@@ -38,8 +38,15 @@
 
 .jb-box { width: 100%; overflow: hidden; margin: 0px auto; position: relative; }
 video { 
+		positon: fixed;
+		top: 0;
+		left: 0;
+		min-width: 100%;
+		min-height: 100%;
+		width: auto;
+		height: auto;
+		z-index: -1;
 		filter: brightness(70%);
-        width: 100%;
       }
 .jb-text { position: absolute; top: 10%; width: 100%; }
 .jb-text p { margin-top: -24px; text-align: center; font-size: 60px; color: #ffffff; }
@@ -49,7 +56,7 @@ video {
 }
 
 body {
-	padding: 0px; margin: 0px;
+	padding: 0; margin: 0;
   	display: flex;
   	justify-content: center;
   	align-items: center;
@@ -101,7 +108,7 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
 
 <body>
   <div class="jb-box">
-    <video muted autoplay loop>
+    <video autoplay loop>
       <source src="resources/video/campus.mp4" type="video/mp4">
     </video>
     
@@ -152,13 +159,13 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
                 </div>
             </section>
 
-		<footer class="g-brd-top-only g-color-white g-pb-40 g-pt-20 g-bg-white" style="border-color: #ffffff !important;">
+		<footer class="g-brd-top-only g-color-white g-pb-40 g-pt-20 g-bg-white" style="border-color: #ffffff !important; margin-top: 5%;">
             <hr style="background:green; height:1px; border:0; margin-top: 3%;">
         	<!-- 주소 -->
             <div class="container">
                 <div class="row g-mt-20 g-hidden-md-down">
                     <div class="col-3 text-center">
-                        <img class="img-fluid" src="resources/images/mainlogo-white.png" style="height: auto; width: 100px;">
+                        <img class="img-fluid" src="resources/images/mainlogo-white.png" style="height: 70px; width: 70px;">
                     </div>
                     <div style="text-align: center;">
                         <address class="text-white"><strong>수려캠퍼스 | </strong>서울특별시 마포구 서교동 447-5 풍성빌딩 2,3,4층</address>
@@ -166,7 +173,7 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
                     <div class="col-xl-3 col-9 offset-lg-max-3">
                         <address class="text-white"><strong class="g-color-gray-dark-v3 g-pr-3">IT 상담 / 문의</strong> : 02-336-8546</address>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" style="margin-top: 0%;">
                         <p style="font-size:9pt; color:white;">Copyright© 2024 SOORYEO NATIONAL UNIVERSITY. All rights reserved.</p>
                     </div>
                 </div>
