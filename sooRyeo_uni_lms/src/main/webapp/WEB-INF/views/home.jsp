@@ -36,7 +36,7 @@
 
 <style type="text/css">
 
-.jb-box { width: 100%; overflow: hidden; margin: 0px auto; position: relative; }
+
 video { 
 		positon: fixed;
 		top: 0;
@@ -48,6 +48,8 @@ video {
 		z-index: -1;
 		filter: brightness(70%);
       }
+      
+.jb-box { width: 100%; overflow: hidden; margin: 0px auto; position: relative; }
 .jb-text { position: absolute; top: 10%; width: 100%; }
 .jb-text p { margin-top: -24px; text-align: center; font-size: 60px; color: #ffffff; }
 
@@ -88,7 +90,11 @@ body {
 }
 
 
+
 </style>	
+
+
+
 
 <script type="text/javascript">
 
@@ -108,13 +114,14 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
 
 <body>
   <div class="jb-box">
-    <video autoplay loop>
-      <source src="resources/video/campus.mp4" type="video/mp4">
+    <video muted autoplay loop>
+    	<source src="resources/video/campus.mp4" type="video/mp4">
     </video>
-    
+   
     <div class="jb-text">
-      	<p><img src="resources/images/mainlogo-white.png" style="width:17%; height:300px;"/></p>
-
+      	<p><img class="img-fluid" src="resources/images/mainlogo-white.png" style="width:17%; height:300px;"/></p>
+	
+		
 		<h2 class="title wave">
  		 	<span class="letter">수려대학교에 오신 것을 환영합니다.</span>
 		</h2>
@@ -141,16 +148,16 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
                         <div class="row justify-content-between mb-4">
                             <div class="col-4">
                                 <div class="form-check">
-                                    <input class="form-check-inline" type="checkbox" id="idsave" name="idsave" value="saveOk"><label id="RemeberMeLabel" class="form-check-label" style="color:white;">ID 기억</label>
+                                    <input class="form-check-inline" type="checkbox" id="idsave" name="idsave" value="saveOk"><label id="RemeberMeLabel" for="idsave" class="form-check-label" style="color:white;">ID 기억</label>
                                 </div>
                             </div>
                             <div class="col-7 align-self-center text-right g-px-0 g-pr-15 ">
-                                <a class="text-white" >아이디(학번) or</a>
+                                <a class="text-white" >아이디(학번) 찾기 /</a>
                                 <a class="text-white">비밀번호 찾기</a>
                             </div>
                         </div>
                        	<div class="d-grid gap-2 col-4 mx-auto">
-						  <button class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-bottom: 15%;" type="button">로그인</button>
+						  <button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-bottom: 15%;" type="button">로그인</button>
 						</div>
                         
                         </div>
@@ -160,7 +167,6 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
             </section>
 
 		<footer class="g-brd-top-only g-color-white g-pb-40 g-pt-20 g-bg-white" style="border-color: #ffffff !important; margin-top: 5%;">
-            <hr style="background:green; height:1px; border:0; margin-top: 3%;">
         	<!-- 주소 -->
             <div class="container">
                 <div class="row g-mt-20 g-hidden-md-down">

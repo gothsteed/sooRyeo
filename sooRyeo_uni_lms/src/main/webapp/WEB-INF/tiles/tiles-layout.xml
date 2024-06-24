@@ -13,6 +13,10 @@
 	<definition name="layout-tiles-student" template="/WEB-INF/tiles/layout/layout-tiles-student.jsp">
 		<put-attribute name="content" value="" />
 	</definition>
-
+	
+   	<definition name="*/*.tiles1" extends="layout-tiles1">
+      	<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}/{2}.jsp"/>
+   	</definition>
+	
 
 </tiles-definitions>
