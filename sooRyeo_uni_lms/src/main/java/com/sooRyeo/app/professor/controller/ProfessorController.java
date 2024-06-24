@@ -10,7 +10,7 @@ public class ProfessorController {
 	@RequestMapping(value = "/professor.lms", method = RequestMethod.GET)
 	public String professor() {
 
-		return "professor/professor_dashboard.tiles1";
+		return "tiles1/professor/professor_dashboard";
 	}
 	
 }
