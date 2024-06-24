@@ -13,7 +13,7 @@
     <link href="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
     
     <style>
-        body {
+		body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -92,6 +92,25 @@
 
         .sidebar ul li a.active .icon {
             color: white;
+        }
+
+        .dropdown-menu {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .dropdown-item {
+            margin: 5px;
+            color: #666;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f4f4f4;
+            color: #00308F;
         }
 
         .content {
@@ -179,12 +198,50 @@
         </div>
         <ul class="nav flex-column">
             <li class="nav-item"><a href="#dashboard" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
-            <li class="nav-item"><a href="#classes" class="nav-link"><span class="icon">📚</span>수업</a></li>
-            <li class="nav-item"><a href="#schedule" class="nav-link"><span class="icon">📅</span>스케줄</a></li>
-            <li class="nav-item"><a href="#grades" class="nav-link"><span class="icon">📈</span>성적</a></li>
-            <li class="nav-item"><a href="#groups" class="nav-link"><span class="icon">👥</span>친구</a></li>
+
+            <li class="nav-item dropdown">
+                <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
+                <div class="dropdown-menu" aria-labelledby="classesMenu">
+                    <a class="dropdown-item" href="#">내 수업</a>
+                    <a class="dropdown-item" href="#">수강신청</a>
+                    <a class="dropdown-item" href="#">수강취소</a>
+                    <a class="dropdown-item" href="#">출석현황</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
+                <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
+                    <a class="dropdown-item" href="#">시간표</a>
+                    <a class="dropdown-item" href="#">과제</a>
+                    <a class="dropdown-item" href="#">시험</a>
+                    <a class="dropdown-item" href="#">오늘 할 일</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
+                <div class="dropdown-menu" aria-labelledby="gradesMenu" >
+                    <a class="dropdown-item" href="#">학점 통계</a>
+                    <a class="dropdown-item" href="#">취득 현황</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
+                <div class="dropdown-menu" aria-labelledby="groupsMenu" >
+                    <a class="dropdown-item" href="#">내 친구</a>
+                    <a class="dropdown-item" href="#">커뮤니티</a>
+                </div>
+            </li>
             <li class="nav-item"><a href="#settings" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
-            <li class="nav-item"><a href="#trash" class="nav-link"><span class="icon">📜</span>증명서</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="certificatesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="icon">📜</span>증명서
+                </a>
+                <div class="dropdown-menu" aria-labelledby="certificatesDropdown">
+                    <a class="dropdown-item" href="#certificate1">성적증명서</a>
+                    <a class="dropdown-item" href="#certificate2">재학증명서</a>
+                    <a class="dropdown-item" href="#certificate3">졸업증명서</a>
+                </div>
+            </li>
             <li class="nav-item"><a href="#logout" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
         </ul>
     </div>
@@ -217,8 +274,7 @@
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-all.js"></script>
