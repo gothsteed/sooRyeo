@@ -201,30 +201,30 @@
             <li class="nav-item"><a href="#dashboard" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
 
             <li class="nav-item dropdown">
-                <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>회원등록</a>
+                <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>회원관리</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
-                    <a class="dropdown-item" href="#">교수</a>
-                    <a class="dropdown-item" href="#">학생</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/admin/MemberCheck.lms">학생조회</a>
+                    <a class="dropdown-item" href="#">교수조회</a>
+                    <a class="dropdown-item" href="#">회원등록</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>수업</a>
+                <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>수업관리</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
-                    <a class="dropdown-item" href="#">?</a>
-                    <a class="dropdown-item" href="#">?</a>
-                    <a class="dropdown-item" href="#">?</a>
-                    <a class="dropdown-item" href="#">?</a>
+                    <a class="dropdown-item" href="#">수업조회</a>
+                    <a class="dropdown-item" href="#">수업추가</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
+                <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>장학금관리</a>
                 <div class="dropdown-menu" aria-labelledby="gradesMenu" >
-                    <a class="dropdown-item" href="#">학점 통계</a>
-                    <a class="dropdown-item" href="#">취득 현황</a>
+                    <a class="dropdown-item" href="#">장학생등록</a>
+                    <a class="dropdown-item" href="#">우리 안한게  뭐가 있지</a>
+                    <a class="dropdown-item" href="#">어 맞아 정답ㅎㅎㅎㅎㅎ</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
+                <a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티관리</a>
                 <div class="dropdown-menu" aria-labelledby="groupsMenu" >
                     <a class="dropdown-item" href="#">내 친구</a>
                     <a class="dropdown-item" href="#">커뮤니티</a>

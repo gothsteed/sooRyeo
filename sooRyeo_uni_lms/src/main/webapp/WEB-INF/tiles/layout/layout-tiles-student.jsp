@@ -203,7 +203,7 @@
             <li class="nav-item dropdown">
                 <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
-                    <a class="dropdown-item" href="#">내 수업</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/lectureList.lms">내 수업</a>
                     <a class="dropdown-item" href="#">수강신청</a>
                     <a class="dropdown-item" href="#">수강취소</a>
                     <a class="dropdown-item" href="#">출석현황</a>

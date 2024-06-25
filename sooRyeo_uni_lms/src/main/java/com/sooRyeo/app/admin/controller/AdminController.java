@@ -8,9 +8,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class AdminController {
 
 	@RequestMapping(value = "/admin/admin_Main.lms", method = RequestMethod.GET)
-	public String AdminController() {
+	public String admin_Main() {
 
 		return "admin_Main.admin";
+	}
+	
+	
+	@RequestMapping(value = "/admin/MemberCheck.lms", method = RequestMethod.GET)
+	public String MemberCheck() {
+		
+		return "MemberCheck.admin";
 	}
 	
 }
