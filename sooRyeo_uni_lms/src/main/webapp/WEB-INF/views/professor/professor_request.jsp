@@ -16,8 +16,8 @@
 
 <div class="container">
 	<div class="row" id="top_container">
-		<div class="card col-sm-5">
-	  		<div class="card-header">
+		<div class="card col-sm-6">
+	  		<div class="card-header row">
 		  		<div class="col-sm-2">교과목 조회</div>
 				<div class="col-sm-4">
 					<select class="form-select" aria-label="Default select example">
@@ -37,13 +37,13 @@
 				</div>
 	  		</div>
 	  		<div class="card-body">
-	    		<h5 class="card-title">Special title treatment</h5>
-	    		<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-	    		<a href="#" class="btn btn-primary">Go somewhere</a>
+				<table>
+					<th
+				</table>
 	  		</div>
 		</div>
 		
-		<div class="card">
+		<div class="card col-sm-5">
 	  		<h5 class="card-header">Featured</h5>
 	  		<div class="card-body">
 	    		<h5 class="card-title">Special title treatment</h5>
@@ -54,7 +54,9 @@
 	
 	</div>
 	
-	<div class="card">
+	<br>
+
+	<div class="card col-sm-11">
   		<h5 class="card-header">Featured</h5>
   		<div class="card-body">
     		<h5 class="card-title">Special title treatment</h5>
