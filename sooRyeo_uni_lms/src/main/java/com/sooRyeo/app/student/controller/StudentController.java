@@ -32,6 +32,12 @@ public class StudentController {
 	
 	
 	
+	@RequestMapping(value="/student/myInfo.lms", method = RequestMethod.GET)
+	public String myInfo() {
+		
+		return "myInfo.student";
+		// /WEB-INF/views/student/{1}.jsp
+	}
 	
 	
 }
