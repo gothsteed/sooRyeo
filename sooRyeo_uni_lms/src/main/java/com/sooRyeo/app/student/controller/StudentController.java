@@ -30,6 +30,13 @@ public class StudentController {
 		// /WEB-INF/views/idFind.jsp
 	}
 	
+	@GetMapping(value = "/student/pwdfind.lms", produces="text/plain;charset=UTF-8")
+	public String pwdFind() {
+		
+		return "pwdFind";
+		// /WEB-INF/views/pwdFind.jsp
+	}
+	
 	
 	
 	@RequestMapping(value="/student/myInfo.lms", method = RequestMethod.GET)

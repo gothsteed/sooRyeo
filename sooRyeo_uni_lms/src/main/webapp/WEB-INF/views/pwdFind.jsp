@@ -164,15 +164,15 @@ video {
     <div class="jb-text">
 	    <div class="login-box">
 	    
-	      <h2>아이디 찾기</h2>
+	      <h2>비밀번호 찾기</h2>
 	  
 	      <form>
 	          <div class="w-100" style="margin-left: 21%; margin-top: 10%;">
 	  
 	            <div class="item" style="width: 300px;">
-	              <input type="text" placeholder="NAME">
+	              <input type="text" placeholder="ID">
 	              <span class="material-icons">
-	                <i class="fa-solid fa-pencil"></i>
+	                <i class="fa-regular fa-user"></i>
 	              </span>
 	            </div>
 	            
