@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %> 
 <!DOCTYPE html>
 <% String ctxPath = request.getContextPath(); %>
 <html lang="en">
@@ -9,8 +10,8 @@
     <title>Styled Sidebar</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/4.3.1/gridstack.min.css" rel="stylesheet"/>
-    <link href="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
+<!--     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/4.3.1/gridstack.min.css" rel="stylesheet"/> -->
+    <%-- <link href="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/> --%>
     
     <style>
 		body {
@@ -168,7 +169,7 @@
             cursor: pointer;
         }
 
-        .grid-stack-item-content {
+/*         .grid-stack-item-content {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -185,7 +186,7 @@
         .grid-stack-item-content:hover {
             transform: translateY(-5px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+        } */
 
     </style>
 </head>
@@ -193,8 +194,8 @@
     <div class="sidebar">
         <div class="profile">
             <img src="https://via.placeholder.com/100" alt="Profile Picture">
-            <h3>이정연</h3>
-            <p>컴퓨터 공학부</p>
+            <h3>${requesetScope.loginuser.name }</h3>
+            <p>${requesetScope.loginuser.department_name}</p>
         </div>
         <ul class="nav flex-column">
             <li class="nav-item"><a href="#dashboard" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
@@ -259,25 +260,25 @@
         </div>
         
         
-        
-
         <div class="main-content">
         
-	        <div class="grid-stack">
-	            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-	                <div class="grid-stack-item-content">Item 1</div>
-	            </div>
-	            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-	                <div class="grid-stack-item-content">Item 2</div>
-	            </div>
-	            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-	                <div class="grid-stack-item-content">Item 3</div>
-	            </div>
-	        
-	        </div>
+        	<tiles:insertAttribute name="content" />
+        
         
         </div>
 
+<!--         <div class="main-content grid-stack">
+            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content">Item 1</div>
+            </div>
+            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content">Item 2</div>
+            </div>
+            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content">Item 3</div>
+            </div>
+        </div>
+ -->
     </div>
 
     <!-- Bootstrap JS and dependencies -->
@@ -285,9 +286,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-all.js"></script>
+<%--     <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-all.js"></script>
     <script type="text/javascript">
         var grid = GridStack.init();
-    </script>
+    </script> --%>
 </body>
 </html>
