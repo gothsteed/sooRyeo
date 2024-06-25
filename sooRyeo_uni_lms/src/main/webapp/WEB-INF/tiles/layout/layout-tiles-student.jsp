@@ -20,20 +20,27 @@
             padding: 0;
             display: flex;
             height: 100vh;
-            background-color: #f4f4f4;
+            background-color: white;
         }
 
         .sidebar {
-            width: 300px;
-            background-color: white;
-            color: #666;
+            width: 250px;
+            background-color: #d1e0e0;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            font-weight: bold;
         }
 
+		.sidebar ul li:hover {
+			background-color: white;
+			margin-left: 10%;
+			width:85%;
+		
+		}
         .sidebar .profile {
             text-align: center;
             margin-bottom: 20px;
@@ -53,7 +60,7 @@
         .sidebar .profile p {
             margin: 0;
             font-size: 14px;
-            color: #999;
+            color: white;
         }
 
         .sidebar ul {
@@ -76,8 +83,6 @@
             text-decoration: none;
             color: #666;
             font-size: 16px;
-            transition: background 0.3s ease, color 0.3s ease;
-            border-radius: 20px;
         }
 
         .sidebar ul li a .icon {
@@ -85,35 +90,28 @@
             font-size: 18px;
         }
 
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #00308F;
-            color: white;
-        }
-
+     
         .sidebar ul li a.active .icon {
             color: white;
         }
 
         .dropdown-menu {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .dropdown-item {
-            margin: 5px;
-            color: #666;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background 0.3s ease, color 0.3s ease;
+			padding-bottom: 2px;
+			background-size: 0 2px;
+			transition: background-size 0.5s;
         }
 
         .dropdown-item:hover {
-            background-color: #f4f4f4;
-            color: #00308F;
+        	background-size: 100% 2px;
+			background-image: linear-gradient(#175F30, #175F30);
+			background-repeat: no-repeat;
+			background-position: top left;
         }
-
+        
         .content {
             flex-grow: 1;
             overflow-y: auto;
@@ -187,7 +185,130 @@
             transform: translateY(-5px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         } */
+        nav {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
 
+        nav ul {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+         margin: 0 20px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #ccc;
+        }
+
+		/* Timeline holder */
+		ul.timeline {
+		    list-style-type: none;
+		    position: relative;
+		    padding-left: 1.5rem;
+		}
+		
+		 /* Timeline vertical line  일자 바*/
+		ul.timeline:before {
+		    content: ' ';
+		    background: #E2E2E2;
+		    display: inline-block;
+		    position: absolute;
+		    left: 16px;
+		    width: 4px;
+		    height: 100%;
+		    z-index: 400;
+		    border-radius: 1rem;
+		}
+		
+		li.timeline-item {
+		    margin: 20px 0;
+		}
+		
+		/* Timeline item arrow */
+		.timeline-arrow-1 {
+		    border-top: 0.5rem solid transparent;
+		    border-right: 0.5rem solid #D6F1EA;
+		    border-bottom: 0.5rem solid transparent;
+		    display: block;
+		    position: absolute;
+		    left: 2rem;
+		}
+		.timeline-arrow-2 {
+		    border-top: 0.5rem solid transparent;
+		    border-right: 0.5rem solid #C9E9F8;
+		    border-bottom: 0.5rem solid transparent;
+		    display: block;
+		    position: absolute;
+		    left: 2rem;
+		}
+		.timeline-arrow-3 {
+		    border-top: 0.5rem solid transparent;
+		    border-right: 0.5rem solid #FCDFD4;
+		    border-bottom: 0.5rem solid transparent;
+		    display: block;
+		    position: absolute;
+		    left: 2rem;
+		}
+		
+		/* Timeline item circle marker  바에 원형모양*/
+		li.timeline-item-1::before {
+		    content: ' ';
+		    background: #99CC99;
+		    display: inline-block;
+		    position: absolute;
+		    border-radius: 50%;
+		    border: 3px solid #fff;
+		    left: 11px;
+		    width: 16px;
+		    height: 16px;
+		    z-index: 400;
+		    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+		}
+		
+		li.timeline-item-2::before {
+		    content: ' ';
+		    background: #87CEEB;
+		    display: inline-block;
+		    position: absolute;
+		    border-radius: 50%;
+		    border: 3px solid #fff;
+		    left: 11px;
+		    width: 16px;
+		    height: 16px;
+		    z-index: 400;
+		    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+		}
+		
+		li.timeline-item-3::before {
+		    content: ' ';
+		    background: pink;
+		    display: inline-block;
+		    position: absolute;
+		    border-radius: 50%;
+		    border: 3px solid #fff;
+		    left: 11px;
+		    width: 16px;
+		    height: 16px;
+		    z-index: 400;
+		    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+		}
+		
+		
+		
+		
     </style>
 </head>
 <body>
@@ -262,7 +383,173 @@
         
         <div class="main-content">
         
-        	<tiles:insertAttribute name="content" />
+            <div class="row">
+
+                <div class="col-sm-4" style="height: 20rem;">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align: center;">캘린더</h5>
+                      <div style="height: 355px; text-align: center;">
+                        <br><br>
+                      		  캘린더 넣을 예정
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 학시 일정 타임라인 -->
+                <div class="col-sm-8">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align: center">2024년도 08월 학사 일정</h5>
+                      <hr>
+
+                      <div class="row">
+                        <div class="col-lg-7 mx-auto">
+                            
+                            <!-- Timeline -->
+                            <ul class="timeline">
+                                <li class="timeline-item-1 rounded ml-3 mb-3 p-4 shadow" style="background-color: #D6F1EA; ">
+                                    <div class="timeline-arrow-1"></div>
+                                    <h5 class="mb-0" style="text-align: center; color: gray;">수강신청 3학년</h5>
+                                    <h5 class="mb-0" style="text-align: center;">2024-08-14 ~ 2024-08-19</h5>
+                                </li>
+                                <li class="timeline-item-2 rounded ml-3 mb-3 p-4 shadow" style="background-color: #C9E9F8; ">
+                                    <div class="timeline-arrow-2"></div>
+                                    <h5 class="mb-0" style="text-align: center; color: gray;">수강신청 2학년</h5>
+                                    <h5 class="mb-0" style="text-align: center;">2024-08-21 ~ 2024-08-26</h5>
+                                </li>
+                                <li class="timeline-item-3 rounded ml-3 mb-3 p-4 shadow" style="background-color: #FCDFD4; ">
+                                    <div class="timeline-arrow-3"></div>
+                                    <h5 class="mb-0" style="text-align: center; color: gray;">수강신청 1학년</h5>
+                                    <h5 class="mb-0" style="text-align: center;">2024-08-21 ~ 2024-08-26</h5>
+                                </li>
+                            </ul><!-- End -->
+            
+                        </div>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div><!-- 학시 일정 타임라인 끝-->
+            </div>
+	
+            <!-- Nav tabs -->
+
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-toggle="tab" data-target="#school_info" style="font-weight: bold; font-size: 14pt; color: #175F30;">학사공지</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-toggle="tab" data-target="#Recruit_info" style="font-weight: bold; font-size: 14pt; color: #175F30;">채용공지</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-toggle="tab" data-target="#department_info" style="font-weight: bold; font-size: 14pt; color: #175F30;">학과공지</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="school_info" role="tabpanel" aria-labelledby="home-tab">
+                    <table style="width: 100%;">
+                        <tr style="border : solid 1px #175F30; background-color: #175F30;">
+                            <th style="color: #FFFFFF; width: 70%; text-align: center; font-size: 18pt;">제목</th>
+                            <th style="color: #FFFFFF; width: 30%; text-align: center; font-size: 18pt;">등록일자</th>
+                        </tr>
+                        <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px; margin-top: 10%;">
+                            <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                                2024학년도 2학기 등록금 납부안내 
+                            </td>
+                            <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                24.06.23 
+                            </td>
+                        </tr>
+                        <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+                            <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                               [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+                            </td>
+                            <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                24.06.28 
+                            </td>
+                        </tr>
+                        <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+                            <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                               [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+                            </td>
+                            <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                24.06.28 
+                            </td>
+                        </tr>
+                        <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+                            <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                               [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+                            </td>
+                            <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                24.06.28 
+                            </td>
+                        </tr>
+                        <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+                            <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                               [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+                            </td>
+                            <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                24.06.28 
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="Recruit_info" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="tab-pane fade show active" id="school_info" role="tabpanel" aria-labelledby="home-tab">
+                        <table style="width: 100%;">
+                            <tr style="border : solid 1px #175F30; background-color: #175F30;">
+                                <th style="color: #FFFFFF; width: 70%; text-align: center; font-size: 18pt;">제목</th>
+                                <th style="color: #FFFFFF; width: 30%; text-align: center; font-size: 18pt;">등록일자</th>
+                            </tr>
+                            <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px; margin-top: 10%;">
+                                <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                                    2024학년도 2학기 등록금 납부안내 
+                                </td>
+                                <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                    24.06.23 
+                                </td>
+                            </tr>
+                            <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+                                <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                                   [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+                                </td>
+                                <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                    24.06.28 
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="department_info" role="tabpanel" aria-labelledby="contact-tab">
+                    <div class="tab-pane fade show active" id="school_info" role="tabpanel" aria-labelledby="home-tab">
+                        <table style="width: 100%;">
+                            <tr style="border : solid 1px #175F30; background-color: #175F30;">
+                                <th style="color: #FFFFFF; width: 70%; text-align: center; font-size: 18pt;">제목</th>
+                                <th style="color: #FFFFFF; width: 30%; text-align: center; font-size: 18pt;">등록일자</th>
+                            </tr>
+                            <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px; margin-top: 10%;">
+                                <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                                    2024학년도 2학기 등록금 납부안내 
+                                </td>
+                                <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                    24.06.23 
+                                </td>
+                            </tr>
+                            <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+                                <td style="width: 70%; text-align: left; font-size: 15pt; ">
+                                   [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+                                </td>
+                                <td style="width: 70%; text-align: center; font-size: 15pt;">
+                                    24.06.28 
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         
         
         </div>

@@ -1,4 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -115,11 +115,11 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
 <body>
   <div class="jb-box">
     <video muted autoplay loop>
-    	<source src="resources/video/campus.mp4" type="video/mp4">
+    	<source src="<%=ctxPath%>/resources/video/campus.mp4" type="video/mp4">
     </video>
    
     <div class="jb-text">
-      	<p><img class="img-fluid" src="resources/images/mainlogo-white.png" style="width:17%; height:300px;"/></p>
+      	<p><img class="img-fluid" src="<%=ctxPath%>/resources/images/mainlogo-white.png" style="width:17%; height:300px;"/></p>
 	
 		
 		<h2 class="title wave">
@@ -186,7 +186,7 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
             <div class="container">
                 <div class="row g-mt-20 g-hidden-md-down">
                     <div class="col-3 text-center">
-                        <img class="img-fluid" src="resources/images/mainlogo-white.png" style="height: 70px; width: 70px;">
+                        <img class="img-fluid" src="<%=ctxPath%>/resources/images/mainlogo-white.png" style="height: 70px; width: 70px;">
                     </div>
                     <div style="text-align: center;">
                         <address class="text-white"><strong>수려캠퍼스 | </strong>서울특별시 마포구 서교동 447-5 풍성빌딩 2,3,4층</address>
