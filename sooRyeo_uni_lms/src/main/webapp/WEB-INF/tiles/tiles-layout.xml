@@ -35,6 +35,19 @@
    	<definition name="*/*.professor" extends="layout-tiles-professor">
       	<put-attribute name="content" value="/WEB-INF/views/professor/{1}/{2}.jsp"/>
    	</definition>
+   	
+   		<!-- ==== tiles 를 사용하는 레이아웃(header,content,footer) 설정 시작 ==== -->
+	<definition name="layout-tiles-admin" template="/WEB-INF/tiles/layout/layout-tiles-admin.jsp">
+		<put-attribute name="content" value="" />
+	</definition>
+	
+	<definition name="*.admin" extends="layout-tiles-admin">
+      	<put-attribute name="content" value="/WEB-INF/views/admin/{1}.jsp"/>
+   	</definition>
+	
+   	<definition name="*/*.admin" extends="layout-tiles-admin">
+      	<put-attribute name="content" value="/WEB-INF/views/admin/{1}/{2}.jsp"/>
+   	</definition>
 	
 
 </tiles-definitions>

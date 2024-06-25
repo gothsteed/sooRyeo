@@ -13,4 +13,10 @@ public class ProfessorController {
 		return "professor_dashboard.professor";
 	}
 	
+	@RequestMapping(value = "/professor/request.lms", method = RequestMethod.GET)
+	public String professor_request() {
+
+		return "professor_request.professor";
+	}
+	
 }

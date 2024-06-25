@@ -17,23 +17,30 @@
 		body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 0; 
             display: flex;
             height: 100vh;
-            background-color: #f4f4f4;
+            background-color: white;
         }
 
         .sidebar {
-            width: 300px;
-            background-color: white;
-            color: #666;
+            width: 250px;
+            background-color: #d1e0e0;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            font-weight: bold;
         }
 
+		.sidebar ul li:hover {
+			background-color: white;
+			margin-left: 10%;
+			width:85%;
+		
+		}
         .sidebar .profile {
             text-align: center;
             margin-bottom: 20px;
@@ -53,7 +60,7 @@
         .sidebar .profile p {
             margin: 0;
             font-size: 14px;
-            color: #999;
+            color: white;
         }
 
         .sidebar ul {
@@ -75,9 +82,8 @@
             padding: 15px 20px;
             text-decoration: none;
             color: #666;
-            font-size: 16px;
             transition: background 0.3s ease, color 0.3s ease;
-            border-radius: 20px;
+            font-size: 16px;
         }
 
         .sidebar ul li a .icon {
@@ -85,35 +91,28 @@
             font-size: 18px;
         }
 
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #00308F;
-            color: white;
-        }
-
+     
         .sidebar ul li a.active .icon {
             color: white;
         }
 
         .dropdown-menu {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .dropdown-item {
-            margin: 5px;
-            color: #666;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background 0.3s ease, color 0.3s ease;
+			padding-bottom: 2px;
+			background-size: 0 2px;
+			transition: background-size 0.5s;
         }
 
         .dropdown-item:hover {
-            background-color: #f4f4f4;
-            color: #00308F;
+        	background-size: 100% 2px;
+			background-image: linear-gradient(#175F30, #175F30);
+			background-repeat: no-repeat;
+			background-position: top left;
         }
-
+        
         .content {
             flex-grow: 1;
             overflow-y: auto;
@@ -187,7 +186,8 @@
             transform: translateY(-5px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         } */
-
+       
+		
     </style>
 </head>
 <body>
@@ -262,7 +262,7 @@
         
         <div class="main-content">
         
-        	<tiles:insertAttribute name="content" />
+           <tiles:insertAttribute name="content" />
         
         
         </div>
