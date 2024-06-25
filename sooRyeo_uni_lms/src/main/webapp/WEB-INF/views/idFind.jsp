@@ -1,29 +1,43 @@
-<!DOCTYPE html>
-<html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+    String ctxPath = request.getContextPath();
+    //     /sooRyeo
+%>
+
+<!doctype html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>Insert title here</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" rel="stylesheet">
-    <script type="text/javascript" src="../../resources/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+<meta charset="utf-8">
+<title>SooRyeo Univ.</title>
 
-<!-- Optional JavaScript -->
-<script type="text/javascript" src="../../resources/js/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="../../resources/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js" ></script> 
+<%-- Required meta tags --%>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- jQueryUI CSS 및 JS -->
-<link rel="stylesheet" type="text/css" href="../../resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
-<script type="text/javascript" src="../../resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
+<%-- Bootstrap CSS --%>
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
 
-<!-- Font Awesome 6 Icons -->
+<%-- Font Awesome 6 Icons --%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1&family=IBM+Plex+Sans+KR&family=Nanum+Gothic&family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 
-</head>
+<%-- Optional JavaScript --%>
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js" ></script> 
+
+<%-- jQueryUI CSS 및 JS --%>
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
+<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
 
 
-<style>
+
+<style type="text/css">
 
 html {
   height: 100%;
@@ -79,8 +93,7 @@ a {
   position: relative;
 }
 .item input[type=text],
-.item input[type=email],
-.item input[type=tel] {
+.item input[type=email]{
   border: 1px solid lightgray;
   height: 40px;
   width: inherit;
@@ -114,20 +127,40 @@ a {
 .item input:focus::placeholder {
   visibility: hidden;
 }
+<%--===================================== --%>
+
+video { 
+      positon: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -1;
+      filter: brightness(70%);
+}
 
 
-    
+.jb-box { width: 100%; overflow: hidden; margin: 0px auto; position: relative; }
+
     
 </style>
 
 <body>
+
   <div class="jb-box">
+  
     <video muted autoplay loop>
-       <source src="resources/video/campus.mp4" type="video/mp4">
+       <source src="<%= ctxPath%>/resources/video/campus.mp4" type="video/mp4">
     </video>
 
-
+    <div>
+    	<img src="<%= ctxPath%>/resources/images/mainlogo-white.png" style="width:17%; height:300px;"/>
+    </div>
+    
     <div class="login-box">
+    
       <h2>아이디 찾기</h2>
   
       <form>
@@ -152,9 +185,10 @@ a {
           <div class="my-3 text-center">
             <button type="button" class="btn btn-success" style="width: 300px;">찾기</button>
           </div>
+          
       </form>
   
-  </div>
+   </div>
    
     
 

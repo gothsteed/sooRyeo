@@ -1,6 +1,7 @@
 package com.sooRyeo.app.student.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,6 +20,14 @@ public class StudentController {
 		
 		return "lectureList.student";
 		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	
+	@GetMapping(value = "/student/idfind.lms", produces="text/plain;charset=UTF-8")
+	public String idFind() {
+		
+		return "idFind";
+		// /WEB-INF/views/idFind.jsp
 	}
 	
 	
