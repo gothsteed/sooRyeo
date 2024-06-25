@@ -131,10 +131,25 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
 	            <div class="col-lg-6 col-xl-5 col-md-8 col-sm-9">
 	                <div class="brd-around g-brd-gray-light-v6 g-bg-white rounded-0 g-px-30 g-py-50 mb-1">
 	                	
-	                    <header class="text-center mb-4" style="margin-top: 25%;">
+	                    <header class="text-center mb-4" style="margin-top: 20%;">
 	                        <h1><span style="color:white;">LOGIN</span></h1>
 	                    </header>
 
+						<div style="display:flex; color:white; font-size: 12pt; padding-top: 3%; padding-bottom: 3%;">
+							<div class="form-check form-check-inline">
+							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
+							  <label class="form-check-label" for="inlineRadio1">학생</label>
+							</div>
+							<div class="form-check form-check-inline pl-3">
+							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+							  <label class="form-check-label" for="inlineRadio2">교수</label>
+							</div>
+							<div class="form-check form-check-inline pl-3">
+							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+							  <label class="form-check-label" for="inlineRadio3">관리자</label>
+							</div>
+						</div>
+						
                         <div class="mb-4">
                             <div class="input-group">
                                 <input type="text" name="UserID" id="userId" class="form-control g-color-gray-dark-v3 g-brd-gray-light-v7 g-py-15 g-px-15 rounded-0" placeholder="수려대학교 ID" autofocus="autofocus">
@@ -166,7 +181,7 @@ wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
                 </div>
             </section>
 
-		<footer class="g-brd-top-only g-color-white g-pb-40 g-pt-20 g-bg-white" style="border-color: #ffffff !important; margin-top: 5%;">
+		<footer class="g-brd-top-only g-color-white g-pb-40 g-pt-20 g-bg-white" style="border-color: #ffffff !important; margin-top: 3%;">
         	<!-- 주소 -->
             <div class="container">
                 <div class="row g-mt-20 g-hidden-md-down">
