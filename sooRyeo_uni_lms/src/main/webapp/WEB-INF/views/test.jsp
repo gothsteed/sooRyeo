@@ -257,25 +257,17 @@
                 <span class="icon">❔</span>
             </div>
         </div>
-        
-        
-        
 
-        <div class="main-content">
-        
-	        <div class="grid-stack">
-	            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-	                <div class="grid-stack-item-content">Item 1</div>
-	            </div>
-	            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-	                <div class="grid-stack-item-content">Item 2</div>
-	            </div>
-	            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-	                <div class="grid-stack-item-content">Item 3</div>
-	            </div>
-	        
-	        </div>
-        
+        <div class="main-content grid-stack">
+            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content">Item 1</div>
+            </div>
+            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content">Item 2</div>
+            </div>
+            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content">Item 3</div>
+            </div>
         </div>
 
     </div>

@@ -10,30 +10,14 @@
 <tiles-definitions>
 
 	<!-- ==== tiles 를 사용하는 레이아웃(header,content,footer) 설정 시작 ==== -->
-	<definition name="layout-tiles-student" template="/WEB-INF/tiles/layout/layout-tiles-student.jsp">
+	<definition name="layout-tiles1" template="/WEB-INF/tiles/layout/layout-tiles1.jsp">
+		<put-attribute name="header" value="/WEB-INF/tiles/tile1/header.jsp" />
 		<put-attribute name="content" value="" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/tile1/footer.jsp" />
 	</definition>
 	
-	<definition name="*.student" extends="layout-tiles-student">
-      	<put-attribute name="content" value="/WEB-INF/views/student/{1}.jsp"/>
-   	</definition>
-	
-   	<definition name="*/*.student" extends="layout-tiles-student">
-      	<put-attribute name="content" value="/WEB-INF/views/student/{1}/{2}.jsp"/>
-   	</definition>
-   	
-   	
-   		<!-- ==== tiles 를 사용하는 레이아웃(header,content,footer) 설정 시작 ==== -->
-	<definition name="layout-tiles-professor" template="/WEB-INF/tiles/layout/layout-tiles-professor.jsp">
-		<put-attribute name="content" value="" />
-	</definition>
-	
-	<definition name="*.professor" extends="layout-tiles-professor">
-      	<put-attribute name="content" value="/WEB-INF/views/professor/{1}.jsp"/>
-   	</definition>
-	
-   	<definition name="*/*.professor" extends="layout-tiles-professor">
-      	<put-attribute name="content" value="/WEB-INF/views/professor/{1}/{2}.jsp"/>
+   	<definition name="*/*.tiles1" extends="layout-tiles1">
+      	<put-attribute name="content" value="/WEB-INF/views/tiles1/{1}/{2}.jsp"/>
    	</definition>
 	
 
