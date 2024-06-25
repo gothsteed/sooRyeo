@@ -262,7 +262,7 @@
         
         <div class="main-content">
         
-           
+           <tiles:insertAttribute name="content" />
         
         
         </div>

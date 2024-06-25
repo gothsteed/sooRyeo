@@ -201,21 +201,19 @@
             <li class="nav-item"><a href="#dashboard" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
 
             <li class="nav-item dropdown">
-                <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
+                <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>회원등록</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
-                    <a class="dropdown-item" href="#">내 수업</a>
-                    <a class="dropdown-item" href="#">수강신청</a>
-                    <a class="dropdown-item" href="#">수강취소</a>
-                    <a class="dropdown-item" href="#">출석현황</a>
+                    <a class="dropdown-item" href="#">교수</a>
+                    <a class="dropdown-item" href="#">학생</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
+                <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
-                    <a class="dropdown-item" href="#">시간표</a>
-                    <a class="dropdown-item" href="#">과제</a>
-                    <a class="dropdown-item" href="#">시험</a>
-                    <a class="dropdown-item" href="#">오늘 할 일</a>
+                    <a class="dropdown-item" href="#">?</a>
+                    <a class="dropdown-item" href="#">?</a>
+                    <a class="dropdown-item" href="#">?</a>
+                    <a class="dropdown-item" href="#">?</a>
                 </div>
             </li>
             <li class="nav-item">
