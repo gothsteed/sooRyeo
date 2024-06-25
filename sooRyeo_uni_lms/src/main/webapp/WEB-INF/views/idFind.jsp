@@ -74,7 +74,7 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
   color: #222;
   line-height: 1.5em;
-  margin: 0;
+  padding: 0; margin: 0;
   font-weight: 300;
   /* 수직 수평 중앙 */
   height: 100vh;
@@ -82,6 +82,8 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+
 a {
   color: #222;
   text-decoration: none;
@@ -137,12 +139,16 @@ video {
       min-height: 100%;
       width: auto;
       height: auto;
-      z-index: -1;
+      z-index: 997;
       filter: brightness(70%);
 }
 
 
 .jb-box { width: 100%; overflow: hidden; margin: 0px auto; position: relative; }
+.jb-text { position: absolute; top: 60%; width: 100%; }
+.img  { margin-top: -24px; text-align: center; font-size: 60px; color: #ffffff; position: absolute; top: 10%; left: 42%;}
+
+
 
     
 </style>
@@ -154,44 +160,41 @@ video {
     <video muted autoplay loop>
        <source src="<%= ctxPath%>/resources/video/campus.mp4" type="video/mp4">
     </video>
-
-    <div>
-    	<img src="<%= ctxPath%>/resources/images/mainlogo-white.png" style="width:17%; height:300px;"/>
-    </div>
-    
-    <div class="login-box">
-    
-      <h2>아이디 찾기</h2>
-  
-      <form>
-          <div class="w-100" style="margin-left: 21%; margin-top: 10%;">
-  
-            <div class="item" style="width: 300px;">
-              <input type="text" placeholder="성명">
-              <span class="material-icons">
-                <i class="fa-solid fa-pencil"></i>
-              </span>
-            </div>
-            
-            <div class="item" style="width: 300px;">
-              <input type="Email" placeholder="이메일">
-              <span class="material-icons">
-                <i class="fa-regular fa-envelope"></i>
-              </span>
-            </div>
-  
-          </div> 
-  
-          <div class="my-3 text-center">
-            <button type="button" class="btn btn-success" style="width: 300px;">찾기</button>
-          </div>
-          
-      </form>
-  
+    <div class="img"><img src="<%= ctxPath%>/resources/images/mainlogo-white.png" style="width:100%; height:300px;"/></div>
+    <div class="jb-text">
+	    <div class="login-box">
+	    
+	      <h2>아이디 찾기</h2>
+	  
+	      <form>
+	          <div class="w-100" style="margin-left: 21%; margin-top: 10%;">
+	  
+	            <div class="item" style="width: 300px;">
+	              <input type="text" placeholder="성명">
+	              <span class="material-icons">
+	                <i class="fa-solid fa-pencil"></i>
+	              </span>
+	            </div>
+	            
+	            <div class="item" style="width: 300px;">
+	              <input type="Email" placeholder="이메일">
+	              <span class="material-icons">
+	                <i class="fa-regular fa-envelope"></i>
+	              </span>
+	            </div>
+	  
+	          </div> 
+	  
+	          <div class="my-3 text-center">
+	            <button type="button" class="btn btn-success" style="width: 300px;">찾기</button>
+	          </div>
+	          
+	      </form>
+	  
+	   </div>
+	   
    </div>
    
-    
-
 
   </div>
   
