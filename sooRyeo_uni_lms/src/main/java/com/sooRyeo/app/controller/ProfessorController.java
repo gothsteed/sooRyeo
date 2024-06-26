@@ -34,15 +34,6 @@ public class ProfessorController {
 	}
 	
 	
-	@GetMapping("/logout.lms")
-	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {// 로그아웃
-		
-		mav = service.logout(mav, request);
-		
-		return mav;
-		
-	}
-	
 	
 	
 }

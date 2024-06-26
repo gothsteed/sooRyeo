@@ -252,6 +252,9 @@
                 <span class="icon">🔎</span>
                 <input type="text" placeholder="메뉴검색">
             </div>
+            <div>
+            	<span style="font-size:16pt; font-weight:bold;">환영합니다!&nbsp;${sessionScope.loginuser.name}교수님!</span>
+            </div>
             <div class="icons">
                 <span class="icon">📫</span>
                 <span class="icon">🔔</span>
