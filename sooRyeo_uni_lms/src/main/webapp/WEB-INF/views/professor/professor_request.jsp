@@ -3,6 +3,13 @@
 
 <style type="text/css">
 
+   	.subject-container {
+        width: 100%;
+        height: 300px; /* 원하는 높이로 설정 */
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+
 	#top_container {
 		border: solid 0px gray;
 	
@@ -72,7 +79,7 @@
                     </select>
                 </div>
             </div>
-            <div class="card-body">
+            <div class="card-body subject-container">
                 <table class="table table-hover">
                     <tr>
                         <th>과목코드</th>
@@ -91,7 +98,107 @@
                         <td>전필</td>
                         <td>3</td>
                         <td>3</td>
-                    </tr>    
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>SUB001</td>
+                        <td>컴퓨터공학과</td>
+                        <td>1</td>
+                        <td>컴퓨터개론</td>
+                        <td>전필</td>
+                        <td>3</td>
+                        <td>3</td>
+                    </tr>
+                        
                 </table>
             </div>
         </div>
