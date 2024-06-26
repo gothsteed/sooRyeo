@@ -25,8 +25,8 @@
         <div class="main-content">
             <div class="justify-content-center">
                 <div class="card">
-                    <h5 class="card-header">
-                    방문 통계 차트
+                  <h5 class="card-header">
+                    	방문 통계 차트
                   </h5>
                   <div class="card-body">
                     <h5 class="card-title">교수 학생 방문통계</h5>
@@ -38,7 +38,7 @@
                 
                 <div class="card">
                   <h5 class="card-header">
-                    강의개설 신청승인
+                    	강의개설 신청승인
                   </h5>
                   <div class="card-body">
                     <h5 class="card-title">개설신청 리스트</h5>
