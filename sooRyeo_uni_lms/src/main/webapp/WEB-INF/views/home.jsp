@@ -1,10 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
     String ctxPath = request.getContextPath();
-    //     /sooRyeo
 %>
 
 <!doctype html>
@@ -18,7 +16,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 <%-- Bootstrap CSS --%>
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
+<link rel="stylesheet" type="text/css" href="<%= ctxPath %>/resources/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
 
 <%-- Font Awesome 6 Icons --%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -27,17 +25,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gothic+A1&family=IBM+Plex+Sans+KR&family=Nanum+Gothic&family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
 
 <%-- Optional JavaScript --%>
-<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="<%= ctxPath%>/resources/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js" ></script> 
+<script type="text/javascript" src="<%= ctxPath %>/resources/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="<%= ctxPath %>/resources/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js" ></script> 
 
 <%-- jQueryUI CSS 및 JS --%>
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
-<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
-
+<link rel="stylesheet" type="text/css" href="<%= ctxPath %>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
+<script type="text/javascript" src="<%= ctxPath %>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
 <style type="text/css">
-
-
 video { 
 		positon: fixed;
 		top: 0;
@@ -71,7 +66,6 @@ body {
   margin-top: -24px; text-align: center; font-size: 65px; color: #ffffff;
 }
 
-
 .letter {
   display: inline-block;
   transform: translateY(100%);
@@ -89,40 +83,45 @@ body {
     transform: translateY(0);
   }
 }
-
-
-
 </style>	
 
-
-
-
 <script type="text/javascript">
-
 function handleLogin() {
     const memberType = document.querySelector('input[name="memberType"]:checked').value;
-    const form = document.getElementById('loginForm');
+    const form = $('#loginForm');
     
     let actionUrl = "";
-    if (memberType == "student") {
+    if (memberType === "student") {
         actionUrl = "<%= ctxPath %>/student/login.lms";
-    } else if (memberType == "professor") {
+    } else if (memberType === "professor") {
         actionUrl = "<%= ctxPath %>/professor/login.lms";
-    } else if (memberType == "admin") {
+    } else if (memberType === "admin") {
         actionUrl = "<%= ctxPath %>/admin/login.lms";
     }
     
-    form.action = actionUrl;
-    form.method = "post";
-    form.submit();
+    $.ajax({
+        url: actionUrl,
+        type: 'POST',
+        data: form.serialize(),
+        dataType:"json",
+        success: function(response) {
+            // Handle success scenario
+            if(response.isSuccess) {
+            	alert("성공");
+            	console.log(response.redirectUrl);
+            	window.location.href = response.redirectUrl; 
+            }
+            else {
+            	alert("실패");
+            }
+        },
+        error: function(xhr, status, error) {
+            // Handle error scenario
+            alert('Login failed: ' + error);
+        }
+    });
 }
-
-
-
-
 </script>
-
-
 </head>
 
 <body>
@@ -143,7 +142,6 @@ function handleLogin() {
         	<div class="row justify-content-center">
 	            <div class="col-lg-6 col-xl-5 col-md-8 col-sm-9">
 	                <div class="brd-around g-brd-gray-light-v6 g-bg-white rounded-0 g-px-30 g-py-50 mb-1">
-	                	
 	                    <header class="text-center mb-4" style="margin-top: 20%;">
 	                        <h1><span style="color:white;">LOGIN</span></h1>
 	                    </header>
@@ -174,13 +172,8 @@ function handleLogin() {
 	                                <input type="password" name="password" id="password" class="form-control g-color-gray-dark-v3 g-brd-gray-light-v7 g-py-15 g-px-15 rounded-0" placeholder="비밀번호">
 	                            </div>
 	                        </div>
-						
-						
-						
-						
 						</form>
 						
-			
                         <div class="row justify-content-between mb-4">
                             <div class="col-4">
                                 <div class="form-check">
@@ -195,9 +188,6 @@ function handleLogin() {
                        	<div class="d-grid gap-2 col-4 mx-auto">
 						  <button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-bottom: 15%;" type="button" onclick="handleLogin()">로그인</button>
 						</div>
-                        
-                        </div>
-
                     </div>
                 </div>
             </section>
@@ -222,11 +212,7 @@ function handleLogin() {
        		 <!-- 주소 end -->
             </div>
         </footer>
-
-
     </div>
   </div>
-
-
 </body>
 </html>
