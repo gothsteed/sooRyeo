@@ -5,21 +5,20 @@
 
 	#top_container {
 		border: solid 1px black;
+		width: 120%;
+		
 	}
 	
-	#left_top, #right_top {
-		border: solid 0px orange;
-	}
 
 
 </style>
 
 <div class="container">
 	<div class="row" id="top_container">
-		<div class="card col-sm-6">
+		<div class="card col-md-6">
 	  		<div class="card-header row">
-		  		<div class="col-sm-2">교과목 조회</div>
-				<div class="col-sm-4">
+		  		<div class="col-md-2">교과목 조회</div>
+				<div class="col-md-4">
 					<select class="form-select" aria-label="Default select example">
 			  			<option selected>단과선택</option>
 			  			<option value="1">인문대학</option>
@@ -27,7 +26,7 @@
 			  			<option value="3">스마트융합대학</option>
 					</select>
 				</div>
-				<div class="col-sm-4" id="right_top">
+				<div class="col-md-4" id="right_top">
 					<select class="form-select" aria-label="Default select example">
 			  			<option selected>학과선택</option>
 			  			<option value="1">국어국문학과</option>
@@ -37,7 +36,7 @@
 				</div>
 	  		</div>
 	  		<div class="card-body">
-				<table class="table table-hover" align="center">
+				<table class="table table-hover">
 					<tr>
 						<th>과목코드</th>
 						<th>학과</th>
@@ -60,10 +59,10 @@
 	  		</div>
 		</div>
 		
-		<div class="card col-sm-5">
+		<div class="card col-md-6">
 			  	<div class="card-header row">
-		  		<div class="col-sm-2">교과목 조회</div>
-				<div class="col-sm-4">
+		  		<div class="col-md-2">교과목 조회</div>
+				<div class="col-md-4">
 					<select class="form-select" aria-label="Default select example">
 			  			<option selected>단과선택</option>
 			  			<option value="1">인문대학</option>
@@ -71,7 +70,7 @@
 			  			<option value="3">스마트융합대학</option>
 					</select>
 				</div>
-				<div class="col-sm-4" id="right_top">
+				<div class="col-md-4" id="right_top">
 					<select class="form-select" aria-label="Default select example">
 			  			<option selected>학과선택</option>
 			  			<option value="1">국어국문학과</option>
@@ -109,7 +108,7 @@
 	
 	<br>
 
-	<div class="card col-sm-11">
+	<div class="card col-md-11">
   		<h5 class="card-header">Featured</h5>
   		<div class="card-body">
     		<h5 class="card-title">Special title treatment</h5>
