@@ -232,7 +232,7 @@
                     <a class="dropdown-item" href="#">커뮤니티</a>
                 </div>
             </li>
-            <li class="nav-item"><a href="#settings" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
+            <li class="nav-item"><a href="<%=ctxPath%>/student/myInfo.lms" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="certificatesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="icon">📜</span>증명서
