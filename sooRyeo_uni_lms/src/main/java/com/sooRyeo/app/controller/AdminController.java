@@ -7,17 +7,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class AdminController {
 
-	@RequestMapping(value = "/admin/dashboard", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/admin_Main.lms", method = RequestMethod.GET)
 	public String admin_Main() {
 
 		return "admin_Main.admin";
 	}
 	
-	
 	@RequestMapping(value = "/admin/MemberCheck.lms", method = RequestMethod.GET)
 	public String MemberCheck() {
 		
 		return "MemberCheck.admin";
+	}
+	
+	@RequestMapping(value = "/admin/MemberRegister.lms", method = RequestMethod.GET)
+	public String MemberRegister() {
+		
+		return "MemberRegister.admin";
 	}
 	
 }
