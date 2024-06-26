@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Styled Sidebar</title>
+    <title>SooRyeo Univ.</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <!--     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/4.3.1/gridstack.min.css" rel="stylesheet"/> -->
@@ -243,7 +243,7 @@
                     <a class="dropdown-item" href="#certificate3">졸업증명서</a>
                 </div>
             </li>
-            <li class="nav-item"><a href="#logout" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
+            <li class="nav-item"><a href="<%=ctxPath%>/logout.lms" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
         </ul>
     </div>
     <div class="content">
@@ -251,6 +251,9 @@
             <div class="search-bar">
                 <span class="icon">🔎</span>
                 <input type="text" placeholder="메뉴검색">
+            </div>
+            <div>
+            	<span style="font-size:16pt; font-weight:bold;">환영합니다!&nbsp;${sessionScope.loginuser.name}교수님!</span>
             </div>
             <div class="icons">
                 <span class="icon">📫</span>
