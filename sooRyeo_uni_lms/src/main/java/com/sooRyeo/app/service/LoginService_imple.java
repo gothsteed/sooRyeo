@@ -73,4 +73,11 @@ public class LoginService_imple implements LoginService {
 		return mav;
 	}
 
+
+	@Override
+	public JSONObject professorLogin(HttpServletRequest resquest, LoginDTO loginDTO) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

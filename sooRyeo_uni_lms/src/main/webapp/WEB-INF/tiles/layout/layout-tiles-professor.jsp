@@ -263,7 +263,6 @@
             	<c:if test="${not empty sessionScope.loginuser.name}">
             		<span style="font-size:16pt; font-weight:bold;">환영합니다!&nbsp;${sessionScope.loginuser.name}교수님!</span>
             	</c:if>
-            	
             </div>
             <div class="icons">
                 <span class="icon">📫</span>
