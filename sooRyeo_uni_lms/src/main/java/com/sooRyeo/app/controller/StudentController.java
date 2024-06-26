@@ -1,4 +1,4 @@
-package com.sooRyeo.app.student.controller;
+package com.sooRyeo.app.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class StudentController {
 
-	@RequestMapping(value = "/student/student_Main.lms", method = RequestMethod.GET)
+	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
 	public String student() {
 
 		return "student_Main.student";

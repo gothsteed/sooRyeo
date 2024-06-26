@@ -1,4 +1,4 @@
-package com.sooRyeo.app.student.service;
+package com.sooRyeo.app.service;
 
 import org.springframework.stereotype.Service;
 

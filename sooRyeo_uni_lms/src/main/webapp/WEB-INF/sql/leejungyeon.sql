@@ -41,6 +41,10 @@ CREATE TABLE tbl_student (
 
 
 );
+ALTER TABLE tbl_student MODIFY pwd NVARCHAR2(200);
+ALTER TABLE tbl_student MODIFY email NVARCHAR2(200);
+ALTER TABLE tbl_student MODIFY tel NVARCHAR2(200);
+
 
 ALTER TABLE tbl_student
 	ADD
@@ -76,6 +80,11 @@ CREATE TABLE tbl_professor (
 	employment_stat SMALLINT      NOT NULL,
 	employment_date DATE          NOT NULL  -- employment_date
 );
+
+ALTER TABLE tbl_professor MODIFY pwd NVARCHAR2(200);
+ALTER TABLE tbl_professor MODIFY email NVARCHAR2(200);
+ALTER TABLE tbl_professor MODIFY tel NVARCHAR2(200);
+
 ALTER TABLE tbl_professor
 	ADD
 		CONSTRAINT PK_tbl_professor -- 교수 기본키
@@ -104,6 +113,11 @@ ALTER TABLE tbl_professor
 	tel       NVARCHAR2(11)  NOT NULL, -- 전화번호
 	email     NVARCHAR2(200) NOT NULL  -- 이메일
 );
+
+ALTER TABLE tbl_admin MODIFY pwd NVARCHAR2(200);
+ALTER TABLE tbl_admin MODIFY email NVARCHAR2(200);
+ALTER TABLE tbl_admin MODIFY tel NVARCHAR2(200);
+
 
 ALTER TABLE tbl_admin
 	ADD
@@ -601,4 +615,51 @@ ALTER TABLE tbl_assignment_submit
 			student_id -- 학번
 		);
     
+
+desc tbl_student;
+desc tbl_department;
+
+insert into tbl_department( DEPARTMENT_SEQ, DEPARTMENT_NAME)
+values (DEPARTMENT_SEQ.nextval, '컴퓨터공학과');
+commit;
+
+select *
+from tbl_department;
+
+
+select *
+from tbl_student;
+
+
+INSERT INTO tbl_student (
+    STUDENT_ID, 
+    PWD, 
+    NAME, 
+    JUBUN, 
+    TEL, 
+    GRADE, 
+    ADDRESS, 
+    EMAIL, 
+    REGISTER_DATE, 
+    STATUS, 
+    FK_DEPARTMENT_SEQ
+) VALUES (
+    generate_student_id(), -- STUDENT_ID
+    '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', -- PWD
+    '이정연', -- NAME
+    '9901011234567', -- JUBUN
+    'k6AvvKD9cZaeKhlunBk9ew==', -- TEL
+    1, -- GRADE
+    '서울시 강남구 테헤란로 123', -- ADDRESS
+    '7DiCwyc+1dXTTwg5kjvDmHehvJlz/ESJNhef/5DX+YA=', -- EMAIL
+    TO_DATE('2024-06-26', 'YYYY-MM-DD'), -- REGISTER_DATE
+    1, -- STATUS
+    2 -- FK_DEPARTMENT_SEQ
+);
+
+commit;
+
+
+
+
 

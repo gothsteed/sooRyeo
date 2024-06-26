@@ -1,4 +1,4 @@
-package com.sooRyeo.app.admin.model;
+package com.sooRyeo.app.model;
 
 import org.springframework.stereotype.Repository;
 

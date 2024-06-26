@@ -9,6 +9,7 @@ public class Curriculum {
     private String name;
     private Short credit;
     
+    
 	public Integer getCurriculum_seq() {
 		return curriculum_seq;
 	}

@@ -1,4 +1,4 @@
-package com.sooRyeo.app.professor.model;
+package com.sooRyeo.app.model;
 
 import org.springframework.stereotype.Repository;
 
