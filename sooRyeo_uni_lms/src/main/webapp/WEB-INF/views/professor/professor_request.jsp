@@ -38,7 +38,7 @@
 	  		</div>
 	  		<div class="card-body">
 				<table>
-					<th
+					<th>
 				</table>
 	  		</div>
 		</div>

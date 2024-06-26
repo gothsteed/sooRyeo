@@ -99,13 +99,7 @@ body {
 
 <script type="text/javascript">
 
-const wave = document.querySelector(".wave");
 
-wave.innerHTML = wave.textContent.split("").map((letter, idx) => {
-    if (letter === " ") return " ";
-    return `<span style="animation-delay:${idx * 50}ms" class="letter">${letter}</span>`;
-})
-.join("");
 
 
 </script>
