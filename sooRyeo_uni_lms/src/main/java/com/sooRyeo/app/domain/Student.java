@@ -12,8 +12,6 @@ import com.sooRyeo.app.common.AES256;
 
 public class Student {
 	
-	@Autowired
-	private AES256 aES256;
 	
 	private Integer student_id;
     private String pwd;
@@ -40,14 +38,7 @@ public class Student {
 	}
 	public String getTel() {
 		
-		String decrypedTel = null;
-		try {
-			decrypedTel = aES256.decrypt(tel);
-		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			e.printStackTrace();
-		}
-		
-		return decrypedTel;
+		return tel;
 	}
 	public Short getGrade() {
 		return grade;
@@ -56,15 +47,8 @@ public class Student {
 		return address;
 	}
 	public String getEmail()  {
-		
-		String decrypedEmail = null;
-		try {
-			decrypedEmail = aES256.decrypt(email);
-		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			e.printStackTrace();
-		}
-		
-		return decrypedEmail;
+	
+		return email;
 	}
 	public Date getRegister_date() {
 		return register_date;
@@ -74,6 +58,21 @@ public class Student {
 	}
 	public Integer getFk_department_seq() {
 		return fk_department_seq;
+	}
+	public void setDecodedEmail(AES256 aES256) {
+		try {
+			email = aES256.decrypt(email);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	public void setDecodeTel(AES256 aES256) {
+		try {
+			tel = aES256.decrypt(tel);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
 	}
     
     

@@ -7,15 +7,20 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.model.StudentDao;
+
+import oracle.net.aso.a;
 
 @Service
 public class LoginService_imple implements LoginService {
 	
 	@Autowired
 	private StudentDao studentDao;
+	@Autowired
+	private AES256 aES256;
 	
 
 	@Override
@@ -30,9 +35,14 @@ public class LoginService_imple implements LoginService {
 			
 			return jsonObject;
 		}
+		loginStudent.setDecodedEmail(aES256);
+		loginStudent.setDecodeTel(aES256);
+		
+		
 		HttpSession session = resquest.getSession();
 		session.setAttribute("loginuser", loginStudent);
 
+		System.out.println("email : " + loginStudent.getEmail());
 			
 		
 		jsonObject.put("isSuccess", true);
