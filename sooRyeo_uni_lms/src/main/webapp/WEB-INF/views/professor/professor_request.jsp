@@ -193,39 +193,39 @@
 				<div class="card-body">
 				    <div class="row mb-2">
 				        <div class="col-md-1">교수명</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				        <div class="col-md-1">소속학과</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
      				    <div class="col-md-1">교번</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				        <div class="col-md-1">연락처</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				    </div>
 				    <div class="row mb-2">
 				        <div class="col-md-1">교과목명</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				        <div class="col-md-1">과목코드</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
      				    <div class="col-md-1">대상학년</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				        <div class="col-md-1">수업구분</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				    </div>
 				    <div class="row mb-2">
 				        <div class="col-md-1">시수</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				        <div class="col-md-1">학점</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
      				    <div class="col-md-1">개설연도</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				        <div class="col-md-1">개설학기</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				    </div>
 				    <div class="row mb-2">
 				        <div class="col-md-1">시작교시</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				        <div class="col-md-1">강의요일</div>
-				        <div class="col-md-2 ml-n1 mr-4"><input class="form-control" /></div>
+				        <div class="col-md-2 ml-n1 mr-4"><input type="text" readonly class="form-control" /></div>
 				    </div>
 				</div>
         </div>
