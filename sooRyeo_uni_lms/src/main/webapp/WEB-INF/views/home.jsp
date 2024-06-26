@@ -1,4 +1,4 @@
- <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -99,6 +99,24 @@ body {
 
 <script type="text/javascript">
 
+function handleLogin() {
+    const memberType = document.querySelector('input[name="memberType"]:checked').value;
+    const form = document.getElementById('loginForm');
+    
+    let actionUrl = "";
+    if (memberType == "student") {
+        actionUrl = "<%= ctxPath %>/student/login.lms";
+    } else if (memberType == "professor") {
+        actionUrl = "<%= ctxPath %>/professor/login.lms";
+    } else if (memberType == "admin") {
+        actionUrl = "<%= ctxPath %>/admin/login.lms";
+    }
+    
+    form.action = actionUrl;
+    form.method = "post";
+    form.submit();
+}
+
 
 
 
@@ -129,32 +147,40 @@ body {
 	                    <header class="text-center mb-4" style="margin-top: 20%;">
 	                        <h1><span style="color:white;">LOGIN</span></h1>
 	                    </header>
-
-						<div style="display:flex; color:white; font-size: 12pt; padding-top: 3%; padding-bottom: 3%;">
-							<div class="form-check form-check-inline">
-							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
-							  <label class="form-check-label" for="inlineRadio1">학생</label>
-							</div>
-							<div class="form-check form-check-inline pl-3">
-							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-							  <label class="form-check-label" for="inlineRadio2">교수</label>
-							</div>
-							<div class="form-check form-check-inline pl-3">
-							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-							  <label class="form-check-label" for="inlineRadio3">관리자</label>
-							</div>
-						</div>
 						
-                        <div class="mb-4">
-                            <div class="input-group">
-                                <input type="text" name="UserID" id="userId" class="form-control g-color-gray-dark-v3 g-brd-gray-light-v7 g-py-15 g-px-15 rounded-0" placeholder="수려대학교 ID" autofocus="autofocus">
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <div class="input-group g-brd-primary--focus mb-4">
-                                <input type="password" name="UserPWD" id="userPwd" class="form-control g-color-gray-dark-v3 g-brd-gray-light-v7 g-py-15 g-px-15 rounded-0" placeholder="비밀번호">
-                            </div>
-                        </div>
+						<form id="loginForm">
+							<div style="display:flex; color:white; font-size: 12pt; padding-top: 3%; padding-bottom: 3%;">
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" name="memberType" id="inlineRadio1" value="student" checked>
+								  <label class="form-check-label" for="inlineRadio1">학생</label>
+								</div>
+								<div class="form-check form-check-inline pl-3">
+								  <input class="form-check-input" type="radio" name="memberType" id="inlineRadio2" value="professor">
+								  <label class="form-check-label" for="inlineRadio2">교수</label>
+								</div>
+								<div class="form-check form-check-inline pl-3">
+								  <input class="form-check-input" type="radio" name="memberType" id="inlineRadio3" value="admin">
+								  <label class="form-check-label" for="inlineRadio3">관리자</label>
+								</div>
+							</div>
+							
+	                        <div class="mb-4">
+	                            <div class="input-group">
+	                                <input type="text" name="id" id="id" class="form-control g-color-gray-dark-v3 g-brd-gray-light-v7 g-py-15 g-px-15 rounded-0" placeholder="수려대학교 ID" autofocus="autofocus">
+	                            </div>
+	                        </div>
+	                        <div class="mb-4">
+	                            <div class="input-group g-brd-primary--focus mb-4">
+	                                <input type="password" name="password" id="password" class="form-control g-color-gray-dark-v3 g-brd-gray-light-v7 g-py-15 g-px-15 rounded-0" placeholder="비밀번호">
+	                            </div>
+	                        </div>
+						
+						
+						
+						
+						</form>
+						
+			
                         <div class="row justify-content-between mb-4">
                             <div class="col-4">
                                 <div class="form-check">
@@ -167,7 +193,7 @@ body {
                             </div>
                         </div>
                        	<div class="d-grid gap-2 col-4 mx-auto">
-						  <button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-bottom: 15%;" type="button">로그인</button>
+						  <button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-bottom: 15%;" type="button" onclick="handleLogin()">로그인</button>
 						</div>
                         
                         </div>

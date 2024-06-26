@@ -38,7 +38,6 @@
 	  		</div>
 	  		<div class="card-body">
 				<table>
-					<th>
 				</table>
 	  		</div>
 		</div>
