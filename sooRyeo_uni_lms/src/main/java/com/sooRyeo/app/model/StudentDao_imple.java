@@ -1,4 +1,4 @@
-package com.sooRyeo.app.student.model;
+package com.sooRyeo.app.model;
 
 import org.springframework.stereotype.Repository;
 
