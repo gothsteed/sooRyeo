@@ -32,56 +32,68 @@
 
 
 <div class="container">
-  <div class="card mb-3" style="max-width: 800px;">
-	  <div class="myInfo row g-0">
-	  
-	    
-	    <div class="col-md-8">
+  <div class="card mb-3 shadow p-3 mb-5 bg-body-tertiary rounded" style="max-width: 1000px;">
+	  <div class="myInfo row g-0 ">
 	      <div class="card-body">
 	        
-			<form class="row g-3" name="myInfo">
-				<div class="col-md-4">
-		      		<img src="<%=ctxPath%>/resources/images/koala.png" class="img-fluid rounded-start" style="margin-left: 7%; margin-top: 25%;" />
+			<form name="myInfo">
+		
+				<div class="col-md-4 d-flex" style="text-align: center;">
+		      		<img src="<%=ctxPath%>/resources/images/koala.png" class="img-fluid rounded-start" style="width:40%;" />
+		      		<input class="form-control" type="file" id="formFile">
 	    		</div>
-				<div class="col-md-4">
-					<label for="name" class="form-label">성명</label>
-				  	<input type="text" class="form-control" id="name" placeholder="코알라" readonly>
-				</div>
-				<div class="col-md-3">
-					<label for="grade" class="form-label">학년</label>
-			  		<input type="text" class="form-control" id="grade" placeholder="3학년" readonly>
-				</div>
-				<div class="col-md-5">
-					<label for="department" class="form-label">학과</label>
-				  	<input type="text" class="form-control" id="department" placeholder="컴퓨터공학과" readonly>
-				</div>
-				<div class="col-md-12">
-				  	<label for="address" class="form-label">주소</label>
-				  	<input type="text" class="form-control" id="address" placeholder="서울시 마포구 집으로 82길 7" readonly>
-				</div>
-				<div class="col-md-12">
-				  	<label for="email" class="form-label">이메일</label>
-				  	<input type="text" class="form-control" id="email" placeholder="ComeBackHome@naver.com" readonly>
-				</div>
-				<div class="col-md-6">
-				  	<label for="birthday" class="form-label">생년월일</label>
-				  	<input type="text" class="form-control" id="birthday" placeholder="97-02-13" readonly>
-				</div>
-				<div class="col-md-6">
-				  	<label for="phone" class="form-label">전화번호</label>
-				  	<input type="text" class="form-control" id="phone" placeholder="010-1234-5678" readonly>
-				</div>
-				<div class="col-md-3">
-				  	<label for="graduate" class="form-label">학적상태</label>
-				  	<input type="text" class="form-control" id="graduate" placeholder="재학" readonly>
-				</div>
-				<div class="">
-				  	<button type="submit" class="btn btn-success">정보 수정</button>
-				</div>
-			</form>
+	    	
+			
+					<div class="col-3 mb-4">
+						<label for="name" class="form-label">성명</label>
+					  	<input type="text" class="form-control" id="name" placeholder="코알라" readonly>
+					</div>
+					<div class="col-md-3 mb-4">
+						<label for="department" class="form-label">학과</label>
+					  	<input type="text" class="form-control" id="department" placeholder="컴퓨터공학과" readonly>
+					</div>
+					<div class="col-2 mb-4">
+						<label for="grade" class="form-label">학년</label>
+				  		<input type="text" class="form-control" id="grade" placeholder="3학년" readonly>
+					</div>
+		
+				
+				
+				
+					<div class="col-md-5 mb-4">
+					  	<label for="address" class="form-label">주소</label>
+					  	<input type="text" class="form-control" id="address" placeholder="서울시 마포구 집으로 82길 7" readonly>
+					</div>
+					<div class="col-md-5 mb-4">
+					  	<label for="email" class="form-label">이메일</label>
+					  	<input type="text" class="form-control" id="email" placeholder="ComeBackHome@naver.com" readonly>
+					</div>
+			
+					
+			
+					<div class="col-md-2">
+					  	<label for="birthday" class="form-label">생년월일</label>
+					  	<input type="text" class="form-control" id="birthday" placeholder="97-02-13" readonly>
+					</div>
+					<div class="col-md-3">
+					  	<label for="phone" class="form-label">전화번호</label>
+					  	<input type="text" class="form-control" id="phone" placeholder="010-1234-5678" readonly>
+					</div>
+					<div class="col-md-2">
+					  	<label for="graduate" class="form-label">학적상태</label>
+					  	<input type="text" class="form-control" id="graduate" placeholder="재학" readonly>
+					</div>
+					<div class="">
+					  	<button type="submit" class="btn btn-success">정보 수정</button>
+					</div>
+			
+					
+					
+				
+				</form>
+			</div>
 	  	</div>
 	</div>
 </div>
 
-</div>
-</div>
+

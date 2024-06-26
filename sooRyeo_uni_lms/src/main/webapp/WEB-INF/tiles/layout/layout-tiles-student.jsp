@@ -47,9 +47,10 @@
         }
 
         .sidebar .profile img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
+            background-color: white;
         }
 
         .sidebar .profile h3 {
@@ -193,8 +194,8 @@
 <body>
     <div class="sidebar">
         <div class="profile">
-            <img src="https://via.placeholder.com/100" alt="Profile Picture">
-            <h3>${requesetScope.loginuser.name }</h3>
+            <img src="<%=ctxPath%>/resources/images/student.png" alt="Profile Picture">
+            <h3>${requesetScope.loginuser.name}</h3>
             <p>${requesetScope.loginuser.department_name}</p>
         </div>
         <ul class="nav flex-column">
