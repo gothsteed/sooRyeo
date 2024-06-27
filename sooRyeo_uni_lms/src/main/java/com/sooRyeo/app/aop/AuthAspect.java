@@ -32,17 +32,19 @@ public class AuthAspect {
 		
 		HttpServletRequest request = attributes.getRequest();
 		
-		String type = requireLogin.type().desc;
+		Class type = requireLogin.type();
 		
 		HttpSession session = request.getSession();
-		
-		
+
+		System.out.println(session.getAttribute("loginuser"));
+	
 		if(session.getAttribute("loginuser") == null) {
 			throw new AuthException("로그인 하시오");
 		}
 		
-		if(session.getAttribute("loginuser") == null ||
-				!session.getAttribute("loginuser").getClass().getName().equalsIgnoreCase(type)) {
+		System.out.println("getClass().getName() : " + session.getAttribute("loginuser").getClass().getName());
+		
+		if(!session.getAttribute("loginuser").getClass().getName().equalsIgnoreCase(type.getName())) {
 			
 			throw new AuthException("권한이 없습니다");
 			
