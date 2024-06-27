@@ -16,5 +16,8 @@ public interface LoginService {
 	
 	// 교수로그인
 	JSONObject professorLogin(HttpServletRequest resquest, LoginDTO loginDTO);
+	
+	// 관리자로그인
+	JSONObject adminLogin(HttpServletRequest resquest, LoginDTO loginDTO);
 
 }

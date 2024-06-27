@@ -1,5 +1,10 @@
 package com.sooRyeo.app.domain;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
+import com.sooRyeo.app.common.AES256;
+
 public class Admin {
 	
     private Integer admin_seq;
@@ -29,6 +34,22 @@ public class Admin {
 		return email;
 	}
     
+	public void setDecodedEmail(AES256 aES256) {// 이메일 복호화
+		try {
+			email = aES256.decrypt(email);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setDecodeTel(AES256 aES256) {// 전화번호 복호화
+		try {
+			tel = aES256.decrypt(tel);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+	
+	}
     
     
 
