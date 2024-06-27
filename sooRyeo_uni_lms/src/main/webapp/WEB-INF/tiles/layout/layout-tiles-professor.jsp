@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %> 
+    
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+ 
 <!DOCTYPE html>
 <% String ctxPath = request.getContextPath(); %>
 <html lang="en">
@@ -253,7 +258,11 @@
                 <input type="text" placeholder="메뉴검색">
             </div>
             <div>
-            	<span style="font-size:16pt; font-weight:bold;">환영합니다!&nbsp;${sessionScope.loginuser.name}교수님!</span>
+            	<c:if test="${empty sessionScope.loginuser.name}">
+            	</c:if>
+            	<c:if test="${not empty sessionScope.loginuser.name}">
+            		<span style="font-size:16pt; font-weight:bold;">환영합니다!&nbsp;${sessionScope.loginuser.name}교수님!</span>
+            	</c:if>
             </div>
             <div class="icons">
                 <span class="icon">📫</span>

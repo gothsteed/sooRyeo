@@ -10,7 +10,7 @@
 
     <div class="grid-stack">
         <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-            <div class="grid-stack-item-content">담당 수업</div> 
+            <div class="grid-stack-item-content">담당 수업 만들어야함!</div> 
         </div>
         <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
             <div class="grid-stack-item-content">과제제출현황</div>

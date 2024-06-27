@@ -660,6 +660,8 @@ INSERT INTO tbl_student (
 commit;
 
 
+desc tbl_student;
+
 
 
 

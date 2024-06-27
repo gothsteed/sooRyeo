@@ -13,5 +13,11 @@ public interface LoginService {
 	
 	// 로그아웃
 	ModelAndView logout(ModelAndView mav, HttpServletRequest request);
+	
+	// 교수로그인
+	JSONObject professorLogin(HttpServletRequest resquest, LoginDTO loginDTO);
+	
+	// 관리자로그인
+	JSONObject adminLogin(HttpServletRequest resquest, LoginDTO loginDTO);
 
 }

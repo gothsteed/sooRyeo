@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="professor">
+
+	<select id="selectProfessor" resultType="com.sooRyeo.app.domain.Professor" parameterType="com.sooRyeo.app.dto.LoginDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT * 
+		FROM tbl_professor 
+		WHERE prof_id = #{id} AND pwd = #{password}				
+	</select>
+
+</mapper>

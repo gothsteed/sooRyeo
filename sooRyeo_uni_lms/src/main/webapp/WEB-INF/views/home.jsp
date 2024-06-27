@@ -91,11 +91,11 @@ function handleLogin() {
     const form = $('#loginForm');
     
     let actionUrl = "";
-    if (memberType === "student") {
+    if (memberType == "student") {
         actionUrl = "<%= ctxPath %>/student/login.lms";
-    } else if (memberType === "professor") {
+    } else if (memberType == "professor") {
         actionUrl = "<%= ctxPath %>/professor/login.lms";
-    } else if (memberType === "admin") {
+    } else if (memberType == "admin") {
         actionUrl = "<%= ctxPath %>/admin/login.lms";
     }
     
