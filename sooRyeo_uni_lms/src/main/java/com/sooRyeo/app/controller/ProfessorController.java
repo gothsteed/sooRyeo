@@ -33,7 +33,4 @@ public class ProfessorController {
 		return "professor_request.professor";
 	}
 	
-	
-	
-	
 }
