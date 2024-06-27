@@ -10,10 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.aop.MemberType;
+import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.service.ProfessorService;
 
 
 @Controller
+@RequireLogin(type = Professor.class)
 public class ProfessorController {
 	
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다.

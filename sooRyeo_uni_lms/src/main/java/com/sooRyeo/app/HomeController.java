@@ -49,7 +49,6 @@ public class HomeController {
 		return "home";
 	}
 	
-	
 	@ResponseBody
 	@PostMapping(value="/student/login.lms")
 	public String home(HttpServletRequest resquest,  LoginDTO loginDTO) {
@@ -63,6 +62,7 @@ public class HomeController {
 	}
 	
 	
+
 	@GetMapping("/logout.lms")
 	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {// 로그아웃
 		
