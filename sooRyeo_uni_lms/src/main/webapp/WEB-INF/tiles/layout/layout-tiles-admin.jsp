@@ -240,7 +240,7 @@
                     <a class="dropdown-item" href="#certificate3">졸업증명서</a>
                 </div>
             </li>
-            <li class="nav-item"><a href="#logout" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
+            <li class="nav-item"><a href="<%=ctxPath%>/logout.lms" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
         </ul>
     </div>
     <div class="content">
