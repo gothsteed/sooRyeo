@@ -15,20 +15,10 @@
     <!-- jQuery UI CSS 및 JS -->
     <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
 	<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
-
-	<%-- DataPicker --%>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
-    
     <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
     
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
     
-    <!-- Font Awesome 6 Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
 	<script type="text/javascript" src="<%= ctxPath%>/resources/js/admin/memberRegister.js"></script>
 
     <script type="text/javascript">
@@ -88,7 +78,7 @@
 							    <label for="jubun" class="col-sm-3 text-sm-left">주민번호</label>
 							    <div class="col-sm-8">
 							        <input type="text" id="jubun" class="form-control">
-							        <span class="error" style="margin-right: 5px;">주민번호 앞자리는 숫자 6자리만 가능합니다.</span>
+							        <span class="error" style="margin-right: 5px;">주민번호 형식에 맞지 않습니다.</span>
 							    </div>
 							</div>
 							<hr>
@@ -140,14 +130,7 @@
                                 <label for="a2" class="col-sm-3 text-sm-left">입학년도</label>
                                 <div class="col-sm-8">
                                     <%-- 생년월일 --%>
-					                <span>
-					                    <span class="text-center">
-					                    	<i class="fa-solid fa-calendar-days"></i>
-					                    </span>
-					                    <span>
-					                       	<input type="text" name="birthday" id="datepicker" class="datepicker" maxlength="10" placeholder="생년월일"/>
-					                    </span>
-					                </span>
+			                       	<input type="text" name="enter" maxlength="4" />
                                 </div>
                             </div>
                             <hr>

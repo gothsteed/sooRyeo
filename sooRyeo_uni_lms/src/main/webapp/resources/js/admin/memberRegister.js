@@ -164,61 +164,72 @@ $(document).ready(function(){
         });// 아이디가 hp3 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 
 
-        $("input#jubun").blur( (e) => {
-            
-            $('#jubun').on('blur', function() {
-		        const jubunValue = $(this).val().trim(); // 입력값 얻기
-		        
-		        // jubun 유효성 검사
-		        let isValidJubun = true;
+		$("input#jubun").blur((e) => {
+		    const jubunValue = $(e.target).val(); // 입력값 얻기
+		    
+		    // jubun 유효성 검사
+		    let isValidJubun = true;
 		
-		        // jubun의 길이는 7자리여야 함
-		        if (jubunValue.length !== 7) {
-		            isValidJubun = false;
-		        }
-		        
-		        // 7번째 자리의 값은 "1", "2", "3", "4" 중 하나여야 함
-		        if (!(jubunValue.charAt(6) === '1' || jubunValue.charAt(6) === '2' || jubunValue.charAt(6) === '3' || jubunValue.charAt(6) === '4')) {
-		            isValidJubun = false;
-		        }
-		        
-		        // 생년월일 추출
-		        let strBirthday = '';
-		        if (jubunValue.charAt(6) === '1' || jubunValue.charAt(6) === '2') {
-		            strBirthday = '19' + jubunValue.substring(0, 6);
-		        } else {
-		            strBirthday = '20' + jubunValue.substring(0, 6);
-		        }
-		        
-		        // 날짜 형식 확인
-		        const sdformat = /^(\d{4})(\d{2})(\d{2})$/;
-		        if (!sdformat.test(strBirthday)) {
-		            isValidJubun = false;
-		        }
+		    // jubun의 길이는 13자리여야 함
+		    if (jubunValue.length !== 13) {
+		        isValidJubun = false;
+		        alert("주민등록번호는 13자리여야 합니다.");
+		    }
+		    
+		    // 7번째 자리의 값은 "1", "2", "3", "4" 중 하나여야 함
+		    if (!(jubunValue.charAt(6) === '1' || jubunValue.charAt(6) === '2' || jubunValue.charAt(6) === '3' || jubunValue.charAt(6) === '4')) {
+		        isValidJubun = false;
+		        alert("주민등록번호의 7번째 자리가 올바르지 않습니다.");
+		    }
+		    
+		    // 생년월일 추출
+		    let strBirthday = '';
+		    if (jubunValue.charAt(6) === '1' || jubunValue.charAt(6) === '2') {
+		        strBirthday = '19' + jubunValue.substring(0, 6);
+		    } else {
+		        strBirthday = '20' + jubunValue.substring(0, 6);
+		    }
+		    
+		    // 날짜 형식 확인
+		    const sdformat = /^(\d{4})(\d{2})(\d{2})$/;
+		    if (!sdformat.test(strBirthday)) {
+		        isValidJubun = false;
+		        alert("주민등록번호의 생년월일 형식이 올바르지 않습니다.");
+		    }
 		
-		        // 엄격한 날짜 체크
-		        const year = parseInt(RegExp.$1, 10);
-		        const month = parseInt(RegExp.$2, 10) - 1;
-		        const day = parseInt(RegExp.$3, 10);
-		        const birthday = new Date(year, month, day);
-		        const now = new Date();
+		    // 실제로 존재하는 날짜인지 확인
+		    const year = parseInt(strBirthday.substring(0, 4), 10);
+		    const month = parseInt(strBirthday.substring(4, 6), 10) - 1; // 월은 0부터 시작하므로 -1 처리
+		    const day = parseInt(strBirthday.substring(6, 8), 10);
+		    const birthday = new Date(year, month, day);
 		
-		        // 생일이 현재 날짜보다 미래이면 유효하지 않음
-		        if (birthday > now) {
-		            isValidJubun = false;
-		        }
+		    // 날짜가 실제로 존재하는지 확인
+		    if (birthday.getFullYear() !== year || birthday.getMonth() !== month || birthday.getDate() !== day) {
+		        isValidJubun = false;
+		        alert("주민등록번호의 생년월일이 올바르지 않습니다.");
+		    }
 		
-		        // 유효성에 따라 입력란 활성화/비활성화
-		        if (!isValidJubun) {
-		            // 유효하지 않으면 모든 입력란 비활성화
-		            $('form[action="#"] input').prop('disabled', true);
-		        } else {
-		            // 유효하면 모든 입력란 활성화
-		            $('form[action="#"] input').prop('disabled', false);
-		        }
-		    });
-        });// 아이디가 jubun 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
-
+		    // 현재 날짜와 비교하여 생일이 미래인지 확인
+		    const now = new Date();
+		    now.setHours(0, 0, 0, 0); // 현재 시간을 00:00:00으로 설정하여 정확한 비교를 위해 시간 부분을 제거
+		    
+		    if (birthday.getTime() > now.getTime()) {
+		        isValidJubun = false;
+		        alert("주민등록번호의 생년월일은 현재 날짜보다 미래일 수 없습니다.");
+		    }
+		
+		    // 유효성에 따라 입력란 활성화/비활성화
+		    if (!isValidJubun) {
+		        // 유효하지 않으면 모든 입력란 비활성화
+		        $('form[action="#"] input').prop('disabled', true);
+		        $(e.target).parent().find("span.error").show();
+		        $(e.target).prop("disabled", false); 
+		    } else {
+		        // 유효하면 모든 입력란 활성화
+		        $('form[action="#"] input').prop('disabled', false);
+		        $(e.target).parent().find("span.error").hide();
+		    }
+		});
 
         $("input#postcode").blur( (e) => {
 		
@@ -244,6 +255,29 @@ $(document).ready(function(){
                 
         });// 아이디가 postcode 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 
+		// 입력란의 blur 이벤트 처리
+		$("input[name='enter']").blur((e) => {
+		    const inputValue = $(e.target).val(); // 입력값 얻기
+		    
+		    if (inputValue.trim() === '') {
+		        // 입력값이 없는 경우 처리
+		        alert("입학년도를 입력해주세요.");
+		        $(e.target).val(''); // 입력값 초기화
+		    } else if (!/^\d{4}$/.test(inputValue)) {
+		        // 입력값이 숫자 4자리가 아닌 경우 처리
+		        alert("입학년도는 숫자로 4자리를 입력해야 합니다.");
+		        $(e.target).val(''); // 입력값 초기화
+		    } else {
+		        const enteredYear = parseInt(inputValue, 10);
+		        const currentYear = new Date().getFullYear();
+		        
+		        // 현재 년도보다 미래인 경우 처리
+		        if (enteredYear > currentYear) {
+		            alert("입학년도는 현재 년도보다 미래일 수 없습니다.");
+		            $(e.target).val(''); // 입력값 초기화
+		        }
+		    }
+		});
         
         ///////////////////////////////////////////////////////////
 
@@ -337,210 +371,9 @@ $(document).ready(function(){
         
 	});// end of $("img#zipcodeSearch").click()------------
 
-    $('input#datepicker').keyup( (e) => {
-
-        $(e.target).val("").next().show();
-
-    });// end of $('input#datepicker').keyup()--------------------
-
-
-    // === jQuery UI 의 datepicker === //
-	$('input#datepicker').datepicker({
-         dateFormat: 'yy-mm-dd'  //Input Display Format 변경
-        ,showOtherMonths: true   //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-        ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-        ,changeYear: true        //콤보박스에서 년 선택 가능
-        ,changeMonth: true       //콤보박스에서 월 선택 가능                
-    //  ,showOn: "both"          //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-    //  ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-    //  ,buttonImageOnly: true   //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-    //  ,buttonText: "선택"       //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-        ,yearSuffix: "년"         //달력의 년도 부분 뒤에 붙는 텍스트
-        ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-        ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-        ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-        ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-    //  ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-    //  ,maxDate: "+1M" //최대 선택일자(+1D:하루후, +1M:한달후, +1Y:일년후)                
-    });
-
-    // 초기값을 오늘 날짜로 설정
- // $('input#datepicker').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-
-
-    // === 전체 datepicker 옵션 일괄 설정하기 ===  
-	//     한번의 설정으로 $("input#fromDate"), $('input#toDate')의 옵션을 모두 설정할 수 있다.
-    $(function() {
-        //모든 datepicker에 대한 공통 옵션 설정
-        $.datepicker.setDefaults({
-             dateFormat: 'yy-mm-dd' //Input Display Format 변경
-            ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-            ,changeYear: true //콤보박스에서 년 선택 가능
-            ,changeMonth: true //콤보박스에서 월 선택 가능                
-         // ,showOn: "both" //button:버튼을 표시하고,버튼을 눌러야만 달력 표시됨. both:버튼을 표시하고,버튼을 누르거나 input을 클릭하면 달력 표시됨.  
-         // ,buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif" //버튼 이미지 경로
-         // ,buttonImageOnly: true //기본 버튼의 회색 부분을 없애고, 이미지만 보이게 함
-         // ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트                
-            ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-            ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-         // ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-         // ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)                    
-        });
- 
-        // input을 datepicker로 선언
-        $("input#fromDate").datepicker();                    
-        $("input#toDate").datepicker();
-        
-        // From의 초기값을 오늘 날짜로 설정
-        $('input#fromDate').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-        
-        // To의 초기값을 3일후로 설정
-        $('input#toDate').datepicker('setDate', '+3D'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, +1M:한달후, +1Y:일년후)
-     });
-    
-    ///////////////////////////////////////////////////////////////////////
-
-    $('input#datepicker').bind("change", (e) => {
-        if( $(e.target).val() != "") {
-            $(e.target).next().hide();
-        }
-    });// 생년월일에 마우스로 달력에 있는 날짜를 선택한 경우 이벤트 처리 한것 
 
 
     ///////////////////////////////////////////////////////////////////////////
-   //"아이디중복확인"을 클릭했을 때 이벤트 처리하기 시작 //
-   $("img#idcheck").click(function(){
-    b_idcheck_click = true; // "아이디중복확인" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도
-
-    // 입력하고자 하는 아이디가 데이터베이스 테이블에 존재하는지, 존재하지 않는지 알아와야 한다.
-   /*
-       Ajax (Asynchronous JavaScript and XML)란?                         
-      ==> 이름만 보면 알 수 있듯이 '비동기 방식의 자바스크립트와 XML' 로서
-          Asynchronous JavaScript + XML 인 것이다.
-          한마디로 말하면, Ajax 란? Client 와 Server 간에 XML 데이터를 JavaScript 를 사용하여 비동기 통신으로 주고 받는 기술이다.
-          하지만 요즘에는 데이터 전송을 위한 데이터 포맷방법으로 XML 을 사용하기 보다는 JSON(Javascript Standard Object Notation) 을 더 많이 사용한다. 
-          참고로 HTML은 데이터 표현을 위한 포맷방법이다.
-          그리고, 비동기식이란 어떤 하나의 웹페이지에서 여러가지 서로 다른 다양한 일처리가 개별적으로 발생한다는 뜻으로서, 
-          어떤 하나의 웹페이지에서 서버와 통신하는 그 일처리가 발생하는 동안 일처리가 마무리 되기전에 또 다른 작업을 할 수 있다는 의미이다.
-     */ 
-
-    // === 첫번째 방법 ===//
-    /*
-    $.ajax({
-        url : "idDuplicateCheck.up",                  // js이기 때문에 DAO를 불러오지 못함. 그래서 URL을 불러옴. url:"idDuplicateCheck.up를 담당하는 클래스는 IdDuplicateCheck.java임
-        data : {"userid" : $( "input#userid" ).val()}, // userid를 IdDuplicateCheck.java의 request.getParameter();에 넣어줌. 겟 파라미터의 이름. 값은 선택자.val()임.
-        // data 속성은 http://localhost:9090/MyMVC/member/idDuplicateCheck.up 로 전송해야할 데이터를 말한다.
-        type : "post", // type을 생략하면 default가 get이다.
-        async:true,   // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
-                      // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
-                      // 동기방식 : 시간 사용이 많음(ex.진동벨 없이 식당을 계속 기다리다가 밥 먹고 할 일을 하는 것). 비동기방식 : 시간 사용이 적음(ex.식당 진동벨로 기다리면서 다른 일 하다가 진동벨 울리면 식당 가는 것)
-        success : function(text){
-            console.log("text =>", text);
-            // text => {"isExists" : true}
-            // text => {"isExists" : false}
-            // text 는 idDuplicateCheck.up 을 통해 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다.
-        
-            console.log("~~~~text의 데이터타입 : ", typeof text);
-            // ~~~~text의 데이터타입 : string
-
-            const json = JSON.parse(text);
-            // JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
-            // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다. 
-            // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
-
-            console.log("json => ", json);
-            // json => {isExists : true}
-            // json => {isExists : false}
-
-            console.log("~~json의 데이터 타입 : ", typeof json);
-            // ~~json의 데이터 타입 : object
-
-            if(json.isExists) {
-                // 입력한 userid 가 이미 사용중이라면 
-                $("span#idcheckResult").html( $("input#userid").val() + " 은 이미 사용중 이므로 다른 아이디를 입력하세요").css({"color":"red"});
-                $("input#userid").val("");
-            } 
-            else {
-                // 입력한 userid 가 존재하지 않는 경우라면 
-                $("span#idcheckResult").html( $("input#userid").val() + " 은 사용가능 합니다.").css({"color":"navy"});
-            }
-        },
-        
-        error: function(request, status, error){
-            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-        }
-    });
-    */
-
-
-
-    
-    // === 두번째 방법 ===//
-
-    $.ajax({
-        url : "idDuplicateCheck.up",                  // js이기 때문에 DAO를 불러오지 못함. 그래서 URL을 불러옴. url:"idDuplicateCheck.up를 담당하는 클래스는 IdDuplicateCheck.java임
-        data : {"userid" : $( "input#userid" ).val()}, // userid를 IdDuplicateCheck.java의 request.getParameter();에 넣어줌. 겟 파라미터의 이름. 값은 선택자.val()임.
-        // data 속성은 http://localhost:9090/MyMVC/member/idDuplicateCheck.up 로 전송해야할 데이터를 말한다.
-        type : "post", // type을 생략하면 default가 get이다.
-        async:true,   // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
-                      // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
-                      // 동기방식 : 시간 사용이 많음(ex.진동벨 없이 식당을 계속 기다리다가 밥 먹고 할 일을 하는 것). 비동기방식 : 시간 사용이 적음(ex.식당 진동벨로 기다리면서 다른 일 하다가 진동벨 울리면 식당 가는 것)
-        dataType : "json",  // Javascript Standard Object Notation.  dataType은 /MyMVC/member/idDuplicateCheck.up 로 부터 실행되어진 결과물을 받아오는 데이터타입을 말한다. 
-                            // 만약에 dataType:"xml" 으로 해주면 /MyMVC/member/idDuplicateCheck.up 로 부터 받아오는 결과물은 xml 형식이어야 한다. 
-                            // 만약에 dataType:"json" 으로 해주면 /MyMVC/member/idDuplicateCheck.up 로 부터 받아오는 결과물은 json 형식이어야 한다.
-        
-        success : function(json){ // 괄호 안에 아무거나 써도 되지만 결과물이 json으로 나올거라서 그냥 json으로 쓴다.
-            console.log("json =>", json);
-            // json => {"isExists" : true}
-            // json => {"isExists" : false}
-            // text 는 idDuplicateCheck.up 을 통해 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다.
-        
-            console.log("~~~~text의 데이터타입 : ", typeof text);
-            // ~~~~text의 데이터타입 : string
-
-            // const json = JSON.parse(text);
-            // JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
-            // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다. 
-            // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
-
-            console.log("json => ", json);
-            // json => {isExists : true}
-            // json => {isExists : false}
-
-            console.log("~~json의 데이터 타입 : ", typeof json);
-            // ~~json의 데이터 타입 : object
-
-            if(json.isExists) {
-                // 입력한 userid 가 이미 사용중이라면 
-                $("span#idcheckResult").html( $("input#userid").val() + " 은 이미 사용중 이므로 다른 아이디를 입력하세요").css({"color":"red"});
-                $("input#userid").val("");
-            } 
-            else {
-                // 입력한 userid 가 존재하지 않는 경우라면 
-                $("span#idcheckResult").html( $("input#userid").val() + " 은 사용가능 합니다.").css({"color":"navy"});
-            }
-        },
-        
-        error: function(request, status, error){
-            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-        }
-    });
-
-
-
-
-});
-
-//"아이디중복확인"을 클릭했을 때 이벤트 처리하기 끝 //
-
-// 아이디값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
-$("input#userid").bind("change", function(){
-    b_idcheck_click = false;
-});
 
 
 // 이메일값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
@@ -653,12 +486,6 @@ $("span#emailcheck").click(function(){
             }
     });
 
-
-
-
-
-    
-
 });
 
 //"이메일중복확인"을 클릭했을 때 이벤트 처리하기 끝 //
@@ -712,16 +539,6 @@ function goRegister() {
     }
     // *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
 
-
-    // *** "아이디중복확인" 을 클릭했는지 검사하기 시작 *** //
-    if( !b_idcheck_click ) {
-        // "아이디중복확인" 을 클릭 안 했을 경우 
-        alert("아이디 중복확인을 클릭하셔야 합니다.");
-        return; // goRegister() 함수를 종료한다.
-    }
-    // *** "아이디중복확인" 을 클릭했는지 검사하기 끝 *** //
-
-
     // *** "이메일중복확인" 을 클릭했는지 검사하기 시작 *** //
     if( !b_emailcheck_click ) {
         // "이메일중복확인" 을 클릭 안 했을 경우 
@@ -730,7 +547,6 @@ function goRegister() {
     }
     // *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //
 
-   
     // *** "우편번호찾기" 를 클릭했는지 검사하기 시작 *** //
     if(!b_zipcodeSearch_click) {
         // "우편번호찾기" 를 클릭 안 했을 경우
@@ -751,37 +567,6 @@ function goRegister() {
 	}
 	// *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
 
-
-    // *** 성별을 선택했는지 검사하기 시작 *** //
-    const radio_checked_length = $("input:radio[name='gender']:checked").length; 
-
-    if(radio_checked_length == 0) {
-        alert("성별을 선택하셔야 합니다.");
-		return; // goRegister() 함수를 종료한다.
-    }
-    // *** 성별을 선택했는지 검사하기 끝 *** //
-
-
-    // *** 생년월일 값을 입력했는지 검사하기 시작 *** //
-    const birthday = $('input#datepicker').val().trim();
-
-    if(birthday == ""){
-        alert("생년월일을 입력하셔야 합니다.");
-		return; // goRegister() 함수를 종료한다.
-    }
-    // *** 생년월일 값을 입력했는지 검사하기 끝 *** //
-
-
-    // *** 약관에 동의를 했는지 검사하기 시작 *** //
-    const checkbox_checked_length = $("input:checkbox[id='agree']:checked").length; 
-
-    if(checkbox_checked_length == 0) {
-        alert("이용약관에 동의하셔야 합니다.");
-		return; // goRegister() 함수를 종료한다.
-    }
-    // *** 약관에 동의를 했는지 검사하기 끝 *** //
-
-    
     const frm = document.registerFrm;
     frm.action = "memberRegister.up";
     frm.method = "post";
