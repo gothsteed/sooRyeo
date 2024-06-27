@@ -63,19 +63,6 @@ public class HomeController {
 	}
 	
 	
-	@ResponseBody
-	@PostMapping(value="/student/login.lms")
-	public String professorLogin(HttpServletRequest resquest,  LoginDTO loginDTO) {
-		System.out.println("id : " + loginDTO.getId());
-		System.out.println("pwd : " + loginDTO.getPassword());
-		
-		JSONObject json = loginService.professorLogin(resquest, loginDTO);
-		
-		
-		return json.toString();
-	}
-	
-	
 	@GetMapping("/logout.lms")
 	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {// 로그아웃
 		
@@ -84,6 +71,23 @@ public class HomeController {
 		return mav;
 		
 	}
+	
+	
+	@ResponseBody
+	@PostMapping(value="/professor/login.lms")
+	public String professorLogin(HttpServletRequest resquest,  LoginDTO loginDTO) {// 교수 로그인
+		
+		System.out.println("id : " + loginDTO.getId());
+		System.out.println("pwd : " + loginDTO.getPassword());
+		
+		JSONObject json = loginService.professorLogin(resquest, loginDTO);
+			
+		return json.toString();
+		
+	}
+	
+	
+	
 	
 	
 	

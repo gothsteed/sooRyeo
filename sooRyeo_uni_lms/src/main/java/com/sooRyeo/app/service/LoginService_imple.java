@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
+import com.sooRyeo.app.model.ProfessorDao;
 import com.sooRyeo.app.model.StudentDao;
 
 import oracle.net.aso.a;
@@ -22,6 +24,9 @@ public class LoginService_imple implements LoginService {
 	private StudentDao studentDao;
 	@Autowired
 	private AES256 aES256;
+	
+	@Autowired
+	private ProfessorDao professorDao;
 	
 
 	@Override
@@ -76,8 +81,30 @@ public class LoginService_imple implements LoginService {
 
 	@Override
 	public JSONObject professorLogin(HttpServletRequest resquest, LoginDTO loginDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Professor loginProfessor = professorDao.selectProfessor(loginDTO);
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		if(loginProfessor == null) {
+			jsonObject.put("isSuccess", false);
+			
+			return jsonObject;
+		}
+		
+		loginProfessor.setDecodedEmail(aES256);
+		loginProfessor.setDecodeTel(aES256);
+		
+		
+		HttpSession session = resquest.getSession();
+		session.setAttribute("loginuser", loginProfessor);
+
+		System.out.println("email : " + loginProfessor.getEmail());
+			
+		
+		jsonObject.put("isSuccess", true);
+		jsonObject.put("redirectUrl", resquest.getContextPath() +  "/professor/dashboard.lms");
+		return jsonObject;
 	}
 
 }
