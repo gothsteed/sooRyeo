@@ -1,5 +1,7 @@
 package com.sooRyeo.app.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,9 +22,16 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/admin/MemberRegister.lms", method = RequestMethod.GET)
-	public String MemberRegister() {
+	public String MemberRegister(HttpServletRequest request) {
+		
+		
+		
+//		request.setAttribute(name, o);
 		
 		return "MemberRegister.admin";
 	}
+	
+	
+	
 	
 }
