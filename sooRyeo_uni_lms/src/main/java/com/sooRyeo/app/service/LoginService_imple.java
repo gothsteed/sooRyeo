@@ -15,7 +15,6 @@ import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.model.ProfessorDao;
 import com.sooRyeo.app.model.StudentDao;
 
-import oracle.net.aso.a;
 
 @Service
 public class LoginService_imple implements LoginService {

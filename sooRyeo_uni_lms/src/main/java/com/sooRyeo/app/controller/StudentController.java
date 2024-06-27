@@ -5,7 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.sooRyeo.app.aop.MemberType;
+import com.sooRyeo.app.aop.RequireLogin;
+
 @Controller
+@RequireLogin(type = MemberType.STUDENT)
 public class StudentController {
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
