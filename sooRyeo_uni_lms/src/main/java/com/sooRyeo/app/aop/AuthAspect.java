@@ -60,7 +60,7 @@ public class AuthAspect {
 	}
 	
 	
-	@Before("@within(isAlreadyLogin) || @annotation(isAlreadyLogin)")
+	@Before(" (@within(isAlreadyLogin) || @annotation(isAlreadyLogin)) && !execution(* com.sooRyeo.app.HomeController.logout(..)) ")
 	public void checkAlreadyLogin(JoinPoint joinPoint, IsAlreadyLogin isAlreadyLogin) {
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = attributes.getRequest();
