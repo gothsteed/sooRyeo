@@ -21,6 +21,15 @@ update tbl_admin set email = '7DiCwyc+1dXTTwg5kjvDmHehvJlz/ESJNhef/5DX+YA='
 where admin_id = '202400001';
 
 
+select rno, student_id
+from
+(select rownum AS rno, student_id
+from tbl_student) V
+WHERE RNO = 1
+
+select *
+from tbl_recruitment_notice;
+
 insert into tbl_admin (admin_id, name, pwd, jubun, tel, email)
 values (generate_admin_id(), '관리자', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', '9101011234567', 'k6AvvKD9cZaeKhlunBk9ew==', '2kh94@naver.com');
 
