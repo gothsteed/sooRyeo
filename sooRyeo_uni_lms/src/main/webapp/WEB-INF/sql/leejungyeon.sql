@@ -41,6 +41,10 @@ CREATE TABLE tbl_student (
 
 
 );
+ALTER TABLE tbl_student
+DROP COLUMN register_year;
+
+
 ALTER TABLE tbl_student MODIFY pwd NVARCHAR2(200);
 ALTER TABLE tbl_student MODIFY email NVARCHAR2(200);
 ALTER TABLE tbl_student MODIFY tel NVARCHAR2(200);
@@ -629,6 +633,12 @@ from tbl_department;
 
 select *
 from tbl_student;
+
+rollback;
+
+SELECT * 
+FROM tbl_professor 
+WHERE student_id = 202400003 AND pwd = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
 
 
 INSERT INTO tbl_student (
