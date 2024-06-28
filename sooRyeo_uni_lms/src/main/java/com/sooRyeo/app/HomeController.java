@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.aop.IsAlreadyLogin;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.service.LoginService;
 
@@ -26,6 +27,7 @@ import com.sooRyeo.app.service.LoginService;
  * Handles requests for the application home page.
  */
 @Controller
+@IsAlreadyLogin
 public class HomeController {
 	
 	@Autowired
@@ -39,12 +41,7 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
 		
 		return "home";
 	}

@@ -1,4 +1,4 @@
-package com.sooRyeo.app.aop;
+package com.sooRyeo.app.ExceptionHandler;
 
 public class AuthException extends RuntimeException {
 	

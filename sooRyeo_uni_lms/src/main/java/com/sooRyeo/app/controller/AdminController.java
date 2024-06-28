@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.sooRyeo.app.aop.MemberType;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Admin;
 
@@ -12,7 +11,7 @@ import com.sooRyeo.app.domain.Admin;
 @RequireLogin(type = Admin.class)
 public class AdminController {
 
-	@RequestMapping(value = "/admin/admin_Main.lms", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/dashboard.lms", method = RequestMethod.GET)
 	public String admin_Main() {
 
 		return "admin_Main.admin";
