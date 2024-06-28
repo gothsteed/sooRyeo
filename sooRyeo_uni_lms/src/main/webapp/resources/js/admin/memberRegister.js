@@ -256,7 +256,7 @@ $(document).ready(function(){
         });// 아이디가 postcode 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
 
 		// 입력란의 blur 이벤트 처리
-		$("input[name='enter']").blur((e) => {
+		$("input[name='register_year']").blur((e) => {
 		    const inputValue = $(e.target).val(); // 입력값 얻기
 		    
 		    if (inputValue.trim() === '') {
@@ -292,9 +292,8 @@ $(document).ready(function(){
 
         // === "우편번호찾기"를 클릭했을 때 이벤트 처리하기 === //
 	    $("img#zipcodeSearch").click(function(){
-		
 		    b_zipcodeSearch_click = true;
-		    // "우편번호찾기" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
+		    // "우편번호찾기" 클릭여부를 알아오기 위한 용도  
 		
             new daum.Postcode({
                 oncomplete: function(data) {
@@ -351,29 +350,7 @@ $(document).ready(function(){
             // 참고항목을 읽기전용(readonly) 로 만들기
             $("input#extraAddress").attr("readonly", true);
         
-            // 주소를 비활성화 로 만들기
-        //  $("input#address").attr("disabled", true);
-        
-            // 참고항목을 비활성화 로 만들기
-        //  $("input#extraAddress").attr("disabled", true);
-
-            // 주소를 쓰기가능 으로 만들기
-		//  $("input#address").removeAttr("readonly");
-        
-            // 참고항목을 쓰기가능 으로 만들기
-        //  $("input#extraAddress").removeAttr("readonly");
-        
-            // 주소를 활성화 시키기
-	    //	$("input#address").removeAttr("disabled");
-        
-           // 참고항목을 활성화 시키기
-        //  $("input#extraAddress").removeAttr("disabled");
-        
 	});// end of $("img#zipcodeSearch").click()------------
-
-
-
-    ///////////////////////////////////////////////////////////////////////////
 
 
 // 이메일값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
@@ -387,56 +364,6 @@ $("span#emailcheck").click(function(){
     
     b_emailcheck_click = true; // "이메일중복확인" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
     
-      // === 첫번째 방법 ===//
-   /*
-    $.ajax({
-        url : "emailDuplicateCheck.up",                  // js이기 때문에 DAO를 불러오지 못함. 그래서 URL을 불러옴. url:"emailDuplicateCheck.up를 담당하는 클래스는 emailDuplicateCheck.java임
-        data : {"email" : $("input#email").val()}, // userid를 emailDuplicateCheck.java의 request.getParameter();에 넣어줌. 겟 파라미터의 이름. 값은 선택자.val()임.
-        // data 속성은 http://localhost:9090/MyMVC/member/emailDuplicateCheck.up 로 전송해야할 데이터를 말한다.
-        type : "post", // type을 생략하면 default가 get이다.
-        async:true,   // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
-                      // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
-                      // 동기방식 : 시간 사용이 많음(ex.진동벨 없이 식당을 계속 기다리다가 밥 먹고 할 일을 하는 것). 비동기방식 : 시간 사용이 적음(ex.식당 진동벨로 기다리면서 다른 일 하다가 진동벨 울리면 식당 가는 것)
-        success : function(text){
-            console.log("text =>", text);
-            // text => {"isExists" : true}
-            // text => {"isExists" : false}
-            // text 는 emailDuplicateCheck.up 을 통해 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다.
-        
-            console.log("~~~~text의 데이터타입 : ", typeof text);
-            // ~~~~text의 데이터타입 : string
-
-            const json = JSON.parse(text);
-            // JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
-            // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다. 
-            // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
-
-            console.log("json => ", json);
-            // json => {isExists : true}
-            // json => {isExists : false}
-
-            console.log("~~json의 데이터 타입 : ", typeof json);
-            // ~~json의 데이터 타입 : object
-
-            if(json.isExists){
-                // 입력한 userid가 이미 사용중이라면
-                $("span#emailCheckResult").html( $("input#email").val()+"은 이미 사용중이므로 다른 이메일을 입력하세요").css({"color":"red"});
-                $("input#email").val("");
-            }
-            else{
-                //입력한 userid가 존재하지 않는 경우라면
-                $("span#emailCheckResult").html( $("input#email").val()+"은 사용가능 합니다.").css({"color":"navy"});
-
-            }
-        },
-
-        error: function(request, status, error){
-           alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-        }
-        */
-
-        //=== 두번째 방법 ===//
-
         $.ajax({
             url : "emailDuplicateCheck.up",                  // js이기 때문에 DAO를 불러오지 못함. 그래서 URL을 불러옴. url:"idDuplicateCheck.up를 담당하는 클래스는 IdDuplicateCheck.java임
             data : {"email" : $( "input#email" ).val()}, // userid를 IdDuplicateCheck.java의 request.getParameter();에 넣어줌. 겟 파라미터의 이름. 값은 선택자.val()임.
@@ -469,7 +396,7 @@ $("span#emailcheck").click(function(){
 
                 console.log("~~json의 데이터 타입 : ", typeof json);
                 // ~~json의 데이터 타입 : object
-*/
+	 */
                 if(json.isExists) {
                     // 입력한 userid 가 이미 사용중이라면 
                     $("span#emailCheckResult").html( $("input#email").val() + " 은 이미 사용중 이므로 다른 아이디를 입력하세요").css({"color":"red"});
@@ -480,51 +407,29 @@ $("span#emailcheck").click(function(){
                     $("span#emailCheckResult").html( $("input#email").val() + " 은 사용가능 합니다.").css({"color":"navy"});
                 }
             },
-            
             error: function(request, status, error){
                 alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
             }
     });
-
 });
 
-//"이메일중복확인"을 클릭했을 때 이벤트 처리하기 끝 //
-
-
-    // 아이디값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
-    $("input#userid").bind("change", function(){
-        b_idcheck_click = false;
-    });
-
-    // 이메일값이 변경되면 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
-    $("input#email").bind("change", function(){
-        b_emailcheck_click = false;
-    });
-
+// 이메일값이 변경되면 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
+$("input#email").bind("change", function(){
+    b_emailcheck_click = false;
+});
 
 });// end of $(document).ready(function(){})----------------
 
 
 // Function Declaration
-// "가입하기" 버튼 클릭시 호출되는 함수
-function goRegister() {
+// "등록하기" 버튼 클릭시 호출되는 함수
+function goRegister(ctxPath) {
 
     // *** 필수입력사항에 모두 입력이 되었는지 검사하기 시작 *** //
     let b_requiredInfo = true;
 
- /*   
-    $("input.requiredInfo").each(function(index, elmt){
-        const data = $(elmt).val().trim();
-        if(data == ""){
-            alert("*표시된 필수입력사항은 모두 입력하셔야 합니다.");
-            b_requiredInfo = false;
-            return false; // break; 라는 뜻이다.
-        }
-    });
- */
-
- // 또는
     const requiredInfo_list = document.querySelectorAll("input.requiredInfo"); 
+    
     for(let i=0; i<requiredInfo_list.length; i++){
         const val = requiredInfo_list[i].value.trim();
         if(val == ""){
@@ -568,15 +473,13 @@ function goRegister() {
 	// *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
 
     const frm = document.registerFrm;
-    frm.action = "memberRegister.up";
+    frm.action = ctxPath+"/admin/memberRegister_end.lms";
     frm.method = "post";
     frm.submit();
 
 }// end of function goRegister()---------------------
 
-
 function goReset() {
-
     $("span.error").hide();
     $("span#idcheckResult").empty();
     $("span#emailCheckResult").empty();

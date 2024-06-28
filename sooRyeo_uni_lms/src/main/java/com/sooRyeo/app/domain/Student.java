@@ -21,7 +21,7 @@ public class Student {
     private Short grade;
     private String address;
     private String email;
-    private Date register_date;
+    private Integer register_year;
     private Short status;
     private Integer fk_department_seq;
 	public Integer getStudent_id() {
@@ -50,8 +50,8 @@ public class Student {
 	
 		return email;
 	}
-	public Date getRegister_date() {
-		return register_date;
+	public Integer getRegister_year() {
+		return register_year;
 	}
 	public Short getStatus() {
 		return status;

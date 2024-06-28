@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    
 <%
    String ctxPath = request.getContextPath();
 %>    
@@ -38,13 +40,13 @@
                   <div class="card-body">
                     <h5 class="card-title">학생 정보</h5>
                     <p class="card-text" />
-                        <form action="#" method="post">
+                        <form action="#" name="registerFrm" method="post">
                             <!-- text, form-control -->
                         
                             <div class="form-group row">
                                 <label for="name" class="col-sm-3 text-sm-left">이름</label>
                                 <div class="col-sm-8">
-                                    <input type="text" id="name" class="form-control">
+                                    <input type="text" name="name" id="name" class="form-control requiredInfo">
                                     <span class="error">이름을 입력하세요.</span>
                                 </div>
                             </div>
@@ -54,9 +56,9 @@
                             <div class="form-group row">
                                 <label for="pwd" class="col-sm-3 text-sm-left">비밀번호</label>
                                 <div class="col-sm-8">
-                                    <input type="password" id="pwd" class="form-control mb-1">
+                                    <input type="password" name="pwd" id="pwd" class="form-control mb-1">
                                     <span class="error">영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요.</span>
-                                    <input type="password" id="pwdcheck" class="form-control">
+                                    <input type="password" id="pwdcheck" class="form-control requiredInfo">
                                     <span class="error">암호가 일치하지 않습니다.</span>
                                 </div>
                             </div>
@@ -65,7 +67,7 @@
                             <div class="form-group row">
                                 <label for="email" class="col-sm-3 text-sm-left">이메일</label>
                                 <div class="col-sm-8 d-flex justify-content-between align-items-center">
-								    <input type="text" id="email" class="form-control" style="width:70%;">
+								    <input type="text" name="email" id="email" class="form-control requiredInfo" style="width:70%;">
 								    <div>
 								        <span class="error" style="margin-right: 5px;">이메일 형식과 일치하지 않습니다.</span>
 								        <button type="button" class="btn btn-light">중복확인</button>
@@ -77,7 +79,7 @@
                             <div class="form-group row">
 							    <label for="jubun" class="col-sm-3 text-sm-left">주민번호</label>
 							    <div class="col-sm-8">
-							        <input type="text" id="jubun" class="form-control">
+							        <input type="text" name="jubun" id="jubun" class="form-control requiredInfo">
 							        <span class="error" style="margin-right: 5px;">주민번호 형식에 맞지 않습니다.</span>
 							    </div>
 							</div>
@@ -85,9 +87,9 @@
                             <div class="form-group row">
                                 <label for="hp2" class="col-sm-3 text-sm-left">전화번호</label>
                                 <div class="col-sm-8 d-flex">
-                                    <input type="text" id="a2" class="form-control" style="width:26%" value="010" readonly> &nbsp;&nbsp;-&nbsp;&nbsp; 
-                                    <input type="text" id="hp2" class="form-control" style="width:26%">&nbsp;&nbsp;-&nbsp;&nbsp; 
-                                    <input type="text" id="hp3" class="form-control" style="width:26%">
+                                    <input type="text" name="a2" id="a2" class="form-control" style="width:26%" value="010" readonly> &nbsp;&nbsp;-&nbsp;&nbsp; 
+                                    <input type="text" name="hp2" id="hp2" class="form-control requiredInfo" style="width:26%">&nbsp;&nbsp;-&nbsp;&nbsp; 
+                                    <input type="text" name="hp3" id="hp3" class="form-control requiredInfo" style="width:26%">
                                 </div>
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-8 d-flex">
@@ -96,50 +98,46 @@
                             </div>
                             <hr>
                             
-                            <div class="form-group row">
-                                <label for="a2" class="col-sm-3 text-sm-left">학과</label>
-                                <div class="col-sm-8">
-                                    <select class="selectpicker" id="major">
-                                        <option>컴퓨터공학과</option>
-                                        <option>국제통상학과</option>
-                                        <option>국어국문과</option>
-                                        <option>작곡과</option>
-                                        <option>의예과</option>
-                                        <option>치의예과</option>
-                                    </select>
-                                </div>
-                            </div>
+							<div class="form-group row">
+							    <label for="a2" class="col-sm-3 text-sm-left">학과</label>
+							    <div class="col-sm-8">
+							        <select class="selectpicker" id="major" name="selectmajor">
+							            <c:forEach var="major" items="${requestScope.departmentList}" varStatus="status">    
+							                <option value="${major.department_seq}" name="fk_department_seq">${major.department_name}</option>
+							            </c:forEach>
+							        </select>
+							    </div>
+							</div>
                             <hr>
-                            
+
                             <div class="form-group row">
                                 <label for="a2" class="col-sm-3 text-sm-left">주소</label>
                                 <div class="col-sm-8">
 			                        <%-- 우편번호 찾기 --%>
-			                        <input class="form-control" type="text" name="postcode" id="postcode" size="6" maxlength="5" />
+			                        <input class="form-control requiredInfo" type="text" name="postcode" id="postcode" size="6" maxlength="5" />
 			                        <img src="<%= ctxPath%>/resources/images/b_zipcode.gif" id="zipcodeSearch" />
 			                        <span class="error">우편번호 형식에 맞지 않습니다.</span>
 			                        <br>
-			                        <input class="form-control  mb-1  mt-1" type="text" name="address" id="address" size="40" maxlength="200" placeholder="주소" />
-			                        <input class="form-control  mb-1" type="text" name="detailaddress" id="detailAddress" size="40" maxlength="200" placeholder="상세주소" />
+			                        <input class="form-control  mb-1  mt-1 requiredInfo" type="text" name="address" id="address" size="40" maxlength="200" placeholder="주소" />
+			                        <input class="form-control  mb-1 requiredInfo" type="text" name="detailaddress" id="detailAddress" size="40" maxlength="200" placeholder="상세주소" />
 			                        <input class="form-control" type="text" name="extraaddress" id="extraAddress" size="40" maxlength="200" placeholder="참고항목" />            
                                 </div>
                             </div>
                             <hr>
                             
-                            <div class="form-group row">
+                            <div class="form-group row requiredInfo">
                                 <label for="a2" class="col-sm-3 text-sm-left">입학년도</label>
                                 <div class="col-sm-8">
-                                    <%-- 생년월일 --%>
-			                       	<input type="text" name="enter" maxlength="4" />
+                                    <%-- 입학년도 --%>
+			                       	<input type="text" name="register_year" maxlength="4" />
                                 </div>
                             </div>
                             <hr>
                         </form>
-                    <button type="button" class="btn btn-primary" onclick="goRegister()">등록하기</button>
+                    <button type="button" class="btn btn-primary" onclick="goRegister('<%=ctxPath%>')">등록하기</button>
                   </div>
                 </div>
             </div>
-
         </div>
 </body>
 </html>
