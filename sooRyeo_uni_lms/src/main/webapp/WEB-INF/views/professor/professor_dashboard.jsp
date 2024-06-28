@@ -7,6 +7,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/4.3.1/gridstack.min.css" rel="stylesheet"/>
 <link href="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
 
+
  <style data-styles="">ion-icon{visibility:hidden}.hydrated{visibility:inherit}</style>
  <meta http-equiv="X-UA-Compatible" content="IE=edge">
  <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,9 +17,10 @@
 
 <script type="module" src="<%=ctxPath %>/resources/node_modules/gridstack/dist/ionicons.esm.js"></script>
 <script nomodule="" src="<%=ctxPath %>/resources/node_modules/gridstack/dist/ionicons.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 <style type="text/css">
+
   .grid-stack { background: #E0E0E0; }
   .grid-stack-item-content { 
     background-color: white; 
@@ -26,6 +28,10 @@
     flex-direction: column;
     border-radius: 10px;
   }
+  
+  
+  
+
   
   
 </style>
@@ -77,7 +83,60 @@
 	            </svg>                        
             	<h4>수려대학교 공지사항</h4>
             </div>
-            <p class="card-text" style="margin-bottom: 0">...but don't resize me!</p>
+            	<div class="container">
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+					  <li class="nav-item" role="presentation">
+					    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">학사공지</button>
+					  </li>
+					  <li class="nav-item" role="presentation">
+					    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">학과공지</button>
+					  </li>
+					  <li class="nav-item" role="presentation">
+					    <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab" aria-controls="messages" aria-selected="false">채용공지</button>
+					  </li>
+					</ul>
+					
+					<!-- Tab panes -->
+					<div class="tab-content">
+					  <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+					  	<table class="table table-hover">
+							<tr class="col-md-12 text-center">
+								<th class="col-md-10"><span>제목</span></th>
+								<th class="col-md-2"><span>등록일자</span></th>
+							</tr>
+							<tr class="col-md-12">
+								<td class="col-md-10">2023학년도 1학기 등록금 납부 안내</td>
+								<td class="col-md-2 text-center">23-03-01</td>
+							</tr>
+						</table>
+					  </div>
+					  <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+					  	<table class="table table-hover">
+							<tr class="col-md-12 text-center">
+								<th class="col-md-10"><span>제목</span></th>
+								<th class="col-md-2"><span>등록일자</span></th>
+							</tr>
+							<tr class="col-md-12">
+								<td class="col-md-10">2023학년도 2학기 등록금 납부 안내</td>
+								<td class="col-md-2 text-center">23-08-01</td>
+							</tr>
+						</table>
+					  </div>
+					  <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">
+					  	<table class="table table-hover">
+							<tr class="col-md-12 text-center">
+								<th class="col-md-10"><span>제목</span></th>
+								<th class="col-md-2"><span>등록일자</span></th>
+							</tr>
+							<tr class="col-md-12">
+							<td class="col-md-10">2024학년도 1학기 등록금 납부 안내</td>
+							<td class="col-md-2 text-center">23-03-01</td>
+							</tr>
+						</table>
+					  </div>
+					</div>
+            	</div>
           </div>
         </div>
       </div>
@@ -88,6 +147,8 @@
   <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-poly.js"></script>
   <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-all.js"></script>
   <script type="text/javascript">
+  
+  	<!-- gridstack 작동을 위한 js -->
     let grid = GridStack.init({
       cellHeight: 120,
       acceptWidgets: true,
@@ -100,5 +161,18 @@
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
     });
+    
+    <!-- tabs 작동을 위한 js -->
+    const triggerTabList = document.querySelectorAll('#myTab button')
+    triggerTabList.forEach(triggerEl => {
+      const tabTrigger = new bootstrap.Tab(triggerEl)
+
+      triggerEl.addEventListener('click', event => {
+        event.preventDefault()
+        tabTrigger.show()
+      })
+    })
+    
+
   </script>
 </body>
