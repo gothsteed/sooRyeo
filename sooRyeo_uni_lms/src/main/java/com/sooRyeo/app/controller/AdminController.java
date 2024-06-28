@@ -59,6 +59,10 @@ public class AdminController {
 		// 학생 회원 등록정보를 인서트 하는 메소드
 		int n = adminService.memberRegister_end(rdto);
 		
+		System.out.println("확인용@@@@@@@@@@@@@@@@"+rdto.getAddress());
+		System.out.println(rdto.getEmail());
+		System.out.println(rdto.getFk_department_seq());
+		
 		if(n == 1) {
 			mav.addObject("message", "학생회원 등록을 성공하였습니다.");
 			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");

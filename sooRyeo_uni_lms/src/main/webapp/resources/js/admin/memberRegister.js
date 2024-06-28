@@ -353,10 +353,10 @@ $(document).ready(function(){
 	});// end of $("img#zipcodeSearch").click()------------
 
 
-// 이메일값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
-$("input#email").bind("change", function(){
-    b_emailcheck_click = false;
-});
+    // 이메일값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
+    $("input#email").bind("change", function(){
+        b_emailcheck_click = false;
+    });
 
 
 //"이메일중복확인"을 클릭했을 때 이벤트 처리하기 시작 //
@@ -445,11 +445,11 @@ function goRegister(ctxPath) {
     // *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
 
     // *** "이메일중복확인" 을 클릭했는지 검사하기 시작 *** //
-    if( !b_emailcheck_click ) {
-        // "이메일중복확인" 을 클릭 안 했을 경우 
-        alert("이메일 중복확인을 클릭하셔야 합니다.");
-        return; // goRegister() 함수를 종료한다.
-    }
+    // if( !b_emailcheck_click ) {
+    //     // "이메일중복확인" 을 클릭 안 했을 경우 
+    //     alert("이메일 중복확인을 클릭하셔야 합니다.");
+    //     return; // goRegister() 함수를 종료한다.
+    // }
     // *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //
 
     // *** "우편번호찾기" 를 클릭했는지 검사하기 시작 *** //

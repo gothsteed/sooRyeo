@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -38,7 +37,7 @@ public class AdminDao_imple implements AdminDao {
 	// 학생 회원 등록정보를 인서트 하는 메소드
 	@Override
 	public int memberRegister_end(RegisterDTO rdto) {
-		int n = sqlSession.insert("admin.memberRegister_end");
+		int n = sqlSession.insert("admin.memberRegister_end", rdto);
 		return n;
 	}
 
