@@ -44,6 +44,17 @@ CREATE TABLE tbl_student (
 ALTER TABLE tbl_student
 DROP COLUMN register_year;
 
+ALTER TABLE tbl_student
+ADD register_year SMALLINT DEFAULT EXTRACT(YEAR FROM SYSDATE) NOT NULL;
+
+
+desc tbl_student;
+select *
+from tbl_board
+where seq = 217;
+
+select * from tbl_student;
+
 
 ALTER TABLE tbl_student MODIFY pwd NVARCHAR2(200);
 ALTER TABLE tbl_student MODIFY email NVARCHAR2(200);
@@ -650,25 +661,24 @@ INSERT INTO tbl_student (
     GRADE, 
     ADDRESS, 
     EMAIL, 
-    REGISTER_DATE, 
     STATUS, 
     FK_DEPARTMENT_SEQ
 ) VALUES (
     generate_student_id(), -- STUDENT_ID
     '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', -- PWD
-    '이정연', -- NAME
+    '강민정', -- NAME
     '9901011234567', -- JUBUN
     'k6AvvKD9cZaeKhlunBk9ew==', -- TEL
     1, -- GRADE
     '서울시 강남구 테헤란로 123', -- ADDRESS
-    '7DiCwyc+1dXTTwg5kjvDmHehvJlz/ESJNhef/5DX+YA=', -- EMAIL
-    TO_DATE('2024-06-26', 'YYYY-MM-DD'), -- REGISTER_DATE
+    'Ebb5gKvx8ME4g2RXYMg/ouPkJeeKt3ECwIY/orYSMlE=', -- EMAIL
     1, -- STATUS
     2 -- FK_DEPARTMENT_SEQ
 );
 
 commit;
-
+select * 
+from tbl_student;
 
 desc tbl_student;
 
