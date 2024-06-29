@@ -683,5 +683,53 @@ from tbl_student;
 desc tbl_student;
 
 
+INSERT INTO tbl_curriculum_type (curriculum_type_seq, curriculum_type_name)
+VALUES (curriculum_type_seq.nextval, 'major');
+INSERT INTO tbl_curriculum_type (curriculum_type_seq, curriculum_type_name)
+VALUES (curriculum_type_seq.nextval, 'liberal_arts');
+
+commit;
+
+desc tbl_curriculum;
+
+select * from 
+tbl_department;
+
+select * 
+from tbl_curriculum_type;
+
+ALTER TABLE tbl_curriculum
+MODIFY fk_department_seq NUMBER NULL;
+
+ALTER TABLE tbl_curriculum
+MODIFY FK_CURRICULUM_TYPE_SEQ NUMBER NULL;
+
+
+INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
+VALUES (curriculum_seq.nextval, 1, 3, 1, '국어학개론', 3, 1);
+INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
+VALUES (curriculum_seq.nextval, 1, 4, 1, '거시경제학', 3, 1);
+
+INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
+VALUES (curriculum_seq.nextval, 1, 5, 1, '화공입문 1', 3, 1);
+
+INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
+VALUES (curriculum_seq.nextval, 1, 6, 1, '화성학 1', 3, 1);
+
+INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
+VALUES (curriculum_seq.nextval, 1, 7, 1, '회계학원론', 3, 1);
+
+INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
+VALUES (curriculum_seq.nextval, 1, 2, 1, '운영체제', 3, 1);
+
+select *
+from tbl_curriculum;
+commit;
+
+
+ALTER TABLE tbl_curriculum
+ADD required Number(1);
+
+
 
 

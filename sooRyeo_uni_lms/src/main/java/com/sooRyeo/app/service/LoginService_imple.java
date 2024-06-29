@@ -136,7 +136,7 @@ public class LoginService_imple implements LoginService {
 			
 		
 		jsonObject.put("isSuccess", true);
-		jsonObject.put("redirectUrl", resquest.getContextPath() +  "/admin/admin_Main.lms");
+		jsonObject.put("redirectUrl", resquest.getContextPath() +  "/admin/dashboard.lms");
 		return jsonObject;
 	}
 

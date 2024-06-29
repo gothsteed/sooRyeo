@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="curriculum">
+
+
+
+	<insert id="insertCurriculum" parameterType="com.sooRyeo.app.dto.CurriculumInsertRequestDto">
+		INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+		VALUES (
+		curriculum_seq.nextval,
+		<choose>
+			<when test="fk_department_seq != null">#{fk_department_seq}</when>
+			<otherwise>NULL</otherwise>
+		</choose>
+		,
+		<choose>
+			<when test="grade != null">#{grade}</when>
+			<otherwise>NULL</otherwise>
+		</choose>
+		,
+		#{name}, #{credit}, #{required}
+		)
+
+	</insert>
+
+
+
+</mapper>

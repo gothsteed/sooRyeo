@@ -210,8 +210,9 @@
             <li class="nav-item">
                 <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>수업관리</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
-                    <a class="dropdown-item" href="#">수업조회</a>
-                    <a class="dropdown-item" href="#">수업추가</a>
+                	<a class="dropdown-item" href="<%=ctxPath%>/admin/add_curriculum.lms">커리큘럼 추가</a>
+                    <a class="dropdown-item" href="#">강의조회</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/admin/add_course.lms">강의개설</a>
                 </div>
             </li>
             <li class="nav-item">

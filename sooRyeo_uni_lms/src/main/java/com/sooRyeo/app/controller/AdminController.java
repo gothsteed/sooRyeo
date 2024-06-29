@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.service.DepartmentService;
 
 @Controller
 @RequireLogin(type = Admin.class)
@@ -24,6 +27,9 @@ public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private DepartmentService departmentService;
 
 	@RequestMapping(value = "/admin/dashboard.lms", method = RequestMethod.GET)
 	public String admin_Main() {
@@ -85,5 +91,24 @@ public class AdminController {
 	
 	
 	
+	
+	@RequestMapping(value = "/admin/add_curriculum.lms", method = RequestMethod.GET)
+	public ModelAndView addCurriculumPage(ModelAndView mav) {
+		
+		List<Department> departments =  adminService.getDeptartments();
+
+		
+		mav.addObject("departments", departments);
+		mav.setViewName("add_curriculum.admin");
+		
+		return mav;
+	}
+	
+	
+	@RequestMapping(value = "/admin/add_curriculum_end.lms", method = RequestMethod.POST)
+	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumInsertRequestDto requestDto) {
+		
+		return adminService.insertCurriculum(request, mav, requestDto);
+	}
 	
 }
