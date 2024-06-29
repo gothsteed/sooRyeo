@@ -20,7 +20,7 @@
 
 	<insert id="memberRegister_end" parameterType="com.sooRyeo.app.dto.RegisterDTO">
 		INSERT INTO tbl_student (student_id, pwd, name, jubun, tel, grade, address, email, register_year, status, fk_department_seq)
-		VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{email}, #{register_date}, default, #{fk_department_seq});
+		VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{address}, #{email}, #{register_year}, default, #{fk_department_seq})
 	</insert>
 
 
