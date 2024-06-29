@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ======= #23. tiles 레이아웃 설정하기 ======= -->
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+
+<tiles-definitions>
+
+	<!-- ==== tiles 를 사용하는 레이아웃(header,content,footer) 설정 시작 ==== -->
+	<definition name="layout-tiles-student" template="/WEB-INF/tiles/layout/layout-tiles-student.jsp">
+		<put-attribute name="content" value="" />
+	</definition>
+	
+	<definition name="*.student" extends="layout-tiles-student">
+      	<put-attribute name="content" value="/WEB-INF/views/student/{1}.jsp"/>
+   	</definition>
+	
+   	<definition name="*/*.student" extends="layout-tiles-student">
+      	<put-attribute name="content" value="/WEB-INF/views/student/{1}/{2}.jsp"/>
+   	</definition>
+   	
+   	
+   		<!-- ==== tiles 를 사용하는 레이아웃(header,content,footer) 설정 시작 ==== -->
+	<definition name="layout-tiles-professor" template="/WEB-INF/tiles/layout/layout-tiles-professor.jsp">
+		<put-attribute name="content" value="" />
+	</definition>
+	
+	<definition name="*.professor" extends="layout-tiles-professor">
+      	<put-attribute name="content" value="/WEB-INF/views/professor/{1}.jsp"/>
+   	</definition>
+	
+   	<definition name="*/*.professor" extends="layout-tiles-professor">
+      	<put-attribute name="content" value="/WEB-INF/views/professor/{1}/{2}.jsp"/>
+   	</definition>
+   	
+   		<!-- ==== tiles 를 사용하는 레이아웃(header,content,footer) 설정 시작 ==== -->
+	<definition name="layout-tiles-admin" template="/WEB-INF/tiles/layout/layout-tiles-admin.jsp">
+		<put-attribute name="content" value="" />
+	</definition>
+	
+	<definition name="*.admin" extends="layout-tiles-admin">
+      	<put-attribute name="content" value="/WEB-INF/views/admin/{1}.jsp"/>
+   	</definition>
+	
+   	<definition name="*/*.admin" extends="layout-tiles-admin">
+      	<put-attribute name="content" value="/WEB-INF/views/admin/{1}/{2}.jsp"/>
+   	</definition>
+	
+
+</tiles-definitions>
