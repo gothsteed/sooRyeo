@@ -21,6 +21,7 @@ import com.sooRyeo.app.domain.Student;
 @Component
 public class AuthAspect {
 	
+	/*
 	@Before("@within(requireLogin) || @annotation(requireLogin)")
 	public void checkAuth(JoinPoint joinPoint, RequireLogin requireLogin) throws Throwable {
 		
@@ -72,6 +73,7 @@ public class AuthAspect {
 		
 		
 	}
+	*/
 	
 
 }

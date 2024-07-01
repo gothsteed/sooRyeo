@@ -1,4 +1,4 @@
-package com.sooRyeo.app.pager;
+package com.sooRyeo.app.domain;
 
 import java.util.List;
 
