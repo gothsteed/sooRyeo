@@ -9,10 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
 
@@ -88,6 +90,20 @@ public class AdminController {
 	}
 	
 	
+	@RequestMapping(value = "/admin/curriculum.lms", method = RequestMethod.GET)
+	public ModelAndView curriculumPage(HttpServletRequest request, ModelAndView mav) {
+		
+		
+		return adminService.ShowCurriculumPage(request, mav);
+	}
+	
+	@RequestMapping(value = "/admin/curriculumJSON.lms", method = RequestMethod.GET)
+	public ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
+		
+		
+		return adminService.getCurriculumPage(request, mav, requestDto);
+	}
+	
 	
 	
 	
@@ -103,6 +119,8 @@ public class AdminController {
 		
 		return mav;
 	}
+	
+	
 	
 	
 	@RequestMapping(value = "/admin/add_curriculum_end.lms", method = RequestMethod.POST)

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 
 public interface AdminService {
@@ -21,6 +22,10 @@ public interface AdminService {
 	List<Department> getDeptartments();
 
 	ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumInsertRequestDto requestDto);
+
+	ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav);
+
+	ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
 
 
 }

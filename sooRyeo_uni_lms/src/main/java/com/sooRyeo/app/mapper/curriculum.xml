@@ -24,6 +24,37 @@
 		)
 
 	</insert>
+	
+	<select id="getCurriculumCount" parameterType="HashMap" resultType="int">
+		 	select count(*)
+	        from tbl_curriculum
+	        <where>
+	            <if test="fk_department_seq != null">
+	                and fk_department_seq = #{fk_department_seq}
+	            </if>
+	            <if test="grade != null">
+	                and grade = #{grade}
+	            </if>
+	        </where>
+	</select>
+	
+	<select id="getCurriculumList" parameterType="HashMap" resultType="com.sooRyeo.app.domain.Curriculum">
+	    select * 
+	    from (
+	        select rownum as rno, curriculum_seq, fk_department_seq, grade, name, credit
+	        from tbl_curriculum
+	        <where>
+	            <if test="fk_department_seq != null">
+	                and fk_department_seq = #{fk_department_seq}
+	            </if>
+	            <if test="grade != null">
+	                and grade = #{grade}
+	            </if>
+	        </where>
+	    ) V
+	    where V.rno between #{startRno} and #{endRno}
+	</select>
+
 
 
 

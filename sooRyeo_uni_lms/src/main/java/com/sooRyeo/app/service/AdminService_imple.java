@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -11,10 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
 import com.sooRyeo.app.model.CurriculumDao;
 import com.sooRyeo.app.model.DepartmentDao;
+import com.sooRyeo.app.pager.Pager;
 
 @Service
 public class AdminService_imple implements AdminService {
@@ -69,6 +73,34 @@ public class AdminService_imple implements AdminService {
 		mav.setViewName("redirect:/admin/dashboard.lms");
 		
 		return mav;
+	}
+
+	@Override
+	public ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav) {
+		
+		
+		mav.setViewName("curriculum.admin");
+		return mav;
+	}
+
+	@Override
+	public ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
+		
+		int sizePerPage = 10;
+		
+		Pager<Curriculum> page = curriculumDao.getCurriculumPage(requestDto, sizePerPage);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Curriculum curr : page.getObjectList()) {
+			JSONObject jsonObj = new JSONObject(); 
+			
+//			jsonObj.put("name", curr.get)
+			
+		}
+		
+		
+		return null;
 	}
 	
 	
