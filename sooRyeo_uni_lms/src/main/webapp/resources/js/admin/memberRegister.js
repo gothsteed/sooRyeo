@@ -351,19 +351,15 @@ $(document).ready(function(){
         b_emailcheck_click = false;
     });
 
-
-    
-    
     // 이메일값이 변경되면 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
     $("input#email").bind("change", function(){
         b_emailcheck_click = false;
     });
-    
+
 });// end of $(document).ready(function(){})----------------
 
 //"이메일중복확인"을 클릭했을 때 이벤트 처리하기 시작 //
 function emailcheck(ctxPath) {
-    alert("작동한다");
     b_emailcheck_click = true; // "이메일중복확인" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
     
     $.ajax({
@@ -440,6 +436,7 @@ function goRegister(ctxPath) {
 		return; // goRegister() 함수를 종료한다.
 	}
 	// *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
+
 
     const frm = document.registerFrm;
     frm.action = ctxPath+"/admin/memberRegister_end.lms";

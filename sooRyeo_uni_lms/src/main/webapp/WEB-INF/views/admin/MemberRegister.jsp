@@ -150,6 +150,16 @@
 								</select>
 							    </div>
 							</div>
+                            
+                            <div class="form-group row product">
+							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">등록사진</label>
+							    <div class="col-sm-8">
+							    	<input type="file" name="attach" />
+							    	<img id="previewImg" width="300"/>
+							    </div>
+							</div>
+							
+							
                         </form>
                     <button type="button" class="btn btn-primary" onclick="goRegister('<%=ctxPath%>')">등록하기</button>
                   </div>
