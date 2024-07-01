@@ -38,7 +38,31 @@ $(document).ready(function() {
 	$("span.error").hide();
 	
 	
-});
+}); // end of $(document).ready(function(){})
+
+
+// 이미지 미리 보여주기
+$(document).on("change", "input#formFile", function(e){
+	
+	const input_file = $(e.target).get(0);
+	
+	// console.log(input_file);
+	// <input class="form-control" type="file" id="formFile" style="width:30%; margin-top: 10%;">
+	
+	// console.log(input_file.files);
+	/*
+		FileList {0: File, length: 1}
+		0: File {name: '스크린샷 2024-03-07 120026.png', lastModified: 1709780426227, lastModifiedDate: Thu Mar 07 2024 12:00:26 GMT+0900 (GMT+09:00), webkitRelativePath: '', size: 1543703, …}
+		length: 1
+		[[Prototype]]: FileList
+	*/
+	
+	// console.log(input_file.files[0].name);
+	// 스크린샷 2024-03-07 120026.png
+	
+	
+	
+}); // end of $(document).on("change", "input#formFile", function(e){})
 
 </script>
 

@@ -71,4 +71,19 @@ public class StudentController {
 	
 	
 	
+	
+	// 내 강의보기
+	@RequestMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
+	public String myLecture() {
+		
+		
+		
+		return "myLecture.student";
+		// /WEB-INF/views/student/{1}.jsp
+		
+	} // end of public String myLecture
+	
+	
+	
+	
 }
