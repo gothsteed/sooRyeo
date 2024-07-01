@@ -44,12 +44,19 @@ insert into tbl_professor (prof_id, pwd, name, jubun, tel, department_seq, email
 values (generate_professor_id(), '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', '홍길동', '9010101234567', 'k6AvvKD9cZaeKhlunBk9ew==', 2, '2kh94@naver.com', '서울특별시 서대문구 연세로 50', 1, sysdate);
 
 
-		SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS
-		FROM 
-    	(SELECT prof_id, pwd, name, tel, department_seq, email, office_address
-     	FROM tbl_professor) P
-		JOIN 
-    	(SELECT department_seq, department_name
-     	FROM tbl_department) D
-		ON P.department_seq = D.department_seq
-		WHERE P.prof_id = '202400002';
+SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS
+FROM 
+(SELECT prof_id, pwd, name, tel, department_seq, email, office_address
+FROM tbl_professor) P
+JOIN 
+(SELECT department_seq, department_name
+FROM tbl_department) D
+ON P.department_seq = D.department_seq
+WHERE P.prof_id = '202400002';
+
+
+select *
+from tbl_professor
+where pwd = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+        
+        

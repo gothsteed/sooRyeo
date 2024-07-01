@@ -10,6 +10,9 @@ public interface ProfessorDao {
 	
 	// 교수 내정보
 	Professor getInfo(Professor loginuser);
+	
+	// 교수 비밀번호 중복확인
+	int pwdDuplicateCheck(String pwd);
 
 
 }

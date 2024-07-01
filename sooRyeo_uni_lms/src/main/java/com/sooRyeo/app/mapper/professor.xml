@@ -36,6 +36,15 @@
 		ON P.department_seq = D.department_seq
 		WHERE P.prof_id = #{prof_id}
 	</select>
+	
+	
+	<select id="pwdDuplicateCheck" resultType="int" parameterType="String">
+		select count(*)
+		from tbl_professor
+		where pwd = #{pwd}
+	</select>
+	
+	
 
 
 </mapper>
