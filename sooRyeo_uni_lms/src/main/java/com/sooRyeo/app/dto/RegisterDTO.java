@@ -1,5 +1,7 @@
 package com.sooRyeo.app.dto;
 
+import com.sooRyeo.app.common.Sha256;
+
 public class RegisterDTO {
 	
 	private String name;
@@ -10,7 +12,14 @@ public class RegisterDTO {
 	private String fk_department_seq;
 	private String address;
 	private String register_year;
+	private String grade;
 
+	public String getGrade() {
+		return grade;
+	}
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
 	public String getName() {
 		return name;
 	}
@@ -21,7 +30,7 @@ public class RegisterDTO {
 		return pwd;
 	}
 	public void setPwd(String pwd) {
-		this.pwd = pwd;
+		this.pwd = Sha256.encrypt(pwd);
 	}
 	public String getEmail() {
 		return email;

@@ -23,5 +23,9 @@
 		VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{address}, #{email}, #{register_year}, default, #{fk_department_seq})
 	</insert>
 
-
+	<select id="emailDuplicateCheck" parameterType="String" resultType="String">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT email
+		FROM tbl_student
+		where email = #{email}
+	</select>
 </mapper>

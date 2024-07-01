@@ -69,9 +69,14 @@
                                 <div class="col-sm-8 d-flex justify-content-between align-items-center">
 								    <input type="text" name="email" id="email" class="form-control requiredInfo" style="width:70%;">
 								    <div>
-								        <span class="error" style="margin-right: 5px;">이메일 형식과 일치하지 않습니다.</span>
-								        <button type="button" class="btn btn-light">중복확인</button>
+								        <button type="button" class="btn btn-light" onclick="emailcheck('<%=ctxPath%>')">중복확인</button>
 								    </div>
+								</div>
+                                <div class="col-sm-3">
+								</div>
+                                <div class="col-sm-8 justify-content-between align-items-center">
+							        <span class="error" style="margin-right: 5px;">이메일 형식과 일치하지 않습니다.</span>
+							        <span id="emailCheckResult"></span>
 								</div>
                             </div>
                             <hr>
@@ -99,9 +104,9 @@
                             <hr>
                             
 							<div class="form-group row">
-							    <label for="a2" class="col-sm-3 text-sm-left">학과</label>
+							    <label for="major" class="col-sm-3 text-sm-left">학과</label>
 							    <div class="col-sm-8">
-							        <select class="selectpicker" id="major" name="selectmajor">
+							        <select class="selectpicker" id="major" name="fk_department_seq">
 							            <c:forEach var="major" items="${requestScope.departmentList}" varStatus="status">    
 							                <option value="${major.department_seq}" name="fk_department_seq">${major.department_name}</option>
 							            </c:forEach>
@@ -111,7 +116,7 @@
                             <hr>
 
                             <div class="form-group row">
-                                <label for="a2" class="col-sm-3 text-sm-left">주소</label>
+                                <label for="detailAddress" class="col-sm-3 text-sm-left">주소</label>
                                 <div class="col-sm-8">
 			                        <%-- 우편번호 찾기 --%>
 			                        <input class="form-control requiredInfo" type="text" name="postcode" id="postcode" size="6" maxlength="5" />
@@ -126,13 +131,25 @@
                             <hr>
                             
                             <div class="form-group row requiredInfo">
-                                <label for="a2" class="col-sm-3 text-sm-left">입학년도</label>
+                                <label for="register_year" class="col-sm-3 text-sm-left">입학년도</label>
                                 <div class="col-sm-8">
                                     <%-- 입학년도 --%>
-			                       	<input type="text" name="register_year" maxlength="4" />
+			                       	<input type="text" name="register_year" id="register_year" maxlength="4" />
                                 </div>
                             </div>
                             <hr>
+                            
+                            <div class="form-group row">
+							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">학년</label>
+							    <div class="col-sm-8">
+							    <select id="grade" name="grade">
+								    <option name="grade1" value="1">1</option>
+								    <option name="grade2" value="2">2</option>
+								    <option name="grade3" value="3">3</option>
+								    <option name="grade4" value="4">4</option>
+								</select>
+							    </div>
+							</div>
                         </form>
                     <button type="button" class="btn btn-primary" onclick="goRegister('<%=ctxPath%>')">등록하기</button>
                   </div>
