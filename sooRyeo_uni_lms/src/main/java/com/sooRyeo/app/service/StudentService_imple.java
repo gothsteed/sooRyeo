@@ -30,7 +30,7 @@ public class StudentService_imple implements StudentService {
 		StudentDTO member_student = new StudentDTO();
 		member_student.setName(loginuser.getName());			// 이름
 		member_student.setGrade(loginuser.getGrade());			// 학년
-		member_student.setStatus(loginuser.getStatus());		// 학적상태
+		member_student.setStatus(loginuser.getStatus());		// 학적
 		member_student.setBirthday(loginuser.getBirthday());  	// 생년월일
 		member_student.setTel(loginuser.getTel()); 				// 연락처
 		member_student.setEmail(loginuser.getEmail()); 			// 이메일

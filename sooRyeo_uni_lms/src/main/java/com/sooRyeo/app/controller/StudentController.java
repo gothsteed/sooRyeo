@@ -59,13 +59,15 @@ public class StudentController {
 		
 		StudentDTO member_student = studentservice.getViewInfo(request);
 		
+		System.out.println(member_student.getStatus());
+		
 		mav.addObject("member_student", member_student);
 		mav.setViewName("myInfo.student");
 		// /WEB-INF/views/student/{1}.jsp
 		
 		return mav;
 		
-	}
+	} // end of public ModelAndView myInfo
 	
 	
 	

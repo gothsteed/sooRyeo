@@ -74,16 +74,16 @@ $(document).ready(function() {
 						</div>
 						<div class="col-sm-6 m-b30">
 							<label class="form-label">학적상태</label>
-							<c:if test="${requestScope.member_student.status} == 1">
+							<c:if test="${requestScope.member_student.status == 1}">
 								<input type="text" disabled  name="stuStatus1" class="form-control" readonly value="재학">
 							</c:if>
-							<c:if test="${requestScope.member_student.status} == 2">
+							<c:if test="${requestScope.member_student.status == 2}">
 								<input type="text" disabled  name="stuStatus2" class="form-control" readonly value="휴학">
 							</c:if>
-							<c:if test="${requestScope.member_student.status} == 3">
+							<c:if test="${requestScope.member_student.status == 3}">
 								<input type="text" disabled  name="stuStatus3" class="form-control" readonly value="졸업">
 							</c:if>
-							<c:if test="${requestScope.member_student.status} == 4">
+							<c:if test="${requestScope.member_student.status == 4}">
 								<input type="text" disabled  name="stuStatus4" class="form-control" readonly value="자퇴">
 							</c:if>
 						</div>
