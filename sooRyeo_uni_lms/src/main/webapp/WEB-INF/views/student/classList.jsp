@@ -36,17 +36,50 @@
 
 <body>
 
+<br><br><br>
+<div style="width: 60%; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold; background-color: #D7E8CD;">&nbsp;전공 수업</div>
+<table class="table table-hover" style="width: 60%; margin: 0 auto;">
+  <tbody>
+    <tr>
+      <th scope="col" style="font-size: 18pt;">자바 기초</th>
+      <td scope="col" style="text-align: right;">서영학</td>
+      <td class="col-3" scope="col" style="text-align: right;">화목3</td>
+    </tr>
+    <tr>
+      <th scope="col" style="font-size: 18pt;">자바 기초</th>
+      <td scope="col" style="text-align: right;">서영학</td>
+      <td class="col-3" scope="col" style="text-align: right;">화목3</td>
+    </tr>
+    <tr>
+      <th scope="col" style="font-size: 18pt;">자바 기초</th>
+      <td scope="col" style="text-align: right;">서영학</td>
+      <td class="col-3" scope="col" style="text-align: right;">화목3</td>
+    </tr>
+  </tbody>
+</table>
 
-<div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">자바 기초</h5>
-    <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="card-link">Card link</a>
-    <a href="#" class="card-link">Another link</a>
-  </div>
-</div>
-
+<br><br><br>
+<div style="width: 60%; margin: auto; font-size: 26pt; color: #175F30; font-weight: bold; background-color: #D7E8CD;">&nbsp;교양 수업</div>
+<table class="table table-hover" style="width: 60%; margin: 0 auto;">
+  <tbody>
+    <tr>
+      <th scope="col" style="font-size: 18pt;">자바 기초</th>
+      <td scope="col" style="text-align: right;">서영학</td>
+      <td class="col-3" scope="col" style="text-align: right;">화목3</td>
+      <td><img src="<%= ctxPath%>/resources/images/greenarrow.png" style="width: 50%;"/></td>
+    </tr>
+    <tr>
+      <th scope="col" style="font-size: 18pt;">자바 기초</th>
+      <td scope="col" style="text-align: right;">서영학</td>
+      <td class="col-3" scope="col" style="text-align: right;">화목3</td>
+    </tr>
+    <tr>
+      <th scope="col" style="font-size: 18pt;">자바 기초</th>
+      <td scope="col" style="text-align: right;">서영학</td>
+      <td class="col-3" scope="col" style="text-align: right;">화목3</td>
+    </tr>
+  </tbody>
+</table>
 
 
 

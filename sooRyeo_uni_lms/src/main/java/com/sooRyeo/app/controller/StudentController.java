@@ -27,26 +27,17 @@ public class StudentController {
 	}
 	
 	
-	@GetMapping(value = "/student/idfind.lms", produces="text/plain;charset=UTF-8")
-	public String idFind() {
-		
-		return "idFind";
-		// /WEB-INF/views/idFind.jsp
-	}
-	
-	@GetMapping(value = "/student/pwdfind.lms", produces="text/plain;charset=UTF-8")
-	public String pwdFind() {
-		
-		return "pwdFind";
-		// /WEB-INF/views/pwdFind.jsp
-	}
-	
-	
-	
 	@RequestMapping(value="/student/myInfo.lms", method = RequestMethod.GET)
 	public String myInfo() {
 		
 		return "myInfo.student";
+		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	@GetMapping(value="/student/classList.lms")
+	public String classList() {
+		
+		return "classList.student";
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
