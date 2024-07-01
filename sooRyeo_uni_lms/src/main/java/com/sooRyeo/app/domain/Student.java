@@ -2,10 +2,7 @@ package com.sooRyeo.app.domain;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sooRyeo.app.common.AES256;
 
@@ -17,13 +14,17 @@ public class Student {
     private String pwd;
     private String name;
     private String jubun;
-    private String tel;
+    private String tel;				// (AES-256 암호화/복호화 대상)
     private Short grade;
     private String address;
-    private String email;
-    private Integer register_year;
+    private String email; 			// (AES-256 암호화/복호화 대상)
+    private Date register_date;
     private Short status;
     private Integer fk_department_seq;
+    
+    private String birthday; 		// 생년월일
+
+    
 	public Integer getStudent_id() {
 		return student_id;
 	}
@@ -36,22 +37,16 @@ public class Student {
 	public String getJubun() {
 		return jubun;
 	}
-	public String getTel() {
-		
-		return tel;
-	}
+
 	public Short getGrade() {
 		return grade;
 	}
 	public String getAddress() {
 		return address;
 	}
-	public String getEmail()  {
 	
-		return email;
-	}
-	public Integer getRegister_year() {
-		return register_year;
+	public Date getRegister_date() {
+		return register_date;
 	}
 	public Short getStatus() {
 		return status;
@@ -59,6 +54,7 @@ public class Student {
 	public Integer getFk_department_seq() {
 		return fk_department_seq;
 	}
+	
 	public void setDecodedEmail(AES256 aES256) {
 		try {
 			email = aES256.decrypt(email);
@@ -66,17 +62,40 @@ public class Student {
 			e.printStackTrace();
 		}
 	}
+	public String getEmail()  {
+		
+		return email;
+	}
+	
+	
 	public void setDecodeTel(AES256 aES256) {
 		try {
-			tel = aES256.decrypt(tel);
+			
+			tel = aES256.decrypt(tel).substring(0,3) + "-" + aES256.decrypt(tel).substring(3,7) + "-" + aES256.decrypt(tel).substring(7);
+			
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
 		}
-		
+	
 	}
-    
-    
+	public String getTel() {
+		
+		return tel;
+	}
+	
+	
 
+	public String getBirthday() {
+		try {
+			
+			birthday = jubun.substring(0,2) + "-" + jubun.substring(2,4) + "-" + jubun.substring(4,6);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return birthday;
+	}
     
     
     

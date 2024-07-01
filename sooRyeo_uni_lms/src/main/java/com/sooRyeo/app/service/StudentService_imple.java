@@ -1,8 +1,52 @@
 package com.sooRyeo.app.service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
+import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.model.StudentDao;
+
+
+
 
 @Service
 public class StudentService_imple implements StudentService {
 
+	@Autowired
+	StudentDao dao;
+	
+	
+	// 내정보 보기
+	@Override
+	public StudentDTO getViewInfo(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student) session.getAttribute("loginuser");
+		
+		
+		StudentDTO member_student = new StudentDTO();
+		member_student.setName(loginuser.getName());			// 이름
+		member_student.setGrade(loginuser.getGrade());			// 학년
+		member_student.setStatus(loginuser.getStatus());		// 학적상태
+		member_student.setBirthday(loginuser.getBirthday());  	// 생년월일
+		member_student.setTel(loginuser.getTel()); 				// 연락처
+		member_student.setEmail(loginuser.getEmail()); 			// 이메일
+		member_student.setAddress(loginuser.getAddress()); 		// 주소
+		
+		// 학과명 가져오기
+		String d_name = dao.select_department(loginuser.getStudent_id());
+		member_student.setDepartment_name(d_name);
+		
+		
+		
+		return member_student;
+		
+	} // end of public void getViewInfo
+
+	
+	
+	
 }
