@@ -19,7 +19,7 @@ public class Professor {
     private Short employment_stat;
     private Date employment_date;
     
-    
+    private Department department;
     
 	public Integer getProf_id() {
 		return prof_id;
@@ -51,6 +51,15 @@ public class Professor {
 	public Date getEmployment_date() {
 		return employment_date;
 	}
+	
+	
+	public Department getDepartment() {
+		return department;
+	}
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+	
 	
 	public void setDecodedEmail(AES256 aES256) {// 이메일 복호화
 		try {

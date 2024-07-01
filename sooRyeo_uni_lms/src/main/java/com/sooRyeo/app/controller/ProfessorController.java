@@ -44,14 +44,10 @@ public class ProfessorController {
 	
 	@GetMapping("/professor/info.lms")
 	public ModelAndView professor_info(HttpServletRequest request, ModelAndView mav, Professor professor) {// 교수 내 정보 뷰단
+			
+		professor = service.getInfo(request);
 		
-		HttpSession session = request.getSession();
-		Professor loginuser = (Professor)session.getAttribute("loginuser");
-		
-		professor = service.getInfo(loginuser);
-		
-		System.out.println("확인용 professor name : " + professor.getName());
-		
+		// System.out.println("확인용 professor name : " + professor.getName());
 		
 		if(professor == null) {
 			mav.setViewName("redirect:/professor/dashboard.lms");

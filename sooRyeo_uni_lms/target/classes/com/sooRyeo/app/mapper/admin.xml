@@ -13,15 +13,4 @@
 				
 	</select>
 
-	<select id="departmentList_select" resultType="com.sooRyeo.app.domain.Department">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		SELECT *
-		FROM tbl_department 
-	</select>
-
-	<insert id="memberRegister_end" parameterType="com.sooRyeo.app.dto.RegisterDTO">
-		INSERT INTO tbl_student (student_id, pwd, name, jubun, tel, grade, address, email, register_year, status, fk_department_seq)
-		VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{address}, #{email}, #{register_year}, default, #{fk_department_seq})
-	</insert>
-
-
 </mapper>

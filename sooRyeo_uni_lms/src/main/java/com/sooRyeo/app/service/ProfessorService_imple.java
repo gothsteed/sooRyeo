@@ -1,6 +1,7 @@
 package com.sooRyeo.app.service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,17 @@ public class ProfessorService_imple implements ProfessorService {
 	
     
     @Override
-	public Professor getInfo(Professor loginuser) {
+	public Professor getInfo(HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+    	
     	Professor professor = dao.getInfo(loginuser);
+    	
+    	professor.setDecodedEmail(aES256);
+    	professor.setDecodeTel(aES256);
+    	
+    	
     	
 		return professor;
 	}

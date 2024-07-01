@@ -9,7 +9,7 @@ import com.sooRyeo.app.domain.Professor;
 public interface ProfessorService {
 	
 	// 교수 내 정보 불러오기
-	Professor getInfo(Professor loginuser);
+	Professor getInfo(HttpServletRequest request);
 	
 
 }

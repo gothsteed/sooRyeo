@@ -30,7 +30,7 @@ public class ProfessorDao_imple implements ProfessorDao {
 	@Override
 	public Professor getInfo(Professor loginuser) {
 		
-		Professor professor = sqlSession.selectOne("professor.selectInfo", loginuser);
+		Professor professor = sqlSession.selectOne("professor.selectInfo", loginuser);		
 		
 		return professor;
 	}
