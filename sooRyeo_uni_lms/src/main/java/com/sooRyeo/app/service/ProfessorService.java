@@ -3,9 +3,11 @@ package com.sooRyeo.app.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.dto.RegisterDTO;
 
 public interface ProfessorService {
 	
@@ -20,6 +22,9 @@ public interface ProfessorService {
 	
 	// 교수 이메일 중복확인
 	JSONObject emailDuplicateCheck(HttpServletRequest request);
+	
+	// 교수 정보 수정
+	int professor_info_edit(MultipartHttpServletRequest mrequest, Professor professor);
 	
 
 }

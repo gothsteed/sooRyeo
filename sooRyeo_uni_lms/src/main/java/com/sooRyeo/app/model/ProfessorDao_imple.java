@@ -66,6 +66,15 @@ public class ProfessorDao_imple implements ProfessorDao {
 	}
 
 
+	@Override
+	public int professor_info_edit(Map<String, String> paraMap) {
+		
+		int n = sqlSession.update("professor.professor_info_edit", paraMap);
+		
+		return n;
+	}
+
+
 
 
 }

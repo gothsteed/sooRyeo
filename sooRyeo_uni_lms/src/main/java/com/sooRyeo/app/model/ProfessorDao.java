@@ -21,6 +21,9 @@ public interface ProfessorDao {
 	
 	// 교수 이메일 중복확인
 	int emailDuplicateCheck(Map<String, String> paraMap);
+	
+	// 교수 정보 수정 
+	int professor_info_edit(Map<String, String> paraMap);
 
 
 }

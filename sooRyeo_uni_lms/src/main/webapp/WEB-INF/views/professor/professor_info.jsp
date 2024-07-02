@@ -41,8 +41,8 @@ span.error {
             <div class="d-flex">
                <img src="<%=ctxPath%>/resources/images/koala.png" class="img-fluid rounded-start" style="width:15%; margin-left:5%;" />
                <div style="width:25%;" class="prodInputName" style="padding-bottom: 10px; margin-left:5%;">이미지파일 미리보기</div>
-               <div><img id="previewImg" width="150" /></div>
-               <input class="form-control" type="file" id="formFile" style="width:30%; margin-top: 10%;">
+               <div><img id="previewImg" width="300"/></div>				    	
+               <input class="form-control img_file" type="file" name="attach" id="formFile" style="width:30%; margin-top: 10%;">
             </div>
                
             <div class="card-body">
