@@ -9,10 +9,13 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
@@ -22,12 +25,10 @@ import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
 
 import com.sooRyeo.app.aop.RequireLogin;
-
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
-
+import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.service.DepartmentService;
-
 
 @Controller
 @RequireLogin(type = Admin.class)
@@ -55,7 +56,12 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/admin/MemberRegister.lms", method = RequestMethod.GET)
-	public String MemberRegister() {
+	public String MemberRegister(HttpServletRequest request) {
+		
+		// select 태그에 학과를 전부 불러오는 메소드
+		List<Department> departmentList = adminService.departmentList_select();
+		
+		request.setAttribute("departmentList", departmentList);
 		
 		return "MemberRegister.admin";
 	}
@@ -162,9 +168,9 @@ public class AdminController {
 		return adminService.ShowCurriculumPage(request, mav);
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/admin/curriculumJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
-	public String getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
+	@RequestMapping(value = "/admin/curriculumJSON.lms", method = RequestMethod.GET)
+	public ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
+		
 		
 		return adminService.getCurriculumPage(request, mav, requestDto);
 	}

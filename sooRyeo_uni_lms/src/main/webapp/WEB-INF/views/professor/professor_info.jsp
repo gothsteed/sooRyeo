@@ -92,7 +92,7 @@ span.error {
                </div>
             </div>
             <div class="card-footer" style="padding-left:800px;">
-               <button class="btn btn-success" id="updateBtn" onclick="goRegister('<%=ctxPath%>')">수정하기</button>
+               <button class="btn btn-success" id="updateBtn" onclick="goEdit()">수정하기</button>
             </div>
          </form>
       
@@ -435,7 +435,7 @@ $(document).ready(function() {
 		
 // Function Declaration		
 
-function goRegister(ctxPath) {
+function goEdit() {
 	
     // *** "비밀번호중복확인" 를 클릭했는지 검사하기 시작 *** //
     if(!b_pwdcheck_click) {
@@ -483,15 +483,21 @@ function goRegister(ctxPath) {
 		return; // goRegister() 함수를 종료한다.
 	}
 	// *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
+	
+	
+	goEdit_noAttach();
 
+} // end of function goEdit()---------------------
+
+
+function goEdit_noAttach(){// 첨부파일 없을 때 등록
+	
     const frm = document.professorFrm;
-    frm.action = ctxPath+"/professor/professor_info_edit.lms";
     frm.method = "post";
-    frm.submit();
-
-} // end of function goRegister()---------------------
-
-
+    frm.action = "<%= ctxPath%>/professor/professor_info_edit.lms";
+    frm.submit();	
+	
+} 
 
 
 

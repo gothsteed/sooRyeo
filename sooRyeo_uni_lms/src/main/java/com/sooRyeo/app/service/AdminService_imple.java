@@ -10,14 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -112,45 +109,29 @@ public class AdminService_imple implements AdminService {
 	@Override
 	public ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav) {
 		
-		List<Department> departments =  departmentDao.departmentList_select();
-		mav.addObject("departments", departments);
 		
 		mav.setViewName("curriculum.admin");
 		return mav;
 	}
 
 	@Override
-	public String getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
+	public ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
 		
 		int sizePerPage = 10;
 		
 		Pager<Curriculum> page = curriculumDao.getCurriculumPage(requestDto, sizePerPage);
-		
-		
-		JSONObject result = new JSONObject();
-		result.put("pageBar", page.makeScriptPageBar("fetchData"));
 		
 		JSONArray jsonArr = new JSONArray();
 		
 		for(Curriculum curr : page.getObjectList()) {
 			JSONObject jsonObj = new JSONObject(); 
 			
-			jsonObj.put("curriculum_seq", curr.getCurriculum_seq());
-			jsonObj.put("department_name", curr.getDepartment_name());
-			jsonObj.put("fk_department_seq", curr.getCurriculum_seq());
-			jsonObj.put("grade", curr.getGrade());
-			jsonObj.put("name", curr.getName());
-			jsonObj.put("credit", curr.getCredit());
-			
-			jsonArr.put(jsonObj);
+//			jsonObj.put("name", curr.get)
 			
 		}
 		
 		
-		result.put("curriculumList", jsonArr);
-	
-		
-		return result.toString();
+		return null;
 	}
 	
 	
