@@ -14,6 +14,9 @@ commit;
 select *
 from tbl_student;
 
+select *
+from tbl_professor;
+
 delete from tbl_student
 where student_id = '202400010';
 

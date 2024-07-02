@@ -16,6 +16,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<%=ctxPath%>/resources/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/highcharts.js"></script>
+<script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
+<script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/highcharts-more.js"></script>
+<script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/modules/solid-gauge.js"></script>
 
 
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -51,9 +55,6 @@
 .grid-stack-item-content .content {
 	margin-top:5px;
 }
-
-
-
 </style>
 
 
@@ -61,6 +62,33 @@
 	<div class="row">
 		<div class="col-sm-12 col-md-12">
 			<div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 720px;">
+				
+
+				
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="0" gs-w="3" gs-h="3" gs-no-resize="true">
+					<div class="grid-stack-item-content">
+						<div id="graph">
+						
+						</div>
+					</div>
+				</div>
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="5" gs-y="0" gs-w="3" gs-h="3" gs-no-resize="true">
+					<div class="grid-stack-item-content">
+						<div id="graph">
+						
+						</div>
+					</div>
+				</div>
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="0" gs-w="3" gs-h="3" gs-no-resize="true">
+					<div class="grid-stack-item-content">
+						<div id="graph">
+						
+						</div>
+					</div>
+				</div>
+				
+
+				
 				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="0" gs-w="4" gs-h="3" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
@@ -232,7 +260,96 @@
 				console.log(e.type + ' ' + items.length + ' items:' + str);
 			});
 		    // Optional: Call resizeItemToContent when content changes, for example in response to a user action
+
+		
 		});
+		
+		
+		$(document).ready(function() {
+			let chart = Highcharts.chart('graph', {
+				  chart: {
+				    type: 'solidgauge',
+				    height: '100%'  // Adjust based on the aspect ratio you prefer
+				  },
+				  title: {
+				    text: '프로그래밍 기초',
+				    style: {
+				      fontSize: '18px'
+				    }
+				  },
+				  tooltip: {
+				    enabled: false
+				  },
+			        exporting: {
+			            enabled: false  // This line disables the exporting menu
+			        },
+				  pane: {
+				    startAngle: 0,
+				    endAngle: 360,
+				    background: [{ // Track for Move
+				      outerRadius: '112%',
+				      innerRadius: '88%',
+				      backgroundColor: Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+				      borderWidth: 0
+				    }]
+				  },
+				  yAxis: {
+				    min: 0,
+				    max: 100,
+				    lineWidth: 0,
+				    tickPositions: []
+				  },
+				  plotOptions: {
+				    solidgauge: {
+				      dataLabels: {
+				        enabled: true,
+				        borderWidth: 0,
+				        color: 'black',
+				        style: {
+				          fontSize: '16px'
+				        },
+				        y: -20,
+				        format: '<div style="text-align:center"><span style="font-size:13px; text-align:center;">{y}%</span><br/>' +
+				                '<span style="font-size:13px;opacity:0.4">수강률</span></div>'
+				      },
+				      linecap: 'round',
+				      stickyTracking: false,
+				      rounded: true
+				    }
+				  },
+				  credits: {
+				    enabled: false
+				  },
+				  series: [{
+				    name: 'Grades Completed',
+				    data: [{
+				      color: Highcharts.getOptions().colors[0],
+				      radius: '112%',
+				      innerRadius: '88%',
+				      y: 75
+				    }]
+				  }],
+				  
+				    responsive: {
+				        rules: [{
+				            condition: {
+				                maxWidth: 500
+				            },
+				            chartOptions: {
+				                legend: {
+				                    layout: 'horizontal',
+				                    align: 'center',
+				                    verticalAlign: 'bottom'
+				                }
+				            }
+				        }]
+				    }
+				});
+			
+			
+			chart.setSize(271, 200, true); // false to skip animation
+			
+		})
 
 		// Ensure you have a mechanism to call resizeItemToContent whenever necessary, e.g., after content updates.
 

@@ -22,8 +22,12 @@ import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
 
 import com.sooRyeo.app.aop.RequireLogin;
+
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
+
+import com.sooRyeo.app.service.DepartmentService;
+
 
 @Controller
 @RequireLogin(type = Admin.class)

@@ -1,6 +1,15 @@
 package com.sooRyeo.app.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.servlet.ModelAndView;
+
+import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.dto.CurriculumPageRequestDto;
+import com.sooRyeo.app.dto.RegisterDTO;
 
 public interface AdminService {
 

@@ -1,7 +1,11 @@
 package com.sooRyeo.app.model;
 
+import java.util.List;
+
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.dto.LoginDTO;
+import com.sooRyeo.app.dto.RegisterDTO;
 
 public interface AdminDao {
 	

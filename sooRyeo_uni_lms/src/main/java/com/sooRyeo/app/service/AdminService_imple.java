@@ -24,6 +24,7 @@ import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
 import com.sooRyeo.app.model.CurriculumDao;
 import com.sooRyeo.app.model.DepartmentDao;
+import com.sooRyeo.app.pager.Pager;
 
 @Service
 public class AdminService_imple implements AdminService {
