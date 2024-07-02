@@ -8,6 +8,7 @@ public class Curriculum {
     private Short grade;
     private String name;
     private Short credit;
+    private Department department; 
     
     
 	public Integer getCurriculum_seq() {
@@ -27,6 +28,14 @@ public class Curriculum {
 	}
 	public Short getCredit() {
 		return credit;
+	}
+	
+	public String getDepartment_name( ) {
+		if(department  == null) {
+			return "";
+		}
+		
+		return department.getDepartment_name();
 	}
     
     

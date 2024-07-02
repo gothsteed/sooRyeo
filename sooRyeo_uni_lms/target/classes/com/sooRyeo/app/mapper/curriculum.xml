@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="curriculum">
+
+    <resultMap id="CurriculumJoinDepartment" type="com.sooRyeo.app.domain.Curriculum">
+        <id property="curriculum_seq" column="curriculum_seq"/>
+        <result property="fk_department_seq" column="fk_department_seq"/>
+        <result property="grade" column="grade"/>
+        <result property="name" column="name"/>
+        <result property="credit" column="credit"/>
+        <result property="required" column="required"/>
+        <association property="department" javaType="com.sooRyeo.app.domain.Department">
+            <id property="department_seq" column="department_seq"/>
+            <result property="department_name" column="department_name"/>
+        </association>
+    </resultMap>
+
+
+
+	<insert id="insertCurriculum" parameterType="com.sooRyeo.app.dto.CurriculumInsertRequestDto">
+		INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+		VALUES (
+		curriculum_seq.nextval,
+		<choose>
+			<when test="fk_department_seq != null">#{fk_department_seq}</when>
+			<otherwise>NULL</otherwise>
+		</choose>
+		,
+		<choose>
+			<when test="grade != null">#{grade}</when>
+			<otherwise>NULL</otherwise>
+		</choose>
+		,
+		#{name}, #{credit}, #{required}
+		)
+
+	</insert>
+	
+	<select id="getCurriculumCount" parameterType="HashMap" resultType="int">
+		 	select count(*)
+	        from tbl_curriculum
+	        <where>
+	            <if test="fk_department_seq != null">
+	                and fk_department_seq = #{fk_department_seq}
+	            </if>
+	            <if test="grade != null">
+	                and grade = #{grade}
+	            </if>
+	        </where>
+	</select>
+	
+	<select id="getCurriculumList" parameterType="HashMap" resultMap="CurriculumJoinDepartment">
+	    select * 
+	    from (
+	        select rownum as rno, curriculum_seq, fk_department_seq, grade, name, credit
+	        from tbl_curriculum
+	        <where>
+	            <if test="fk_department_seq != null">
+	                and fk_department_seq = #{fk_department_seq}
+	            </if>
+	            <if test="grade != null">
+	                and grade = #{grade}
+	            </if>
+	        </where>
+	    ) V
+	    left join
+	    tbl_department v2
+	    on v.fk_department_seq = v2.department_seq
+	    where V.rno between #{startRno} and #{endRno}
+	</select>
+
+
+
+
+</mapper>
