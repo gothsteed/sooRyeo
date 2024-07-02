@@ -12,6 +12,10 @@ public class RegisterDTO {
 	private String jubun;
 	private String tel;
 	private String fk_department_seq;
+
+	private String office_address;
+	private String department_seq;
+	
 	private String address;
 	private String register_year;
 	private String grade;
@@ -19,6 +23,18 @@ public class RegisterDTO {
 	
 	private MultipartFile attach;
 
+	public String getOffice_address() {
+		return office_address;
+	}
+	public void setOffice_address(String office_address) {
+		this.office_address = office_address;
+	}
+	public String getDepartment_seq() {
+		return department_seq;
+	}
+	public void setDepartment_seq(String department_seq) {
+		this.department_seq = department_seq;
+	}
 	public MultipartFile getAttach() {
 		return attach;
 	}

@@ -1,4 +1,3 @@
-
 let b_emailcheck_click = false;
 // "이메일중복확인" 을 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도
 
@@ -7,6 +6,22 @@ let b_zipcodeSearch_click = false;
 
 $(document).ready(function(){
 	
+    $("div#student").show();
+    $("div#professor").hide();
+    
+    $("input#option1").click(function(){
+        $("div#professor").hide();
+        $("div#student").show();
+
+        $("span.error").hide();
+    });
+    $("input#option2").click(function(){
+        $("div#student").hide();
+        $("div#professor").show();
+        
+        $("span.error").hide();
+    });
+		
     $("span.error").hide();
     $("input#name").focus();
 
@@ -130,7 +145,6 @@ $(document).ready(function(){
             $("form[action='#'] input").prop("disabled", false);
             $(e.target).parent().next().next().children().hide();
         }
-        
     });// 아이디가 hp2 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
     
     $("input#hp3").blur( (e) => {
@@ -345,20 +359,10 @@ $(document).ready(function(){
         
 	});// end of $("img#zipcodeSearch").click()------------
 
-
-    // 이메일값이 변경되면 가입하기 버튼을 클릭시 "아이디중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
-    $("input#email").bind("change", function(){
-        b_emailcheck_click = false;
-    });
-
     // 이메일값이 변경되면 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
     $("input#email").bind("change", function(){
         b_emailcheck_click = false;
     });
-
-
-
-
 
  // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 시작 <<== //
 	   $(document).on("change", "input.img_file", function(e){
@@ -379,12 +383,6 @@ $(document).ready(function(){
 	   }); // end of $(document).on("change", "input.img_file", function(e){}-------------------------------------------------------------------------------------------------------------
 	   // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 끝 <<== //
 	   
-
-
-
-
-
-
 });// end of $(document).ready(function(){})----------------
 
 //"이메일중복확인"을 클릭했을 때 이벤트 처리하기 시작 //
@@ -400,12 +398,11 @@ function emailcheck(ctxPath) {
             console.log(JSON.stringify(json));
             if(json.emailDuplicateCheck != null) {
                 // 입력한 email이 이미 사용중이라면 
-                $("span#emailCheckResult").html( $("input#email").val() + " 은 이미 사용중 이므로 다른 아이디를 입력하세요").css({"color":"red"});
+                $("span#emailCheckResult").html( $("input#email").val() + " 은 이미 사용중 이므로 다른 이메일을 입력하세요").css({"color":"red"});
                 $("input#email").val("");
             } 
             else {
-                
-                // 입력한 userid 가 존재하지 않는 경우라면 
+                // 입력한 userid 가 존재하지 않는 경우라면
                 $("span#emailCheckResult").html( $("input#email").val() + " 은 사용가능 합니다.").css({"color":"navy"});
             }
         },
@@ -472,13 +469,3 @@ function goRegister(ctxPath) {
 	   frm.submit();
 
 } // end of function goRegister()---------------------
-
-function goReset() {
-    $("span.error").hide();
-    $("span#idcheckResult").empty();
-    $("span#emailCheckResult").empty();
-} //  end of function goReset() {}----------------------------------
-
-function goGaib() {
-    alert("회원가입에 대한 유효성검사를 한후에 통과되면 submit 하려고 함");
-}

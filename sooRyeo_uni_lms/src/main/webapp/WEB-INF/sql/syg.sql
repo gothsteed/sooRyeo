@@ -14,8 +14,11 @@ commit;
 select *
 from tbl_student;
 
-delete from tbl_student
-where student_id = '202400010';
+select *
+from tbl_professor;
+
+delete from tbl_professor
+where prof_id = '202400003';
 
 commit;
 
@@ -26,3 +29,5 @@ ALTER TABLE tbl_student MODIFY register_year Number;
 
 ALTER TABLE tbl_student
 RENAME COLUMN register_date TO register_year;
+
+select * from tab;

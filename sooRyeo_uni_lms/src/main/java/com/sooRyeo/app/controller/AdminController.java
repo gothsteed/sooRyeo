@@ -65,30 +65,47 @@ public class AdminController {
 		
 		return "MemberRegister.admin";
 	}
+	
+	@RequestMapping(value = "/admin/ProfessorRegister.lms", method = RequestMethod.GET)
+	public String ProfessorRegister(HttpServletRequest request) {
+		
+		// select 태그에 학과를 전부 불러오는 메소드
+		List<Department> departmentList = adminService.departmentList_select();
+		
+		request.setAttribute("departmentList", departmentList);
+		
+		return "ProfessorRegister.admin";
+	}
 
 	@PostMapping(value = "/admin/memberRegister_end.lms")
 	public ModelAndView memberRegister_end(HttpServletRequest request, ModelAndView mav, RegisterDTO rdto, MultipartHttpServletRequest mrequest) {
 		
-		String address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
-			String tel = request.getParameter("a2") + request.getParameter("hp2") + request.getParameter("hp3"); // 전화번호
+		String tel = request.getParameter("a2") + request.getParameter("hp2") + request.getParameter("hp3"); // 전화번호
+		rdto.setTel(tel);
+		
+		if(rdto.getGrade() != null) {
+			String address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
 			rdto.setAddress(address);
-			rdto.setTel(tel);
-			
-			
-			MultipartFile attach =  rdto.getAttach();
-	        /*
-	        1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. 
-	        >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
-	                              우리는 WAS의 webapp/resources/files 라는 폴더로 지정해준다.
-	                              조심할 것은  Package Explorer 에서  files 라는 폴더를 만드는 것이 아니다.       
+		}
+		else {
+			String office_address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
+			rdto.setOffice_address(office_address);
+		}
+		
+		MultipartFile attach =  rdto.getAttach();
+        /*
+        1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. 
+        >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
+                              우리는 WAS의 webapp/resources/files 라는 폴더로 지정해준다.
+                              조심할 것은  Package Explorer 에서  files 라는 폴더를 만드는 것이 아니다.       
 	     */
 	     // WAS 의 webapp 의 절대경로를 알아와야 한다. 
 	     HttpSession session = mrequest.getSession(); 
 	     String root = session.getServletContext().getRealPath("/");
-	     
+	    
 	     // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
 	     // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
-	     
+	    
 	     String path = root+"resources"+File.separator+"files";
 	     /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
 	           운영체제가 Windows 이라면 File.separator 는  "\" 이고,
@@ -135,12 +152,12 @@ public class AdminController {
 		int n = adminService.memberRegister_end(rdto);
 		
 		if(n == 1) {
-			mav.addObject("message", "학생회원 등록을 성공하였습니다.");
+			mav.addObject("message", "회원 등록을 성공하였습니다.");
 			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
 			mav.setViewName("msg");
 		}
 		else {
-			mav.addObject("message", "학생회원 등록을 실패하였습니다.");
+			mav.addObject("message", "회원 등록을 실패하였습니다.");
 			mav.addObject("loc", request.getContextPath()+"/admin/MemberRegister.lms");
 			mav.setViewName("msg");
 		}
