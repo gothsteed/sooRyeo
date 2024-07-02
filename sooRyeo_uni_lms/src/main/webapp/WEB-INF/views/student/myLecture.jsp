@@ -10,12 +10,20 @@
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 <%-- jQueryUI CSS 및 JS --%>
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
 <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
-<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 
 
 <style type="text/css">
+
+.btns {
+  display: flex;
+  position: fixed;
+  right: 200px;
+  bottom: 200px;
+}
+
 
 
 </style>
@@ -23,27 +31,45 @@
 <script type="text/javascript">
 
 
+function scrollToTarget_up() {
+	
+    var target = document.getElementById('target');
+    target.scrollIntoView({ behavior: 'smooth' });
+    
+}
+
+
+function scrollToTarget_down() {
+	
+    var target = document.getElementById('target2');
+    target2.scrollIntoView({ behavior: 'smooth' });
+    
+}
+
 </script>
 
-<div class="container">
+<div id="target"></div>
+<div class="container ml-5">
 <h3>강의 개요</h3>
 <hr>
-	<div class="card mb-5">
-		<div class="card-body">
-			<div>
-				<img src="<%=ctxPath%>/resources/images/annoucement.png" class="img-fluid d-flex" style="width:3%;">
-				<span id="annoucement">공지사항</span>
-			</div>
-			<div>
-				<img src="<%=ctxPath%>/resources/images/tasks.png" class="img-fluid d-flex" style="width:3%;">
-				<span id="tasks">과제</span>
-			</div>
-		</div>
+	<div class="card-body" style="">
+		<button type="button" class="btn btn-outline-light" style="width:20%; height:150px;">
+			<img src="<%=ctxPath%>/resources/images/annoucement.png" class="img-fluid" style="width:30%;">
+			<br><br>
+			<span id="annoucement" style="color:black; font-weight: bold;">공지사항</span>
+			<br>
+		</button> 	
+		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;">
+			<img src="<%=ctxPath%>/resources/images/tasks.png" class="img-fluid" style="width:30%;">
+			<br><br>
+			<span id="tasks" style="color:black; font-weight: bold;">과제</span>
+			<br>
+		</button>
 	</div>
 </div>
 
 
-<div class="container">
+<div class="container ml-5" style="margin-top:5%;">
 <h3>이번주 강의</h3>
 <hr>
 	<div class="card mb-5">
@@ -56,7 +82,7 @@
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;1주차 수업 자료</a>
 		</div>
 	</div>
-</div>
+
 
 <h3>주차 별 학습활동</h3>
 <hr>
@@ -90,14 +116,15 @@
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;3주차 수업 자료</a>
 		</div>
 	</div>
+</div>
+<div id="target2"></div>
 
 
 
-
-
-
-
-
+<div class="btns" style="display:inline;">
+  	<div class="moveTopBtn" onclick="scrollToTarget_up()"><img src="<%=ctxPath%>/resources/images/btn_up_light.png"></div>
+  	<div class="moveDownBtn" onclick="scrollToTarget_down()"><img src="<%=ctxPath%>/resources/images/btn_down_light.png"></div>
+</div>
 
 
 
