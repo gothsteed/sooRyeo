@@ -69,12 +69,11 @@ public class AdminController {
 	@PostMapping(value = "/admin/memberRegister_end.lms")
 	public ModelAndView memberRegister_end(HttpServletRequest request, ModelAndView mav, RegisterDTO rdto, MultipartHttpServletRequest mrequest) {
 		
-			String address = request.getParameter("address") + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
+		String address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
 			String tel = request.getParameter("a2") + request.getParameter("hp2") + request.getParameter("hp3"); // 전화번호
 			rdto.setAddress(address);
 			rdto.setTel(tel);
 			
-			System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@여기는 오냐?@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 			
 			MultipartFile attach =  rdto.getAttach();
 	        /*
@@ -114,7 +113,7 @@ public class AdminController {
 			String originalFilename =  attach.getOriginalFilename();
 			// attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다.
 			
-			System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
+			// System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
 	        // ~~~ 확인용 originalFilename => LG_싸이킹청소기_사용설명서.pdf 
 			
 			newFileName = fileManager.doFileUpload(bytes, originalFilename, path);

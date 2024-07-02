@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+  
 <%
    String ctxPath = request.getContextPath();
 %>    
@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
 	<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
+    
     
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
     
@@ -40,7 +41,7 @@
                   <div class="card-body">
                     <h5 class="card-title">학생 정보</h5>
                     <p class="card-text" />
-                        <form action="#" name="registerFrm" method="post">
+                        <form action="#" name="registerFrm" method="post" enctype="multipart/form-data">
                             <!-- text, form-control -->
                         
                             <div class="form-group row">
@@ -152,9 +153,9 @@
 							</div>
                             
                             <div class="form-group row product">
-							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">등록사진</label>
+							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">증명사진</label>
 							    <div class="col-sm-8">
-							    	<input type="file" name="attach" />
+							    	<input type="file" name="attach" class="img_file" />
 							    	<img id="previewImg" width="300"/>
 							    </div>
 							</div>
