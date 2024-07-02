@@ -199,7 +199,7 @@
             <p>${requesetScope.loginuser.department_name}</p>
         </div>
         <ul class="nav flex-column">
-            <li class="nav-item"><a href="#dashboard" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
+            <li class="nav-item"><a href="<%=ctxPath%>/student/dashboard.lms" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
 
             <li class="nav-item dropdown">
                 <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>

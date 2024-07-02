@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>   
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>   
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
  
@@ -11,8 +12,12 @@
 
 <%-- jQueryUI CSS 및 JS --%>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
-<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
+
+
+<%-- 직접만든 JS --%>
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/student/studentRegister.js"></script>
 
 
 <style type="text/css">
@@ -30,42 +35,6 @@ span.error {
 
 </style>
 
-<script type="text/javascript">
-
-
-$(document).ready(function() {
-	
-	$("span.error").hide();
-	
-	
-}); // end of $(document).ready(function(){})
-
-
-// 이미지 미리 보여주기
-$(document).on("change", "input#formFile", function(e){
-	
-	const input_file = $(e.target).get(0);
-	
-	// console.log(input_file);
-	// <input class="form-control" type="file" id="formFile" style="width:30%; margin-top: 10%;">
-	
-	// console.log(input_file.files);
-	/*
-		FileList {0: File, length: 1}
-		0: File {name: '스크린샷 2024-03-07 120026.png', lastModified: 1709780426227, lastModifiedDate: Thu Mar 07 2024 12:00:26 GMT+0900 (GMT+09:00), webkitRelativePath: '', size: 1543703, …}
-		length: 1
-		[[Prototype]]: FileList
-	*/
-	
-	// console.log(input_file.files[0].name);
-	// 스크린샷 2024-03-07 120026.png
-	
-	
-	
-}); // end of $(document).on("change", "input#formFile", function(e){})
-
-</script>
-
 
 
 <div class="container">
@@ -73,12 +42,15 @@ $(document).on("change", "input#formFile", function(e){
 	  <div class="myInfo row g-0 ">
 	      <div class="card-body">
 	        
-			<form class="profile-form">
+			<form action="#" name="updateFrm" method="post" enctype="multipart/form-data" class="profile-form">
 				<div class="d-flex">
-					<img src="<%=ctxPath%>/resources/images/koala.png" class="img-fluid rounded-start" style="width:15%; margin-left:5%;" />
-					<div style="width:25%;" class="prodInputName" style="padding-bottom: 10px; margin-left:5%;">이미지파일 미리보기</div>
-					<div><img id="previewImg" width="150" /></div>
-					<input class="form-control" type="file" id="formFile" style="width:30%; margin-top: 10%;">
+					<div style="width:15%; height:50px; margin-left:10%; margin-bottom: 10%;">
+						<img src="<%=ctxPath%>/resources/images/student.png" class="img-fluid rounded-start" />
+					</div>
+					<div style="width:25%;" class="prodInputName" style="padding-bottom: 10px; margin-left:5%;"></div>
+					<div><img id="previewImg" width="150" />
+						<input class="form-control" type="file" name="attach" id="formFile" style="margin-top: 10%;">
+					</div>
 				</div>
 					
 				<div class="card-body">
@@ -118,7 +90,11 @@ $(document).on("change", "input#formFile", function(e){
 						<div class="col-sm-6 m-b30">
 							<label class="form-label">연락처</label> 
 							<span class="error">올바른 연락처 형식이 아닙니다.</span>
-							<input type="text" name="stuTel" class="form-control" value="${requestScope.member_student.tel}">
+							<div class="d-flex">
+	                       		<input type="text" disabled name="hp1" id="hp1" class="form-control" maxlength="3" value="010" style="width:15%;" readonly />&nbsp;-&nbsp; 
+	                       		<input type="text" name="hp2" id="hp2" class="form-control" maxlength="4" style="width:15%;" value="${fn:substring(requestScope.member_student.tel, 3, 7)}" />&nbsp;-&nbsp;
+	                       		<input type="text" name="hp3" id="hp3" class="form-control" maxlength="4" style="width:15%;" value="${fn:substring(requestScope.member_student.tel, 7, 11)}" />
+	                       	</div>   
 						</div>
 						<div class="col-sm-6 m-b30">
 							<label class="form-label">이메일</label> 
@@ -136,7 +112,7 @@ $(document).on("change", "input#formFile", function(e){
 					</div>
 				</div>
 				<div class="card-footer" style="padding-left:800px;">
-					<button class="btn btn-success" id="updateBtn" onclick="">수정하기</button>
+					<button class="btn btn-success" id="updateBtn" onclick="goUpdate('<%=ctxPath%>')">수정하기</button>
 				</div>
 			</form>
 	    	

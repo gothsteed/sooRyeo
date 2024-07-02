@@ -1,5 +1,7 @@
 package com.sooRyeo.app.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class StudentDTO {
 
 	
@@ -11,9 +13,23 @@ public class StudentDTO {
 	private String email;
 	private Short status;
 	private String department_name;
+	private String img_name;
+	
+	private MultipartFile attach;
 	
 	
-	
+	public String getImg_name() {
+		return img_name;
+	}
+	public void setImg_name(String img_name) {
+		this.img_name = img_name;
+	}
+	public MultipartFile getAttach() {
+		return attach;
+	}
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
 	// getter, setter
 	public String getName() {
 		return name;

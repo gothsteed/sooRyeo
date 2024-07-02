@@ -71,7 +71,7 @@ public class Student {
 	public void setDecodeTel(AES256 aES256) {
 		try {
 			
-			tel = aES256.decrypt(tel).substring(0,3) + "-" + aES256.decrypt(tel).substring(3,7) + "-" + aES256.decrypt(tel).substring(7);
+			tel = aES256.decrypt(tel).substring(0,3) + aES256.decrypt(tel).substring(3,7) + aES256.decrypt(tel).substring(7);
 			
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
