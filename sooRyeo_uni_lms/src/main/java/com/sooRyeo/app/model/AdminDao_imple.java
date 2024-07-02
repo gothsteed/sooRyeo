@@ -40,5 +40,11 @@ public class AdminDao_imple implements AdminDao {
 		int n = sqlSession.insert("admin.memberRegister_end", rdto);
 		return n;
 	}
+	
+	@Override
+	public String emailDuplicateCheck(String email) {
+		String emailDuplicateCheck = sqlSession.selectOne("admin.emailDuplicateCheck", email);
+		return emailDuplicateCheck;
+	}
 
 }
