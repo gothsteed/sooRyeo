@@ -25,9 +25,26 @@
 
 </script>
 
+<div class="container">
+<h3>강의 개요</h3>
+<hr>
+	<div class="card mb-5">
+		<div class="card-body">
+			<div>
+				<img src="<%=ctxPath%>/resources/images/annoucement.png" class="img-fluid d-flex" style="width:3%;">
+				<span id="annoucement">공지사항</span>
+			</div>
+			<div>
+				<img src="<%=ctxPath%>/resources/images/tasks.png" class="img-fluid d-flex" style="width:3%;">
+				<span id="tasks">과제</span>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div class="container">
-<h3>▶ 이번주 강의</h3>
+<h3>이번주 강의</h3>
 <hr>
 	<div class="card mb-5">
 		<h5 class="card-header" style="font-weight:bold;">1주차 [3월 01일 ~ 3월 08일]</h5>
@@ -41,7 +58,7 @@
 	</div>
 </div>
 
-<h3>▶ 주차 별 학습활동</h3>
+<h3>주차 별 학습활동</h3>
 <hr>
 	<div class="card mb-5">
 		<h5 class="card-header" style="font-weight:bold;">1주차 [3월 01일 ~ 3월 08일]</h5>
