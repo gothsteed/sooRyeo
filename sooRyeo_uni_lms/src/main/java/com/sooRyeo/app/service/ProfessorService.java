@@ -15,5 +15,11 @@ public interface ProfessorService {
 	// 교수 비밀번호 중복확인
 	JSONObject pwdDuplicateCheck(HttpServletRequest request);
 	
+	// 교수 전화번호 중복확인
+	JSONObject telDuplicateCheck(HttpServletRequest request);
+	
+	// 교수 이메일 중복확인
+	JSONObject emailDuplicateCheck(HttpServletRequest request);
+	
 
 }

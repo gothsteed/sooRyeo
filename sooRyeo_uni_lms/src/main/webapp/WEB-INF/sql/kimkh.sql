@@ -20,6 +20,11 @@ commit;
 update tbl_admin set email = '7DiCwyc+1dXTTwg5kjvDmHehvJlz/ESJNhef/5DX+YA='
 where admin_id = '202400001';
 
+alter table tbl_professor add img_name NVARCHAR2(200); 
+commit;
+
+
+
 
 select rno, student_id
 from
@@ -58,5 +63,9 @@ WHERE P.prof_id = '202400002';
 select *
 from tbl_professor
 where pwd = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
-        
+
+
+select count(*)
+from tbl_professor
+where prof_id = 202400002 and name = '홍길동'        
         

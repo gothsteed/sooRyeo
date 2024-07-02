@@ -1,5 +1,7 @@
 package com.sooRyeo.app.model;
 
+import java.util.Map;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,11 +40,32 @@ public class ProfessorDao_imple implements ProfessorDao {
 	@Override
 	public int pwdDuplicateCheck(String pwd) {
 		
-		System.out.println("확인용 pwd : "+ pwd);
+		// System.out.println("확인용 pwd : "+ pwd);
 		
 		int n = sqlSession.selectOne("professor.pwdDuplicateCheck", pwd);
 		
 		return n;
 	}
+
+
+	@Override
+	public int telDuplicateCheck(Map<String, String> paraMap) {
+		
+		int n = sqlSession.selectOne("professor.telDuplicateCheck", paraMap);
+		
+		return n;
+	}
+
+
+	@Override
+	public int emailDuplicateCheck(Map<String, String> paraMap) {
+		
+		int n = sqlSession.selectOne("professor.emailDuplicateCheck", paraMap);
+		
+		return n;
+	}
+
+
+
 
 }

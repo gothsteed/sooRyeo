@@ -1,5 +1,7 @@
 package com.sooRyeo.app.service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,12 +11,9 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.Sha256;
-import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.model.ProfessorDao;
 
@@ -58,10 +57,87 @@ public class ProfessorService_imple implements ProfessorService {
 		String pwd = request.getParameter("pwd");		
 		pwd = Sha256.encrypt(pwd);
 		
-		
 		int n = 0;
 		try {
 			n = dao.pwdDuplicateCheck(pwd);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n); // {"n":1}
+		
+		return jsonObj;
+	}
+
+
+	@Override
+	public JSONObject telDuplicateCheck(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		String prof_id = Integer.toString(loginuser.getProf_id());
+		
+		String tel = request.getParameter("tel");
+		try {
+			tel = aES256.encrypt(tel);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		// System.out.println("확인용 prof_id : " + prof_id);
+		// System.out.println("확인용 tel : " + tel);
+		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		paraMap.put("prof_id", prof_id);
+		paraMap.put("tel", tel);
+		
+		
+		int n = 0;
+		try {
+			n = dao.telDuplicateCheck(paraMap);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n); // {"n":1}
+		
+		return jsonObj;
+	}
+
+
+	@Override
+	public JSONObject emailDuplicateCheck(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		String prof_id = Integer.toString(loginuser.getProf_id());
+		
+		String email = request.getParameter("email");
+		try {
+			email = aES256.encrypt(email);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		// System.out.println("확인용 prof_id : " + prof_id);
+		// System.out.println("확인용 tel : " + tel);
+		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		paraMap.put("prof_id", prof_id);
+		paraMap.put("email", email);
+		
+		
+		int n = 0;
+		try {
+			n = dao.emailDuplicateCheck(paraMap);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

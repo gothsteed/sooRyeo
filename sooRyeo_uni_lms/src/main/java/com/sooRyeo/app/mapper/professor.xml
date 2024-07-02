@@ -45,6 +45,20 @@
 	</select>
 	
 	
+	<select id="telDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_professor
+		where prof_id = to_number(#{prof_id}) and tel = #{tel}
+	</select>
+	
+	
+	<select id="emailDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_professor
+		where prof_id = to_number(#{prof_id}) and email = #{email}
+	</select>
+	
+	
 
 
 </mapper>
