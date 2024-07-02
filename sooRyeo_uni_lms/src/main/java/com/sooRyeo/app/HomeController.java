@@ -56,6 +56,7 @@ public class HomeController {
 	@ResponseBody
 	@PostMapping(value="/student/login.lms")
 	public String home(HttpServletRequest resquest,  LoginDTO loginDTO) {
+		
 		System.out.println("id : " + loginDTO.getId());
 		System.out.println("pwd : " + loginDTO.getPassword());
 		
