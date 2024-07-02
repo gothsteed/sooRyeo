@@ -23,4 +23,25 @@ public class AdminDao_imple implements AdminDao {
 		return admin;
 	}
 
+	// select 태그에 학과를 전부 불러오는 메소드
+	@Override
+	public List<Department> departmentList_select() {
+		
+		List<Department> departmentList = sqlSession.selectList("admin.departmentList_select");
+		return departmentList;
+	}
+
+	// 학생 회원 등록정보를 인서트 하는 메소드
+	@Override
+	public int memberRegister_end(RegisterDTO rdto) {
+		int n = sqlSession.insert("admin.memberRegister_end", rdto);
+		return n;
+	}
+	
+	@Override
+	public String emailDuplicateCheck(String email) {
+		String emailDuplicateCheck = sqlSession.selectOne("admin.emailDuplicateCheck", email);
+		return emailDuplicateCheck;
+	}
+
 }

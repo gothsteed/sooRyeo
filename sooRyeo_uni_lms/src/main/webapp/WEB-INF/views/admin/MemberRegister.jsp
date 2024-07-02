@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+  
 <%
    String ctxPath = request.getContextPath();
 %>    
@@ -23,8 +25,10 @@
     
     <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
     
-    <!-- Font Awesome 6 Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
+    
+	<script type="text/javascript" src="<%= ctxPath%>/resources/js/admin/memberRegister.js"></script>
 
     <script type="text/javascript">
 
@@ -105,7 +109,7 @@
                   <div class="card-body">
                     <h5 class="card-title">학생 정보</h5>
                     <p class="card-text" />
-                        <form action="#" method="post">
+                        <form action="#" name="registerFrm" method="post" enctype="multipart/form-data">
                             <!-- text, form-control -->
                         
                             <div class="form-group row">
@@ -141,20 +145,19 @@
                             </div>
                             <hr>
                             <div class="form-group row">
-                                <label for="a2" class="col-sm-3 text-sm-left">주민번호</label>
-                                <div class="col-sm-8 d-flex">
-                                    <input type="text" id="a2" class="form-control" style="width:39%">
-                                    &nbsp;&nbsp;<input type="password" id="a2" class="form-control" style="width:39%">
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="form-group row">
-                                <label for="a2" class="col-sm-3 text-sm-left">전화번호</label>
-                                <div class="col-sm-8 d-flex">
-                                    <input type="text" id="a2" class="form-control" style="width:26%">
-                                    &nbsp;&nbsp;<input type="text" id="a2" class="form-control" style="width:26%">
-                                    &nbsp;&nbsp;<input type="text" id="a2" class="form-control" style="width:26%">
-                                </div>
+                                <label for="email" class="col-sm-3 text-sm-left">이메일</label>
+                                <div class="col-sm-8 d-flex justify-content-between align-items-center">
+								    <input type="text" name="email" id="email" class="form-control requiredInfo" style="width:70%;">
+								    <div>
+								        <button type="button" class="btn btn-light" onclick="emailcheck('<%=ctxPath%>')">중복확인</button>
+								    </div>
+								</div>
+                                <div class="col-sm-3">
+								</div>
+                                <div class="col-sm-8 justify-content-between align-items-center">
+							        <span class="error" style="margin-right: 5px;">이메일 형식과 일치하지 않습니다.</span>
+							        <span id="emailCheckResult"></span>
+								</div>
                             </div>
                             <hr>
                             
@@ -173,29 +176,56 @@
                             </div>
                             <hr>
                             
+							<div class="form-group row">
+							    <label for="major" class="col-sm-3 text-sm-left">학과</label>
+							    <div class="col-sm-8">
+							        <select class="selectpicker" id="major" name="fk_department_seq">
+							            <c:forEach var="major" items="${requestScope.departmentList}" varStatus="status">    
+							                <option value="${major.department_seq}" name="fk_department_seq">${major.department_name}</option>
+							            </c:forEach>
+							        </select>
+							    </div>
+							</div>
+                            <hr>
+
                             <div class="form-group row">
-                                <label for="a2" class="col-sm-3 text-sm-left">주소</label>
+                                <label for="detailAddress" class="col-sm-3 text-sm-left">주소</label>
                                 <div class="col-sm-8">
                                     <input type="text" id="a2" class="form-control">
                                 </div>
                             </div>
                             <hr>
                             
-                            <div class="form-group row">
-                                <label for="a2" class="col-sm-3 text-sm-left">입학년도</label>
+                            <div class="form-group row requiredInfo">
+                                <label for="register_year" class="col-sm-3 text-sm-left">입학년도</label>
                                 <div class="col-sm-8">
-                                    <%-- 생년월일 --%>
-					                <span>
-					                    <span class="text-center">
-					                    	<i class="fa-solid fa-calendar-days"></i>
-					                    </span>
-					                    <span>
-					                       	<input type="text" name="birthday" id="datepicker" class="datepicker" maxlength="10" placeholder="생년월일"/>
-					                    </span>
-					                </span>
+                                    <%-- 입학년도 --%>
+			                       	<input type="text" name="register_year" id="register_year" maxlength="4" />
                                 </div>
                             </div>
                             <hr>
+                            
+                            <div class="form-group row">
+							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">학년</label>
+							    <div class="col-sm-8">
+							    <select id="grade" name="grade">
+								    <option name="grade1" value="1">1</option>
+								    <option name="grade2" value="2">2</option>
+								    <option name="grade3" value="3">3</option>
+								    <option name="grade4" value="4">4</option>
+								</select>
+							    </div>
+							</div>
+                            
+                            <div class="form-group row product">
+							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">증명사진</label>
+							    <div class="col-sm-8">
+							    	<input type="file" name="attach" class="img_file" />
+							    	<img id="previewImg" width="300"/>
+							    </div>
+							</div>
+							
+							
                         </form>
                     <a href="#" class="btn btn-primary">개설신청하기</a>
                   </div>
