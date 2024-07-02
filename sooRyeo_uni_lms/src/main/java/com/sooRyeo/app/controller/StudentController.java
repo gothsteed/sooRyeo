@@ -75,28 +75,28 @@ public class StudentController {
 		
 	} // end of public ModelAndView myInfo
 	
-	
+	/*
 	// 내정보 수정 및 파일 첨부(이미지)
 	@PostMapping(value="/student/myInfoUpdate.lms")
 	public ModelAndView myInfoUpdate(HttpServletRequest request, ModelAndView mav) {
 		return mav;
 	}
+	*/
 	
-	
-	
+	/*
 	@ResponseBody
 	@PostMapping(value="/admin/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
 	public String addComment(String email) {
 		
-	//	String emailDuplicateCheck = studentservice.emailDuplicateCheck(email);
+		String emailDuplicateCheck = studentservice.emailDuplicateCheck(email);
 		// 수정시 입력한 이메일이 이미 있는 이메일인지 검사하는 메소드
 		
 		JSONObject jsonObj = new JSONObject();
-	//	jsonObj.put("emailDuplicateCheck", emailDuplicateCheck);
+		jsonObj.put("emailDuplicateCheck", emailDuplicateCheck);
 		
 		return jsonObj.toString();
 	}
-	
+	*/
 	
 	
 	// 수업  - 내 강의보기
