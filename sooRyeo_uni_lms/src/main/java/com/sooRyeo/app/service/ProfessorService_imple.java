@@ -19,7 +19,6 @@ import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.ProfessorDao;
 
 
