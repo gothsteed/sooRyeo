@@ -55,6 +55,7 @@ public  class Pager<T> {
 	}
 	
 	
+
 	public String makePageBar(String baseUrl, String... parameters) {
 		
 		int loop = 1;

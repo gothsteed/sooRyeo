@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
@@ -150,6 +151,12 @@ public class AdminService_imple implements AdminService {
 	
 		
 		return result.toString();
+	}
+
+	@Override
+	public List<Announcement> getAnnouncement(Announcement an) {
+		List<Announcement> announcementList = admindao.getAnnouncement(an);
+		return announcementList;
 	}
 	
 	

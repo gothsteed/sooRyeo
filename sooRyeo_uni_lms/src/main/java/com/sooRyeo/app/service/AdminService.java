@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
@@ -29,6 +30,9 @@ public interface AdminService {
 	ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav);
 
 	String getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
+
+	// 학사공지사항 리스트를 select 해오는 메소드
+	List<Announcement> getAnnouncement(Announcement an);
 
 
 }

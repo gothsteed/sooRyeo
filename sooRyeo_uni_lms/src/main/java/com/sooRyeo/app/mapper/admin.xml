@@ -34,4 +34,10 @@
 		FROM tbl_student
 		where email = #{email}
 	</select>
+	
+	<select id="getAnnouncement" parameterType="com.sooRyeo.app.domain.Announcement" resultType="com.sooRyeo.app.domain.Announcement">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT *
+		FROM tbl_announcement
+	</select>
+	
 </mapper>

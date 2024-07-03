@@ -31,3 +31,18 @@ ALTER TABLE tbl_student
 RENAME COLUMN register_date TO register_year;
 
 select * from tab;
+
+select *
+from tbl_announcement;
+
+select *
+from tbl_recruitment_notice;
+
+insert into tbl_announcement (announcement_seq, a_title, a_content)
+values (ANNOUNCEMENT_SEQ.nextval, '학생들 이번학기는 개강을 안해요5', '행복하죠?');
+
+ALTER TABLE tbl_announcement ADD writeday date DEFAULT sysdate NOT NULL;
+ALTER TABLE tbl_announcement ADD viewcount number DEFAULT 0 NOT NULL;
+
+ALTER TABLE tbl_recruitment_notice ADD writeday date DEFAULT sysdate NOT NULL;
+ALTER TABLE tbl_recruitment_notice ADD viewcount number DEFAULT 0 NOT NULL;

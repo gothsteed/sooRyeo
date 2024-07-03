@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,7 @@ import com.sooRyeo.app.service.AdminService;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.service.DepartmentService;
 
@@ -216,5 +218,19 @@ public class AdminController {
 		
 		return adminService.insertCurriculum(request, mav, requestDto);
 	}
+	
+	
+	@GetMapping("/admin/announcement.lms")
+	public ModelAndView announcement(ModelAndView mav, Announcement an) {
+	
+		List<Announcement> announcementList =  adminService.getAnnouncement(an);
+		
+		mav.addObject("announcementList", announcementList);
+		mav.setViewName("announcement.admin");
+
+		return mav;
+	}
+	
+	
 	
 }
