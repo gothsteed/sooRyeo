@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %> 
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <!DOCTYPE html>
 <% String ctxPath = request.getContextPath(); %>
 <html lang="en">
@@ -10,11 +10,9 @@
     <title>Styled Sidebar</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<!--     <link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/4.3.1/gridstack.min.css" rel="stylesheet"/> -->
-    <%-- <link href="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/> --%>
-    
+
     <style>
-		body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0; 
@@ -35,12 +33,12 @@
             font-weight: bold;
         }
 
-		.sidebar ul li:hover {
-			background-color: white;
-			margin-left: 10%;
-			width:85%;
-		
-		}
+        .sidebar ul li:hover {
+            background-color: white;
+            margin-left: 10%;
+            width: 85%;
+        }
+
         .sidebar .profile {
             text-align: center;
             margin-bottom: 20px;
@@ -92,7 +90,6 @@
             font-size: 18px;
         }
 
-     
         .sidebar ul li a.active .icon {
             color: white;
         }
@@ -102,16 +99,16 @@
         }
 
         .dropdown-item {
-			padding-bottom: 2px;
-			background-size: 0 2px;
-			transition: background-size 0.5s;
+            padding-bottom: 2px;
+            background-size: 0 2px;
+            transition: background-size 0.5s;
         }
 
         .dropdown-item:hover {
-        	background-size: 100% 2px;
-			background-image: linear-gradient(#175F30, #175F30);
-			background-repeat: no-repeat;
-			background-position: top left;
+            background-size: 100% 2px;
+            background-image: linear-gradient(#175F30, #175F30);
+            background-repeat: no-repeat;
+            background-position: top left;
         }
         
         .content {
@@ -168,41 +165,23 @@
             font-size: 25px;
             cursor: pointer;
         }
-
-/*         .grid-stack-item-content {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .grid-stack-item-content:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        } */
-       
-		
     </style>
 </head>
 <body>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
     <div class="sidebar">
         <div class="profile">
             <img src="<%=ctxPath%>/resources/images/student.png" alt="Profile Picture">
-            <h3>${requesetScope.loginuser.name}</h3>
-            <p>${requesetScope.loginuser.department_name}</p>
+            <h3>${requestScope.loginuser.name}</h3>
+            <p>${requestScope.loginuser.department_name}</p>
         </div>
         <ul class="nav flex-column">
             <li class="nav-item"><a href="#dashboard" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
-
             <li class="nav-item dropdown">
-                <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
+                <a class="nav-link dropdown-toggle" href="#" id="classesMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
                     <a class="dropdown-item" href="<%=ctxPath%>/student/lectureList.lms">내 수업</a>
                     <a class="dropdown-item" href="#">수강신청</a>
@@ -211,8 +190,8 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
-                <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
+                <a class="nav-link dropdown-toggle" href="#" id="scheduleMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
+                <div class="dropdown-menu" aria-labelledby="scheduleMenu">
                     <a class="dropdown-item" href="#">시간표</a>
                     <a class="dropdown-item" href="#">과제</a>
                     <a class="dropdown-item" href="#">시험</a>
@@ -220,15 +199,15 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
-                <div class="dropdown-menu" aria-labelledby="gradesMenu" >
+                <a class="nav-link dropdown-toggle" href="#" id="gradesMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
+                <div class="dropdown-menu" aria-labelledby="gradesMenu">
                     <a class="dropdown-item" href="#">학점 통계</a>
                     <a class="dropdown-item" href="#">취득 현황</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
-                <div class="dropdown-menu" aria-labelledby="groupsMenu" >
+                <a class="nav-link dropdown-toggle" href="#" id="groupsMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
+                <div class="dropdown-menu" aria-labelledby="groupsMenu">
                     <a class="dropdown-item" href="#">내 친구</a>
                     <a class="dropdown-item" href="#">커뮤니티</a>
                 </div>
@@ -260,35 +239,9 @@
             </div>
         </div>
         
-        
         <div class="main-content">
-        
-           <tiles:insertAttribute name="content" />
-        
-        
+            <tiles:insertAttribute name="content" />
         </div>
-
-<!--         <div class="main-content grid-stack">
-            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content">Item 1</div>
-            </div>
-            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content">Item 2</div>
-            </div>
-            <div class="grid-stack-item" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content">Item 3</div>
-            </div>
-        </div>
- -->
     </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-
-<%--     <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-all.js"></script>
-    <script type="text/javascript">
-        var grid = GridStack.init();
-    </script> --%>
 </body>
 </html>
