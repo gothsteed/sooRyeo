@@ -22,5 +22,15 @@
 		where student_id = #{student_id}
 	</select>
 
+	<!-- 내정보수정 -->
+
+
+
+	<!-- 내정보수정-이메일중복확인 -->
+	<select id="emailDuplicateCheck" parameterType="String" resultType="String">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT email
+		FROM tbl_student
+		where email = #{email}
+	</select>
 
 </mapper>

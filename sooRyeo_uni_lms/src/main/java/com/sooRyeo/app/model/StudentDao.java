@@ -14,4 +14,7 @@ public interface StudentDao {
 	// 학과명 가져오기
 	String select_department(Integer student_id);
 
+	// 이메일 중복확인
+	String emailDuplicateCheck(String email);
+
 }

@@ -206,4 +206,20 @@ function goUpdate(ctxPath) {
     }
     // *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //
 
+    const frm = document.registerFrm;
+    frm.action = ctxPath+"/student/myInfoUpdate.lms";
+    frm.method = "post";
+    frm.submit();
+
 } // end of function goUpdate()---------------------
+
+
+function goReset() {
+    $("span.error").hide();
+    $("span#idcheckResult").empty();
+    $("span#emailCheckResult").empty();
+} //  end of function goReset() {}----------------------------------
+
+function goGaib() {
+    alert("회원가입에 대한 유효성검사를 한후에 통과되면 submit 하려고 함");
+}

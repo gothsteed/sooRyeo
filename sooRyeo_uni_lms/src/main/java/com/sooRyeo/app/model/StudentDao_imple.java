@@ -23,7 +23,8 @@ public class StudentDao_imple implements StudentDao {
 		Student student = sqlSession.selectOne("student.selectStudent", loginDTO);
 		
 		return student;
-	}
+		
+	} // end of public Student selectStudent
 
 	// 내정보 보기
 	@Override
@@ -32,7 +33,8 @@ public class StudentDao_imple implements StudentDao {
 		StudentDTO member_student = sqlSession.selectOne("student.getViewInfo", login_userid);
 		
 		return member_student;
-	}
+		
+	} // end of public StudentDTO getViewInfo
 
 	// 학과명 가져오기
 	@Override
@@ -41,6 +43,16 @@ public class StudentDao_imple implements StudentDao {
 		String d_name = sqlSession.selectOne("student.select_department", student_id);
 		
 		return d_name;
-	} 
+	} // end of public String select_department
+
+	// 이메일 중복확인
+	@Override
+	public String emailDuplicateCheck(String email) {
+		
+		String emailDuplicateCheck = sqlSession.selectOne("student.emailDuplicateCheck", email);
+		
+		return emailDuplicateCheck;
+		
+	} // end of public String emailDuplicateCheck
 	
 }

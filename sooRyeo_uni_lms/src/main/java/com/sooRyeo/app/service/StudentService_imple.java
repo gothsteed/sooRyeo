@@ -1,10 +1,15 @@
 package com.sooRyeo.app.service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
+
+import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.model.StudentDao;
@@ -18,6 +23,8 @@ public class StudentService_imple implements StudentService {
 	@Autowired
 	StudentDao dao;
 	
+	@Autowired
+	private AES256 aes;
 	
 	// 내정보 보기
 	@Override
@@ -45,6 +52,32 @@ public class StudentService_imple implements StudentService {
 		return member_student;
 		
 	} // end of public void getViewInfo
+
+	
+	// 내정보 수정
+	@Override
+	public int myInfoUpdate(StudentDTO student) {
+		
+		System.out.println(student.getTel());
+		
+		
+		return 0;
+	} // end of public int myInfoUpdate
+
+
+	// 이메일 중복확인
+	@Override
+	public String emailDuplicateCheck(String email) {
+		
+		String emailDuplicateCheck = "";
+		try {
+			emailDuplicateCheck = dao.emailDuplicateCheck(aes.encrypt(email));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		return emailDuplicateCheck;
+		
+	} // end of public String emailDuplicateCheck
 
 	
 	
