@@ -15,6 +15,8 @@
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
+<%-- kakao 우편주소 불러오기용 --%>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
 
 <%-- 직접만든 JS --%>
 <script type="text/javascript" src="<%= ctxPath%>/resources/js/student/studentRegister.js"></script>
@@ -96,7 +98,7 @@ span.error {
 	                       		<input type="text" name="hp3" id="hp3" class="form-control" maxlength="4" style="width:15%;" value="${fn:substring(requestScope.member_student.tel, 7, 11)}" />
 	                       	</div>   
 						</div>
-						<div class="col-sm-6 m-b30">
+						<div class="col-sm-6 m-b30 mb-3">
 							<label class="form-label">이메일</label> 
 							<span class="error" id="email_error">이메일 형식에 맞지 않습니다.</span>
 							<input type="text" name="stuEmail" class="form-control" value="${sessionScope.loginuser.email}">
@@ -109,7 +111,20 @@ span.error {
 							<label class="form-label">주소</label> 
 							<span class="error">주소를 입력하세요.</span>
 							<input type="text" id="stuAddress" name="stuAddress" class="form-control" value="${requestScope.member_student.address}">
+							
+							<input type="text" id="postcode" name="postcode" class="form-control w-25 mb-1" />
+                     		<input type="text" id="address" name="address" class="form-control mb-1"/>
+                     		<input type="text" id="detailAddress" name="detailAddress" class="form-control mb-1" />
+                     		<input type="text" id="extraAddress" name="extraAddress" class="form-control" />
 						</div>
+						<div class="col-sm-6 m-b30"> 
+                     		<label class="form-label">비밀번호</label>
+                     		<span class="error">숫자/문자/특수문자 포함 형태의 8~15자리로 입력해주세요.</span> 
+                     		<input type="password" id="profPwd" name="pwd" class="form-control" />
+                   	        <%-- 비밀번호중복체크 --%>
+                            <span id="pwdcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">비밀번호 중복확인</button></span>
+                            <span id="pwdCheckResult"></span>
+                 		</div>
 					</div>
 				</div>
 				<div class="card-footer" style="padding-left:800px;">
