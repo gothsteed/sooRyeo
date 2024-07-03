@@ -37,12 +37,11 @@ span.error {
      <div class="myInfo row g-0 ">
          <div class="card-body">
            
-         <form class="profile-frm" name="professorFrm">
+         <form class="profile-frm" name="professorFrm" enctype="multipart/form-data">
             <div class="d-flex">
-               <img src="<%=ctxPath%>/resources/images/koala.png" class="img-fluid rounded-start" style="width:15%; margin-left:5%;" />
-               <div style="width:25%;" class="prodInputName" style="padding-bottom: 10px; margin-left:5%;">이미지파일 미리보기</div>
-               <div><img id="previewImg" width="300"/></div>				    	
-               <input class="form-control img_file" type="file" name="attach" id="formFile" style="width:30%; margin-top: 10%;">
+               <img class="img-fluid rounded-start" id="previewImg" style="width:15%; margin-left:5%;" />
+               <div class="prodInputName" style="width:25%; padding-bottom: 10px; margin-left:5%;">이미지파일 미리보기</div>				    	
+               <input class="form-control img_file" type="file" name="attach" style="width:30%; margin-top: 10%;">
             </div>
                
             <div class="card-body">
@@ -92,7 +91,7 @@ span.error {
                </div>
             </div>
             <div class="card-footer" style="padding-left:800px;">
-               <button class="btn btn-success" id="updateBtn" onclick="goEdit()">수정하기</button>
+               <button type="button" class="btn btn-success" id="editBtn" onclick="goEdit()">수정하기</button>
             </div>
          </form>
       
@@ -104,9 +103,6 @@ span.error {
 
 <script type="text/javascript">
 
-
-$(document).ready(function() {
-   
 	let b_emailcheck_click = false;
 	// "이메일중복확인" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도
 
@@ -118,6 +114,10 @@ $(document).ready(function() {
 	
 	let b_zipcodeSearch_click = false;
 	// "우편번호" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도
+
+$(document).ready(function() {
+   
+
 	
    $("span.error").hide();
        
@@ -429,9 +429,32 @@ $(document).ready(function() {
        $("input#extraAddress").attr("readonly", true);
        
 	});// end of $("img#zipcodeSearch").click()------------		   
-      
+    
+	
+	// ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 시작 <<== //
+    $(document).on("change", "input.img_file", function(e){
+       
+    		const input_file = $(e.target).get(0);
+            
+          	// 자바스크립트에서 file 객체의 실제 데이터(내용물)에 접근하기 위해 FileReader 객체를 생성하여 사용한다.
+           	const fileReader = new FileReader();
+            
+           	fileReader.readAsDataURL(input_file.files[0]); // FileReader.readAsDataURL() --> 파일을 읽고, result 속성에 파일을 나타내는 URL을 저장 시켜준다.
+           
+           	fileReader.onload = function(){ // FileReader.onload --> 파일 읽기 완료 성공시에만 작동하도록 하는 것임.
+            
+            	document.getElementById("previewImg").src = fileReader.result; // ■■■■■■  id가 previewImg 이것인 img 태그에 위에서 얻어온 img.src값을 넣어준 것이다. ■■■■■■
+        	};
+       
+    }); // end of $(document).on("change", "input.img_file", function(e){}-------------------------------------------------------------------------------------------------------------
+    // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 끝 <<== //
+	
+	
+	
    
-});// end of $(document).ready(function()
+});// end of $(document).ready()-----------------------------------------------------
+
+		
 		
 // Function Declaration		
 

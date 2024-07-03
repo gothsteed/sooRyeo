@@ -91,18 +91,18 @@ public class ProfessorController {
 	
 	
 	@PostMapping(value = "/professor/professor_info_edit.lms")
-	public ModelAndView professor_info_edit(HttpServletRequest request, ModelAndView mav, Professor professor) {// 첨부파일 없는 교수 정보 수정
+	public ModelAndView professor_info_edit( ModelAndView mav, Professor professor, MultipartHttpServletRequest mrequest) {// 첨부파일 없는 교수 정보 수정
 		     
-	      int n = service.professor_info_edit(request, professor);
+	      int n = service.professor_info_edit(professor, mrequest);
       
 	      if(n == 1) {
 	    	  mav.addObject("message", "교수정보 수정을 성공하였습니다.");
-	    	  mav.addObject("loc", request.getContextPath()+"/professor/dashboard.lms");
+	    	  mav.addObject("loc", mrequest.getContextPath()+"/professor/dashboard.lms");
 	    	  mav.setViewName("msg");
 	      }
 	      else {
 	    	  mav.addObject("message", "교수정보 수정이 실패하였습니다.");
-	    	  mav.addObject("loc", request.getContextPath()+ "/professor/info.lms");
+	    	  mav.addObject("loc", mrequest.getContextPath()+ "/professor/info.lms");
 	    	  mav.setViewName("msg");
 	      }
       

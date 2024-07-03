@@ -159,24 +159,77 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public int professor_info_edit(HttpServletRequest request, Professor professor) {
+	public int professor_info_edit(Professor professor,  MultipartHttpServletRequest mrequest) {
 		
 		int n = 0;
 		
-		HttpSession session = request.getSession();
+		MultipartFile attach =  professor.getAttach();
+		
+		HttpSession session = mrequest.getSession();
+		
+		String root = session.getServletContext().getRealPath("/");
+	     
+	    // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+	    // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+	     
+	    String path = root+"resources"+File.separator+"files";
+	    /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+	          운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+	          운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+	    */
+	    // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+	    // System.out.println("~~~ 확인용 path => " + path);
+	    // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+		/*
+		  2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+	    */
+	    String newFileName = "";
+	    // WAS(톰캣)의 디스크에 저장될 파일명
+	     
+	    byte[] bytes = null;
+	    // 첨부 파일의 내용물을 담은 것
+	    
+	    String img_name = "";
+	    
+	    try {
+	    	bytes = attach.getBytes();
+	    	// 첨부파일의 내용물을 읽어오는 것
+			
+			String originalFilename =  attach.getOriginalFilename();
+			// attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다.
+			
+			// System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
+	        // ~~~ 확인용 originalFilename => LG_싸이킹청소기_사용설명서.pdf 
+			
+			newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+			// 첨부되어진 파일을 업로드 하는 것이다.
+			
+			// System.out.println("~~~ 확인용 newFileName => " + newFileName);
+			// ~~~ 확인용 newFileName => 2024062712074811660790417300.xlsx
+			
+			/*
+	           3. BoardVO boardvo 에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주기  
+			*/
+			img_name = newFileName;
+			   // WAS(톰캣)에 저장된 파일명(2024062712074811660790417300.xlsx) 이다.	
+			   
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		
+		
+		
+		
 		Professor loginuser = (Professor)session.getAttribute("loginuser");
 		
 	
 		String prof_id = Integer.toString(loginuser.getProf_id());
-		String pwd = request.getParameter("pwd");
+		String pwd = mrequest.getParameter("pwd");
 		pwd = Sha256.encrypt(pwd);
 		
-		String address = request.getParameter("address") + " " + request.getParameter("detailAddress") + request.getParameter("extraAddress");	// 주소
+		String address = mrequest.getParameter("address") + " " + mrequest.getParameter("detailAddress") + mrequest.getParameter("extraAddress");	// 주소
 		
-		String email = request.getParameter("email");
-		
-		System.out.println("확인용 address : " + address);
-		
+		String email = mrequest.getParameter("email");
 		
 		try {
 			email = aES256.encrypt(email);
@@ -184,14 +237,20 @@ public class ProfessorService_imple implements ProfessorService {
 			e.printStackTrace();
 		}
 		
-		String tel = request.getParameter("tel");
+		String tel = mrequest.getParameter("tel");
 		
 		try {
 			tel = aES256.encrypt(tel);
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
 		}
-				
+		
+		System.out.println("확인용 prof_id : " + prof_id);
+		System.out.println("확인용 pwd : " + pwd);
+		System.out.println("확인용 address : " + address);
+		System.out.println("확인용 email : " + email);
+		System.out.println("확인용 tel : " + tel);
+		System.out.println("확인용 img_name : " + img_name);
 		
 		Map<String, String> paraMap = new HashMap<>();
 		
@@ -200,6 +259,13 @@ public class ProfessorService_imple implements ProfessorService {
 		paraMap.put("address", address);
 		paraMap.put("email", email);
 		paraMap.put("tel", tel);
+		
+		if(img_name != null) {
+			paraMap.put("img_name", img_name);
+		}
+		else {
+			paraMap.put("img_name", "");
+		}
 		
 		try {
 			n = dao.professor_info_edit(paraMap);

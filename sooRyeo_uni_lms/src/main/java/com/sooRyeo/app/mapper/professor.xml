@@ -60,7 +60,12 @@
 	
 	
 	<update id="professor_info_edit" parameterType="HashMap">
-		update tbl_professor set pwd = #{pwd}, address = #{address}, email = #{email}, tel = #{tel}  
+		update tbl_professor set pwd = #{pwd}, office_address = #{address}, email = #{email}, tel = #{tel}
+		<choose>
+			<when test='img_name != "" '>
+			, img_name = #{img_name}
+			</when>
+		</choose>  
 		where prof_id = to_number(#{prof_id})
 	</update>
 	

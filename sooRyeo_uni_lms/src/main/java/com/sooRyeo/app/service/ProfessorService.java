@@ -24,7 +24,7 @@ public interface ProfessorService {
 	JSONObject emailDuplicateCheck(HttpServletRequest request);
 	
 	// 교수 정보 수정
-	int professor_info_edit(HttpServletRequest request, Professor professor);
+	int professor_info_edit(Professor professor, MultipartHttpServletRequest mrequest);
 	
 
 }
