@@ -4,6 +4,19 @@
 
 <mapper namespace="curriculum">
 
+    <resultMap id="CurriculumJoinDepartment" type="com.sooRyeo.app.domain.Curriculum">
+        <id property="curriculum_seq" column="curriculum_seq"/>
+        <result property="fk_department_seq" column="fk_department_seq"/>
+        <result property="grade" column="grade"/>
+        <result property="name" column="name"/>
+        <result property="credit" column="credit"/>
+        <result property="required" column="required"/>
+        <association property="department" javaType="com.sooRyeo.app.domain.Department">
+            <id property="department_seq" column="department_seq"/>
+            <result property="department_name" column="department_name"/>
+        </association>
+    </resultMap>
+
 
 
 	<insert id="insertCurriculum" parameterType="com.sooRyeo.app.dto.CurriculumInsertRequestDto">
@@ -38,7 +51,7 @@
 	        </where>
 	</select>
 	
-	<select id="getCurriculumList" parameterType="HashMap" resultType="com.sooRyeo.app.domain.Curriculum">
+	<select id="getCurriculumList" parameterType="HashMap" resultMap="CurriculumJoinDepartment">
 	    select * 
 	    from (
 	        select rownum as rno, curriculum_seq, fk_department_seq, grade, name, credit
@@ -52,6 +65,9 @@
 	            </if>
 	        </where>
 	    ) V
+	    left join
+	    tbl_department v2
+	    on v.fk_department_seq = v2.department_seq
 	    where V.rno between #{startRno} and #{endRno}
 	</select>
 

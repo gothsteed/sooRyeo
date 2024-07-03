@@ -1,9 +1,9 @@
 package com.sooRyeo.app.model;
 
 import com.sooRyeo.app.domain.Curriculum;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
-import com.sooRyeo.app.pager.Pager;
 
 public interface CurriculumDao {
 
