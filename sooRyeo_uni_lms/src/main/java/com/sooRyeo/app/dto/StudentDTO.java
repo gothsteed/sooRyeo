@@ -30,7 +30,6 @@ public class StudentDTO {
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
 	}
-	// getter, setter
 	public String getName() {
 		return name;
 	}
