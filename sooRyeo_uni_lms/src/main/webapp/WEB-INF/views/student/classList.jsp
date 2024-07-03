@@ -20,7 +20,7 @@
 
 <style>
 
-.major {
+.majorO {
 
 	border:solid 1px #175F30;
 	background-color: #175F30;
@@ -34,7 +34,7 @@
 
 }
 
-.no-major {
+.majorX {
 
 	border:solid 1px #A0D468;
 	background-color: #A0D468;
@@ -48,10 +48,24 @@
 
 }
 
-.yang {
+.no-majorO {
 
 	border:solid 1px #FFD400;
 	background-color: #FFD400;
+	width: 8%;
+	height: 22px;
+	font-size: 11pt;
+	text-align: center;
+	margin-left : 2.5%;
+	margin-top: 1.5%;
+	color: white;
+
+}
+
+.no-majorX {
+
+	border:solid 1px #FF9500;
+	background-color: #FF9500;
 	width: 8%;
 	height: 22px;
 	font-size: 11pt;
@@ -86,15 +100,8 @@
 
 <script type="text/javascript">
 	
-	
-	
-	
-	
-	
-	
+
 </script>
-
-
 
 
 
@@ -102,43 +109,31 @@
 
 	<div style="margin-top: 5%; width : 80%; border: solid 0px green;">
 	
-		<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-		   <div style="display: flex;">
-		      <div><img src="<%= ctxPath%>/resources/images/user.png" style="width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
-		      <div class="major rounded">전공</div>
-		      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">
-		         <div style="font-size: 20pt; color: black;">자바 기초</div>
-		         <div style="font-size: 12pt; color: black;">서영학</div>
-		      </div>
-		      <div style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
-		   </div>
-		</div>
-		
-		<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-		   <div style="display: flex;">
-		      <div><img src="<%= ctxPath%>/resources/images/user.png" style="width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
-		      <div class="yang rounded">교양</div>
-		      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">
-		         <div style="font-size: 20pt; color: black;">철학의 이해</div>
-		         <div style="font-size: 12pt; color: black;">손혜정</div>
-		      </div>
-		      <div style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
-		   </div>
-		</div>
-		
-		<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-		   <div style="display: flex;">
-		      <div><img src="<%= ctxPath%>/resources/images/user.png" style="width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
-		      <div class="no-major rounded">교양</div>
-		      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">
-		         <div style="font-size: 20pt; color: black;">UI/UX</div>
-		         <div style="font-size: 12pt; color: black;">이정연</div>
-		      </div>
-		   	  <div style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
-		   </div>
-		</div>
-	
-	
+		<c:forEach var="mapList" items="${requestScope.mapList}">
+			<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
+			   <div style="display: flex;">
+			      <div><img src="<%= ctxPath%>/resources/images/user.png" style="width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
+			      <c:if test="${mapList.department_seq != null && mapList.required == '1'}">
+			      	<div class="majorO rounded">전공필수</div>
+			      </c:if>
+			      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
+			      	<div class="majorX rounded">전공선택</div>
+			      </c:if>
+			      <c:if test="${mapList.department_seq == null && mapList.required == '1'}">
+			      	<div class="no-majorO rounded">교양필수</div>
+			      </c:if>
+			      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
+			      	<div class="no-majorX rounded">교양선택</div>
+			      </c:if>
+			      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">
+					  <div style="font-size: 20pt; color: black;">${mapList.className}</div>
+		         	  <div style="font-size: 12pt; color: black;">${mapList.professorName}</div>	
+			      </div>
+			      <div style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
+			   </div>
+			</div>
+		</c:forEach>
+
 	</div>
 	
 	

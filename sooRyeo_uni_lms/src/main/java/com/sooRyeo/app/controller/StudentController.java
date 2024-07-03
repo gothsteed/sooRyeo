@@ -54,8 +54,9 @@ public class StudentController {
 		
 		int userid = loginuser.getStudent_id();
 		
-		
 		List<Map<String, String>> mapList = service.classList(userid);
+		
+		request.setAttribute("mapList", mapList);
 
 		return "classList.student";
 		// /WEB-INF/views/student/{1}.jsp

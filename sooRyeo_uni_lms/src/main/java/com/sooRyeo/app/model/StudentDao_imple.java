@@ -1,5 +1,8 @@
 package com.sooRyeo.app.model;
 
+import java.util.List;
+import java.util.Map;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +25,14 @@ public class StudentDao_imple implements StudentDao {
 		
 		Student student = sqlSession.selectOne("student.selectStudent", loginDTO);
 		return student;
+	}
+
+
+	// 수업명, 교수명  select
+	@Override
+	public List<Map<String, String>> classList(int userid) {
+		List<Map<String, String>> classList = sqlSession.selectList("student.classList", userid);
+		return classList;
 	}
 
 }
