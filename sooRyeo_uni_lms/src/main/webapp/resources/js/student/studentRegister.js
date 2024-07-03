@@ -117,17 +117,15 @@ $(document).ready(function(){
 
 //"이메일중복확인"을 클릭했을 때 이벤트 처리하기 시작 //
 function emailcheck(ctxPath) {
-
-    var b_emailcheck_click = true; // "이메일중복확인" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
+    var b_emailcheck_click = true; // "이메일중복확인"를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
     var email = $("input[name='stuEmail']").val();
     var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 이메일 형식을 검증하는 정규 표현식
 
     // 이메일 형식 검증
     if (!emailPattern.test(email)) {
-        $("span#emailCheckResult").html("잘못된 이메일 형식입니다. 다시 입력해 주세요.").css({"color":"red"});
+        $("span#email_error").show(); // 형식에러 메시지 표시
         return;
     }
-
 
     $.ajax({
         url : ctxPath + "/student/emailDuplicateCheck.lms",
@@ -135,18 +133,18 @@ function emailcheck(ctxPath) {
         type : "post",
         dataType : "json",  
         success : function(json){
-            
-            console.log(JSON.stringify(json));
+
+            $("span#email_error").hide(); // 형식에러 메시지 숨기기
 
             if (json.emailDuplicateCheck) {
-                $("span#emailCheckResult").html(email + " 은 이미 사용중 이므로 다른 이메일을 입력하세요.").css({"color":"red"});
+                $("span#emailCheckResult").html(email + " 은 이미 사용중 이므로 다른 이메일을 입력하세요.").css({"color":"red", "font-size":14});
                 $("input[name='stuEmail']").val("");
             } else {
-                $("span#emailCheckResult").html(email + " 은 사용가능 합니다.").css({"color":"navy"});
+                $("span#emailCheckResult").html(email + " 은 사용가능 합니다.").css({"color":"navy", "font-size":14});
             }
         },
         error: function(request, status, error){
-            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+            alert("이메일 확인 중 오류가 발생했습니다. 다시 시도해 주세요.\n" + "code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
         }
     });
 };

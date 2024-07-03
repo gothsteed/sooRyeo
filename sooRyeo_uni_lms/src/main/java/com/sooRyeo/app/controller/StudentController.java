@@ -48,21 +48,6 @@ public class StudentController {
 	}
 	
 	
-	@GetMapping(value = "/student/idfind.lms", produces="text/plain;charset=UTF-8")
-	public String idFind() {
-		
-		return "idFind";
-		// /WEB-INF/views/idFind.jsp
-	}
-	
-	@GetMapping(value = "/student/pwdfind.lms", produces="text/plain;charset=UTF-8")
-	public String pwdFind() {
-		
-		return "pwdFind";
-		// /WEB-INF/views/pwdFind.jsp
-	}
-	
-	
 	
 	// 내정보 보기
 	@RequestMapping(value="/student/myInfo.lms", produces="text/plain;charset=UTF-8")

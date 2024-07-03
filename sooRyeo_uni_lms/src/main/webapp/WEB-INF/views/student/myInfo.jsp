@@ -102,6 +102,7 @@ span.error {
 							<input type="text" name="stuEmail" class="form-control" value="${sessionScope.loginuser.email}">
 	                       	<%-- 이메일중복체크 --%>
 	                       	<span id="emailcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3" onclick="emailcheck('<%=ctxPath%>')">이메일 중복확인 </button></span>
+	                       	<br>
 	                       	<span id="emailCheckResult"></span>
 						</div>
 						<div class="col-sm-6 m-b30">
