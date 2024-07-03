@@ -730,6 +730,243 @@ commit;
 ALTER TABLE tbl_curriculum
 ADD required Number(1);
 
+desc tbl_curriculum;
+
+ALTER TABLE tbl_curriculum
+ADD EXIST NUMBER(1) default 1 not null;
+
+ALTER TABLE tbl_curriculum
+DROP COLUMN EXIST;
+
+
+
+
+ALTER TABLE tbl_curriculum
+DROP COLUMN fk_curriculum_type_seq;
+
+
+-- Inserting data into tbl_curriculum for 회계학과
+BEGIN
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 1, '회계원리', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 1, '재무회계', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 2, '관리회계', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 2, '세무회계', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 3, '회계감사', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 3, '원가회계', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 4, '국제회계', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 4, '회계정보시스템', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 4, '회계연구', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 7, 4, '전산회계', 3, 1);
+    
+    commit;
+END;
+
+
+select * from tbl_curriculum
+where fk_department_seq = 6;
+
+-- Inserting data into tbl_curriculum for 작곡과
+BEGIN
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 1, '작곡개론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 1, '화성학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 2, '대위법', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 2, '악기론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 3, '편곡법', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 3, '음악이론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 4, '음악분석', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 4, '현대음악작곡', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 4, '전자음악', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 6, 4, '작곡세미나', 3, 1);
+END;
+
+
+-- Inserting data into tbl_curriculum for 화학공학과
+BEGIN
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 1, '화학공학개론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 1, '유기화학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 2, '물리화학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 2, '열역학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 3, '반응공학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 3, '공정제어', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 4, '고분자공학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 4, '나노공학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 4, '에너지공학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 5, 4, '환경공학', 3, 1);
+END;
+
+
+-- Inserting data into tbl_curriculum for 국제통상학과
+BEGIN
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 1, '국제통상개론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 1, '무역실무', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 2, '국제경영', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 2, '무역법규', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 3, '국제마케팅', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 3, '통상정책', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 4, '국제금융', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 4, '국제통상세미나', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 4, '무역관리', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 4, 4, '글로벌경영', 3, 1);
+END;
+
+
+-- Inserting data into tbl_curriculum for 국어국문학과
+BEGIN
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 1, '국어학개론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 1, '한국문학사', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 2, '현대문학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 2, '고전문학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 3, '국어문법', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 3, '국어음운론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 4, '국어의미론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 4, '비교문학', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 4, '국어교육론', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 3, 4, '문학이론', 3, 1);
+END;
+
+
+-- Inserting data into tbl_curriculum for 컴퓨터공학과
+BEGIN
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 1, '프로그래밍기초', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 1, '자료구조', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 2, '알고리즘', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 2, '운영체제', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 3, '데이터베이스', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 3, '네트워크', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 4, '인공지능', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 4, '컴퓨터비전', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 4, '빅데이터', 3, 1);
+    
+    INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
+    VALUES (curriculum_seq.nextval, 2, 4, '소프트웨어공학', 3, 1);
+END;
+
+
+
+
+
+
+
+select *
+from tbl_curriculum
+where fk_department_seq = 3;
+
+desc tbl_curriculum;
+
+
+
 
 
 

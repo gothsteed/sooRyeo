@@ -9,6 +9,7 @@ public class Curriculum {
     private String name;
     private Short credit;
     private Department department; 
+    private Short required;
     
     
 	public Integer getCurriculum_seq() {
@@ -37,6 +38,11 @@ public class Curriculum {
 		
 		return department.getDepartment_name();
 	}
+	public Short getRequired() {
+		return required;
+	}
+	
+	
     
     
     

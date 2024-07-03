@@ -19,7 +19,7 @@
 
 
 
-	<insert id="insertCurriculum" parameterType="com.sooRyeo.app.dto.CurriculumInsertRequestDto">
+	<insert id="insertCurriculum" parameterType="com.sooRyeo.app.dto.CurriculumRequestDto">
 		INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
 		VALUES (
 		curriculum_seq.nextval,
@@ -41,35 +41,63 @@
 	<select id="getCurriculumCount" parameterType="HashMap" resultType="int">
 		 	select count(*)
 	        from tbl_curriculum
-	        <where>
-	            <if test="fk_department_seq != null">
-	                and fk_department_seq = #{fk_department_seq}
-	            </if>
-	            <if test="grade != null">
-	                and grade = #{grade}
-	            </if>
-	        </where>
+		    WHERE 1=1
+		        <if test="fk_department_seq != null">
+		            AND fk_department_seq = #{fk_department_seq}
+		        </if>
+		        <if test="fk_department_seq == null">
+		            AND fk_department_seq IS NULL
+		        </if>
+		        <if test="grade != null">
+		            AND grade = #{grade}
+		        </if>
 	</select>
 	
 	<select id="getCurriculumList" parameterType="HashMap" resultMap="CurriculumJoinDepartment">
-	    select * 
-	    from (
-	        select rownum as rno, curriculum_seq, fk_department_seq, grade, name, credit
-	        from tbl_curriculum
-	        <where>
-	            <if test="fk_department_seq != null">
-	                and fk_department_seq = #{fk_department_seq}
-	            </if>
-	            <if test="grade != null">
-	                and grade = #{grade}
-	            </if>
-	        </where>
-	    ) V
-	    left join
-	    tbl_department v2
-	    on v.fk_department_seq = v2.department_seq
-	    where V.rno between #{startRno} and #{endRno}
+		SELECT * 
+		FROM (
+		    SELECT rownum AS rno, curriculum_seq, fk_department_seq, grade, name, credit, required
+		    FROM tbl_curriculum
+		    WHERE 1=1 and exist = 1
+		        <if test="fk_department_seq != null">
+		            AND fk_department_seq = #{fk_department_seq}
+		        </if>
+		        <if test="fk_department_seq == null">
+		            AND fk_department_seq IS NULL
+		        </if>
+		        <if test="grade != null">
+		            AND grade = #{grade}
+		        </if>
+		) V
+		LEFT JOIN tbl_department V2
+		ON V.fk_department_seq = V2.department_seq
+		WHERE V.rno BETWEEN #{startRno} AND #{endRno}
 	</select>
+	
+	<update id="updateToDeleteCurriculum" parameterType="int">
+		UPDATE tbl_curriculum
+		SET EXIST = 0
+		WHERE CURRICULUM_SEQ = ${curriculum_seq}
+
+	
+	</update>
+
+
+    <update id="updateCurriculum" parameterType="com.sooRyeo.app.dto.CurriculumRequestDto">
+        UPDATE tbl_curriculum
+        SET
+            <if test="fk_department_seq != null">
+                FK_DEPARTMENT_SEQ = #{fk_department_seq},
+            </if>
+            <if test="grade != null">
+                grade = #{grade},
+            </if>
+            name = #{name},
+            credit = #{credit},
+            required = #{required}
+        WHERE CURRICULUM_SEQ = #{curriculum_seq}
+    </update>
+
 
 
 

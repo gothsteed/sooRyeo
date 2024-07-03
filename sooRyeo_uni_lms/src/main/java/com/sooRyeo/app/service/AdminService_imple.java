@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
@@ -58,7 +59,7 @@ public class AdminService_imple implements AdminService {
 	}
 
 	@Override
-	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumInsertRequestDto requestDto) {
+	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumRequestDto requestDto) {
 		int n = curriculumDao.insertCurriculum(requestDto);
 		
 		
@@ -105,10 +106,11 @@ public class AdminService_imple implements AdminService {
 			
 			jsonObj.put("curriculum_seq", curr.getCurriculum_seq());
 			jsonObj.put("department_name", curr.getDepartment_name());
-			jsonObj.put("fk_department_seq", curr.getCurriculum_seq());
+			jsonObj.put("fk_department_seq", curr.getFk_department_seq());
 			jsonObj.put("grade", curr.getGrade());
 			jsonObj.put("name", curr.getName());
 			jsonObj.put("credit", curr.getCredit());
+			jsonObj.put("required", curr.getRequired());
 			
 			jsonArr.put(jsonObj);
 			
@@ -119,6 +121,48 @@ public class AdminService_imple implements AdminService {
 	
 		
 		return result.toString();
+	}
+
+	@Override
+	public ResponseEntity<String> deleteCurriculum(HttpServletRequest request, ModelAndView mav) throws NumberFormatException {
+		
+		int curriculum_seq = Integer.parseInt( request.getParameter("curriculum_seq"));
+		
+		int result = curriculumDao.deleteCurriculum(curriculum_seq);
+		
+		
+		if(result != 1) {
+			System.out.println("삭제실패");
+			return ResponseEntity.status(500).body("삭제에 실패하였습니다");
+		}
+		
+		System.out.println("삭제성공");
+		return ResponseEntity.ok().body("삭제 성공하였습니다");
+		
+	}
+
+	@Override
+	public ResponseEntity<String> updateCurriculum(HttpServletRequest request, ModelAndView mav,
+			CurriculumRequestDto requestDto) {
+		
+		System.out.println(requestDto.getName());
+		System.out.println(requestDto.getRequired());
+		System.out.println(requestDto.getCredit());
+		System.out.println(requestDto.getCurriculum_seq());
+		System.out.println(requestDto.getFk_department_seq());
+		System.out.println(requestDto.getGrade());
+		
+		int result  = curriculumDao.updateCurriculum(requestDto);
+		
+		
+		if(result != 1) {
+			System.out.println("수정 실패");
+			return ResponseEntity.status(500).body("수정에 실패하였습니다");
+		}
+		
+		
+		System.out.println("수정 성공");
+		return ResponseEntity.ok().body("수정 성공하였습니다");
 	}
 	
 	
