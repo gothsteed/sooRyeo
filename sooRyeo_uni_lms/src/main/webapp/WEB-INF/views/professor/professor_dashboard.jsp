@@ -21,19 +21,25 @@
 
 <style type="text/css">
 
-  .grid-stack { background: #E0E0E0; }
-  .grid-stack-item-content { 
-    background-color: white; 
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-  }
-  
-  
-  
-
-  
-  
+	.grid-stack { background: #E0E0E0; }
+	.grid-stack-item-content { 
+	  	background-color: white; 
+	  	display: flex;
+	  	flex-direction: column;
+	  	border-radius: 10px;
+	}
+	
+	.time_table td, .time_table th {
+      	width: 150px;
+      	height: 40px;
+      	text-align: center; /* 셀 안의 텍스트를 중앙 정렬 */
+      	vertical-align: middle; /* 셀 안의 텍스트를 수직으로 중앙 정렬 */
+    }
+    
+    .smaller-font {
+    	font-size: 11px;	
+    }
+    
 </style>
 
 
@@ -42,7 +48,8 @@
   <div class="row"> 
     <div class="col-sm-12 col-md-12">
       <div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 720px;">
-        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="0" gs-w="4" gs-h="3" gs-no-resize="true">
+        <!-- Widget 1: Weather -->
+        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
@@ -53,7 +60,8 @@
             <p class="card-text" style="margin-bottom: 0">...but don't resize me!</p>
           </div>
         </div>
-        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="6" gs-y="0" gs-w="4" gs-h="3" gs-no-resize="true">
+        <!-- Widget 2: Timetable -->
+        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="6" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	           	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
@@ -61,9 +69,70 @@
 	            </svg>
             	<h4>시간표</h4>
             </div>
-            <p class="card-text" style="margin-bottom: 0">...but don't resize me!</p>
+            <div class="table-responsive">
+                <table class="table table-bordered time_table smaller-font">
+				  	<tr>
+				    	<th> </th>
+					    <th>월</th>
+					    <th>화</th>
+					    <th>수</th>
+					    <th>목</th>
+					    <th>금</th>
+				  	</tr>
+			    	<tr>
+					    <th>1교시</th>
+					    <td style = "background : Plum  ;">문화와 역사2</td>
+					    <td> </td>
+					    <td style = "background : LavenderBlush ;"rowspan="2">정보통신융합공학개론</td>
+					    <td style = "background : Pink ;" rowspan="2">화일구조</td>
+					    <td style = "background : LightGoldenRodYellow;" rowspan="2">참삶의길</td>
+				   	</tr>
+					    <tr>
+					    <th>2교시</th>
+					    <td> </td>
+					    <td> </td>
+				  	</tr>
+					    <tr>
+					    <th>3교시</th>
+					    <td> </td>
+					    <td> </td>
+					    <td style = "background : LightCyan  ;" rowspan="2">프로그래밍언어구조론</td>
+					    <td style = "background : Lavender;" rowspan="2">웹/xml프로그래밍</td>
+					    <td> </td>
+				  	</tr>
+				   	<tr>
+					    <th>4교시</th>
+					    <td> </td>
+					    <td> </td>
+					    <td> </td>
+				  	</tr>
+				   	<tr>
+					    <th>5교시</th>
+					    <td style = "background : Lavender  ;" rowspan="2">웹/xml프로그래밍</td>
+					    <td style = "background : Salmon  ;" rowspan="4">c++ </td>
+					    <td style = "background : MintCream  ;" rowspan="4">임베디드프로그래밍실습</td>
+					    <td style = "background : Wheat   ;" rowspan="4">리눅스컴퓨팅실무</td>
+					    <td> </td>
+				  	</tr>
+				   	<tr>
+					    <th>6교시</th>
+					    <td> </td>
+				  	</tr>
+				   	<tr>
+					    <th>7교시</th>
+					    <td> </td>
+					    <td> </td>
+				  	</tr>
+				  	<tr>
+					   <th>8교시</th>
+					   <td style = "background : LightCyan  ;">프로그래밍언어구조론</td>
+					   <td></td>
+				  	</tr>
+				</table>
+            </div>
           </div>
         </div>
+        <!-- Widget 3: University Schedule -->
         <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="4" gs-w="8" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
@@ -75,6 +144,7 @@
             <p class="card-text" style="margin-bottom: 0">...but don't resize me!</p>
           </div>
         </div>
+        <!-- Widget 4: University Announcements -->
         <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="8" gs-w="8" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
@@ -83,62 +153,125 @@
 	            </svg>                        
             	<h4>수려대학교 공지사항</h4>
             </div>
-            	<div class="container">
-					<!-- Nav tabs -->
-					<ul class="nav nav-tabs" id="myTab" role="tablist">
-					  <li class="nav-item" role="presentation">
-					    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">학사공지</button>
-					  </li>
-					  <li class="nav-item" role="presentation">
-					    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">학과공지</button>
-					  </li>
-					  <li class="nav-item" role="presentation">
-					    <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab" aria-controls="messages" aria-selected="false">채용공지</button>
-					  </li>
-					</ul>
-					
-					<!-- Tab panes -->
-					<div class="tab-content">
-					  <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-					  	<table class="table table-hover">
-							<tr class="col-md-12 text-center">
-								<th class="col-md-10"><span>제목</span></th>
-								<th class="col-md-2"><span>등록일자</span></th>
-							</tr>
-							<tr class="col-md-12">
-								<td class="col-md-10">2023학년도 1학기 등록금 납부 안내</td>
-								<td class="col-md-2 text-center">23-03-01</td>
-							</tr>
-						</table>
-					  </div>
-					  <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-					  	<table class="table table-hover">
-							<tr class="col-md-12 text-center">
-								<th class="col-md-10"><span>제목</span></th>
-								<th class="col-md-2"><span>등록일자</span></th>
-							</tr>
-							<tr class="col-md-12">
-								<td class="col-md-10">2023학년도 2학기 등록금 납부 안내</td>
-								<td class="col-md-2 text-center">23-08-01</td>
-							</tr>
-						</table>
-					  </div>
-					  <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab" tabindex="0">
-					  	<table class="table table-hover">
-							<tr class="col-md-12 text-center">
-								<th class="col-md-10"><span>제목</span></th>
-								<th class="col-md-2"><span>등록일자</span></th>
-							</tr>
-							<tr class="col-md-12">
-							<td class="col-md-10">2024학년도 1학기 등록금 납부 안내</td>
-							<td class="col-md-2 text-center">23-03-01</td>
-							</tr>
-						</table>
-					  </div>
-					</div>
-            	</div>
-          </div>
+            <div class="container">
+			<!-- Nav tabs -->
+		      	<ul class="nav nav-tabs" id="myTab" role="tablist">
+		          <li class="nav-item" role="presentation">
+		              <a class="nav-link active" data-toggle="tab" data-target="#school_info" style="font-weight: bold; font-size: 14pt; color: #175F30;">학사공지</a>
+		          </li>
+		          <li class="nav-item" role="presentation">
+		              <a class="nav-link" data-toggle="tab" data-target="#Recruit_info" style="font-weight: bold; font-size: 14pt; color: #175F30;">채용공지</a>
+		          </li>
+		          <li class="nav-item" role="presentation">
+		              <a class="nav-link" data-toggle="tab" data-target="#department_info" style="font-weight: bold; font-size: 14pt; color: #175F30;">학과공지</a>
+		          </li>
+	      		</ul>
+		      	<div class="tab-content" id="myTabContent">
+		          <div class="tab-pane fade show active" id="school_info" role="tabpanel" aria-labelledby="home-tab">
+		              <table style="width: 100%;">
+		                  <tr style="border : solid 1px #175F30; background-color: #175F30;">
+		                      <th style="color: #FFFFFF; width: 70%; text-align: center; font-size: 18pt;">제목</th>
+		                      <th style="color: #FFFFFF; width: 30%; text-align: center; font-size: 18pt;">등록일자</th>
+		                  </tr>
+		                  <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px; margin-top: 10%;">
+		                      <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                          2024학년도 2학기 등록금 납부안내 
+		                      </td>
+		                      <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                          24.06.23 
+		                      </td>
+		                  </tr>
+		                  <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+		                      <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                         [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+		                      </td>
+		                      <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                          24.06.28 
+		                      </td>
+		                  </tr>
+		                  <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+		                      <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                         [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+		                      </td>
+		                      <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                          24.06.28 
+		                      </td>
+		                  </tr>
+		                  <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+		                      <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                         [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+		                      </td>
+		                      <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                          24.06.28 
+		                      </td>
+		                  </tr>
+		                  <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+		                      <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                         [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+		                      </td>
+		                      <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                          24.06.28 
+		                      </td>
+		                  </tr>
+		              </table>
+		          </div>
+		          <div class="tab-pane fade" id="Recruit_info" role="tabpanel" aria-labelledby="profile-tab">
+		              <div class="tab-pane fade show active" id="school_info" role="tabpanel" aria-labelledby="home-tab">
+		                  <table style="width: 100%;">
+		                      <tr style="border : solid 1px #175F30; background-color: #175F30;">
+		                          <th style="color: #FFFFFF; width: 70%; text-align: center; font-size: 18pt;">제목</th>
+		                          <th style="color: #FFFFFF; width: 30%; text-align: center; font-size: 18pt;">등록일자</th>
+		                      </tr>
+		                      <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px; margin-top: 10%;">
+		                          <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                              2024학년도 2학기 등록금 납부안내 
+		                          </td>
+		                          <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                              24.06.23 
+		                          </td>
+		                      </tr>
+		                      <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+		                          <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                             [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+		                          </td>
+		                          <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                              24.06.28 
+		                          </td>
+		                      </tr>
+		                  </table>
+		              </div>
+		          </div>
+		          <div class="tab-pane fade" id="department_info" role="tabpanel" aria-labelledby="contact-tab">
+		              <div class="tab-pane fade show active" id="school_info" role="tabpanel" aria-labelledby="home-tab">
+		                  <table style="width: 100%;">
+		                      <tr style="border : solid 1px #175F30; background-color: #175F30;">
+		                          <th style="color: #FFFFFF; width: 70%; text-align: center; font-size: 18pt;">제목</th>
+		                          <th style="color: #FFFFFF; width: 30%; text-align: center; font-size: 18pt;">등록일자</th>
+		                      </tr>
+		                      <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px; margin-top: 10%;">
+		                          <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                              2024학년도 2학기 등록금 납부안내 
+		                          </td>
+		                          <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                              24.06.23 
+		                          </td>
+		                      </tr>
+		                      <tr style="border: dotted 4px gray; border-width : 0 0 2px; height: 50px;">
+		                          <td style="width: 70%; text-align: left; font-size: 15pt; ">
+		                             [성적] 재학생 학점포기 기간 안내[2024.8.7(월)-8.9(수)]
+		                          </td>
+		                          <td style="width: 70%; text-align: center; font-size: 15pt;">
+		                              24.06.28 
+		                          </td>
+		                      </tr>
+		                  </table>
+		              </div>
+		          </div>
+		      	</div>
+			<!-- Nav tabs end -->
+          	</div>
         </div>
+        
       </div>
     </div>
   </div>

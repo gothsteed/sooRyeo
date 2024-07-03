@@ -1,15 +1,15 @@
 CREATE TABLE tbl_department (
-	department_seq  Number        NOT NULL, -- ÇÐ°úÄÚµå
-	department_name NVARCHAR2(200) NOT NULL  -- ÇÐ°ú¸í
+   department_seq  Number        NOT NULL, --  Ð°  Úµ 
+   department_name NVARCHAR2(200) NOT NULL  --  Ð°   
 );
 
--- ÇÐ°ú
+--  Ð° 
 ALTER TABLE tbl_department
-	ADD
-		CONSTRAINT PK_tbl_department -- ÇÐ°ú ±âº»Å°
-		PRIMARY KEY (
-			department_seq -- ÇÐ°úÄÚµå
-		);
+   ADD
+      CONSTRAINT PK_tbl_department --  Ð°   âº»Å°
+      PRIMARY KEY (
+         department_seq --  Ð°  Úµ 
+      );
         
 
 create sequence department_seq
@@ -26,18 +26,18 @@ tbl_department;
 
 
 CREATE TABLE tbl_student (
-	student_id        Number        NOT NULL
-	, -- ÇÐ¹ø
-	pwd               NVARCHAR2(100) NOT NULL, -- ºñ¹Ð¹øÈ£
-	name              NVARCHAR2(100) NOT NULL, -- ¼º¸í
-	jubun             NVARCHAR2(13)  NOT NULL, -- ÁÖ¹Î¹øÈ£
-	tel               NVARCHAR2(11)  NOT NULL, -- tel
-	grade             SMALLINT      NOT NULL, -- ÇÐ³â
-	address           NVARCHAR2(200) NOT NULL, -- ÁÖ¼Ò
-	email             NVARCHAR2(200) NOT NULL, -- ÀÌ¸ÞÀÏ
-	register_date     DATE          NOT NULL, -- ÀÔÇÐ³âµµ
-	status            SMALLINT      NOT NULL, -- ÇÐÀû»óÅÂ
-	fk_department_seq Number        NOT NULL  -- ÇÐ°úÄÚµå
+   student_id        Number        NOT NULL
+   , --  Ð¹ 
+   pwd               NVARCHAR2(100) NOT NULL, --   Ð¹ È£
+   name              NVARCHAR2(100) NOT NULL, --     
+   jubun             NVARCHAR2(13)  NOT NULL, --  Ö¹Î¹ È£
+   tel               NVARCHAR2(11)  NOT NULL, -- tel
+   grade             SMALLINT      NOT NULL, --  Ð³ 
+   address           NVARCHAR2(200) NOT NULL, --  Ö¼ 
+   email             NVARCHAR2(200) NOT NULL, --  Ì¸   
+   register_date     DATE          NOT NULL, --    Ð³âµµ
+   status            SMALLINT      NOT NULL, --         
+   fk_department_seq Number        NOT NULL  --  Ð°  Úµ 
 
 
 );
@@ -62,38 +62,38 @@ ALTER TABLE tbl_student MODIFY tel NVARCHAR2(200);
 
 
 ALTER TABLE tbl_student
-	ADD
-		CONSTRAINT PK_tbl_student -- ÇÐ»ý ±âº»Å°
-		PRIMARY KEY (
-			student_id -- ÇÐ¹ø
-		);
+   ADD
+      CONSTRAINT PK_tbl_student --  Ð»   âº»Å°
+      PRIMARY KEY (
+         student_id --  Ð¹ 
+      );
 
 ALTER TABLE tbl_student
-	ADD
-		CONSTRAINT FK_tbl_depar_tbl_student -- ÇÐ°ú -> ÇÐ»ý
-		FOREIGN KEY (
-			fk_department_seq -- ÇÐ°úÄÚµå
-		)
-		REFERENCES tbl_department ( -- ÇÐ°ú
-			department_seq -- ÇÐ°úÄÚµå
-		);
+   ADD
+      CONSTRAINT FK_tbl_depar_tbl_student --  Ð°  ->  Ð» 
+      FOREIGN KEY (
+         fk_department_seq --  Ð°  Úµ 
+      )
+      REFERENCES tbl_department ( --  Ð° 
+         department_seq --  Ð°  Úµ 
+      );
         
 ALTER TABLE tbl_student
 MODIFY status DEFAULT 1;
 
 
 CREATE TABLE tbl_professor (
-	prof_id         Number        NOT NULL 
-	, -- ±³¼ö¹øÈ£
-	pwd             NVARCHAR2(100) NOT NULL, -- ºñ¹Ð¹øÈ£
-	name            NVARCHAR2(100) NOT NULL, -- ¼º¸í
-	jubun           NVARCHAR2(13)  NOT NULL, -- jubun
-	tel             NVARCHAR2(11)  NOT NULL, -- ÀüÈ­¹øÈ£
-	department_seq  Number        NOT NULL, -- ÇÐ°úÄÚµå
-	email           NVARCHAR2(200) NOT NULL, -- ÀÌ¸ÞÀÏ
-	office_address  NVARCHAR2(200) NOT NULL, -- ¿¬±¸½ÇÁÖ¼Ò
-	employment_stat SMALLINT      NOT NULL,
-	employment_date DATE          NOT NULL  -- employment_date
+   prof_id         Number        NOT NULL 
+   , --       È£
+   pwd             NVARCHAR2(100) NOT NULL, --   Ð¹ È£
+   name            NVARCHAR2(100) NOT NULL, --     
+   jubun           NVARCHAR2(13)  NOT NULL, -- jubun
+   tel             NVARCHAR2(11)  NOT NULL, --   È­  È£
+   department_seq  Number        NOT NULL, --  Ð°  Úµ 
+   email           NVARCHAR2(200) NOT NULL, --  Ì¸   
+   office_address  NVARCHAR2(200) NOT NULL, --        Ö¼ 
+   employment_stat SMALLINT      NOT NULL,
+   employment_date DATE          NOT NULL  -- employment_date
 );
 
 ALTER TABLE tbl_professor MODIFY pwd NVARCHAR2(200);
@@ -101,32 +101,32 @@ ALTER TABLE tbl_professor MODIFY email NVARCHAR2(200);
 ALTER TABLE tbl_professor MODIFY tel NVARCHAR2(200);
 
 ALTER TABLE tbl_professor
-	ADD
-		CONSTRAINT PK_tbl_professor -- ±³¼ö ±âº»Å°
-		PRIMARY KEY (
-			prof_id -- ±³¼ö¹øÈ£
-		);
+   ADD
+      CONSTRAINT PK_tbl_professor --       âº»Å°
+      PRIMARY KEY (
+         prof_id --       È£
+      );
 
  ALTER TABLE tbl_professor
-	MODIFY employment_stat DEFAULT 1;
+   MODIFY employment_stat DEFAULT 1;
     
     ALTER TABLE tbl_professor
-	ADD
-		CONSTRAINT FK_tbl_depart_tbl_professor -- ÇÐ°ú -> ±³¼ö
-		FOREIGN KEY (
-			department_seq -- ÇÐ°úÄÚµå
-		)
-		REFERENCES tbl_department ( -- ÇÐ°ú
-			department_seq -- ÇÐ°úÄÚµå
-		);
+   ADD
+      CONSTRAINT FK_tbl_depart_tbl_professor --  Ð°  ->     
+      FOREIGN KEY (
+         department_seq --  Ð°  Úµ 
+      )
+      REFERENCES tbl_department ( --  Ð° 
+         department_seq --  Ð°  Úµ 
+      );
     
     CREATE TABLE tbl_admin (
-	admin_seq Number        NOT NULL, -- °ü¸®ÀÚ ¾ÆÀÌµð
-	name      NVARCHAR2(100) NOT NULL, -- ¼º¸í
-	pwd       NVARCHAR2(100) NOT NULL, -- ºñ¹Ð¹øÈ£
-	jubun     NVARCHAR2(13)  NOT NULL, -- ÁÖ¹Î¹øÈ£
-	tel       NVARCHAR2(11)  NOT NULL, -- ÀüÈ­¹øÈ£
-	email     NVARCHAR2(200) NOT NULL  -- ÀÌ¸ÞÀÏ
+   admin_seq Number        NOT NULL, --           Ìµ 
+   name      NVARCHAR2(100) NOT NULL, --     
+   pwd       NVARCHAR2(100) NOT NULL, --   Ð¹ È£
+   jubun     NVARCHAR2(13)  NOT NULL, --  Ö¹Î¹ È£
+   tel       NVARCHAR2(11)  NOT NULL, --   È­  È£
+   email     NVARCHAR2(200) NOT NULL  --  Ì¸   
 );
 
 ALTER TABLE tbl_admin MODIFY pwd NVARCHAR2(200);
@@ -135,15 +135,15 @@ ALTER TABLE tbl_admin MODIFY tel NVARCHAR2(200);
 
 
 ALTER TABLE tbl_admin
-	ADD
-		CONSTRAINT PK_tbl_admin -- °ü¸®ÀÚ ±âº»Å°
-		PRIMARY KEY (
-			admin_seq -- °ü¸®ÀÚ ¾ÆÀÌµð
-		);
+   ADD
+      CONSTRAINT PK_tbl_admin --         âº»Å°
+      PRIMARY KEY (
+         admin_seq --           Ìµ 
+      );
 
 
 
--- ½ÃÄö½º »ý¼º
+--            
 CREATE SEQUENCE student_seq
   START WITH 1
   INCREMENT BY 1
@@ -162,7 +162,7 @@ CREATE SEQUENCE admin_seq
   NOCACHE
   NOCYCLE;
 
--- ÇÐ¹ø »ý¼º ÇÔ¼ö
+--  Ð¹        Ô¼ 
 CREATE OR REPLACE FUNCTION generate_student_id RETURN Number IS
   v_year VARCHAR2(4);
   v_seq  VARCHAR2(5);
@@ -173,7 +173,7 @@ BEGIN
 END;
 /
 
--- ±³¼ö¹øÈ£ »ý¼º ÇÔ¼ö
+--       È£       Ô¼ 
 CREATE OR REPLACE FUNCTION generate_professor_id RETURN Number IS
   v_year VARCHAR2(4);
   v_seq  VARCHAR2(5);
@@ -184,7 +184,7 @@ BEGIN
 END;
 /
 
--- Á÷¿ø¹øÈ£ »ý¼º ÇÔ¼ö
+--       È£       Ô¼ 
 CREATE OR REPLACE FUNCTION generate_admin_id RETURN Number IS
   v_year VARCHAR2(4);
   v_seq  VARCHAR2(5);
@@ -201,7 +201,7 @@ values(department_seq.nextval, 'test');
 select *
 from tbl_department;
 
--- ÇÐ»ý Å×ÀÌºí¿¡ ÇÐ¹ø »ðÀÔ
+--  Ð»     Ìº   Ð¹      
 INSERT INTO tbl_student (student_id, pwd, name, jubun, tel, grade, address, email, register_date, status, fk_department_seq)
 VALUES (generate_student_id(), 'password123', 'John Doe', '1234567890123', '01012345678', 1, 'Some address', 'john.doe@example.com', SYSDATE, 1, 1);
 
@@ -210,20 +210,20 @@ select * from tbl_student;
 rollback;
 
 CREATE TABLE tbl_announcement (
-	announcement_seq Number        NOT NULL, -- °øÁö»çÇ× ½ÃÄö½º
-	a_title          NVARCHAR2(200) NOT NULL, -- °øÁöÁ¦¸ñ
-	a_content        NVARCHAR2(600) NULL,     -- °øÁö³»¿ë
-	attatched_file   NVARCHAR2(200) NULL      -- Ã·ºÎÆÄÀÏ
+   announcement_seq Number        NOT NULL, --                
+   a_title          NVARCHAR2(200) NOT NULL, --         
+   a_content        NVARCHAR2(600) NULL,     --         
+   attatched_file   NVARCHAR2(200) NULL      -- Ã·      
 );
 
 drop table tbl_announcement;
 
 ALTER TABLE tbl_announcement
-	ADD
-		CONSTRAINT PK_tbl_announcement -- ÇÐ»ç°øÁö»çÇ× ±âº»Å°
-		PRIMARY KEY (
-			announcement_seq -- °øÁö»çÇ× ½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_announcement --  Ð»          âº»Å°
+      PRIMARY KEY (
+         announcement_seq --                
+      );
         
 CREATE SEQUENCE announcement_seq
   START WITH 1
@@ -232,10 +232,10 @@ CREATE SEQUENCE announcement_seq
   NOCYCLE;
   
 CREATE TABLE tbl_recruitment_notice (
-	recruitment_notice_seq Number  NOT NULL, -- Ã¤¿ë°øÁö»çÇ× ½ÃÄö½º
-	r_title                NVARCHAR2(200)      NOT NULL, -- °øÁö Á¦¸ñ
-	r_content              NVARCHAR2(600)      NOT NULL, -- °øÁö ³»¿ë
-	attatched_file         NVARCHAR2(200)      NULL      -- »õ ÄÃ·³
+   recruitment_notice_seq Number  NOT NULL, -- Ã¤                
+   r_title                NVARCHAR2(200)      NOT NULL, --          
+   r_content              NVARCHAR2(600)      NOT NULL, --          
+   attatched_file         NVARCHAR2(200)      NULL      --     Ã· 
 ); 
 
 CREATE SEQUENCE recruitment_notice_seq
@@ -246,16 +246,16 @@ CREATE SEQUENCE recruitment_notice_seq
   
   
 ALTER TABLE tbl_recruitment_notice
-	ADD
-		CONSTRAINT PK_tbl_recruitment_notice -- Ã¤¿ë°øÁö»çÇ× ±âº»Å°
-		PRIMARY KEY (
-			recruitment_notice_seq -- Ã¤¿ë°øÁö»çÇ× ½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_recruitment_notice -- Ã¤           âº»Å°
+      PRIMARY KEY (
+         recruitment_notice_seq -- Ã¤                
+      );
   
 
 CREATE TABLE tbl_curriculum_type (
-	curriculum_type_seq  Number        NOT NULL, -- ¼ö¾÷Å¸ÀÔ½ÃÄö½º
-	curriculum_type_name NVARCHAR2 (100) NOT NULL  -- ¼ö¾÷Å¸ÀÔ
+   curriculum_type_seq  Number        NOT NULL, --     Å¸ Ô½     
+   curriculum_type_name NVARCHAR2 (100) NOT NULL  --     Å¸  
 );
 CREATE SEQUENCE curriculum_type_seq
   START WITH 1
@@ -264,19 +264,19 @@ CREATE SEQUENCE curriculum_type_seq
   NOCYCLE;
   
   ALTER TABLE tbl_curriculum_type
-	ADD
-		CONSTRAINT PK_tbl_curriculum_type -- ¼ö¾÷Å¸ÀÔ ±âº»Å°
-		PRIMARY KEY (
-			curriculum_type_seq -- ¼ö¾÷Å¸ÀÔ½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_curriculum_type --     Å¸    âº»Å°
+      PRIMARY KEY (
+         curriculum_type_seq --     Å¸ Ô½     
+      );
         
 CREATE TABLE tbl_curriculum (
-	curriculum_seq         Number        NOT NULL, -- ¼ö¾÷½ÃÄö½º
-	fk_curriculum_type_seq Number        NOT NULL, -- ¼ö¾÷Å¸ÀÔ½ÃÄö½º
-	fk_department_seq      Number        NOT NULL, -- ÇÐ°úÄÚµå
-	grade                  SMALLINT      NULL,     -- ÇÐ³â
-	name                   NVARCHAR2(100) NOT NULL, -- ¼ö¾÷¸í
-	credit                 SMALLINT      NOT NULL  -- ÀÌ¼ö´ÜÀ§(nÇÐÁ¡)
+   curriculum_seq         Number        NOT NULL, --           
+   fk_curriculum_type_seq Number        NOT NULL, --     Å¸ Ô½     
+   fk_department_seq      Number        NOT NULL, --  Ð°  Úµ 
+   grade                  SMALLINT      NULL,     --  Ð³ 
+   name                   NVARCHAR2(100) NOT NULL, --       
+   credit                 SMALLINT      NOT NULL  --  Ì¼     (n    )
 );
 
 CREATE SEQUENCE curriculum_seq
@@ -287,36 +287,36 @@ CREATE SEQUENCE curriculum_seq
   
   
   ALTER TABLE tbl_curriculum
-	ADD
-		CONSTRAINT PK_tbl_curriculum -- ¼ö¾÷ ±âº»Å°
-		PRIMARY KEY (
-			curriculum_seq -- ¼ö¾÷½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_curriculum --       âº»Å°
+      PRIMARY KEY (
+         curriculum_seq --           
+      );
         
         
 ALTER TABLE tbl_curriculum
-	ADD
-		CONSTRAINT FK_tbl_curri_type_tbl_curri -- ¼ö¾÷Å¸ÀÔ -> ¼ö¾÷
-		FOREIGN KEY (
-			fk_curriculum_type_seq -- ¼ö¾÷Å¸ÀÔ½ÃÄö½º
-		)
-		REFERENCES tbl_curriculum_type ( -- ¼ö¾÷Å¸ÀÔ
-			curriculum_type_seq -- ¼ö¾÷Å¸ÀÔ½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_tbl_curri_type_tbl_curri --     Å¸   ->     
+      FOREIGN KEY (
+         fk_curriculum_type_seq --     Å¸ Ô½     
+      )
+      REFERENCES tbl_curriculum_type ( --     Å¸  
+         curriculum_type_seq --     Å¸ Ô½     
+      );
 ALTER TABLE tbl_curriculum
-	ADD
-		CONSTRAINT FK_tbl_depart_TO_tbl_curri-- ÇÐ°ú -> ¼ö¾÷
-		FOREIGN KEY (
-			fk_department_seq -- ÇÐ°úÄÚµå
-		)
-		REFERENCES tbl_department ( -- ÇÐ°ú
-			department_seq -- ÇÐ°úÄÚµå
-		);
+   ADD
+      CONSTRAINT FK_tbl_depart_TO_tbl_curri--  Ð°  ->     
+      FOREIGN KEY (
+         fk_department_seq --  Ð°  Úµ 
+      )
+      REFERENCES tbl_department ( --  Ð° 
+         department_seq --  Ð°  Úµ 
+      );
         
 CREATE TABLE tbl_time (
-	time_seq    Number   NOT NULL, -- ½Ã°£½ÃÄö½º
-	day_of_week SMALLINT NOT NULL, -- ¿äÀÏ
-	period      SMALLINT NOT NULL  -- ½Ã°£
+   time_seq    Number   NOT NULL, --  Ã°       
+   day_of_week SMALLINT NOT NULL, --     
+   period      SMALLINT NOT NULL  --  Ã° 
 );
 
 CREATE SEQUENCE time_seq
@@ -326,20 +326,20 @@ CREATE SEQUENCE time_seq
   NOCYCLE;
   
   ALTER TABLE tbl_time
-	ADD
-		CONSTRAINT PK_tbl_time -- ½Ã°£Ç¥ ±âº»Å°
-		PRIMARY KEY (
-			time_seq -- ½Ã°£½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_time --  Ã° Ç¥  âº»Å°
+      PRIMARY KEY (
+         time_seq --  Ã°       
+      );
 
 
 CREATE TABLE tbl_course (
-	course_seq        Number NOT NULL, -- °³¼³¼ö¾÷½ÃÄö½º
-	fk_professor_id  Number NOT NULL, -- ±³¼ö¹øÈ£
-	fk_curriculum_seq Number NOT NULL, -- ¼ö¾÷½ÃÄö½º
-	fk_time_seq       Number NOT NULL, -- ½Ã°£½ÃÄö½º
-	capacity          Number NOT NULL, -- Á¤¿ø
-	semester_date     DATE   NOT NULL  -- °³°­³âµµÇÐ±â
+   course_seq        Number NOT NULL, --               
+   fk_professor_id  Number NOT NULL, --       È£
+   fk_curriculum_seq Number NOT NULL, --           
+   fk_time_seq       Number NOT NULL, --  Ã°       
+   capacity          Number NOT NULL, --     
+   semester_date     DATE   NOT NULL  --      âµµ Ð± 
 );
 
 drop table tbl_course;
@@ -352,51 +352,51 @@ CREATE SEQUENCE course_seq
 
 
 ALTER TABLE tbl_course
-	ADD
-		CONSTRAINT PK_tbl_course -- °³¼³¼ö¾÷ ±âº»Å°
-		PRIMARY KEY (
-			course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_course --           âº»Å°
+      PRIMARY KEY (
+         course_seq --               
+      );
 
 
 ALTER TABLE tbl_course
-	ADD
-		CONSTRAINT FK_tbl_prof_tbl_course -- ±³¼ö -> °³¼³¼ö¾÷
-		FOREIGN KEY (
-			fk_professor_id -- ±³¼ö¹øÈ£
-		)
-		REFERENCES tbl_professor ( -- ±³¼ö
-			prof_id -- ±³¼ö¹øÈ£
+   ADD
+      CONSTRAINT FK_tbl_prof_tbl_course --      ->         
+      FOREIGN KEY (
+         fk_professor_id --       È£
+      )
+      REFERENCES tbl_professor ( --     
+         prof_id --       È£
 );
 
 ALTER TABLE tbl_course
-	ADD
-		CONSTRAINT FK_tbl_curri_TO_tbl_course -- ¼ö¾÷ -> °³¼³¼ö¾÷
-		FOREIGN KEY (
-			fk_curriculum_seq -- ¼ö¾÷½ÃÄö½º
-		)
-		REFERENCES tbl_curriculum ( -- ¼ö¾÷
-			curriculum_seq -- ¼ö¾÷½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_tbl_curri_TO_tbl_course --      ->         
+      FOREIGN KEY (
+         fk_curriculum_seq --           
+      )
+      REFERENCES tbl_curriculum ( --     
+         curriculum_seq --           
+      );
 
 ALTER TABLE tbl_course
-	ADD
-		CONSTRAINT FK_tbl_time_TO_tbl_course -- ½Ã°£Ç¥ -> °³¼³¼ö¾÷
-		FOREIGN KEY (
-			fk_time_seq -- ½Ã°£½ÃÄö½º
-		)
-		REFERENCES tbl_time ( -- ½Ã°£Ç¥
-			time_seq -- ½Ã°£½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_tbl_time_TO_tbl_course --  Ã° Ç¥ ->         
+      FOREIGN KEY (
+         fk_time_seq --  Ã°       
+      )
+      REFERENCES tbl_time ( --  Ã° Ç¥
+         time_seq --  Ã°       
+      );
 
 
 CREATE TABLE tbl_lecture (
-	lecture_seq       Number         NOT NULL, -- lecture_seq
-	fk_course_seq     Number         NOT NULL, -- °³¼³¼ö¾÷½ÃÄö½º
-	video_file_name   NVARCHAR2(200) NULL,     -- °­ÀÇ¿µ»óÆÄÀÏÀÌ¸§
-	lecture_file_name NVARCHAR2(200) NULL,     -- °­ÀÇÀÚ·áÆÄÀÏÀÌ¸§
-	lecture_title     NVARCHAR2(200) NOT NULL, -- °­ÀÇÁ¦¸ñ
-	lecture_content   NVARCHAR2(800)  NOT NULL  -- »õ ÄÃ·³
+   lecture_seq       Number         NOT NULL, -- lecture_seq
+   fk_course_seq     Number         NOT NULL, --               
+   video_file_name   NVARCHAR2(200) NULL,     --    Ç¿        Ì¸ 
+   lecture_file_name NVARCHAR2(200) NULL,     --      Ú·      Ì¸ 
+   lecture_title     NVARCHAR2(200) NOT NULL, --         
+   lecture_content   NVARCHAR2(800)  NOT NULL  --     Ã· 
 );
 CREATE SEQUENCE lecture_seq
   START WITH 1
@@ -406,29 +406,29 @@ CREATE SEQUENCE lecture_seq
 
 
 ALTER TABLE tbl_lecture
-	ADD
-		CONSTRAINT PK_tbl_lecture -- °­ÀÇ ±âº»Å°
-		PRIMARY KEY (
-			lecture_seq -- lecture_seq
-		);
+   ADD
+      CONSTRAINT PK_tbl_lecture --       âº»Å°
+      PRIMARY KEY (
+         lecture_seq -- lecture_seq
+      );
         
         
 ALTER TABLE tbl_lecture
-	ADD
-		CONSTRAINT FK_tbl_cours_tbl_lecture -- °³¼³¼ö¾÷ -> °­ÀÇ
-		FOREIGN KEY (
-			fk_course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		)
-		REFERENCES tbl_course ( -- °³¼³¼ö¾÷
-			course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_tbl_cours_tbl_lecture --          ->     
+      FOREIGN KEY (
+         fk_course_seq --               
+      )
+      REFERENCES tbl_course ( --         
+         course_seq --               
+      );
 
 CREATE TABLE tbl_attendance (
-	attendance_seq Number NOT NULL, -- Ãâ¼®½ÃÄö½º
-	fk_course_seq  Number             NOT NULL, -- °³¼³¼ö¾÷½ÃÄö½º
-	fk_student_id  Number             NOT NULL, -- ÇÐ¹ø
-	isAttended     CHAR(1)             NOT NULL, -- Ãâ¼®À¯¹«
-	attended_date  DATE               NOT NULL  -- Ãâ¼®³¯Â¥
+   attendance_seq Number NOT NULL, --  â¼®      
+   fk_course_seq  Number             NOT NULL, --               
+   fk_student_id  Number             NOT NULL, --  Ð¹ 
+   isAttended     CHAR(1)             NOT NULL, --  â¼®    
+   attended_date  DATE               NOT NULL  --  â¼®  Â¥
 );
 
 CREATE SEQUENCE attendance_seq
@@ -438,37 +438,37 @@ CREATE SEQUENCE attendance_seq
   NOCYCLE;
 
 ALTER TABLE tbl_attendance
-	ADD
-		CONSTRAINT PK_tbl_attendance -- Ãâ¼® ±âº»Å°
-		PRIMARY KEY (
-			attendance_seq -- Ãâ¼®½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_attendance --  â¼®  âº»Å°
+      PRIMARY KEY (
+         attendance_seq --  â¼®      
+      );
 
 ALTER TABLE tbl_attendance
-	ADD
-		CONSTRAINT FK_tbl_cours_tbl_atten -- °³¼³¼ö¾÷ -> Ãâ¼®
-		FOREIGN KEY (
-			fk_course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		)
-		REFERENCES tbl_course ( -- °³¼³¼ö¾÷
-			course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_tbl_cours_tbl_atten --          ->  â¼®
+      FOREIGN KEY (
+         fk_course_seq --               
+      )
+      REFERENCES tbl_course ( --         
+         course_seq --               
+      );
         
 ALTER TABLE tbl_attendance
-	ADD
-		CONSTRAINT FK_tbl_stud_tbl_attend -- ÇÐ»ý -> Ãâ¼®
-		FOREIGN KEY (
-			fk_student_id -- ÇÐ¹ø
-		)
-		REFERENCES tbl_student ( -- ÇÐ»ý
-			student_id -- ÇÐ¹ø
-		);
+   ADD
+      CONSTRAINT FK_tbl_stud_tbl_attend --  Ð»  ->  â¼®
+      FOREIGN KEY (
+         fk_student_id --  Ð¹ 
+      )
+      REFERENCES tbl_student ( --  Ð» 
+         student_id --  Ð¹ 
+      );
 
 CREATE TABLE tbl_registered_course (
-	registered_course_seq Number NOT NULL, -- ¼ö°­½ÅÃ»½ÃÄö½º
-	fk_student_id         Number NOT NULL, -- ÇÐ»ý¾ÆÀÌµð
-	fk_course_seq         Number NOT NULL, -- °³¼³¼ö¾÷½ÃÄö½º
-	register_date         DATE   NOT NULL  -- ½ÅÃ»³¯Â¥
+   registered_course_seq Number NOT NULL, --       Ã»      
+   fk_student_id         Number NOT NULL, --  Ð»    Ìµ 
+   fk_course_seq         Number NOT NULL, --               
+   register_date         DATE   NOT NULL  --   Ã»  Â¥
 );
 
 CREATE SEQUENCE registered_course_seq
@@ -479,28 +479,28 @@ CREATE SEQUENCE registered_course_seq
   
   
   ALTER TABLE tbl_registered_course
-	ADD
-		CONSTRAINT PK_tbl_registered_course -- ¼ö°­½ÅÃ» ±âº»Å°
-		PRIMARY KEY (
-			registered_course_seq -- ¼ö°­½ÅÃ»½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_registered_course --       Ã»  âº»Å°
+      PRIMARY KEY (
+         registered_course_seq --       Ã»      
+      );
 
 
 ALTER TABLE tbl_registered_course
-	ADD
-		CONSTRAINT FK_tbl_stud_tbl_regist_course -- ÇÐ»ý -> ¼ö°­½ÅÃ»2
-		FOREIGN KEY (
-			fk_student_id -- ÇÐ»ý¾ÆÀÌµð
-		)
-		REFERENCES tbl_student ( -- ÇÐ»ý
-			student_id -- ÇÐ¹ø
-		);
+   ADD
+      CONSTRAINT FK_tbl_stud_tbl_regist_course --  Ð»  ->       Ã»2
+      FOREIGN KEY (
+         fk_student_id --  Ð»    Ìµ 
+      )
+      REFERENCES tbl_student ( --  Ð» 
+         student_id --  Ð¹ 
+      );
   
 CREATE TABLE tbl_grade (
-	grade_seq                Number    NOT NULL, -- ¼ºÀû½ÃÄö½º
-	fk_registered_course_seq Number    NOT NULL, -- ¼ö°­½ÅÃ»½ÃÄö½º
-	score                    NUMber    NOT NULL, -- Á¡¼ö
-	mark                     CHARACTER NOT NULL  -- ÇÐÁ¡(A, B ...)
+   grade_seq                Number    NOT NULL, --           
+   fk_registered_course_seq Number    NOT NULL, --       Ã»      
+   score                    NUMber    NOT NULL, --     
+   mark                     CHARACTER NOT NULL  --     (A, B ...)
 );
   
   
@@ -508,14 +508,14 @@ CREATE TABLE tbl_grade (
 
 
 ALTER TABLE tbl_registered_course
-	ADD
-		CONSTRAINT FK_tbl_course_tbl_regist_cour -- °³¼³¼ö¾÷ -> ¼ö°­½ÅÃ»
-		FOREIGN KEY (
-			fk_course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		)
-		REFERENCES tbl_course ( -- °³¼³¼ö¾÷
-			course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_tbl_course_tbl_regist_cour --          ->       Ã»
+      FOREIGN KEY (
+         fk_course_seq --               
+      )
+      REFERENCES tbl_course ( --         
+         course_seq --               
+      );
 CREATE SEQUENCE grade_seq
   START WITH 1
   INCREMENT BY 1
@@ -525,35 +525,35 @@ CREATE SEQUENCE grade_seq
   
   
   ALTER TABLE tbl_grade
-	ADD
-		CONSTRAINT PK_tbl_grade -- ¼ºÀû ±âº»Å°
-		PRIMARY KEY (
-			grade_seq -- ¼ºÀû½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_grade --       âº»Å°
+      PRIMARY KEY (
+         grade_seq --           
+      );
 
 
 
 
 ALTER TABLE tbl_grade
-	ADD
-		CONSTRAINT FK_regist_course_tbl_grade -- ¼ö°­½ÅÃ» -> ¼ºÀû
-		FOREIGN KEY (
-			fk_registered_course_seq -- ¼ö°­½ÅÃ»½ÃÄö½º
-		)
-		REFERENCES tbl_registered_course ( -- ¼ö°­½ÅÃ»
-			registered_course_seq -- ¼ö°­½ÅÃ»½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_regist_course_tbl_grade --       Ã» ->     
+      FOREIGN KEY (
+         fk_registered_course_seq --       Ã»      
+      )
+      REFERENCES tbl_registered_course ( --       Ã»
+         registered_course_seq --       Ã»      
+      );
 
 
 
 CREATE TABLE tbl_assignment (
-	assignment_seq Number         NOT NULL, -- °úÁ¦½ÃÄö½º
-	fk_course_seq  Number         NOT NULL, -- °³¼³¼ö¾÷½ÃÄö½º
-	start_datetime DATE       NOT NULL, -- µî·Ï½Ã°£
-	end_datetime   DATE       NOT NULL, -- ¸¶°¨½Ã°£
-	title          NVARCHAR2(200)  NOT NULL, -- °úÁ¦ÀÌ¸§
-	content        NVARCHAR2(800)  NOT NULL, -- °úÁ¦ ³»¿ë
-	attatched_file NVARCHAR2(200) NULL      -- Ã·ºÎÆÄÀÏ
+   assignment_seq Number         NOT NULL, --           
+   fk_course_seq  Number         NOT NULL, --               
+   start_datetime DATE       NOT NULL, --   Ï½Ã° 
+   end_datetime   DATE       NOT NULL, --      Ã° 
+   title          NVARCHAR2(200)  NOT NULL, --      Ì¸ 
+   content        NVARCHAR2(800)  NOT NULL, --          
+   attatched_file NVARCHAR2(200) NULL      -- Ã·      
 );
 
 CREATE SEQUENCE assignment_seq
@@ -564,34 +564,34 @@ CREATE SEQUENCE assignment_seq
   
   
 ALTER TABLE tbl_assignment
-	ADD
-		CONSTRAINT PK_tbl_assignment -- °úÁ¦ ±âº»Å°
-		PRIMARY KEY (
-			assignment_seq -- °úÁ¦½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_assignment --       âº»Å°
+      PRIMARY KEY (
+         assignment_seq --           
+      );
         
         
 ALTER TABLE tbl_assignment
-	ADD
-		CONSTRAINT FK_tbl_cour_tbl_assigt -- °³¼³¼ö¾÷ -> °úÁ¦
-		FOREIGN KEY (
-			fk_course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		)
-		REFERENCES tbl_course ( -- °³¼³¼ö¾÷
-			course_seq -- °³¼³¼ö¾÷½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT FK_tbl_cour_tbl_assigt --          ->     
+      FOREIGN KEY (
+         fk_course_seq --               
+      )
+      REFERENCES tbl_course ( --         
+         course_seq --               
+      );
         
   DROP TABLE tbl_assignment_submit;      
 
 CREATE TABLE tbl_assignment_submit (
-	assignment_submit_seq Number         NOT NULL, -- Á¦Ãâ½ÃÄö½º
-	fk_assignment_seq     Number         NOT NULL, -- °úÁ¦½ÃÄö½º
-	title                 NVARCHAR2(200)  NOT NULL, -- Á¦¸ñ
-	content               NVARCHAR2(800)  NOT NULL, -- ³»¿ë
-	score                 Number         NULL,     -- Á¡¼ö
-	submit_datetime       DATE           NULL,     -- Á¦Ãâ½Ã°£
-	attatched_file        NVARCHAR2(200) NULL,     -- Ã·ºÎÆÄÀÏ
-	fk_student_id         Number         NOT NULL  -- ÇÐ¹ø
+   assignment_submit_seq Number         NOT NULL, --          
+   fk_assignment_seq     Number         NOT NULL, --           
+   title                 NVARCHAR2(200)  NOT NULL, --     
+   content               NVARCHAR2(800)  NOT NULL, --     
+   score                 Number         NULL,     --     
+   submit_datetime       DATE           NULL,     --     Ã° 
+   attatched_file        NVARCHAR2(200) NULL,     -- Ã·      
+   fk_student_id         Number         NOT NULL  --  Ð¹ 
 );
 
 CREATE SEQUENCE assignment_submit_seq
@@ -602,40 +602,40 @@ CREATE SEQUENCE assignment_submit_seq
   
   
   ALTER TABLE tbl_assignment_submit
-	ADD
-		CONSTRAINT PK_tbl_assignment_submit -- °úÁ¦Á¦Ãâ ±âº»Å°
-		PRIMARY KEY (
-			assignment_submit_seq -- Á¦Ãâ½ÃÄö½º
-		);
+   ADD
+      CONSTRAINT PK_tbl_assignment_submit --           âº»Å°
+      PRIMARY KEY (
+         assignment_submit_seq --          
+      );
         
         
 ALTER TABLE tbl_assignment_submit
-	ADD
-		CONSTRAINT FK_tbl_assig_ass_submit -- °úÁ¦ -> °úÁ¦Á¦Ãâ
-		FOREIGN KEY (
-			fk_assignment_seq -- °úÁ¦½ÃÄö½º
-		)
-		REFERENCES tbl_assignment ( -- °úÁ¦
-			assignment_seq -- °úÁ¦½ÃÄö½º
-		)
+   ADD
+      CONSTRAINT FK_tbl_assig_ass_submit --      ->         
+      FOREIGN KEY (
+         fk_assignment_seq --           
+      )
+      REFERENCES tbl_assignment ( --     
+         assignment_seq --           
+      )
         ON DELETE cascade;
         
 ALTER TABLE tbl_assignment_submit
-	ADD
-		CONSTRAINT FK_tbl_stut_assig_submit -- ÇÐ»ý -> °úÁ¦Á¦Ãâ
-		FOREIGN KEY (
-			fk_student_id -- ÇÐ¹ø
-		)
-		REFERENCES tbl_student ( -- ÇÐ»ý
-			student_id -- ÇÐ¹ø
-		);
+   ADD
+      CONSTRAINT FK_tbl_stut_assig_submit --  Ð»  ->         
+      FOREIGN KEY (
+         fk_student_id --  Ð¹ 
+      )
+      REFERENCES tbl_student ( --  Ð» 
+         student_id --  Ð¹ 
+      );
     
 
 desc tbl_student;
 desc tbl_department;
 
 insert into tbl_department( DEPARTMENT_SEQ, DEPARTMENT_NAME)
-values (DEPARTMENT_SEQ.nextval, 'ÄÄÇ»ÅÍ°øÇÐ°ú');
+values (DEPARTMENT_SEQ.nextval, '  Ç» Í°  Ð° ');
 commit;
 
 select *
@@ -666,11 +666,11 @@ INSERT INTO tbl_student (
 ) VALUES (
     generate_student_id(), -- STUDENT_ID
     '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', -- PWD
-    '°­¹ÎÁ¤', -- NAME
+    '      ', -- NAME
     '9901011234567', -- JUBUN
     'k6AvvKD9cZaeKhlunBk9ew==', -- TEL
     1, -- GRADE
-    '¼­¿ï½Ã °­³²±¸ Å×Çì¶õ·Î 123', -- ADDRESS
+    '                     123', -- ADDRESS
     'Ebb5gKvx8ME4g2RXYMg/ouPkJeeKt3ECwIY/orYSMlE=', -- EMAIL
     1, -- STATUS
     2 -- FK_DEPARTMENT_SEQ
@@ -706,21 +706,21 @@ MODIFY FK_CURRICULUM_TYPE_SEQ NUMBER NULL;
 
 
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
-VALUES (curriculum_seq.nextval, 1, 3, 1, '±¹¾îÇÐ°³·Ð', 3, 1);
+VALUES (curriculum_seq.nextval, 1, 3, 1, '     Ð°   ', 3, 1);
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
-VALUES (curriculum_seq.nextval, 1, 4, 1, '°Å½Ã°æÁ¦ÇÐ', 3, 1);
+VALUES (curriculum_seq.nextval, 1, 4, 1, ' Å½Ã°     ', 3, 1);
 
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
-VALUES (curriculum_seq.nextval, 1, 5, 1, 'È­°øÀÔ¹® 1', 3, 1);
+VALUES (curriculum_seq.nextval, 1, 5, 1, 'È­   Ô¹  1', 3, 1);
 
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
-VALUES (curriculum_seq.nextval, 1, 6, 1, 'È­¼ºÇÐ 1', 3, 1);
+VALUES (curriculum_seq.nextval, 1, 6, 1, 'È­     1', 3, 1);
 
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
-VALUES (curriculum_seq.nextval, 1, 7, 1, 'È¸°èÇÐ¿ø·Ð', 3, 1);
+VALUES (curriculum_seq.nextval, 1, 7, 1, 'È¸   Ð¿   ', 3, 1);
 
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
-VALUES (curriculum_seq.nextval, 1, 2, 1, '¿î¿µÃ¼Á¦', 3, 1);
+VALUES (curriculum_seq.nextval, 1, 2, 1, ' î¿µÃ¼  ', 3, 1);
 
 select *
 from tbl_curriculum;

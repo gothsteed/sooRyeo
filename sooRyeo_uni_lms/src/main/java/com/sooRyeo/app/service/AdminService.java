@@ -28,7 +28,7 @@ public interface AdminService {
 
 	ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav);
 
-	String getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
+	ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
 
 
 }

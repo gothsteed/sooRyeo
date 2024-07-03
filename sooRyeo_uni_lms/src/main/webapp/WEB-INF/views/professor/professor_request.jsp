@@ -221,6 +221,7 @@
                 </div>
             </div>
             <div class="card-body">
+            	<!-- time_table start -->
                 <table class="table" id="time_table" style="width:100%">
 			 	<caption>수려대학교 시간표</caption>
 			  	<tr>
@@ -281,6 +282,7 @@
 				   <td></td>
 			  	</tr>
 				</table>
+				<!-- time_table end -->
             </div>
         </div>
     </div>    
