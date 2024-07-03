@@ -75,6 +75,25 @@ public class ProfessorDao_imple implements ProfessorDao {
 	}
 
 
+	@Override
+	public Professor select_file_name(Map<String, String> paraMap) {
+		
+		Professor professor = sqlSession.selectOne("professor.select_file_name", paraMap);
+		
+		return professor;
+	}
+
+
+	@Override
+	public int delFilename(String prof_id) {
+		int n = sqlSession.update("professor.delFilename", prof_id);
+		
+		return n;
+	}
+
+
+
+
 
 
 }

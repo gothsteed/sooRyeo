@@ -20,6 +20,7 @@ public class Professor {
     private String office_address;
     private Short employment_stat;
     private Date employment_date;
+    private String img_name;
     
     private Department department;
     
@@ -56,6 +57,9 @@ public class Professor {
 		return employment_date;
 	}
 	
+	public String getImg_name() {
+		return img_name;
+	}
 	
 	public Department getDepartment() {
 		return department;

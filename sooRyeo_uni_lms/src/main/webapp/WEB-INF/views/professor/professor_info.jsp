@@ -55,7 +55,7 @@ span.error {
                      <span class="error">숫자/문자/특수문자 포함 형태의 8~15자리로 입력해주세요.</span> 
                      <input type="password" id="profPwd" name="pwd" class="form-control" />
                    	         <%-- 비밀번호중복체크 --%>
-                             <span id="pwdcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">비밀번호 중복확인</button></span>
+                             <span id="pwdcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">비밀번호 중복확인</button></span><br>
                              <span id="pwdCheckResult"></span>
                   </div>
                   <div class="col-sm-6 m-b30 mb-3">
@@ -67,7 +67,7 @@ span.error {
                      <span class="error">010으로 시작하는 연락처를 입력해주세요.</span>
                      <input type="text" id="profTel" name="tel" class="form-control" value="${requestScope.professor.tel}">
                              <%-- 연락처중복체크 --%>
-                             <span id="telcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">연락처 중복확인</button></span>
+                             <span id="telcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">연락처 중복확인</button></span><br>
                              <span id="telCheckResult"></span>
                   </div>
                   <div class="col-sm-6 m-b30">
@@ -75,7 +75,7 @@ span.error {
                      <span class="error">이메일 형식에 맞지 않습니다.</span>
                      <input type="text" id="profEmail" name="email" class="form-control" value="${requestScope.professor.email}">
                              <%-- 이메일중복체크 --%>
-                             <span id="emailcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">이메일 중복확인</button></span>
+                             <span id="emailcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">이메일 중복확인</button></span><br>
                              <span id="emailCheckResult"></span>
                   </div>
                   <div class="col-sm-6 m-b30">
@@ -163,7 +163,7 @@ $(document).ready(function() {
                
                if(json.n != 0){
                    // 입력한 userid 가 이미 데이터베이스에 저장되어 있다면
-                   $("span#pwdCheckResult").html("해당 비밀번호는 이미 사용중 이므로 다른 비밀번호를 입력하세요").css({"color":"red"});
+                   $("span#pwdCheckResult").html("해당 비밀번호는 이미 사용중 이므로<br>다른 비밀번호를 입력하세요").css({"color":"red"});
                    $("input#profPwd").val("");
                    b_pwdcheck_click = false;
                }

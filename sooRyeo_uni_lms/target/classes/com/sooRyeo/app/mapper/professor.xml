@@ -70,6 +70,18 @@
 	</update>
 	
 	
+	<select id="select_file_name" resultType="com.sooRyeo.app.domain.Professor" parameterType="HashMap">
+		select img_name
+		from tbl_professor
+		where prof_id = to_number(#{prof_id}) 
+	</select>
+	
+	
+	<update id="delFilename" parameterType="String">
+		update tbl_professor set img_name = NULL
+		where prof_id = to_number(#{prof_id})
+	</update>
+	
 
 
 </mapper>
