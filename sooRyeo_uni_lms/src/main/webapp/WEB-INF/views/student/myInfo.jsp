@@ -98,10 +98,10 @@ span.error {
 						</div>
 						<div class="col-sm-6 m-b30">
 							<label class="form-label">이메일</label> 
-							<span class="error">이메일 형식에 맞지 않습니다.</span>
+							<span class="error" id="email_error">이메일 형식에 맞지 않습니다.</span>
 							<input type="text" name="stuEmail" class="form-control" value="${sessionScope.loginuser.email}">
 	                       	<%-- 이메일중복체크 --%>
-	                       	<span id="emailcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">이메일 중복확인 </button></span>
+	                       	<span id="emailcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3" onclick="emailcheck('<%=ctxPath%>')">이메일 중복확인 </button></span>
 	                       	<span id="emailCheckResult"></span>
 						</div>
 						<div class="col-sm-6 m-b30">

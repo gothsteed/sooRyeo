@@ -9,6 +9,7 @@ $(document).ready(function(){
     $("input[name='stuName']").blur( (e) => {
 
         const name = $(e.target).val().trim();
+
         if(name == "") {
             // 입력하지 않거나 공백만 입력했을 경우 
             $("form[action='#'] input").prop("disabled", true);
@@ -26,39 +27,7 @@ $(document).ready(function(){
 
     });// 아이디가 name 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.
     
-
-    $("input[name='stuEmail']").blur( (e) => { 
-
-    // const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;  
-    // 또는
-        const regExp_email = new RegExp(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i);  
-        // 이메일 정규표현식 객체 생성 
-        
-        const bool = regExp_email.test($(e.target).val());
-
-        if(!bool) {
-            // 이메일이 정규표현식에 위배된 경우 
-            
-            $("form[action='#'] input").prop("disabled", true);
-            $(e.target).prop("disabled", false);
-            $(e.target).val("").focus();
-        
-        //  $(e.target).next().show();
-        //  또는
-            $(e.target).parent().next().next().find("span.error").show();
-
-        }
-        else {
-            // 이메일이 정규표현식에 맞는 경우 
-            $("form[action='#'] input").prop("disabled", false);
-
-            //  $(e.target).next().hide();
-            //  또는
-            $(e.target).parent().find("span.error").hide();
-        }
-
-    });// 아이디가 email 인 것은 포커스를 잃어버렸을 경우(blur) 이벤트를 처리해주는 것이다.       
-
+    
 
     $("input#hp2").blur( (e) => {
     
@@ -148,24 +117,32 @@ $(document).ready(function(){
 
 //"이메일중복확인"을 클릭했을 때 이벤트 처리하기 시작 //
 function emailcheck(ctxPath) {
-    b_emailcheck_click = true; // "이메일중복확인" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
-    
+
+    var b_emailcheck_click = true; // "이메일중복확인" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도  
+    var email = $("input[name='stuEmail']").val();
+    var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 이메일 형식을 검증하는 정규 표현식
+
+    // 이메일 형식 검증
+    if (!emailPattern.test(email)) {
+        $("span#emailCheckResult").html("잘못된 이메일 형식입니다. 다시 입력해 주세요.").css({"color":"red"});
+        return;
+    }
+
+
     $.ajax({
         url : ctxPath + "/student/emailDuplicateCheck.lms",
-        data : {"email" : $( "input[name='stuEmail']" ).val()},
+        data : {"email" : email},
         type : "post",
         dataType : "json",  
         success : function(json){
+            
             console.log(JSON.stringify(json));
-            if(json.emailDuplicateCheck != null) {
-                // 입력한 email이 이미 사용중이라면 
-                $("span#emailCheckResult").html( $("input[name='stuEmail']").val() + " 은 이미 사용중 이므로 다른 이메일을 입력하세요.").css({"color":"red"});
+
+            if (json.emailDuplicateCheck) {
+                $("span#emailCheckResult").html(email + " 은 이미 사용중 이므로 다른 이메일을 입력하세요.").css({"color":"red"});
                 $("input[name='stuEmail']").val("");
-            } 
-            else {
-                
-                // 입력한 email이 존재하지 않는 경우라면 
-                $("span#emailCheckResult").html( $("input[name='stuEmail']").val() + " 은 사용가능 합니다.").css({"color":"navy"});
+            } else {
+                $("span#emailCheckResult").html(email + " 은 사용가능 합니다.").css({"color":"navy"});
             }
         },
         error: function(request, status, error){

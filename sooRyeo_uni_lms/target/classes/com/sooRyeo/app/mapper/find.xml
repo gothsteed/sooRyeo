@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="find">
+
+	<!-- 아이디 찾기  -->
+	<select id="idfind" resultType="String" parameterType="HashMap"> 
+		<if test='memberType.equals("student")'>
+			select STUDENT_ID
+			from tbl_student
+			where name = #{name} and email = #{email}
+		</if>
+	    <if test='memberType.equals("professor")'>
+			select PROF_ID
+			from tbl_professor
+			where name = #{name} and email = #{email}
+		</if>
+		<if test='memberType.equals("admin")'>
+			select ADMIN_ID
+			from tbl_admin
+			where name = #{name} and email = #{email}
+		</if>
+	</select>
+	
+	
+   <!-- 데이터베이스에 회원이 존재하는지 확인하는 메소드  -->
+   <select id="memberCheck" resultType="String" parameterType="HashMap"> 
+      <if test='memberType.equals("student")'>
+         select STUDENT_ID, email
+         from tbl_student
+         where student_id = #{id} and email = #{email}
+      </if>
+       <if test='memberType.equals("professor")'>
+         select PROF_ID, email
+         from tbl_professor
+         where PROF_ID = #{id} and email = #{email}
+      </if>
+      <if test='memberType.equals("admin")'>
+         select ADMIN_ID, email
+         from tbl_admin
+         where ADMIN_ID = #{id} and email = #{email}
+      </if>
+   </select>
+	
+	
+	
+	<update id="pwdFindEnd" parameterType="HashMap">
+		<if test='memberType.equals("student")'>
+			update tbl_student set pwd= #{pwd}
+			where STUDENT_ID = #{userid}
+		</if>
+	    <if test='memberType.equals("professor")'>
+			update tbl_professor set pwd= #{pwd}
+			where PROF_ID = #{userid}
+		</if>
+		<if test='memberType.equals("admin")'>
+			update tbl_admin set pwd= #{pwd}
+			where ADMIN_ID = #{userid}
+		</if>
+		
+	</update>
+	
+	
+	
+
+</mapper>

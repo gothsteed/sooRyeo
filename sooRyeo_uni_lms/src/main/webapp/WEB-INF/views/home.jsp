@@ -181,8 +181,8 @@ function handleLogin() {
                                 </div>
                             </div>
                             <div class="col-7 align-self-center text-right g-px-0 g-pr-15 ">
-                                <a class="text-white" >아이디(학번) 찾기 /</a>
-                                <a class="text-white">비밀번호 찾기</a>
+                                <a class="text-white"  href="<%= ctxPath%>/member/idfind.lms">아이디(학번) 찾기 /</a>
+                                <a class="text-white"  href="<%= ctxPath%>/member/pwdfind.lms">비밀번호 찾기</a>
                             </div>
                         </div>
                        	<div class="d-grid gap-2 col-4 mx-auto">
