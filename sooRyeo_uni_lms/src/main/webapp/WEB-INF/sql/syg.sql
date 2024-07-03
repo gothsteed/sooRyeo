@@ -17,8 +17,8 @@ from tbl_student;
 select *
 from tbl_professor;
 
-delete from tbl_professor
-where prof_id = '202400003';
+delete from tbl_student
+where student_id = '202400010';
 
 commit;
 

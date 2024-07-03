@@ -29,7 +29,7 @@ public interface AdminService {
 
 	ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav);
 
-	String getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
+	ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
 
 	// 학사공지사항 리스트를 select 해오는 메소드
 	List<Announcement> getAnnouncement(Announcement an);

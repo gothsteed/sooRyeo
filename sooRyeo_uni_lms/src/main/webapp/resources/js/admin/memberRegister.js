@@ -5,7 +5,7 @@ let b_zipcodeSearch_click = false;
 // "우편번호찾기" 를 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도
 
 $(document).ready(function(){
-	
+   
     $("div#student").show();
     $("div#professor").hide();
     
@@ -21,7 +21,7 @@ $(document).ready(function(){
         
         $("span.error").hide();
     });
-		
+      
     $("span.error").hide();
     $("input#name").focus();
 
@@ -129,7 +129,7 @@ $(document).ready(function(){
         const regExp_hp2 = new RegExp(/^[1-9][0-9]{3}$/);  
         // 연락처 국번( 숫자 4자리인데 첫번째 숫자는 1-9 이고 나머지는 0-9) 정규표현식 객체 생성 
         
-        const bool = regExp_hp2.test($(e.target).val());	
+        const bool = regExp_hp2.test($(e.target).val());   
         
         if(!bool) {
             // 연락처 국번이 정규표현식에 위배된 경우 
@@ -152,7 +152,7 @@ $(document).ready(function(){
         const regExp_hp3 = new RegExp(/^\d{4}$/);  
         // 숫자 4자리만 들어오도록 검사해주는 정규표현식 객체 생성 
         
-        const bool = regExp_hp3.test($(e.target).val());	
+        const bool = regExp_hp3.test($(e.target).val());   
         
         if(!bool) {
             // 마지막 전화번호 4자리가 정규표현식에 위배된 경우 
@@ -243,7 +243,7 @@ $(document).ready(function(){
         const regExp_postcode = new RegExp(/^\d{5}$/);  
         // 숫자 5자리만 들어오도록 검사해주는 정규표현식 객체 생성 
         
-        const bool = regExp_postcode.test($(e.target).val());	
+        const bool = regExp_postcode.test($(e.target).val());   
         
         if(!bool) {
             // 우편번호가 정규표현식에 위배된 경우 
@@ -357,7 +357,7 @@ $(document).ready(function(){
         // 참고항목을 읽기전용(readonly) 로 만들기
         $("input#extraAddress").attr("readonly", true);
         
-	});// end of $("img#zipcodeSearch").click()------------
+   });// end of $("img#zipcodeSearch").click()------------
 
     // 이메일값이 변경되면 가입하기 버튼을 클릭시 "이메일중복확인" 을 클릭했는지 클릭안했는지를 알아보기위한 용도 초기화 시키기
     $("input#email").bind("change", function(){
@@ -446,26 +446,26 @@ function goRegister(ctxPath) {
     // *** "우편번호찾기" 를 클릭했는지 검사하기 시작 *** //
     if(!b_zipcodeSearch_click) {
         // "우편번호찾기" 를 클릭 안 했을 경우
-		alert("우편번호찾기를 클릭하셔서 우편번호를 입력하셔야 합니다.");
-		return; // goRegister() 함수를 종료한다.
+      alert("우편번호찾기를 클릭하셔서 우편번호를 입력하셔야 합니다.");
+      return; // goRegister() 함수를 종료한다.
     }
     // *** "우편번호찾기" 를 클릭했는지 검사하기 끝 *** //
 
     // *** 우편번호 및 주소에 값을 입력했는지 검사하기 시작 *** //
-	const postcode = $("input#postcode").val().trim();
-	const address = $("input#address").val().trim();
-	const detailAddress = $("input#detailAddress").val().trim();
-	const extraAddress = $("input#extraAddress").val().trim();
-	
-	if(postcode == "" || address == "" || detailAddress == "" || extraAddress == "") {
-		alert("우편번호 및 주소를 입력하셔야 합니다.");
-		return; // goRegister() 함수를 종료한다.
-	}
-	// *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
+   const postcode = $("input#postcode").val().trim();
+   const address = $("input#address").val().trim();
+   const detailAddress = $("input#detailAddress").val().trim();
+   const extraAddress = $("input#extraAddress").val().trim();
+   
+   if(postcode == "" || address == "" || detailAddress == "" || extraAddress == "") {
+      alert("우편번호 및 주소를 입력하셔야 합니다.");
+      return; // goRegister() 함수를 종료한다.
+   }
+   // *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
 
-	   const frm = document.registerFrm;
-	   frm.action = ctxPath+"/admin/memberRegister_end.lms";
-	   frm.method = "post";
-	   frm.submit();
+      const frm = document.registerFrm;
+      frm.action = ctxPath+"/admin/memberRegister_end.lms";
+      frm.method = "post";
+      frm.submit();
 
 } // end of function goRegister()---------------------
