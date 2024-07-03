@@ -98,12 +98,6 @@
 
 </style>
 
-<script type="text/javascript">
-	
-
-</script>
-
-
 
 <div style="display: flex; width : 100%;" class="row">
 

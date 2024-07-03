@@ -63,4 +63,13 @@ public class StudentController {
 	}
 	
 	
+	@GetMapping("student/assignment_List.lms")
+	public String assignment_List(HttpServletRequest request) {
+		
+		
+		return "assignment_List.student";
+		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	
 }
