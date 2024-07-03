@@ -185,9 +185,9 @@ public class AdminController {
 		return adminService.ShowCurriculumPage(request, mav);
 	}
 	
-	@RequestMapping(value = "/admin/curriculumJSON.lms", method = RequestMethod.GET)
-	public ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
-		
+	@ResponseBody
+	@RequestMapping(value = "/admin/curriculumJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
+	public String getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
 		
 		return adminService.getCurriculumPage(request, mav, requestDto);
 	}

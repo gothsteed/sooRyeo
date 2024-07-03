@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Curriculum;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
-import com.sooRyeo.app.pager.Pager;
 
 @Repository
 public class CurriculumDao_imple  implements CurriculumDao{
@@ -26,7 +26,7 @@ public class CurriculumDao_imple  implements CurriculumDao{
 		return sqlsession.insert("curriculum.insertCurriculum", requestDto);
 	}
 	
-	private int getCurriculumCount(int fk_department_seq, int grade) {
+	private int getCurriculumCount(Integer fk_department_seq, Integer grade) {
 		Map<String, Object> paraMap = new HashMap<>();
 
 		paraMap.put("fk_department_seq", fk_department_seq);
