@@ -24,8 +24,8 @@
 			VALUES (generate_professor_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{office_address}, #{email}, sysdate, default, #{department_seq}, #{img_name})
 		</if>
 		<if test="department_seq == null">
-			INSERT INTO tbl_student (student_id, pwd, name, jubun, tel, grade, address, email, register_year, status, fk_department_seq, img_name)
-			VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{address}, #{email}, #{register_year}, default, #{fk_department_seq}, #{img_name})
+			INSERT INTO tbl_student (student_id, pwd, name, jubun, tel, grade, address, postcode, detailaddress, extraaddress, email, register_year, status, fk_department_seq, img_name)
+			VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{address}, #{postcode}, #{detailaddress}, #{extraAddress}, #{email}, #{register_year}, default, #{fk_department_seq}, #{img_name})
 		</if>
 	</insert>
 
