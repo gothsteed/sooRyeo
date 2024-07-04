@@ -4,10 +4,19 @@ import java.util.List;
 
 public  class Pager<T> {
 
+	//페이지에 보여줄 컨탠츠
 	private List<T> objectList;
+	
+	//현재페이지
 	private int pageNumber;
+	
+	//한페이지에 보여줄 개수
 	private int perPageSize;
+	
+	//총 컨탠츠 개수
 	private int totalElementCount;
+	
+	// 총 패이지 수
 	private int totalPageCount;
 	
 	public Pager(List<T> objectList, int pageNumber, int perPageSize, int totalElementCount) {
