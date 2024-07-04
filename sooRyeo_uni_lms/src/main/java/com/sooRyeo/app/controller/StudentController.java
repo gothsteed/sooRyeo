@@ -52,7 +52,31 @@ public class StudentController {
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
+	@GetMapping(value="/student/classList.lms")
+	public String classList(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		int userid = loginuser.getStudent_id();
+		
+		List<Map<String, String>> mapList = service.classList(userid);
+		
+		request.setAttribute("mapList", mapList);
+
+		return "classList.student";
+		// /WEB-INF/views/student/{1}.jsp
+	}
 	
+	
+	@GetMapping("/student/assignment_List.lms")
+	public String assignment_List(HttpServletRequest request) {
+		
+		
+		return "assignment_List.student";
+		// /WEB-INF/views/student/{1}.jsp
+	}
 	
 	// 내정보 보기
 	@RequestMapping(value="/student/myInfo.lms", produces="text/plain;charset=UTF-8")
@@ -139,31 +163,7 @@ public class StudentController {
 		e.printStackTrace();
 	}
 	
-	@GetMapping(value="/student/classList.lms")
-	public String classList(HttpServletRequest request) {
-		
-		HttpSession session = request.getSession();
-		
-		Student loginuser = (Student)session.getAttribute("loginuser");
-		
-		int userid = loginuser.getStudent_id();
-		
-		List<Map<String, String>> mapList = service.classList(userid);
-		
-		request.setAttribute("mapList", mapList);
 
-		return "classList.student";
-		// /WEB-INF/views/student/{1}.jsp
-	}
-	
-	
-	@GetMapping("/student/assignment_List.lms")
-	public String assignment_List(HttpServletRequest request) {
-		
-		
-		return "assignment_List.student";
-		// /WEB-INF/views/student/{1}.jsp
-	}
 	int n = studentservice.myInfoUpdate(student);
 	
 	if(n == 1) {

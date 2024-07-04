@@ -13,14 +13,11 @@ import java.security.GeneralSecurityException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.stereotype.Service;
 
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
-import com.sooRyeo.app.model.StudentDao;
 
 
 
@@ -30,7 +27,11 @@ public class StudentService_imple implements StudentService {
 	
 	@Autowired
 	private StudentDao dao;
+	
+	@Autowired
+	private AES256 aes;
 
+	// 내수업리스트
 	@Override
 	public List<Map<String, String>> classList(int userid) {
 		
@@ -38,13 +39,6 @@ public class StudentService_imple implements StudentService {
 		return classList;
 	}
 	
-	
-
-	@Autowired
-	StudentDao dao;
-	
-	@Autowired
-	private AES256 aes;
 	
 	// 내정보 보기
 	@Override
