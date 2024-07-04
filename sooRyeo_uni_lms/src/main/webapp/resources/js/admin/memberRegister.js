@@ -457,7 +457,7 @@ function goRegister(ctxPath) {
    const detailAddress = $("input#detailAddress").val().trim();
    const extraAddress = $("input#extraAddress").val().trim();
    
-   if(postcode == "" || address == "" || detailAddress == "" || extraAddress == "") {
+   if(postcode == "" || address == "" || detailAddress == "") {
       alert("우편번호 및 주소를 입력하셔야 합니다.");
       return; // goRegister() 함수를 종료한다.
    }

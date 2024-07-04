@@ -11,7 +11,7 @@
 
 <div class="container">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header" style="text-align: center;">
             <h2>학사 공지사항</h2>
         </div>
         <div class="card-body">
@@ -28,7 +28,7 @@
 			    <tr>
 			      <th scope="col">NO</th>
 			      <th scope="col">제목</th>
-			      <th scope="col">날짜</th>
+			      <th scope="col">날짜 / 시간</th>
 			      <th scope="col">조회수</th>
 			    </tr>
 			  </thead>
@@ -43,6 +43,7 @@
               </c:forEach>
 			  </tbody>
 			</table>
+			<div class="pagination justify-content-center">${requestScope.pageBar}</div>
 		</div>
 	</div>
 </div>

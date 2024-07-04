@@ -36,7 +36,17 @@
 	</select>
 	
 	<select id="getAnnouncement" parameterType="com.sooRyeo.app.domain.Announcement" resultType="com.sooRyeo.app.domain.Announcement">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		SELECT *
+		select *
+		from
+		(
+			SELECT rownum as rno, announcement_seq, a_title, writeday, viewcount
+			FROM tbl_announcement
+		)V
+		where V.rno BETWEEN #{startRno} AND #{endRno}
+	</select>
+	
+	<select id="getTotalElementCount" resultType="Integer">
+		SELECT count(*)
 		FROM tbl_announcement
 	</select>
 	

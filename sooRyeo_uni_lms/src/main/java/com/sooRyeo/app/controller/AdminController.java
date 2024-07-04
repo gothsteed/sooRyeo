@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -220,11 +221,22 @@ public class AdminController {
 	
 	
 	@GetMapping("/admin/announcement.lms")
-	public ModelAndView announcement(ModelAndView mav, Announcement an) {
-	
-		List<Announcement> announcementList =  adminService.getAnnouncement(an);
+	public ModelAndView announcement(ModelAndView mav, Announcement an, HttpServletRequest request) {
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
 		
-		mav.addObject("announcementList", announcementList);
+		
+		// 학사공지사항을 전부 불러오는 메소드
+		Pager<Announcement> announcementList =  adminService.getAnnouncement(currentPage);
+		
+		System.out.println(announcementList.getObjectList());
+		
+		mav.addObject("announcementList", announcementList.getObjectList());
+		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms"));
 		mav.setViewName("announcement.admin");
 
 		return mav;
