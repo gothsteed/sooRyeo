@@ -201,11 +201,11 @@ public class ProfessorService_imple implements ProfessorService {
 			e.printStackTrace();
 		}
 		
-		System.out.println("확인용 prof_id : " + prof_id);
-		System.out.println("확인용 pwd : " + pwd);
-		System.out.println("확인용 address : " + address);
-		System.out.println("확인용 email : " + email);
-		System.out.println("확인용 tel : " + tel);
+		//System.out.println("확인용 prof_id : " + prof_id);
+		//System.out.println("확인용 pwd : " + pwd);
+		//System.out.println("확인용 address : " + address);
+		//System.out.println("확인용 email : " + email);
+		//System.out.println("확인용 tel : " + tel);
 		
 		Map<String, String> paraMap = new HashMap<>();
 		
@@ -219,7 +219,7 @@ public class ProfessorService_imple implements ProfessorService {
 		
 		if (img_name_check != null) {
 	        String fileName = img_name_check.getImg_name();
-	        System.out.println("확인용 fileName : " + fileName);
+	        //System.out.println("확인용 fileName : " + fileName);
 	        
 	        if (fileName != null && !"".equals(fileName)) {
 	            
@@ -244,7 +244,7 @@ public class ProfessorService_imple implements ProfessorService {
 	            paraMap.put("fileName", fileName); // 삭제해야할 파일이 저장된 경로
 	            
 	            n1 = dao.delFilename(paraMap.get("prof_id"));
-	            System.out.println("n1: " + n1);
+	            //System.out.println("n1: " + n1);
 	            
 	            if (n1 == 1) {
 	                path = paraMap.get("path");
@@ -320,14 +320,14 @@ public class ProfessorService_imple implements ProfessorService {
 			}			
 	    };// end of if(!attach.isEmpty()) 	
 		
-	    System.out.println("확인용 img_name : " + img_name);
+	    //System.out.println("확인용 img_name : " + img_name);
 
 		paraMap.put("img_name", img_name);
 
 		
 		try {
 			n2 = dao.professor_info_edit(paraMap);
-			System.out.println("n2: " + n2);
+			//System.out.println("n2: " + n2);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
