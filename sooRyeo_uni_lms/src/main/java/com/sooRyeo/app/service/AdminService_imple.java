@@ -39,7 +39,6 @@ public class AdminService_imple implements AdminService {
 	
 	@Autowired
 	private AES256 aes;
-	private AES256 aES256; 
 	
 	// select 태그에 학과를 전부 불러오는 메소드
 	//TODO ****departmentDao 사용해주세요1!!!!
@@ -111,6 +110,8 @@ public class AdminService_imple implements AdminService {
 	@Override
 	public ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav) {
 		
+		List<Department> departments =  departmentDao.departmentList_select();
+		mav.addObject("departments", departments);
 		
 		mav.setViewName("curriculum.admin");
 		return mav;

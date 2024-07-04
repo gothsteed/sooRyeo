@@ -41,7 +41,7 @@
 	<select id="getCurriculumCount" parameterType="HashMap" resultType="int">
 		 	select count(*)
 	        from tbl_curriculum
-		    WHERE 1=1
+		    WHERE 1=1 and exist = 1
 		        <if test="fk_department_seq != null">
 		            AND fk_department_seq = #{fk_department_seq}
 		        </if>

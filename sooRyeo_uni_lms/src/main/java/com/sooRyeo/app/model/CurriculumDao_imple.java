@@ -26,7 +26,7 @@ public class CurriculumDao_imple  implements CurriculumDao{
 		return sqlsession.insert("curriculum.insertCurriculum", requestDto);
 	}
 	
-	private int getCurriculumCount(int fk_department_seq, int grade) {
+	private int getCurriculumCount(Integer fk_department_seq, Integer grade) {
 		Map<String, Object> paraMap = new HashMap<>();
 
 		paraMap.put("fk_department_seq", fk_department_seq);
@@ -50,6 +50,11 @@ public class CurriculumDao_imple  implements CurriculumDao{
 		paraMap.put("endRno", endRno);
 
 		List<Curriculum> curriculumList = sqlsession.selectList("curriculum.getCurriculumList", paraMap);
+		System.out.println("requestDto.getCurrentPage() : " + requestDto.getCurrentPage());
+		System.out.println("requestDto.getGrade() : " + requestDto.getGrade());
+		System.out.println("requestDto.getFk_department_seq() : " + requestDto.getFk_department_seq());
+		
+		
 		int totalCurriculumCount = getCurriculumCount(requestDto.getFk_department_seq(), requestDto.getGrade());
 
 		return new Pager<Curriculum>(curriculumList, requestDto.getCurrentPage(), sizePerPage, totalCurriculumCount);
