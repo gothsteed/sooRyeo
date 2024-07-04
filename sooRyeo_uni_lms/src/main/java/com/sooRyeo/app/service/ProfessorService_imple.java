@@ -62,12 +62,23 @@ public class ProfessorService_imple implements ProfessorService {
 	@Override
 	public JSONObject pwdDuplicateCheck(HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		String prof_id = Integer.toString(loginuser.getProf_id());
+		
 		String pwd = request.getParameter("pwd");		
 		pwd = Sha256.encrypt(pwd);
 		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		paraMap.put("prof_id", prof_id);
+		paraMap.put("pwd", pwd);
+		
+		
 		int n = 0;
 		try {
-			n = dao.pwdDuplicateCheck(pwd);
+			n = dao.pwdDuplicateCheck(paraMap);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -204,10 +215,10 @@ public class ProfessorService_imple implements ProfessorService {
 		paraMap.put("email", email);
 		paraMap.put("tel", tel);
 		
-		professor = dao.select_file_name(paraMap);
+		Professor img_name_check = dao.select_file_name(paraMap);
 		
-		if (professor != null) {
-	        String fileName = professor.getImg_name();
+		if (img_name_check != null) {
+	        String fileName = img_name_check.getImg_name();
 	        System.out.println("확인용 fileName : " + fileName);
 	        
 	        if (fileName != null && !"".equals(fileName)) {
@@ -222,8 +233,8 @@ public class ProfessorService_imple implements ProfessorService {
 	            
 	            String path = root+"resources"+File.separator+"files";
 	            /* 	File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
-	                    운영체제가 Windows 이라면 File.separator 는  "\" 이고,
-	                    운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+                	운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+                	운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
 	            */
 	            // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
 	            // System.out.println("~~~ 확인용 path => " + path);
@@ -246,41 +257,42 @@ public class ProfessorService_imple implements ProfessorService {
 	                        e.printStackTrace();
 	                    }
 	                }
+	                
 	            } // end of if(n1 == 1)
+	            
 	        } // end of if(fileName != null && !"".equals(fileName))
 	    } // end of if (professor != null) 
 		
 		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
 		/////////////////////////////////////////////////////////////////////////////////
 
+		String img_name = "";
+		MultipartFile attach = professor.getAttach();
 		
-		MultipartFile attach = professor != null ? professor.getAttach() : null;
+		if(!attach.isEmpty()) {
 		
-		String root = session.getServletContext().getRealPath("/");
-	     
-	    // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
-	    // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
-	     
-	    String path = root+"resources"+File.separator+"files";
-	    /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
-	          운영체제가 Windows 이라면 File.separator 는  "\" 이고,
-	          운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
-	    */
-	    // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
-	    // System.out.println("~~~ 확인용 path => " + path);
-	    // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
-		/*
-		  2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
-	    */
-	    String newFileName = "";
-	    // WAS(톰캣)의 디스크에 저장될 파일명
-	     
-	    byte[] bytes = null;
-	    // 첨부 파일의 내용물을 담은 것
-	    
-	    String img_name = "";
-	    
-	    if(attach != null) {	    
+			String root = session.getServletContext().getRealPath("/");
+		     
+		    // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+		    // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+		     
+		    String path = root+"resources"+File.separator+"files";
+		    /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+		          운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+		          운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+		    */
+		    // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+		    // System.out.println("~~~ 확인용 path => " + path);
+		    // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+			/*
+			  2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+		    */
+		    String newFileName = "";
+		    // WAS(톰캣)의 디스크에 저장될 파일명
+		     
+		    byte[] bytes = null;
+		    // 첨부 파일의 내용물을 담은 것
+		    	    
 		    try {
 		    	bytes = attach.getBytes();
 		    	// 첨부파일의 내용물을 읽어오는 것
@@ -306,14 +318,11 @@ public class ProfessorService_imple implements ProfessorService {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
-	    };// end of if(attach != null) 	
+	    };// end of if(!attach.isEmpty()) 	
 		
 	    System.out.println("확인용 img_name : " + img_name);
 
-		
-
 		paraMap.put("img_name", img_name);
-
 
 		
 		try {

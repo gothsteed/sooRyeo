@@ -38,11 +38,11 @@ public class ProfessorDao_imple implements ProfessorDao {
 
 
 	@Override
-	public int pwdDuplicateCheck(String pwd) {
+	public int pwdDuplicateCheck(Map<String, String> paraMap) {
 		
 		// System.out.println("확인용 pwd : "+ pwd);
 		
-		int n = sqlSession.selectOne("professor.pwdDuplicateCheck", pwd);
+		int n = sqlSession.selectOne("professor.pwdDuplicateCheck", paraMap);
 		
 		return n;
 	}

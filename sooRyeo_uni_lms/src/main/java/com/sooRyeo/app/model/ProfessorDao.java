@@ -14,7 +14,7 @@ public interface ProfessorDao {
 	Professor getInfo(Professor loginuser);
 	
 	// 교수 비밀번호 중복확인
-	int pwdDuplicateCheck(String pwd);
+	int pwdDuplicateCheck(Map<String, String> paraMap);
 	
 	// 교수 전화번호 중복확인
 	int telDuplicateCheck(Map<String, String> paraMap);

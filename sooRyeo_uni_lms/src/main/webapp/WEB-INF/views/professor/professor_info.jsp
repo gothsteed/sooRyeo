@@ -136,6 +136,7 @@ $(document).ready(function() {
            // 암호가 정규표현식에 위배된 경우 
            $("input#profPwd").val("");
            $("input#profPwd").parent().find("span.error").show();
+           $("span#pwdCheckResult").html("");
            return;
        }
        else {
@@ -210,6 +211,7 @@ $(document).ready(function() {
            // 연락처가 정규표현식에 위배된 경우 
            $("input#profTel").val("");
            $("input#profTel").parent().find("span.error").show();
+           $("span#telCheckResult").html("");
            return;
        }
        else {
@@ -291,6 +293,7 @@ $(document).ready(function() {
            // 이메일 정규표현식에 위배된 경우 
            $("input#profEmail").val("");
            $("input#profEmail").parent().find("span.error").show();
+           $("span#emailCheckResult").html("");
            return;
        }
        else {

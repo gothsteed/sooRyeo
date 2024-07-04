@@ -38,10 +38,10 @@
 	</select>
 	
 	
-	<select id="pwdDuplicateCheck" resultType="int" parameterType="String">
+	<select id="pwdDuplicateCheck" resultType="int" parameterType="HashMap">
 		select count(*)
 		from tbl_professor
-		where pwd = #{pwd}
+		where prof_id = to_number(#{prof_id}) and pwd = #{pwd}
 	</select>
 	
 	
