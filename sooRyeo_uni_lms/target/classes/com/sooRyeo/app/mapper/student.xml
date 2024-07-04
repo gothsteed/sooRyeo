@@ -60,15 +60,53 @@
 		where student_id = #{student_id}
 	</select>
 
-	<!-- 내정보수정 -->
-
-
-
-	<!-- 내정보수정-이메일중복확인 -->
-	<select id="emailDuplicateCheck" parameterType="String" resultType="String">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		SELECT email
-		FROM tbl_student
-		where email = #{email}
+	<!-- 학생정보 - 비밀번호 중복 -->
+	<select id="pwdDuplicateCheck" resultType="int" parameterType="String">
+		select count(*)
+		from tbl_student
+		where student_id = to_number(#{student_id}) and pwd = #{pwd}
 	</select>
+
+	<!-- 학생정보 - 전화번호 중복 -->
+	<select id="telDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_student
+		where student_id = to_number(#{student_id}) and tel = #{tel}
+	</select>
+
+	<!-- 학생정보 - 이메일 중복 -->
+	<select id="emailDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_student
+		where student_id = to_number(#{student_id}) and email = #{email}
+	</select>
+
+	<!-- 학생정보 - 계정에 파일이 있는지 확인 -->
+	<select id="select_file_name" resultType="com.sooRyeo.app.dto.StudentDTO" parameterType="HashMap">
+		select img_name
+		from tbl_student
+		where student_id = to_number(#{student_id}) 
+	</select>
+	
+	<!-- 학생정보 - 계정에 기존 파일 삭제 -->
+	<update id="delFilename" parameterType="String">
+		update tbl_student set img_name = NULL
+		where student_id = to_number(#{student_id})
+	</update>
+
+	<!-- 학생정보 수정 -->
+	<update id="student_info_edit" parameterType="HashMap">
+		update tbl_student set pwd = #{pwd}, postcode=#{postcode}, address = #{address}, detailAddress=#{detailAddress}, extraAddress=#{extraAddress}
+		, email = #{email}, tel = #{tel}
+		<choose>
+			<when test='img_name != "" '>
+			, img_name = #{img_name}
+			</when>
+		</choose>  
+		where student_id = to_number(#{student_id})
+	</update>
+
+
+
 
 </mapper>
