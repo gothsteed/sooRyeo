@@ -178,12 +178,6 @@ public class AdminService_imple implements AdminService {
 	public ResponseEntity<String> updateCurriculum(HttpServletRequest request, ModelAndView mav,
 			CurriculumRequestDto requestDto) {
 		
-		System.out.println(requestDto.getName());
-		System.out.println(requestDto.getRequired());
-		System.out.println(requestDto.getCredit());
-		System.out.println(requestDto.getCurriculum_seq());
-		System.out.println(requestDto.getFk_department_seq());
-		System.out.println(requestDto.getGrade());
 		
 		int result  = curriculumDao.updateCurriculum(requestDto);
 		
