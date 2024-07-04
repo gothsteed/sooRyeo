@@ -3,20 +3,25 @@ package com.sooRyeo.app.domain;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.Map;
 
 import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.dto.StudentDTO;
 
 
 public class Student {
 	
 	
 	private Integer student_id;
-    private String pwd;
+    private String pwd;				// (AES-256 암호화/복호화 대상)
     private String name;
     private String jubun;
     private String tel;				// (AES-256 암호화/복호화 대상)
     private Short grade;
+    private String postcode;
     private String address;
+    private String detailAddress;
+    private String extraAddress;
     private String email; 			// (AES-256 암호화/복호화 대상)
     private Date register_date;
     private Short status;
@@ -41,8 +46,18 @@ public class Student {
 	public Short getGrade() {
 		return grade;
 	}
+	
+	public String getPostcode() {
+		return postcode;
+	}
 	public String getAddress() {
 		return address;
+	}
+	public String getDetailAddress() {
+		return detailAddress;
+	}
+	public String getExtraAddress() {
+		return extraAddress;
 	}
 	
 	public Date getRegister_date() {
@@ -96,7 +111,28 @@ public class Student {
 		
 		return birthday;
 	}
+
+	
     
+	public void updateinfo(Map<String, String> paraMap, AES256 aES256) {
+		
+		student_id = Integer.parseInt(paraMap.get("student_id"));
+		pwd = paraMap.get("pwd");
+		postcode = paraMap.get("postcode");
+		address = paraMap.get("address");
+		detailAddress = paraMap.get("detailAddress");
+		extraAddress = paraMap.get("extraAddress");
+		tel = paraMap.get("tel");
+		email = paraMap.get("email");
+		
+		setDecodedEmail(aES256);
+		setDecodeTel(aES256);
+		
+		// 넣은 데이터 복호화(연락처, 이메일)
+		
+		
+		
+	}
     
     
 

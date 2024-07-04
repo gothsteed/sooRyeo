@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.StudentDTO;
@@ -56,14 +57,76 @@ public class StudentDao_imple implements StudentDao {
 		return d_name;
 	} // end of public String select_department
 
-	// 이메일 중복확인
+
+	// 학생 비밀번호 중복확인
 	@Override
-	public String emailDuplicateCheck(String email) {
+	public int pwdDuplicateCheck(Map<String, String> paraMap) {
 		
-		String emailDuplicateCheck = sqlSession.selectOne("student.emailDuplicateCheck", email);
+		int n = sqlSession.selectOne("student.pwdDuplicateCheck", paraMap);
 		
-		return emailDuplicateCheck;
+		return n;
 		
-	} // end of public String emailDuplicateCheck
+	} // end of public int pwdDuplicateCheck
+
+	
+	// 학생 전화번호 중복확인
+	@Override
+	public int telDuplicateCheck(Map<String, String> paraMap) {
+		
+		int n = sqlSession.selectOne("student.telDuplicateCheck", paraMap);
+		
+		return n;
+		
+	} // end of public int telDuplicateCheck
+
+	
+	// 학생 이메일 중복확인
+	@Override
+	public int emailDuplicateCheck(Map<String, String> paraMap) {
+		
+		int n = sqlSession.selectOne("student.emailDuplicateCheck", paraMap);
+		
+		return n;
+		
+	} // end of public int emailDuplicateCheck
+
+	
+	
+	
+
+	// 계정에 파일이 있는지 확인
+	@Override
+	public StudentDTO select_file_name(Map<String, String> paraMap) {
+		
+		StudentDTO student = sqlSession.selectOne("student.select_file_name", paraMap);
+		
+		return student;
+		
+	} // end of public StudentDTO select_file_name
+
+
+	// 계정에 기존 파일 삭제
+	@Override
+	public int delFilename(String student_id) {
+		
+		int n = sqlSession.update("student.delFilename", student_id);
+		
+		return n;
+		
+	} // end of public int delFilename
+
+
+	// 학생 정보 수정
+	@Override
+	public int student_info_edit(Map<String, String> paraMap) {
+		
+		int n = sqlSession.update("student.student_info_edit", paraMap);
+		
+		return n;
+		
+	} // end of public int student_info_edit
+
+
+	
 	
 }
