@@ -63,7 +63,7 @@ public class StudentController {
 	}
 	
 	
-	@GetMapping("student/assignment_List.lms")
+	@GetMapping("/student/assignment_List.lms")
 	public String assignment_List(HttpServletRequest request) {
 		
 		
