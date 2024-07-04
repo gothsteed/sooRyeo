@@ -5,6 +5,7 @@ import java.util.List;
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -23,6 +24,9 @@ public interface AdminDao {
 	String emailDuplicateCheck(String email);
 
 	// 학사공지사항 리스트를 select 해오는 메소드
-	List<Announcement> getAnnouncement(Announcement an);
+	Pager<Announcement> getAnnouncement(int currentPage);
+
+	// 학사공지사항 글의 개수를 알아오는 메소드
+	int getTotalElementCount();
 
 }

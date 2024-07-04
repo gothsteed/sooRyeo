@@ -151,8 +151,8 @@ public class AdminService_imple implements AdminService {
 	}
 
 	@Override
-	public List<Announcement> getAnnouncement(Announcement an) {
-		List<Announcement> announcementList = admindao.getAnnouncement(an);
+	public Pager<Announcement> getAnnouncement(int currentPage) {
+		Pager<Announcement> announcementList = admindao.getAnnouncement(currentPage);
 		return announcementList;
 	}
 
@@ -196,6 +196,14 @@ public class AdminService_imple implements AdminService {
 		
 		System.out.println("수정 성공");
 		return ResponseEntity.ok().body("수정 성공하였습니다");
+	}
+
+	// 학사공지사항 글의 개수를 알아오는 메소드
+	@Override
+	public int getTotalElementCount() {
+		
+		int totalElementCount = admindao.getTotalElementCount();
+		return totalElementCount;
 	}
 	
 	
