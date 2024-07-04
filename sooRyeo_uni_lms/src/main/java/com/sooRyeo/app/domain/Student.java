@@ -122,6 +122,9 @@ public class Student {
 		address = paraMap.get("address");
 		detailAddress = paraMap.get("detailAddress");
 		extraAddress = paraMap.get("extraAddress");
+		tel = paraMap.get("tel");
+		email = paraMap.get("email");
+		
 		setDecodedEmail(aES256);
 		setDecodeTel(aES256);
 		
