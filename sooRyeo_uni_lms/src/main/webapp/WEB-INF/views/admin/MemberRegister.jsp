@@ -127,7 +127,7 @@
 			                        <br>
 			                        <input class="form-control  mb-1  mt-1 requiredInfo" type="text" name="address" id="address" size="40" maxlength="200" placeholder="주소" />
 			                        <input class="form-control  mb-1 requiredInfo" type="text" name="detailaddress" id="detailAddress" size="40" maxlength="200" placeholder="상세주소" />
-			                        <input class="form-control" type="text" name="extraaddress" id="extraAddress" size="40" maxlength="200" placeholder="참고항목" />            
+			                        <input class="form-control" type="text" name="extraAddress" id="extraAddress" size="40" maxlength="200" placeholder="참고항목" />            
                                 </div>
                             </div>
                             <hr>

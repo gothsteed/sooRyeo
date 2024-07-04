@@ -17,10 +17,31 @@ public class RegisterDTO {
 	private String department_seq;
 	
 	private String address;
+	private String postcode;
+	private String detailaddress;
+	private String extraAddress;
 	private String register_year;
 	private String grade;
 	private String img_name;
 	
+	public String getPostcode() {
+		return postcode;
+	}
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+	public String getDetailaddress() {
+		return detailaddress;
+	}
+	public void setDetailaddress(String detailaddress) {
+		this.detailaddress = detailaddress;
+	}
+	public String getExtraAddress() {
+		return extraAddress;
+	}
+	public void setExtraAddress(String extraAddress) {
+		this.extraAddress = extraAddress;
+	}
 	private MultipartFile attach;
 
 	public String getOffice_address() {
