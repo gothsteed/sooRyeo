@@ -27,10 +27,12 @@ public class ProfessorController {
 	private ProfessorService service;
 	
 	
-	@RequestMapping(value = "/professor/dashboard.lms", method = RequestMethod.GET)
-	public String professor() {// 대시보드 뷰단
-
-		return "professor_dashboard.professor";
+	@RequestMapping(value = "/professor/dashboard.lms")
+	public ModelAndView professor_dashboard(ModelAndView mav) {// 대시보드 뷰단
+		
+		mav.setViewName("professor_dashboard.professor");
+		
+		return mav;
 	}
 	
 	
@@ -91,10 +93,10 @@ public class ProfessorController {
 	
 	
 	@PostMapping(value = "/professor/professor_info_edit.lms")
-	public ModelAndView professor_info_edit( ModelAndView mav, Professor professor, MultipartHttpServletRequest mrequest) {// 첨부파일 없는 교수 정보 수정
+	public ModelAndView professor_info_edit( ModelAndView mav, Professor professor, MultipartHttpServletRequest mrequest) {// 교수 정보 수정
 		     
 	      int n = service.professor_info_edit(professor, mrequest);
-      
+	      
 	      if(n == 1) {
 	    	  mav.addObject("message", "교수정보 수정을 성공하였습니다.");
 	    	  mav.addObject("loc", mrequest.getContextPath()+"/professor/dashboard.lms");

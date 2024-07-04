@@ -5,26 +5,33 @@
 
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="professor">
-
-	<select id="selectProfessor" resultType="com.sooRyeo.app.domain.Professor" parameterType="com.sooRyeo.app.dto.LoginDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		SELECT * 
-		FROM tbl_professor 
-		WHERE prof_id = #{id} AND pwd = #{password}				
-	</select>
 	
-	
-    <resultMap id="professorResultMap" type="com.sooRyeo.app.domain.Professor">
+	<resultMap id="professorResultMap" type="com.sooRyeo.app.domain.Professor">
         <id property="prof_id" column="prof_id"/>
         <result property="pwd" column="pwd"/>
         <result property="name" column="name"/>
         <result property="tel" column="tel"/>
         <result property="email" column="email"/>
         <result property="office_address" column="office_address"/>
+        <result property="img_name" column="img_name"/>
         <association property="department" javaType="com.sooRyeo.app.domain.Department">
             <id property="departmentSeq" column="department_seq"/>
             <result property="department_name" column="department_name"/>
         </association>
     </resultMap>
+	<select id="selectProfessor" resultMap="professorResultMap" parameterType="com.sooRyeo.app.dto.LoginDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS, P.IMG_NAME
+		FROM 
+    	(SELECT prof_id, pwd, name, tel, department_seq, email, office_address, img_name
+     	FROM tbl_professor) P
+		JOIN 
+    	(SELECT department_seq, department_name
+     	FROM tbl_department) D
+		ON P.department_seq = D.department_seq
+		WHERE P.prof_id = #{id} AND P.pwd = #{password}				
+	</select>
+	
+	
 	<select id="selectInfo" resultMap="professorResultMap" parameterType="com.sooRyeo.app.domain.Professor">
 		SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS
 		FROM 

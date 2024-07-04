@@ -67,18 +67,18 @@ public class ProfessorDao_imple implements ProfessorDao {
 
 
 	@Override
-	public int professor_info_edit(Map<String, String> paraMap) {
+	public int professor_info_edit(Map<String, String> editMap) {
 		
-		int n = sqlSession.update("professor.professor_info_edit", paraMap);
+		int n = sqlSession.update("professor.professor_info_edit", editMap);
 		
 		return n;
 	}
 
 
 	@Override
-	public Professor select_file_name(Map<String, String> paraMap) {
+	public Professor select_file_name(Map<String, String> editMap) {
 		
-		Professor professor = sqlSession.selectOne("professor.select_file_name", paraMap);
+		Professor professor = sqlSession.selectOne("professor.select_file_name", editMap);
 		
 		return professor;
 	}
@@ -90,9 +90,6 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		return n;
 	}
-
-
-
 
 
 

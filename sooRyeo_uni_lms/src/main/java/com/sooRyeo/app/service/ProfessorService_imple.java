@@ -207,15 +207,15 @@ public class ProfessorService_imple implements ProfessorService {
 		//System.out.println("확인용 email : " + email);
 		//System.out.println("확인용 tel : " + tel);
 		
-		Map<String, String> paraMap = new HashMap<>();
+		Map<String, String> editMap = new HashMap<>();
 		
-		paraMap.put("prof_id", prof_id);
-		paraMap.put("pwd", pwd);
-		paraMap.put("address", address);
-		paraMap.put("email", email);
-		paraMap.put("tel", tel);
+		editMap.put("prof_id", prof_id);
+		editMap.put("pwd", pwd);
+		editMap.put("address", address);
+		editMap.put("email", email);
+		editMap.put("tel", tel);
 		
-		Professor img_name_check = dao.select_file_name(paraMap);
+		Professor img_name_check = dao.select_file_name(editMap);
 		
 		if (img_name_check != null) {
 	        String fileName = img_name_check.getImg_name();
@@ -240,15 +240,15 @@ public class ProfessorService_imple implements ProfessorService {
 	            // System.out.println("~~~ 확인용 path => " + path);
 	            // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
 	            
-	            paraMap.put("path", path); // 삭제해야할 파일이 저장된 경로
-	            paraMap.put("fileName", fileName); // 삭제해야할 파일이 저장된 경로
+	            editMap.put("path", path); // 삭제해야할 파일이 저장된 경로
+	            editMap.put("fileName", fileName); // 삭제해야할 파일이 저장된 경로
 	            
-	            n1 = dao.delFilename(paraMap.get("prof_id"));
+	            n1 = dao.delFilename(editMap.get("prof_id"));
 	            //System.out.println("n1: " + n1);
 	            
 	            if (n1 == 1) {
-	                path = paraMap.get("path");
-	                fileName = paraMap.get("fileName");
+	                path = editMap.get("path");
+	                fileName = editMap.get("fileName");
 	                
 	                if (fileName != null && !"".equals(fileName)) {
 	                    try {
@@ -322,16 +322,22 @@ public class ProfessorService_imple implements ProfessorService {
 		
 	    //System.out.println("확인용 img_name : " + img_name);
 
-		paraMap.put("img_name", img_name);
+	    editMap.put("img_name", img_name);
 
 		
 		try {
-			n2 = dao.professor_info_edit(paraMap);
+			n2 = dao.professor_info_edit(editMap);
 			//System.out.println("n2: " + n2);
 		} catch (Throwable e) {
 			e.printStackTrace();
-		}
+		}		
 		
+		if(n1*n2 == 1) {// 잘 수정되었다면 세션에 정보를 덧씌우기하기 위한 용도
+			
+			loginuser.updateinfo(editMap); // professor 도메인 데이터 수정
+			
+		}
+
 		return n1*n2;
 	}
     

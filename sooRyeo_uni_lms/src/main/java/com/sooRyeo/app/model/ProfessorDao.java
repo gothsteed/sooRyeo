@@ -23,13 +23,14 @@ public interface ProfessorDao {
 	int emailDuplicateCheck(Map<String, String> paraMap);
 	
 	// 교수 정보 수정 
-	int professor_info_edit(Map<String, String> paraMap);
+	int professor_info_edit(Map<String, String> editMap);
 	
 	// 계정에 파일이 있는지 확인
-	Professor select_file_name(Map<String, String> paraMap);
+	Professor select_file_name(Map<String, String> editMap);
 	
 	// 계정에 기존 파일 삭제
 	int delFilename(String prof_id);
+	
 
 
 }
