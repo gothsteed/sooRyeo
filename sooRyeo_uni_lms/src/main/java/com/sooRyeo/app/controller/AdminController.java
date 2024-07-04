@@ -87,11 +87,7 @@ public class AdminController {
 		String tel = request.getParameter("a2") + request.getParameter("hp2") + request.getParameter("hp3"); // 전화번호
 		rdto.setTel(tel);
 		
-		if(rdto.getGrade() != null) {
-			String address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
-			rdto.setAddress(address);
-		}
-		else {
+		if(rdto.getGrade() == null) {
 			String office_address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
 			rdto.setOffice_address(office_address);
 		}
