@@ -37,10 +37,10 @@
             <div class="d-flex justify-content-center">
                 <div class="card" style="width: 45%;" id="student">
                   <h5 class="card-header">
-                  	학생 등록
+                  	교수 등록
                   </h5>
                   <div class="card-body">
-                    <h5 class="card-title">학생 정보</h5>
+                    <h5 class="card-title">교수 정보</h5>
                     <p class="card-text" />
                         <form action="#" name="registerFrm" method="post" enctype="multipart/form-data">
                             <!-- text, form-control -->
@@ -108,7 +108,7 @@
 							<div class="form-group row">
 							    <label for="major" class="col-sm-3 text-sm-left">학과</label>
 							    <div class="col-sm-8">
-							        <select class="selectpicker" id="major" name="fk_department_seq">
+							        <select class="selectpicker" id="major" name="department_seq">
 							            <c:forEach var="major" items="${requestScope.departmentList}" varStatus="status">    
 							                <option value="${major.department_seq}" name="fk_department_seq">${major.department_name}</option>
 							            </c:forEach>
@@ -131,28 +131,7 @@
                                 </div>
                             </div>
                             <hr>
-                            
-                            <div class="form-group row requiredInfo">
-                                <label for="register_year" class="col-sm-3 text-sm-left">입학년도</label>
-                                <div class="col-sm-8">
-                                    <%-- 입학년도 --%>
-			                       	<input type="text" name="register_year" id="register_year" maxlength="4" />
-                                </div>
-                            </div>
-                            <hr>
-                            
-                            <div class="form-group row">
-							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">학년</label>
-							    <div class="col-sm-8">
-							    <select id="grade" name="grade">
-								    <option name="grade1" value="1">1</option>
-								    <option name="grade2" value="2">2</option>
-								    <option name="grade3" value="3">3</option>
-								    <option name="grade4" value="4">4</option>
-								</select>
-							    </div>
-							</div>
-                            
+
                             <div class="form-group row product">
 							    <label for="grade" class="col-sm-3 text-sm-left requiredInfo">증명사진</label>
 							    <div class="col-sm-8">
@@ -168,3 +147,4 @@
         </div>
 </body>
 </html>
+

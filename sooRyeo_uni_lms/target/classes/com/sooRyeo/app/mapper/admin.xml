@@ -19,9 +19,25 @@
 	</select>
 
 	<insert id="memberRegister_end" parameterType="com.sooRyeo.app.dto.RegisterDTO">
-		INSERT INTO tbl_student (student_id, pwd, name, jubun, tel, grade, address, email, register_year, status, fk_department_seq)
-		VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{address}, #{email}, #{register_year}, default, #{fk_department_seq})
+		<if test="fk_department_seq == null">
+			INSERT INTO tbl_professor (prof_id, pwd, name, jubun, tel, office_address, email, employment_date, employment_stat, department_seq, img_name)
+			VALUES (generate_professor_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{office_address}, #{email}, sysdate, default, #{department_seq}, #{img_name})
+		</if>
+		<if test="department_seq == null">
+			INSERT INTO tbl_student (student_id, pwd, name, jubun, tel, grade, address, email, register_year, status, fk_department_seq, img_name)
+			VALUES (generate_student_id(), #{pwd}, #{name}, #{jubun}, #{tel}, #{grade}, #{address}, #{email}, #{register_year}, default, #{fk_department_seq}, #{img_name})
+		</if>
 	</insert>
 
-
+	<select id="emailDuplicateCheck" parameterType="String" resultType="String">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT email
+		FROM tbl_student
+		where email = #{email}
+	</select>
+	
+	<select id="getAnnouncement" parameterType="com.sooRyeo.app.domain.Announcement" resultType="com.sooRyeo.app.domain.Announcement">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT *
+		FROM tbl_announcement
+	</select>
+	
 </mapper>

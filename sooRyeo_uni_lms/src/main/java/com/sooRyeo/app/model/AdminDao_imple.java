@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -39,6 +40,18 @@ public class AdminDao_imple implements AdminDao {
 	public int memberRegister_end(RegisterDTO rdto) {
 		int n = sqlSession.insert("admin.memberRegister_end", rdto);
 		return n;
+	}
+	
+	@Override
+	public String emailDuplicateCheck(String email) {
+		String emailDuplicateCheck = sqlSession.selectOne("admin.emailDuplicateCheck", email);
+		return emailDuplicateCheck;
+	}
+
+	@Override
+	public List<Announcement> getAnnouncement(Announcement an) {
+		List<Announcement> announcementList = sqlSession.selectList("admin.getAnnouncement", an);
+		return announcementList;
 	}
 
 }

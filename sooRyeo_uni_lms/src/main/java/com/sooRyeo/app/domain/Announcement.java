@@ -5,6 +5,8 @@ public class Announcement {
 	private Integer announcement_seq;
 	private String a_title;
 	private String a_content;
+	private String writeday;
+	private Integer viewcount;
 	private String attatched_file;
 	
 	
@@ -19,6 +21,12 @@ public class Announcement {
 	}
 	public String getAttatched_file() {
 		return attatched_file;
+	}
+	public String getWriteday() {
+		return writeday;
+	}
+	public Integer getViewcount() {
+		return viewcount;
 	}
 	
 	

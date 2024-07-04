@@ -1,4 +1,4 @@
-package com.sooRyeo.app.domain;
+package com.sooRyeo.app.pager;
 
 import java.util.List;
 
@@ -55,7 +55,6 @@ public  class Pager<T> {
 	}
 	
 	
-
 	public String makePageBar(String baseUrl, String... parameters) {
 		
 		int loop = 1;

@@ -1,5 +1,9 @@
 package com.sooRyeo.app.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.sooRyeo.app.common.Sha256;
+
 public class RegisterDTO {
 	
 	private String name;
@@ -8,9 +12,47 @@ public class RegisterDTO {
 	private String jubun;
 	private String tel;
 	private String fk_department_seq;
+
+	private String office_address;
+	private String department_seq;
+	
 	private String address;
 	private String register_year;
+	private String grade;
+	private String img_name;
+	
+	private MultipartFile attach;
 
+	public String getOffice_address() {
+		return office_address;
+	}
+	public void setOffice_address(String office_address) {
+		this.office_address = office_address;
+	}
+	public String getDepartment_seq() {
+		return department_seq;
+	}
+	public void setDepartment_seq(String department_seq) {
+		this.department_seq = department_seq;
+	}
+	public MultipartFile getAttach() {
+		return attach;
+	}
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+	public String getImg_name() {
+		return img_name;
+	}
+	public void setImg_name(String img_name) {
+		this.img_name = img_name;
+	}
+	public String getGrade() {
+		return grade;
+	}
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
 	public String getName() {
 		return name;
 	}
@@ -21,7 +63,7 @@ public class RegisterDTO {
 		return pwd;
 	}
 	public void setPwd(String pwd) {
-		this.pwd = pwd;
+		this.pwd = Sha256.encrypt(pwd);
 	}
 	public String getEmail() {
 		return email;

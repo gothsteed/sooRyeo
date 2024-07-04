@@ -11,5 +11,77 @@
 		FROM tbl_professor 
 		WHERE prof_id = #{id} AND pwd = #{password}				
 	</select>
+	
+	
+    <resultMap id="professorResultMap" type="com.sooRyeo.app.domain.Professor">
+        <id property="prof_id" column="prof_id"/>
+        <result property="pwd" column="pwd"/>
+        <result property="name" column="name"/>
+        <result property="tel" column="tel"/>
+        <result property="email" column="email"/>
+        <result property="office_address" column="office_address"/>
+        <association property="department" javaType="com.sooRyeo.app.domain.Department">
+            <id property="departmentSeq" column="department_seq"/>
+            <result property="department_name" column="department_name"/>
+        </association>
+    </resultMap>
+	<select id="selectInfo" resultMap="professorResultMap" parameterType="com.sooRyeo.app.domain.Professor">
+		SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS
+		FROM 
+    	(SELECT prof_id, pwd, name, tel, department_seq, email, office_address
+     	FROM tbl_professor) P
+		JOIN 
+    	(SELECT department_seq, department_name
+     	FROM tbl_department) D
+		ON P.department_seq = D.department_seq
+		WHERE P.prof_id = #{prof_id}
+	</select>
+	
+	
+	<select id="pwdDuplicateCheck" resultType="int" parameterType="String">
+		select count(*)
+		from tbl_professor
+		where pwd = #{pwd}
+	</select>
+	
+	
+	<select id="telDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_professor
+		where prof_id = to_number(#{prof_id}) and tel = #{tel}
+	</select>
+	
+	
+	<select id="emailDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_professor
+		where prof_id = to_number(#{prof_id}) and email = #{email}
+	</select>
+	
+	
+	<update id="professor_info_edit" parameterType="HashMap">
+		update tbl_professor set pwd = #{pwd}, office_address = #{address}, email = #{email}, tel = #{tel}
+		<choose>
+			<when test='img_name != "" '>
+			, img_name = #{img_name}
+			</when>
+		</choose>  
+		where prof_id = to_number(#{prof_id})
+	</update>
+	
+	
+	<select id="select_file_name" resultType="com.sooRyeo.app.domain.Professor" parameterType="HashMap">
+		select img_name
+		from tbl_professor
+		where prof_id = to_number(#{prof_id}) 
+	</select>
+	
+	
+	<update id="delFilename" parameterType="String">
+		update tbl_professor set img_name = NULL
+		where prof_id = to_number(#{prof_id})
+	</update>
+	
+
 
 </mapper>
