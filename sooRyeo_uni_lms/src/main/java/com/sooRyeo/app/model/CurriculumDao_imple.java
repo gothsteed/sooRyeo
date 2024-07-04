@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Curriculum;
-import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
-import com.sooRyeo.app.pager.Pager;
 
 @Repository
 public class CurriculumDao_imple  implements CurriculumDao{
@@ -22,7 +22,7 @@ public class CurriculumDao_imple  implements CurriculumDao{
 	private SqlSession sqlsession;
 
 	@Override
-	public int insertCurriculum(CurriculumInsertRequestDto requestDto) {
+	public int insertCurriculum(CurriculumRequestDto requestDto) {
 		return sqlsession.insert("curriculum.insertCurriculum", requestDto);
 	}
 	
@@ -53,6 +53,19 @@ public class CurriculumDao_imple  implements CurriculumDao{
 		int totalCurriculumCount = getCurriculumCount(requestDto.getFk_department_seq(), requestDto.getGrade());
 
 		return new Pager<Curriculum>(curriculumList, requestDto.getCurrentPage(), sizePerPage, totalCurriculumCount);
+	}
+
+	@Override
+	public int deleteCurriculum(int curriculum_seq) {
+		
+		
+		return sqlsession.update("curriculum.updateToDeleteCurriculum", curriculum_seq);
+	}
+
+	@Override
+	public int updateCurriculum(CurriculumRequestDto requestDto) {
+		
+		return sqlsession.update("curriculum.updateCurriculum", requestDto);
 	}
 
 }

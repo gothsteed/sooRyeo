@@ -3,8 +3,10 @@ package com.sooRyeo.app.ExceptionHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -96,4 +98,13 @@ public class GlobalExceptionHandler {
 		
 		return modelView;
 	}
+	
+	/*
+	@ResponseBody
+	@ExceptionHandler(NumberFormatException.class) 
+	public String handleNumberFormatExceptionWtihJSON(NumberFormatException exception) {
+
+		return "";
+	}
+	*/
 }

@@ -8,9 +8,11 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
@@ -214,7 +216,7 @@ public class AdminController {
 	
 	
 	@RequestMapping(value = "/admin/add_curriculum_end.lms", method = RequestMethod.POST)
-	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumInsertRequestDto requestDto) {
+	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumRequestDto requestDto) {
 		
 		return adminService.insertCurriculum(request, mav, requestDto);
 	}
@@ -231,6 +233,19 @@ public class AdminController {
 		return mav;
 	}
 	
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/deleteCurriculumREST.lms", method = RequestMethod.DELETE, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> deleteCurriculumREST(HttpServletRequest request, ModelAndView mav) {
+		return adminService.deleteCurriculum(request, mav);
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/updateCurriculumREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> updateCurriculumREST(HttpServletRequest request, ModelAndView mav, @RequestBody CurriculumRequestDto requestDto) {
+		return adminService.updateCurriculum(request, mav, requestDto);
+	}
 	
 	
 }

@@ -1,6 +1,7 @@
 package com.sooRyeo.app.domain;
 
 import java.util.Date;
+import java.util.List;
 
 public class Course {
 	
@@ -11,6 +12,8 @@ public class Course {
     private Integer fk_time_seq;
     private Integer capacity;
     private Date semester_date;
+    
+    private List<Time> time;
     
     
 	public Integer getCourse_seq() {
@@ -30,6 +33,9 @@ public class Course {
 	}
 	public Date getSemester_date() {
 		return semester_date;
+	}
+	public List<Time> getTime() {
+		return time;
 	}
     
     
