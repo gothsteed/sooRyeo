@@ -22,6 +22,7 @@
 	$(document).ready(function(){
 		$("div#major").show();
 		$("div#minor").hide();
+				
 		
 		$("input#option1").click(function(){
 			$("div#major").show();
@@ -31,6 +32,9 @@
 			$("div#minor").show();
 			$("div#major").hide();
 		})
+		
+		
+
 		
 		
 		
@@ -50,10 +54,10 @@
         <div class="main-content d-flex justify-content-center">
             <div class="btn-group btn-group-toggle" data-toggle="buttons" style="width: 70%">
                 <label class="btn btn-secondary active">
-                  <input type="radio" name="options" id="option1" autocomplete="off" onclick="showmajor()" checked> 전공과목
+                  <input type="radio" name="options" id="option1" autocomplete="off"/> 전공과목
                 </label>
                 <label class="btn btn-secondary">
-                  <input type="radio" name="options" id="option2" autocomplete="off" onclick="showminor()"> 비전공과목
+                  <input type="radio" name="options" id="option2" autocomplete="off"/> 비전공과목
                 </label>
             </div>
         </div>
@@ -64,141 +68,54 @@
                  	담당전공과목
               </h5>
               <div style="display: flex;">
-              	  <c:if test="${not empty requestScope.courseList && requestScope.courseList.curriculum.fk_department_seq != null}">
-	                  <c:forEach var="courseList" items="${requestScope.courseList}" varStatus="status">
-	                  <div class="card-body">
-	                    <p class="card-text" />
-	                        <table class="table table-dark table-striped">
-	                            <tr>
-		                            <th>${courseList.curriculum.name}</th>
-		                            <th></th>
-		                        </tr>
-	                            <tr>
-	                                <td>교수명</td>
-	                                <td>${courseList.name}</td>
-	                            </tr>
-	                            <tr>
-	                                <td>학점</td>
-	                                <td>${courseList.curriculum.credit}학점</td>
-	                            </tr>
-	                            <tr>
-	                                <td>시간</td>
-	                                <td>월 3 - 6</td>
-	                            </tr>
-	                        </table>
-	                    <a href="#" class="btn btn-primary">과목상세보기</a>
-	                  </div>
-	                  </c:forEach>
-                  </c:if>
-                  <c:if test="${not empty requestScope.courseList && requestScope.courseList.curriculum.fk_department_seq == null}">
-	                  <div class="card-body">
-	                    <p class="card-text" />
-	                        <table class="table table-dark table-striped">
-	                            <tr>
-		                            <th>담당하고 있는 전공과목이 없습니다.</th>
-		                            <th></th>
-		                        </tr>      
-	                        </table>
-	                  </div>
-                  </c:if>
+              	  <c:if test="${not empty requestScope.courseList}">
+	                  <c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
+		                  <c:if test="${not empty course.curriculum.fk_department_seq}">
+			                  <div class="card-body">
+			                    <p class="card-text" />
+			                        <table class="table table-dark table-striped">
+			                            <tr>
+				                            <th>${course.curriculum.name}</th>
+				                            <th></th>
+				                        </tr>
+			                            <tr>
+			                                <td>교수명</td>
+			                                <td>${course.name}</td>
+			                            </tr>
+			                            <tr>
+			                                <td>학점</td>
+			                                <td>${course.curriculum.credit}학점</td>
+			                            </tr>
+			                            <tr>
+			                                <td>시간</td>
+			                                <td>${course.time.day_of_week}&nbsp;${course.time.start_period}-${course.time.end_period}교시</td>
+			                            </tr>
+			                        </table>
+			                    <a href="#" class="btn btn-primary">과목상세보기</a>
+			                  </div>
+		                  </c:if>
+		                  <c:if test="${empty course.curriculum.fk_department_seq}">
+			                  <div class="card-body">
+			                    <p class="card-text" />
+			                        <table class="table table-dark table-striped">
+			                            <tr>
+				                            <th>담당하고 있는 전공과목이 없습니다.</th>
+				                            <th></th>
+				                        </tr>      
+			                        </table>
+			                  </div>
+	                 	  </c:if>
+                 	  </c:forEach>
+                  	</c:if>
                  </div>
 			</div>
 		</div>
         <div class="d-flex justify-content-center">
             <div class="card" style="width: 80%;" id="minor">
               <h5 class="card-header">
-                	 비전공과목
+                	 교양과목
               </h5>
-              <div style="display: flex;">
-                  <div class="card-body" >
-                    <p class="card-text" />
-                        <table class="table table-dark table-striped">
-                            <tr>
-	                            <th>컴퓨터 과학과 사회적 통찰</th>
-	                            <th></th>
-	                        </tr>
-                            <tr>
-                                <td>교수명</td>
-                                <td>이정연</td>
-                            </tr>
-                            <tr>
-                                <td>학점</td>
-                                <td>3학점</td>
-                            </tr>
-                            <tr>
-                                <td>시간</td>
-                                <td>월 3 - 6</td>
-                            </tr>
-                        </table>
-                    <a href="#" class="btn btn-primary">수강철회하기</a>
-                  </div>
-                  <div class="card-body">
-                    <p class="card-text" />
-                        <table class="table table-dark table-striped">
-                            <tr>
-	                            <th>컴퓨터 과학과 사회적 통찰</th>
-	                            <th></th>
-	                        </tr>
-                            <tr>
-                                <td>교수명</td>
-                                <td>이정연</td>
-                            </tr>
-                            <tr>
-                                <td>학점</td>
-                                <td>3학점</td>
-                            </tr>
-                            <tr>
-                                <td>시간</td>
-                                <td>월 3 - 6</td>
-                            </tr>
-                        </table>
-                    <a href="#" class="btn btn-primary">수강철회하기</a>
-                  </div>
-                  <div class="card-body">
-                    <p class="card-text" />
-                        <table class="table table-dark table-striped">
-                            <tr>
-	                            <th>컴퓨터 과학과 사회적 통찰</th>
-	                            <th></th>
-	                        </tr>
-                            <tr>
-                                <td>교수명</td>
-                                <td>이정연</td>
-                            </tr>
-                            <tr>
-                                <td>학점</td>
-                                <td>3학점</td>
-                            </tr>
-                            <tr>
-                                <td>시간</td>
-                                <td>월 3 - 6</td>
-                            </tr>
-                        </table>
-                    <a href="#" class="btn btn-primary">수강철회하기</a>
-                  </div>
-                  <div class="card-body">
-                    <p class="card-text" />
-                        <table class="table table-dark table-striped">
-                            <tr>
-	                            <th>컴퓨터 과학과 사회적 통찰</th>
-	                            <th></th>
-	                        </tr>
-                            <tr>
-                                <td>교수명</td>
-                                <td>이정연</td>
-                            </tr>
-                            <tr>
-                                <td>학점</td>
-                                <td>3학점</td>
-                            </tr>
-                            <tr>
-                                <td>시간</td>
-                                <td>월 3 - 6</td>
-                            </tr>
-                        </table>
-                    <a href="#" class="btn btn-primary">수강철회하기</a>
-                  </div>
-              </div>
+             
             </div>
         </div>
 

@@ -29,6 +29,8 @@ public class Professor {
     
     private Curriculum curriculum;
     
+    private Time time;
+    
     private MultipartFile attach;
     
     
@@ -87,7 +89,12 @@ public class Professor {
 	public void setCurriculum(Curriculum curriculum) {
 		this.curriculum = curriculum;
 	}
-	
+	public Time getTime() {
+		return time;
+	}
+	public void setTime(Time time) {
+		this.time = time;
+	}
 	
 	
 	public MultipartFile getAttach() {

@@ -120,11 +120,13 @@ public class ProfessorController {
 		List<Professor> courseList = service.professor_course(request);
 		
 		if(courseList == null) {// 정보가 없다면
-			mav.setViewName("redirect:/professor/dashboard.lms");
+			  mav.addObject("message", "담당한 강의가 없습니다.");
+	    	  mav.addObject("loc", request.getContextPath()+"/professor/dashboard.lms");
+	    	  mav.setViewName("msg");
 			return mav;
 		}
 		
-		mav.addObject(courseList);
+		mav.addObject("courseList", courseList);
 		mav.setViewName("professor_courseList.professor");
 		
 		return mav;

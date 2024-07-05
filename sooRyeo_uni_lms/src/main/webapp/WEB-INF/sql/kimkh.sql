@@ -84,8 +84,16 @@ SELECT P.prof_id AS prof_id,
        CU.credit AS credit, 
        CU.required AS required, 
        CU.exist AS exist,
-       T.DAY_OF_WEEK AS day_of_week,
-       T.PERIOD AS period
+       CASE 
+        WHEN T.DAY_OF_WEEK = 1 THEN '월'
+        WHEN T.DAY_OF_WEEK = 2 THEN '화'
+        WHEN T.DAY_OF_WEEK = 3 THEN '수'
+        WHEN T.DAY_OF_WEEK = 4 THEN '목'
+        WHEN T.DAY_OF_WEEK = 5 THEN '금'
+        ELSE '요일없음'
+       END AS day_of_week,
+       T.start_period AS start_period,
+       T.end_period AS end_period
 FROM tbl_professor P
 JOIN tbl_course C ON P.prof_id = C.fk_professor_id
 JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
@@ -125,3 +133,11 @@ time_seq 3 day_of_week 2 period 3
 -- 학과
 select *
 from tbl_department
+
+select *
+from tbl_time
+
+INSERT INTO tbl_time (time_seq, day_of_week, fk_course_seq, start_period, end_period)
+VALUES (time_seq.nextval, 1, 4, 1, 3);
+commit;
+

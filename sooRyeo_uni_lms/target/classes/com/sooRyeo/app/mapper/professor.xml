@@ -107,10 +107,16 @@
             <result property="required" column="required"/>
             <result property="exist" column="exist"/>
         </association>
+        <association property="time" javaType="com.sooRyeo.app.domain.Time">
+            <id property="day_of_week" column="day_of_week"/>
+            <result property="start_period" column="start_period"/>
+            <result property="end_period" column="end_period"/>
+
+        </association>
     </resultMap>
 	<select id="professor_course" resultMap="professorCourseMap" parameterType="String">
 		SELECT P.prof_id AS prof_id,
-			P.name AS prof_name, 
+       		P.name AS prof_name,
        		C.COURSE_SEQ AS course_seq, 
        		C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
        		C.CAPACITY AS capacity, 
@@ -120,10 +126,14 @@
        		CU.name AS name, 
        		CU.credit AS credit, 
        		CU.required AS required, 
-       		CU.exist AS exist 
+       		CU.exist AS exist,
+       		T.DAY_OF_WEEK AS day_of_week,
+       		T.start_period AS start_period,
+       		T.end_period AS end_period
 		FROM tbl_professor P
 		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
 		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+		JOIN tbl_time T ON C.course_seq = T.fk_course_seq
 		where P.prof_id = to_number(#{prof_id}) 
 	</select>
 
