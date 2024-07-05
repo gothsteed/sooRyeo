@@ -1,6 +1,7 @@
 package com.sooRyeo.app.model;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
@@ -25,5 +26,11 @@ public interface AdminDao {
 
 	// 학사공지사항 글의 개수를 알아오는 메소드
 	int getTotalElementCount();
+	
+	// 글 한개를 불러오는 메소드
+	Announcement getView(Map<String, String> paraMap);
+
+	// 조회수를 증가시키는 메소드
+	int increase_viewCount(String string);
 
 }

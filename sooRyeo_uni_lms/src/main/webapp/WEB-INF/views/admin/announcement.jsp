@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%
+	String ctxPath = request.getContextPath();
+%>
 <style type="text/css">
 
 .a_title:hover {
@@ -14,10 +17,25 @@
 <script type="text/javascript">
 
 	function goView(announcement_seq){
+		const goBackURL = "${requestScope.goBackURL}";
 		
+		const frm = document.goViewFrm;
+		frm.seq.value = announcement_seq;
+		frm.goBackURL.value = goBackURL;
+		
+		if(${not empty requestScope.paraMap}){ // 검색조건이 있을 경우
+			frm.searchWord.value = "${requestScope.paraMap.searchWord}";
+		};
+		
+		frm.method = "post";
+		frm.action = "<%= ctxPath %>/admin/announcementView.lms";
+		frm.submit();
 	}
-	
-	
+
+	// 첫 번째 입력 필드 값이 변경될 때 두 번째 searchWord 입력 필드에 실시간으로 반영하는 함수
+	function updateSearchWord(value) {
+		document.getElementsByName("searchWord")[0].value = value;
+	}
 
 </script>
 
@@ -31,7 +49,7 @@
 				 <div class="input-group-prepend">
 				   <label class="input-group-text" for="inputGroupSelect01">제목검색</label>
 				 </div>
-				<input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+				<input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" oninput="updateSearchWord(this.value)">
 				&nbsp;&nbsp;&nbsp;
 				<button type="button" class="btn btn-primary btn-sm">검색하기</button>
 			</div>
@@ -59,3 +77,9 @@
 		</div>
 	</div>
 </div>
+
+<form name="goViewFrm">
+	<input type="text" name="seq" />
+	<input type="text" name="goBackURL" />
+	<input type="text" name="searchWord" />  
+</form>

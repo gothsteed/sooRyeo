@@ -3,6 +3,7 @@ package com.sooRyeo.app.service;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -198,6 +199,26 @@ public class AdminService_imple implements AdminService {
 		
 		int totalElementCount = admindao.getTotalElementCount();
 		return totalElementCount;
+	}
+
+	@Override
+	public Announcement getView(Map<String, String> paraMap) {
+		
+		String login_userid = paraMap.get("login_userid");
+		// paraMap.get("login_userid") 은 로그인을 한 상태이라면 로그인한 사용자의 userid 이고,
+        // 로그인을 하지 않은 상태이라면  paraMap.get("login_userid") 은 null 이다.
+		
+		if( login_userid != null &&
+			login_userid != "202400001" &&
+					  paraMap != null ) {
+			// 글 조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 한다.
+			
+			int n = admindao.increase_viewCount(paraMap.get("seq")); // 글 조회수 1증가 하기
+		}
+		
+		Announcement an = admindao.getView(paraMap); // 글 1개 조회하기
+
+		return an;
 	}
 	
 	

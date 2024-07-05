@@ -73,4 +73,18 @@ public class AdminDao_imple implements AdminDao {
 		return n;
 	}
 
+
+	@Override
+	public Announcement getView(Map<String, String> paraMap) {
+		Announcement an = sqlSession.selectOne("admin.getView", paraMap);
+		return an;
+	}
+
+
+	@Override
+	public int increase_viewCount(String seq) {
+		int n = sqlSession.update("admin.increase_readCount", seq);
+		return n;
+	}
+
 }

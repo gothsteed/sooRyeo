@@ -50,4 +50,31 @@
 		FROM tbl_announcement
 	</select>
 	
+	<update id="increase_readCount" parameterType="String">
+		update tbl_announcement set viewCount = viewCount + 1
+		where announcement_seq = #{seq}
+	</update>
+	
+	<select id="getView" parameterType="HashMap" resultType="com.sooRyeo.app.domain.Announcement">
+		SELECT previousseq, previoussubject, seq, subject, content
+		     , readCount, regDate
+		     , nextseq, nextsubject
+		     , fileName
+	    from
+	    (
+	    select lag (seq) over(order by seq desc) AS previousseq 
+	         , lag (subject,1) over(order by seq desc) AS previoussubject
+	         , seq
+	         , lead (seq) over(order by seq desc) AS nextseq
+	         , lead (subject, 1) over(order by seq desc) AS Nextsubject
+	         , fileName
+	    from tbl_board
+	    where status = 1
+		<if test='searchWord != ""'>
+		    and lower(subject) like '%'||lower(#{searchWord})||'%'
+		</if>
+	    ) V
+	    WHERE V.seq = #{seq}
+	</select>
+	
 </mapper>
