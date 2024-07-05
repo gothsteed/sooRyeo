@@ -193,7 +193,7 @@
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#" id="scheduleMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu">
-                    <a class="dropdown-item" href="#">시간표</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/lectureList.lms">시간표</a>
                     <a class="dropdown-item" href="#">과제</a>
                     <a class="dropdown-item" href="#">시험</a>
                     <a class="dropdown-item" href="#">오늘 할 일</a>
@@ -207,7 +207,9 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle" href="#" id="groupsMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
+                <a class="nav-link dropdown-toggle" href="#" id="groupsMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	<span class="icon">👥</span>커뮤니티
+                </a>
                 <div class="dropdown-menu" aria-labelledby="groupsMenu">
                     <a class="dropdown-item" href="#">내 친구</a>
                     <a class="dropdown-item" href="#">커뮤니티</a>

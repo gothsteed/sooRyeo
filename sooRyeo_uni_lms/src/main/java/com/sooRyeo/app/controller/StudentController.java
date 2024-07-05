@@ -220,6 +220,4 @@ public class StudentController {
 	} // end of public String myLecture
 	
 	
-	
-	
 }

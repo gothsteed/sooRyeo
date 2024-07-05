@@ -37,14 +37,11 @@ public class HomeController {
 	private FindService findService;
 	
 	
-	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		
-		
 		
 		return "home";
 	}
