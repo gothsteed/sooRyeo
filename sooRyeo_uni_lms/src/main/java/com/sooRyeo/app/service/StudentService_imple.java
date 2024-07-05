@@ -361,9 +361,6 @@ public class StudentService_imple implements StudentService {
 	
 
 
-	} // end of public String emailDuplicateCheck
-	
-	
 	// 내수업리스트
 	@Override
 	public List<Map<String, String>> classList(int userid) {

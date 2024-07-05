@@ -120,8 +120,6 @@ public class StudentDao_imple implements StudentDao {
 
 
 	
-	} // end of public String emailDuplicateCheck
-
 	
 	// 수업리스트 보여주기
 	@Override
