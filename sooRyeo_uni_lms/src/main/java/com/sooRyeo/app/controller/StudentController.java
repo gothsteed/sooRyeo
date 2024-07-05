@@ -53,6 +53,8 @@ public class StudentController {
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
+	
+	// 수업리스트 보여주기
 	@GetMapping(value="/student/classList.lms")
 	public String classList(HttpServletRequest request) {
 		
@@ -71,9 +73,19 @@ public class StudentController {
 	}
 	
 	
+	// 과제리스트 보여주기
 	@GetMapping("/student/assignment_List.lms")
 	public String assignment_List(HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		int userid = loginuser.getStudent_id();
+		
+		List<Map<String, String>> mapList = service.assignment_List(userid);
+		
+		request.setAttribute("mapList", mapList);
 		
 		return "assignment_List.student";
 		// /WEB-INF/views/student/{1}.jsp

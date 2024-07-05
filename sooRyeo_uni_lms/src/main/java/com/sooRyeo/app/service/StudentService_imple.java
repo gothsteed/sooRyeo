@@ -43,14 +43,6 @@ public class StudentService_imple implements StudentService {
 	
 	
 
-	// 내수업리스트
-	@Override
-	public List<Map<String, String>> classList(int userid) {
-		
-		List<Map<String, String>> classList = dao.classList(userid);
-		return classList;
-	}
-	
 	
 	// 내정보 보기
 	@Override
@@ -369,6 +361,25 @@ public class StudentService_imple implements StudentService {
 	
 
 
+	} // end of public String emailDuplicateCheck
+	
+	
+	// 내수업리스트
+	@Override
+	public List<Map<String, String>> classList(int userid) {
+		
+		List<Map<String, String>> classList = dao.classList(userid);
+		return classList;
+	}
+
+
+	// 과제리스트 보여주기
+	@Override
+	public List<Map<String, String>> assignment_List(int userid) {
+		
+		List<Map<String, String>> assignment_List = dao.assignment_List(userid);
+		return assignment_List;
+	}
 
 	
 	

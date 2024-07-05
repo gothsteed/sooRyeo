@@ -12,7 +12,7 @@ public interface StudentDao {
 
 	Student selectStudent(LoginDTO loginDTO);
 
-	// 수업명, 교수명  select
+	// 수업리스트 보여주기
 	List<Map<String, String>> classList(int userid);
 	
 	// 내정보 보기
@@ -38,5 +38,8 @@ public interface StudentDao {
 
 	// 학생 정보 수정
 	int student_info_edit(Map<String, String> paraMap);
+
+	// 과제리스트 보여주기
+	List<Map<String, String>> assignment_List(int userid);
 
 }
