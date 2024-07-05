@@ -9,19 +9,21 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
 import com.sooRyeo.app.model.CurriculumDao;
 import com.sooRyeo.app.model.DepartmentDao;
-import com.sooRyeo.app.pager.Pager;
 
 @Service
 public class AdminService_imple implements AdminService {
@@ -37,7 +39,6 @@ public class AdminService_imple implements AdminService {
 	
 	@Autowired
 	private AES256 aes;
-	private AES256 aES256; 
 	
 	// select 태그에 학과를 전부 불러오는 메소드
 	//TODO ****departmentDao 사용해주세요1!!!!
@@ -87,7 +88,7 @@ public class AdminService_imple implements AdminService {
 	}
 
 	@Override
-	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumInsertRequestDto requestDto) {
+	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumRequestDto requestDto) {
 		int n = curriculumDao.insertCurriculum(requestDto);
 		
 		
@@ -109,29 +110,94 @@ public class AdminService_imple implements AdminService {
 	@Override
 	public ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav) {
 		
+		List<Department> departments =  departmentDao.departmentList_select();
+		mav.addObject("departments", departments);
 		
 		mav.setViewName("curriculum.admin");
 		return mav;
 	}
 
 	@Override
-	public ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
+	public String getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
 		
 		int sizePerPage = 10;
 		
 		Pager<Curriculum> page = curriculumDao.getCurriculumPage(requestDto, sizePerPage);
+
+		JSONObject result = new JSONObject();
+		result.put("pageBar", page.makeScriptPageBar("fetchData"));
 		
 		JSONArray jsonArr = new JSONArray();
 		
 		for(Curriculum curr : page.getObjectList()) {
 			JSONObject jsonObj = new JSONObject(); 
 			
-//			jsonObj.put("name", curr.get)
+			jsonObj.put("curriculum_seq", curr.getCurriculum_seq());
+			jsonObj.put("department_name", curr.getDepartment_name());
+			jsonObj.put("fk_department_seq", curr.getFk_department_seq());
+			jsonObj.put("grade", curr.getGrade());
+			jsonObj.put("name", curr.getName());
+			jsonObj.put("credit", curr.getCredit());
+			jsonObj.put("required", curr.getRequired());
 			
+			jsonArr.put(jsonObj);
+			
+		}
+
+		result.put("curriculumList", jsonArr);
+		
+		
+		return result.toString();
+	}
+
+	@Override
+	public Pager<Announcement> getAnnouncement(int currentPage) {
+		Pager<Announcement> announcementList = admindao.getAnnouncement(currentPage);
+		return announcementList;
+	}
+
+	@Override
+	public ResponseEntity<String> deleteCurriculum(HttpServletRequest request, ModelAndView mav) throws NumberFormatException {
+		
+		int curriculum_seq = Integer.parseInt( request.getParameter("curriculum_seq"));
+		
+		int result = curriculumDao.deleteCurriculum(curriculum_seq);
+		
+		
+		if(result != 1) {
+			System.out.println("삭제실패");
+			return ResponseEntity.status(500).body("삭제에 실패하였습니다");
+		}
+		
+		System.out.println("삭제성공");
+		return ResponseEntity.ok().body("삭제 성공하였습니다");
+		
+	}
+
+	@Override
+	public ResponseEntity<String> updateCurriculum(HttpServletRequest request, ModelAndView mav,
+			CurriculumRequestDto requestDto) {
+		
+		
+		int result  = curriculumDao.updateCurriculum(requestDto);
+		
+		
+		if(result != 1) {
+			System.out.println("수정 실패");
+			return ResponseEntity.status(500).body("수정에 실패하였습니다");
 		}
 		
 		
-		return null;
+		System.out.println("수정 성공");
+		return ResponseEntity.ok().body("수정 성공하였습니다");
+	}
+
+	// 학사공지사항 글의 개수를 알아오는 메소드
+	@Override
+	public int getTotalElementCount() {
+		
+		int totalElementCount = admindao.getTotalElementCount();
+		return totalElementCount;
 	}
 	
 	

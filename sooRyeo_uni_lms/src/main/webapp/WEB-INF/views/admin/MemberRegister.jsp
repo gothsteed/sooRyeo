@@ -4,7 +4,8 @@
   
 <%
    String ctxPath = request.getContextPath();
-%>    
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,12 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Styled Sidebar</title>
     <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- jQuery UI CSS 및 JS -->
-    <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
-	<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
     
     
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
@@ -34,7 +29,7 @@
 <body>
         <div class="main-content">
             <div class="d-flex justify-content-center">
-                <div class="card" style="width: 45%;">
+                <div class="card" style="width: 45%;" id="student">
                   <h5 class="card-header">
                   	학생 등록
                   </h5>
@@ -126,7 +121,7 @@
 			                        <br>
 			                        <input class="form-control  mb-1  mt-1 requiredInfo" type="text" name="address" id="address" size="40" maxlength="200" placeholder="주소" />
 			                        <input class="form-control  mb-1 requiredInfo" type="text" name="detailaddress" id="detailAddress" size="40" maxlength="200" placeholder="상세주소" />
-			                        <input class="form-control" type="text" name="extraaddress" id="extraAddress" size="40" maxlength="200" placeholder="참고항목" />            
+			                        <input class="form-control" type="text" name="extraAddress" id="extraAddress" size="40" maxlength="200" placeholder="참고항목" />            
                                 </div>
                             </div>
                             <hr>
@@ -159,8 +154,6 @@
 							    	<img id="previewImg" width="300"/>
 							    </div>
 							</div>
-							
-							
                         </form>
                     <button type="button" class="btn btn-primary" onclick="goRegister('<%=ctxPath%>')">등록하기</button>
                   </div>

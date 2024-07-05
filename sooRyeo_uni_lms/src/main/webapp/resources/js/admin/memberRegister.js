@@ -365,24 +365,24 @@ $(document).ready(function(){
     });
 
  // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 시작 <<== //
-      $(document).on("change", "input.img_file", function(e){
-         
-            const input_file = $(e.target).get(0);
-              $("input#imgname").val(input_file.files[0].name);
-              
-            // 자바스크립트에서 file 객체의 실제 데이터(내용물)에 접근하기 위해 FileReader 객체를 생성하여 사용한다.
-             const fileReader = new FileReader();
-              
-             fileReader.readAsDataURL(input_file.files[0]); // FileReader.readAsDataURL() --> 파일을 읽고, result 속성에 파일을 나타내는 URL을 저장 시켜준다.
-             
-             fileReader.onload = function(){ // FileReader.onload --> 파일 읽기 완료 성공시에만 작동하도록 하는 것임.
-              
-              document.getElementById("previewImg").src = fileReader.result; // ■■■■■■  id가 previewImg 이것인 img 태그에 위에서 얻어온 img.src값을 넣어준 것이다. ■■■■■■
-          };
-         
-      }); // end of $(document).on("change", "input.img_file", function(e){}-------------------------------------------------------------------------------------------------------------
-      // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 끝 <<== //
-      
+	   $(document).on("change", "input.img_file", function(e){
+		   
+			   const input_file = $(e.target).get(0);
+	           $("input#imgname").val(input_file.files[0].name);
+	           
+			   // 자바스크립트에서 file 객체의 실제 데이터(내용물)에 접근하기 위해 FileReader 객체를 생성하여 사용한다.
+		       const fileReader = new FileReader();
+	           
+		       fileReader.readAsDataURL(input_file.files[0]); // FileReader.readAsDataURL() --> 파일을 읽고, result 속성에 파일을 나타내는 URL을 저장 시켜준다.
+		       
+		       fileReader.onload = function(){ // FileReader.onload --> 파일 읽기 완료 성공시에만 작동하도록 하는 것임.
+	           
+	           document.getElementById("previewImg").src = fileReader.result; // ■■■■■■  id가 previewImg 이것인 img 태그에 위에서 얻어온 img.src값을 넣어준 것이다. ■■■■■■
+	       };
+			
+	   }); // end of $(document).on("change", "input.img_file", function(e){}-------------------------------------------------------------------------------------------------------------
+	   // ==>> 제품이미지 파일선택을 선택하면 화면에 이미지를 미리 보여주기 끝 <<== //
+	   
 });// end of $(document).ready(function(){})----------------
 
 //"이메일중복확인"을 클릭했을 때 이벤트 처리하기 시작 //
@@ -398,12 +398,11 @@ function emailcheck(ctxPath) {
             console.log(JSON.stringify(json));
             if(json.emailDuplicateCheck != null) {
                 // 입력한 email이 이미 사용중이라면 
-                $("span#emailCheckResult").html( $("input#email").val() + " 은 이미 사용중 이므로 다른 아이디를 입력하세요").css({"color":"red"});
+                $("span#emailCheckResult").html( $("input#email").val() + " 은 이미 사용중 이므로 다른 이메일을 입력하세요").css({"color":"red"});
                 $("input#email").val("");
             } 
             else {
-                
-                // 입력한 userid 가 존재하지 않는 경우라면 
+                // 입력한 userid 가 존재하지 않는 경우라면
                 $("span#emailCheckResult").html( $("input#email").val() + " 은 사용가능 합니다.").css({"color":"navy"});
             }
         },
@@ -458,7 +457,7 @@ function goRegister(ctxPath) {
    const detailAddress = $("input#detailAddress").val().trim();
    const extraAddress = $("input#extraAddress").val().trim();
    
-   if(postcode == "" || address == "" || detailAddress == "" || extraAddress == "") {
+   if(postcode == "" || address == "" || detailAddress == "") {
       alert("우편번호 및 주소를 입력하셔야 합니다.");
       return; // goRegister() 함수를 종료한다.
    }
@@ -470,13 +469,3 @@ function goRegister(ctxPath) {
       frm.submit();
 
 } // end of function goRegister()---------------------
-
-function goReset() {
-    $("span.error").hide();
-    $("span#idcheckResult").empty();
-    $("span#emailCheckResult").empty();
-} //  end of function goReset() {}----------------------------------
-
-function goGaib() {
-    alert("회원가입에 대한 유효성검사를 한후에 통과되면 submit 하려고 함");
-}

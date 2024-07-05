@@ -3,14 +3,110 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="student">
 
 	<select id="selectStudent" resultType="com.sooRyeo.app.domain.Student" parameterType="com.sooRyeo.app.dto.LoginDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
 		SELECT * 
 		FROM tbl_student 
-		WHERE student_id = #{id} AND pwd = #{password}
-				
+		WHERE student_id = #{id} AND pwd = #{password}	
 	</select>
+	
+	
+	
+	
+	<!-- 수업명, 교수명 select -->
+	<resultMap type="HashMap" id="classListMap">
+		<result property="professorName" 	column="professorName" 	 javaType="String" />
+		<result property="className" 	 	column="className" 		 javaType="String" />
+		<result property="department_seq" 	column="department_seq"  javaType="String" />
+		<result property="required" 	 	column="required" 		 javaType="String" />
+	</resultMap>
+	
+	
+	<select id="classList" parameterType="int" resultMap="classListMap">
+		WITH
+		P AS (
+		select name, prof_id 
+		from tbl_professor
+		),
+		C AS (
+		select curriculum_seq, name, fk_department_seq, required
+		from tbl_curriculum
+		),
+		V AS (
+			select course_seq, fk_curriculum_seq, fk_professor_id, fk_student_id
+			from tbl_course join tbl_registered_course
+			on course_seq = fk_course_seq
+		)
+		select p.name as professorName,
+			   c.name as className,
+			   c.fk_department_seq as department_seq,
+       		   c.required as required
+       		   
+		from P JOIN V
+		on V.fk_professor_id = P.prof_id
+		JOIN C
+		on V.fk_curriculum_seq = C.curriculum_seq
+		where V.fk_student_id = #{userid}
+	</select>
+
+	
+	<!-- 학생정보 - 학과명 가져오기 -->
+	<select id="select_department" parameterType="Integer" resultType="String">
+		select department_name
+		from tbl_department join tbl_student
+		on tbl_department.department_seq = tbl_student.fk_department_seq
+		where student_id = #{student_id}
+	</select>
+
+	<!-- 학생정보 - 비밀번호 중복 -->
+	<select id="pwdDuplicateCheck" resultType="int" parameterType="String">
+		select count(*)
+		from tbl_student
+		where student_id = to_number(#{student_id}) and pwd = #{pwd}
+	</select>
+
+	<!-- 학생정보 - 전화번호 중복 -->
+	<select id="telDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_student
+		where student_id = to_number(#{student_id}) and tel = #{tel}
+	</select>
+
+	<!-- 학생정보 - 이메일 중복 -->
+	<select id="emailDuplicateCheck" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_student
+		where student_id = to_number(#{student_id}) and email = #{email}
+	</select>
+
+	<!-- 학생정보 - 계정에 파일이 있는지 확인 -->
+	<select id="select_file_name" resultType="com.sooRyeo.app.dto.StudentDTO" parameterType="HashMap">
+		select img_name
+		from tbl_student
+		where student_id = to_number(#{student_id}) 
+	</select>
+	
+	<!-- 학생정보 - 계정에 기존 파일 삭제 -->
+	<update id="delFilename" parameterType="String">
+		update tbl_student set img_name = NULL
+		where student_id = to_number(#{student_id})
+	</update>
+
+	<!-- 학생정보 수정 -->
+	<update id="student_info_edit" parameterType="HashMap">
+		update tbl_student set pwd = #{pwd}, postcode=#{postcode}, address = #{address}, detailAddress=#{detailAddress}, extraAddress=#{extraAddress}
+		, email = #{email}, tel = #{tel}
+		<choose>
+			<when test='img_name != "" '>
+			, img_name = #{img_name}
+			</when>
+		</choose>  
+		where student_id = to_number(#{student_id})
+	</update>
+
+
+
 
 </mapper>

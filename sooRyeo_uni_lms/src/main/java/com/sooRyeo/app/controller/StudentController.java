@@ -1,17 +1,44 @@
 package com.sooRyeo.app.controller;
 
+import java.util.List;
+import java.util.Map;
+import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.service.StudentService;
 
 @Controller
 @RequireLogin(type = Student.class)
 public class StudentController {
+	
+	@Autowired
+	private StudentService service;
 
+	@Autowired
+	private StudentService studentservice;
+	
+	@Autowired
+	private FileManager fileManager;
+	
+	
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
 	public String student() {
 
@@ -26,29 +53,121 @@ public class StudentController {
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
-	
-	@GetMapping(value = "/student/idfind.lms", produces="text/plain;charset=UTF-8")
-	public String idFind() {
+	@GetMapping(value="/student/classList.lms")
+	public String classList(HttpServletRequest request) {
 		
-		return "idFind";
-		// /WEB-INF/views/idFind.jsp
-	}
-	
-	@GetMapping(value = "/student/pwdfind.lms", produces="text/plain;charset=UTF-8")
-	public String pwdFind() {
+		HttpSession session = request.getSession();
 		
-		return "pwdFind";
-		// /WEB-INF/views/pwdFind.jsp
-	}
-	
-	
-	
-	@RequestMapping(value="/student/myInfo.lms", method = RequestMethod.GET)
-	public String myInfo() {
+		Student loginuser = (Student)session.getAttribute("loginuser");
 		
-		return "myInfo.student";
+		int userid = loginuser.getStudent_id();
+		
+		List<Map<String, String>> mapList = service.classList(userid);
+		
+		request.setAttribute("mapList", mapList);
+
+		return "classList.student";
 		// /WEB-INF/views/student/{1}.jsp
 	}
+	
+	
+	@GetMapping("/student/assignment_List.lms")
+	public String assignment_List(HttpServletRequest request) {
+		
+		
+		return "assignment_List.student";
+		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	
+	
+	// 내정보 보기
+	@RequestMapping(value="/student/myInfo.lms", produces="text/plain;charset=UTF-8")
+	public ModelAndView myInfo(ModelAndView mav, HttpServletRequest request) {
+		
+		StudentDTO member_student = studentservice.getViewInfo(request);
+		
+		// System.out.println(member_student.getStatus());
+		
+		mav.addObject("member_student", member_student);
+		mav.setViewName("myInfo.student");
+		// /WEB-INF/views/student/{1}.jsp
+		
+		return mav;
+		
+	} // end of public ModelAndView myInfo
+	
+	
+	// 비밀번호 중복
+	@ResponseBody
+	@PostMapping(value = "/student/pwdDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
+	public String pwdDuplicateCheck(HttpServletRequest request, StudentDTO student) {	
+		
+		JSONObject json = studentservice.pwdDuplicateCheck(request);						
+		
+		return json.toString();
+	}
+
+	
+	// 전화번호 중복
+	@ResponseBody
+	@PostMapping(value = "/student/telDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
+	public String telDuplicateCheck(HttpServletRequest request, StudentDTO student) {		
+		
+		JSONObject json = studentservice.telDuplicateCheck(request);						
+		
+		return json.toString();
+	}
+	
+	// 이메일 중복
+	@ResponseBody
+	@PostMapping(value = "/student/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
+	public String emailDuplicateCheck(HttpServletRequest request, StudentDTO student) {	
+		
+		JSONObject json = studentservice.emailDuplicateCheck(request);						
+		
+		return json.toString();
+	}
+	
+	// 학생 정보 수정
+	@PostMapping(value = "/student/student_info_edit.lms")
+	public ModelAndView professor_info_edit( ModelAndView mav, StudentDTO student, MultipartHttpServletRequest mrequest) {
+		     
+		
+	      int n = studentservice.student_info_edit(student, mrequest);
+      
+	      if(n == 1) {
+	    	  mav.addObject("message", "학생정보 수정을 성공하였습니다.");
+	    	  mav.addObject("loc", mrequest.getContextPath()+"/student/dashboard.lms");
+	    	  mav.setViewName("msg");
+	      }
+	      else {
+	    	  mav.addObject("message", "학생정보 수정이 실패하였습니다.");
+	    	  mav.addObject("loc", mrequest.getContextPath()+ "/student/myInfo.lms");
+	    	  mav.setViewName("msg");
+	      }
+      
+	      return mav;
+	}
+	
+	
+	
+
+	
+	
+
+	
+	
+	
+	// 수업  - 내 강의보기
+	@RequestMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
+	public String myLecture() {
+		return "myLecture.student";
+		// /WEB-INF/views/student/{1}.jsp
+		
+	} // end of public String myLecture
+	
+	
 	
 	
 }

@@ -8,8 +8,11 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +22,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
@@ -27,6 +31,7 @@ import com.sooRyeo.app.service.AdminService;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.service.DepartmentService;
 
@@ -65,30 +70,43 @@ public class AdminController {
 		
 		return "MemberRegister.admin";
 	}
+	
+	@RequestMapping(value = "/admin/ProfessorRegister.lms", method = RequestMethod.GET)
+	public String ProfessorRegister(HttpServletRequest request) {
+		
+		// select 태그에 학과를 전부 불러오는 메소드
+		List<Department> departmentList = adminService.departmentList_select();
+		
+		request.setAttribute("departmentList", departmentList);
+		
+		return "ProfessorRegister.admin";
+	}
 
 	@PostMapping(value = "/admin/memberRegister_end.lms")
 	public ModelAndView memberRegister_end(HttpServletRequest request, ModelAndView mav, RegisterDTO rdto, MultipartHttpServletRequest mrequest) {
 		
-		String address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
-			String tel = request.getParameter("a2") + request.getParameter("hp2") + request.getParameter("hp3"); // 전화번호
-			rdto.setAddress(address);
-			rdto.setTel(tel);
-			
-			
-			MultipartFile attach =  rdto.getAttach();
-	        /*
-	        1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. 
-	        >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
-	                              우리는 WAS의 webapp/resources/files 라는 폴더로 지정해준다.
-	                              조심할 것은  Package Explorer 에서  files 라는 폴더를 만드는 것이 아니다.       
+		String tel = request.getParameter("a2") + request.getParameter("hp2") + request.getParameter("hp3"); // 전화번호
+		rdto.setTel(tel);
+		
+		if(rdto.getGrade() == null) {
+			String office_address = request.getParameter("address") + " " + request.getParameter("detailaddress") + request.getParameter("extraaddress");	// 주소
+			rdto.setOffice_address(office_address);
+		}
+		
+		MultipartFile attach =  rdto.getAttach();
+        /*
+        1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. 
+        >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
+                              우리는 WAS의 webapp/resources/files 라는 폴더로 지정해준다.
+                              조심할 것은  Package Explorer 에서  files 라는 폴더를 만드는 것이 아니다.       
 	     */
 	     // WAS 의 webapp 의 절대경로를 알아와야 한다. 
 	     HttpSession session = mrequest.getSession(); 
 	     String root = session.getServletContext().getRealPath("/");
-	     
+	    
 	     // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
 	     // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
-	     
+	    
 	     String path = root+"resources"+File.separator+"files";
 	     /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
 	           운영체제가 Windows 이라면 File.separator 는  "\" 이고,
@@ -135,12 +153,12 @@ public class AdminController {
 		int n = adminService.memberRegister_end(rdto);
 		
 		if(n == 1) {
-			mav.addObject("message", "학생회원 등록을 성공하였습니다.");
+			mav.addObject("message", "회원 등록을 성공하였습니다.");
 			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
 			mav.setViewName("msg");
 		}
 		else {
-			mav.addObject("message", "학생회원 등록을 실패하였습니다.");
+			mav.addObject("message", "회원 등록을 실패하였습니다.");
 			mav.addObject("loc", request.getContextPath()+"/admin/MemberRegister.lms");
 			mav.setViewName("msg");
 		}
@@ -168,9 +186,10 @@ public class AdminController {
 		return adminService.ShowCurriculumPage(request, mav);
 	}
 	
-	@RequestMapping(value = "/admin/curriculumJSON.lms", method = RequestMethod.GET)
-	public ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
-		
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/curriculumJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
+	public String getCurriculumPage(HttpServletRequest request, ModelAndView mav, CurriculumPageRequestDto requestDto) {
 		
 		return adminService.getCurriculumPage(request, mav, requestDto);
 	}
@@ -195,9 +214,47 @@ public class AdminController {
 	
 	
 	@RequestMapping(value = "/admin/add_curriculum_end.lms", method = RequestMethod.POST)
-	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumInsertRequestDto requestDto) {
+	public ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumRequestDto requestDto) {
 		
 		return adminService.insertCurriculum(request, mav, requestDto);
 	}
+	
+	
+	@GetMapping("/admin/announcement.lms")
+	public ModelAndView announcement(ModelAndView mav, Announcement an, HttpServletRequest request) {
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		
+		
+		// 학사공지사항을 전부 불러오는 메소드
+		Pager<Announcement> announcementList =  adminService.getAnnouncement(currentPage);
+		
+		System.out.println(announcementList.getObjectList());
+		
+		mav.addObject("announcementList", announcementList.getObjectList());
+		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms"));
+		mav.setViewName("announcement.admin");
+
+		return mav;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/deleteCurriculumREST.lms", method = RequestMethod.DELETE, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> deleteCurriculumREST(HttpServletRequest request, ModelAndView mav) {
+		return adminService.deleteCurriculum(request, mav);
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/updateCurriculumREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> updateCurriculumREST(HttpServletRequest request, ModelAndView mav, @RequestBody CurriculumRequestDto requestDto) {
+		return adminService.updateCurriculum(request, mav, requestDto);
+	}
+	
 	
 }

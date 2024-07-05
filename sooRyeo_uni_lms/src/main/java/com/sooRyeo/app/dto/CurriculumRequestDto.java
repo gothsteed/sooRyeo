@@ -1,8 +1,9 @@
 package com.sooRyeo.app.dto;
 
-public class CurriculumInsertRequestDto {
+public class CurriculumRequestDto {
 
 //  private Integer fk_curriculum_type_seq;
+	private Integer curriculum_seq;
 	private Integer fk_department_seq;
 	private Short grade;
 	private String name;
@@ -12,6 +13,12 @@ public class CurriculumInsertRequestDto {
 	
 	
 
+	public Integer getCurriculum_seq() {
+		return curriculum_seq;
+	}
+	public void setCurriculum_seq(Integer curriculum_seq) {
+		this.curriculum_seq = curriculum_seq;
+	}
 	public Integer getFk_department_seq() {
 		return fk_department_seq;
 	}

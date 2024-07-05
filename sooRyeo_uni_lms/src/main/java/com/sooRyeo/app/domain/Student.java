@@ -2,28 +2,34 @@ package com.sooRyeo.app.domain;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
 
 import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.dto.StudentDTO;
 
 
 public class Student {
 	
 	
 	private Integer student_id;
-    private String pwd;
+    private String pwd;				// (AES-256 암호화/복호화 대상)
     private String name;
     private String jubun;
-    private String tel;
+    private String tel;				// (AES-256 암호화/복호화 대상)
     private Short grade;
+    private String postcode;
     private String address;
-    private String email;
-    private Integer register_year;
+    private String detailAddress;
+    private String extraAddress;
+    private String email; 			// (AES-256 암호화/복호화 대상)
+    private Date register_date;
     private Short status;
     private Integer fk_department_seq;
+    
+    private String birthday; 		// 생년월일
+
+    
 	public Integer getStudent_id() {
 		return student_id;
 	}
@@ -36,22 +42,26 @@ public class Student {
 	public String getJubun() {
 		return jubun;
 	}
-	public String getTel() {
-		
-		return tel;
-	}
+
 	public Short getGrade() {
 		return grade;
+	}
+	
+	public String getPostcode() {
+		return postcode;
 	}
 	public String getAddress() {
 		return address;
 	}
-	public String getEmail()  {
-	
-		return email;
+	public String getDetailAddress() {
+		return detailAddress;
 	}
-	public Integer getRegister_year() {
-		return register_year;
+	public String getExtraAddress() {
+		return extraAddress;
+	}
+	
+	public Date getRegister_date() {
+		return register_date;
 	}
 	public Short getStatus() {
 		return status;
@@ -59,6 +69,7 @@ public class Student {
 	public Integer getFk_department_seq() {
 		return fk_department_seq;
 	}
+	
 	public void setDecodedEmail(AES256 aES256) {
 		try {
 			email = aES256.decrypt(email);
@@ -66,18 +77,62 @@ public class Student {
 			e.printStackTrace();
 		}
 	}
+	public String getEmail()  {
+		
+		return email;
+	}
+	
+	
 	public void setDecodeTel(AES256 aES256) {
 		try {
-			tel = aES256.decrypt(tel);
+			
+			tel = aES256.decrypt(tel).substring(0,3) + aES256.decrypt(tel).substring(3,7) + aES256.decrypt(tel).substring(7);
+			
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
 		}
+	
+	}
+	public String getTel() {
+		
+		return tel;
+	}
+	
+	
+
+	public String getBirthday() {
+		try {
+			
+			birthday = jubun.substring(0,2) + "-" + jubun.substring(2,4) + "-" + jubun.substring(4,6);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return birthday;
+	}
+
+	
+    
+	public void updateinfo(Map<String, String> paraMap, AES256 aES256) {
+		
+		student_id = Integer.parseInt(paraMap.get("student_id"));
+		pwd = paraMap.get("pwd");
+		postcode = paraMap.get("postcode");
+		address = paraMap.get("address");
+		detailAddress = paraMap.get("detailAddress");
+		extraAddress = paraMap.get("extraAddress");
+		tel = paraMap.get("tel");
+		email = paraMap.get("email");
+		
+		setDecodedEmail(aES256);
+		setDecodeTel(aES256);
+		
+		// 넣은 데이터 복호화(연락처, 이메일)
+		
+		
 		
 	}
-    
-    
-
-    
     
     
 

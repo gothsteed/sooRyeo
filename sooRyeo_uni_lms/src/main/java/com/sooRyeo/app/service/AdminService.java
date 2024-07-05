@@ -4,10 +4,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.dto.CurriculumInsertRequestDto;
+import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -24,11 +27,22 @@ public interface AdminService {
 
 	List<Department> getDeptartments();
 
-	ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumInsertRequestDto requestDto);
+	ModelAndView insertCurriculum(HttpServletRequest request, ModelAndView mav, CurriculumRequestDto requestDto);
 
 	ModelAndView ShowCurriculumPage(HttpServletRequest request, ModelAndView mav);
 
-	ModelAndView getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
+	String getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
+
+	// 학사공지사항 리스트를 select 해오는 메소드
+	Pager<Announcement> getAnnouncement(int currentPage);
+
+	ResponseEntity<String> deleteCurriculum(HttpServletRequest request, ModelAndView mav);
+
+	ResponseEntity<String> updateCurriculum(HttpServletRequest request, ModelAndView mav,
+			CurriculumRequestDto requestDto);
+
+	// 학사공지사항 글의 개수를 알아오는 메소드
+	int getTotalElementCount();
 
 
 }

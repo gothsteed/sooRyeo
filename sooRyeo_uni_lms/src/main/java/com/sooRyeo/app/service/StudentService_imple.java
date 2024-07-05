@@ -1,8 +1,373 @@
 package com.sooRyeo.app.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.sooRyeo.app.model.StudentDao;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+
+import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.common.Sha256;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.StudentDTO;
+
 
 @Service
 public class StudentService_imple implements StudentService {
+	
+	@Autowired
+	private StudentDao dao;
+	
+    @Autowired
+    private AES256 aES256;
+    
+	@Autowired
+	private FileManager fileManager;
+	
+	
+	
 
+	// 내수업리스트
+	@Override
+	public List<Map<String, String>> classList(int userid) {
+		
+		List<Map<String, String>> classList = dao.classList(userid);
+		return classList;
+	}
+	
+	
+	// 내정보 보기
+	@Override
+	public StudentDTO getViewInfo(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student) session.getAttribute("loginuser");
+		
+		
+		StudentDTO member_student = new StudentDTO();
+		member_student.setName(loginuser.getName());					// 이름
+		member_student.setPwd(loginuser.getPwd());						// 비번
+		member_student.setGrade(loginuser.getGrade());					// 학년
+		member_student.setStatus(loginuser.getStatus());				// 학적
+		member_student.setBirthday(loginuser.getBirthday());  			// 생년월일
+		member_student.setTel(loginuser.getTel()); 						// 연락처
+		member_student.setEmail(loginuser.getEmail()); 					// 이메일
+		member_student.setPostcode(loginuser.getPostcode());			// 우편번호
+		member_student.setAddress(loginuser.getAddress()); 				// 주소
+		member_student.setDetailAddress(loginuser.getDetailAddress());	// 상세주소
+		member_student.setExtraAddress(loginuser.getExtraAddress());	// 추가주소
+		
+		// 학과명 가져오기
+		String d_name = dao.select_department(loginuser.getStudent_id());
+		member_student.setDepartment_name(d_name);
+		
+		
+		return member_student;
+		
+	} // end of public void getViewInfo
+
+	
+	
+	
+	// 학생 비밀번호 중복확인
+	@Override
+	public JSONObject pwdDuplicateCheck(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		String student_id = Integer.toString(loginuser.getStudent_id());
+		
+		String pwd = request.getParameter("pwd");		
+		pwd = Sha256.encrypt(pwd);
+		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		paraMap.put("student_id", student_id);
+		paraMap.put("pwd", pwd);
+		
+		int n = 0;
+		try {
+			n = dao.pwdDuplicateCheck(paraMap);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n); // {"n":1}
+		
+		return jsonObj;
+		
+	} // end of public JSONObject pwdDuplicateCheck
+	
+	
+	// 학생 전화번호 중복확인
+	@Override
+	public JSONObject telDuplicateCheck(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		String student_id = Integer.toString(loginuser.getStudent_id());
+		
+		String tel = request.getParameter("tel");
+		try {
+			tel = aES256.encrypt(tel);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		paraMap.put("student_id", student_id);
+		paraMap.put("tel", tel);
+		
+		
+		int n = 0;
+		try {
+			n = dao.telDuplicateCheck(paraMap);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n); // {"n":1}
+		
+		return jsonObj;
+	}
+
+
+	// 이메일 중복확인
+	@Override
+	public JSONObject emailDuplicateCheck(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		String student_id = Integer.toString(loginuser.getStudent_id());
+		
+		String email = request.getParameter("email");
+		try {
+			email = aES256.encrypt(email);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		paraMap.put("student_id", student_id);
+		paraMap.put("email", email);
+		
+		
+		int n = 0;
+		try {
+			n = dao.emailDuplicateCheck(paraMap);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n); // {"n":1}
+		
+		return jsonObj;
+	}
+
+
+	// 학생정보 수정
+	@Override
+	public int student_info_edit(StudentDTO student,  MultipartHttpServletRequest mrequest) {
+		
+		int n1 = 1;
+		int n2 = 0;
+			
+		HttpSession session = mrequest.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+
+		String student_id = Integer.toString(loginuser.getStudent_id());
+		String pwd = mrequest.getParameter("pwd");
+		pwd = Sha256.encrypt(pwd);
+		
+		// 주소
+		String postcode = mrequest.getParameter("postcode");
+		String address = mrequest.getParameter("address");
+		String detailAddress = mrequest.getParameter("detailAddress"); 
+		String extraAddress = mrequest.getParameter("extraAddress");	
+		
+		String email = mrequest.getParameter("email");
+		
+		System.out.println("~~~확인용 email : " + email);
+		
+		
+		try {
+			email = aES256.encrypt(email);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+	
+		
+		
+		String tel = mrequest.getParameter("tel");
+		
+		try {
+			tel = aES256.encrypt(tel);
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("~~~확인용 tel : " + tel);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("student_id", student_id);
+		paraMap.put("pwd", pwd);
+		paraMap.put("postcode", postcode);
+		paraMap.put("address", address);
+		paraMap.put("detailAddress", detailAddress);
+		paraMap.put("extraAddress", extraAddress);
+		paraMap.put("email", email);
+		paraMap.put("tel", tel);
+		
+		student = dao.select_file_name(paraMap);
+		
+		if (student != null) {
+	        String fileName = student.getImg_name();
+	        System.out.println("확인용 fileName : " + fileName);
+	        
+	        if (fileName != null && !"".equals(fileName)) {
+	            
+	            String root = session.getServletContext().getRealPath("/");
+	            
+	            String path = root+"resources"+File.separator+"files";
+	   
+	            paraMap.put("path", path); // 삭제해야할 파일이 저장된 경로
+	            paraMap.put("fileName", fileName); // 삭제해야할 파일이 저장된 경로
+	            
+	            n1 = dao.delFilename(paraMap.get("student_id"));
+	            System.out.println("n1: " + n1);
+	            
+	            if (n1 == 1) {
+	                path = paraMap.get("path");
+	                fileName = paraMap.get("fileName");
+	                
+	                if (fileName != null && !"".equals(fileName)) {
+	                    try {
+	                        fileManager.doFileDelete(fileName, path);
+	                    } catch (Exception e) {
+	                        e.printStackTrace();
+	                    }
+	                }
+	            } // end of if(n1 == 1)
+	        } // end of if(fileName != null && !"".equals(fileName))
+	    } // end of if (professor != null) 
+		
+		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
+		/////////////////////////////////////////////////////////////////////////////////
+
+		
+		MultipartFile attach = student != null ? student.getAttach() : null;
+		
+		String root = session.getServletContext().getRealPath("/");
+	     
+	    // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+	    // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+	     
+	    String path = root+"resources"+File.separator+"files";
+	    /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+	          운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+	          운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+	    */
+	    // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+	    // System.out.println("~~~ 확인용 path => " + path);
+	    // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+		/*
+		  2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+	    */
+	    String newFileName = "";
+	    // WAS(톰캣)의 디스크에 저장될 파일명
+	     
+	    byte[] bytes = null;
+	    // 첨부 파일의 내용물을 담은 것
+	    
+	    String img_name = "";
+	    
+	    if(attach != null) {	    
+		    try {
+		    	bytes = attach.getBytes();
+		    	// 첨부파일의 내용물을 읽어오는 것
+				
+				String originalFilename =  attach.getOriginalFilename();
+				// attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다.
+				
+				// System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
+		        // ~~~ 확인용 originalFilename => LG_싸이킹청소기_사용설명서.pdf 
+				
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				// 첨부되어진 파일을 업로드 하는 것이다.
+				
+				// System.out.println("~~~ 확인용 newFileName => " + newFileName);
+				// ~~~ 확인용 newFileName => 2024062712074811660790417300.xlsx
+				
+				/*
+		           3. BoardVO boardvo 에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주기  
+				*/
+				img_name = newFileName;
+				   // WAS(톰캣)에 저장된 파일명(2024062712074811660790417300.xlsx) 이다.	
+				   
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+	    };// end of if(attach != null) 	
+		
+	    System.out.println("확인용 img_name : " + img_name);
+
+		
+
+		paraMap.put("img_name", img_name);
+
+
+		
+		try {
+			n2 = dao.student_info_edit(paraMap);
+			System.out.println("n2: " + n2);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		if(n1*n2 == 1) {// 잘 수정되었다면 세션에 정보를 덧씌우기하기 위한 용도
+			
+			loginuser.updateinfo(paraMap, aES256); // student 도메인 데이터 수정
+			
+		}
+		
+		return n1*n2;
+	}
+
+	
+
+
+
+	
+	
+	
 }
