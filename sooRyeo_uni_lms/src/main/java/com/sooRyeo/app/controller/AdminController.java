@@ -233,9 +233,11 @@ public class AdminController {
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  adminService.getAnnouncement(currentPage);
 		
-		System.out.println(announcementList.getObjectList());
+		// System.out.println(announcementList.getObjectList());
 		
 		mav.addObject("announcementList", announcementList.getObjectList());
+		mav.addObject("currentPage", announcementList.getPageNumber());
+		mav.addObject("perPageSize", announcementList.getPerPageSize());
 		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms"));
 		mav.setViewName("announcement.admin");
 
