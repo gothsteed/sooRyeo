@@ -10,7 +10,7 @@ public class Curriculum {
     private Short credit;
     private Department department; 
     private Short required;
-    
+    private Integer exist;
     
 	public Integer getCurriculum_seq() {
 		return curriculum_seq;
@@ -41,6 +41,11 @@ public class Curriculum {
 	public Short getRequired() {
 		return required;
 	}
+	public Integer getExist() {
+		return exist;
+	}
+
+
 	
 	
     

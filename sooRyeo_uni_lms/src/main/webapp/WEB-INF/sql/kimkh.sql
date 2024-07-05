@@ -69,5 +69,59 @@ from tbl_professor
 
 select count(*)
 from tbl_professor
-where prof_id = 202400002 and name = '홍길동'        
-        
+where prof_id = 202400002 and name = '홍길동'   
+
+-- 교수 진행 강의 리스트
+SELECT P.prof_id AS prof_id,
+       P.name AS prof_name,
+       C.COURSE_SEQ AS course_seq, 
+       C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       C.CAPACITY AS capacity, 
+       C.SEMESTER_DATE AS semester_date,
+       CU.fk_department_seq AS fk_department_seq, 
+       CU.grade AS grade, 
+       CU.name AS name, 
+       CU.credit AS credit, 
+       CU.required AS required, 
+       CU.exist AS exist,
+       T.DAY_OF_WEEK AS day_of_week,
+       T.PERIOD AS period
+FROM tbl_professor P
+JOIN tbl_course C ON P.prof_id = C.fk_professor_id
+JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+JOIN tbl_time T ON C.course_seq = T.fk_course_seq
+WHERE P.prof_id = 202400002;
+
+select *
+from tbl_time
+
+-- 개설수업
+select *
+from tbl_course
+
+-- 수업
+select *
+from tbl_curriculum
+--
+/*
+period
+1 - 1교시
+2 - 2교시
+3
+4
+5
+6
+7
+8
+9
+
+3학점인데 1~3교시다
+
+time_seq 1 day_of_week 2 period 1
+time_seq 2 day_of_week 2 period 2
+time_seq 3 day_of_week 2 period 3
+*/
+
+-- 학과
+select *
+from tbl_department

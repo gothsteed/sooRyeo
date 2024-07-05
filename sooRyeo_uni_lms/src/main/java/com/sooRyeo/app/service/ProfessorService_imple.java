@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -339,6 +340,35 @@ public class ProfessorService_imple implements ProfessorService {
 		}
 
 		return n1*n2;
+	}
+
+	
+	@Override
+	public List<Professor> professor_course(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		
+		String prof_id = Integer.toString(loginuser.getProf_id());
+		
+		List<Professor> professorList = dao.professor_course(prof_id);
+		
+		/*
+		 * int professor_id = professorList.getProf_id(); int course_seq
+		 * =professorList.getCourse().getCourse_seq(); int capacity =
+		 * professorList.getCourse().getCapacity(); Date semester_date =
+		 * professorList.getCourse().getSemester_date();
+		 * 
+		 * int curriculum_seq = professorList.getCurriculum().getCurriculum_seq(); int
+		 * grade = professorList.getCurriculum().getGrade(); String name =
+		 * professorList.getCurriculum().getName(); int credit =
+		 * professorList.getCurriculum().getCredit(); int required =
+		 * professorList.getCurriculum().getRequired(); int exist =
+		 * professorList.getCurriculum().getExist();
+		 */
+		
+		return professorList;
 	}
     
     

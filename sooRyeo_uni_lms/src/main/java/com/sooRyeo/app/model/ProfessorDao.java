@@ -1,5 +1,6 @@
 package com.sooRyeo.app.model;
 
+import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Professor;
@@ -30,6 +31,9 @@ public interface ProfessorDao {
 	
 	// 계정에 기존 파일 삭제
 	int delFilename(String prof_id);
+	
+	// 교수 진행 강의 목록 
+	List<Professor> professor_course(String prof_id);
 	
 
 

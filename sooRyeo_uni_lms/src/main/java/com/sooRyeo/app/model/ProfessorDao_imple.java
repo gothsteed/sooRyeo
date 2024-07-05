@@ -1,5 +1,6 @@
 package com.sooRyeo.app.model;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -86,10 +87,23 @@ public class ProfessorDao_imple implements ProfessorDao {
 
 	@Override
 	public int delFilename(String prof_id) {
+		
 		int n = sqlSession.update("professor.delFilename", prof_id);
 		
 		return n;
 	}
+
+
+	@Override
+	public List<Professor> professor_course(String prof_id) {
+		
+		List<Professor> professorList  = sqlSession.selectList("professor.professor_course", prof_id);		
+		
+		return professorList;
+	}
+
+
+
 
 
 

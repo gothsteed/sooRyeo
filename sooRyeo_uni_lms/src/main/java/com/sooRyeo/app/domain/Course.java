@@ -15,7 +15,6 @@ public class Course {
     
     private List<Time> time;
     
-    
 	public Integer getCourse_seq() {
 		return course_seq;
 	}
@@ -37,8 +36,5 @@ public class Course {
 	public List<Time> getTime() {
 		return time;
 	}
-    
-    
-    
 
 }

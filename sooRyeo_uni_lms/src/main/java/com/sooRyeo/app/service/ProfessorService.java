@@ -1,5 +1,7 @@
 package com.sooRyeo.app.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
@@ -25,6 +27,9 @@ public interface ProfessorService {
 	
 	// 교수 정보 수정
 	int professor_info_edit(Professor professor, MultipartHttpServletRequest mrequest);
+	
+	// 교수 진행 강의 목록 
+	List<Professor> professor_course(HttpServletRequest request);
 	
 
 }

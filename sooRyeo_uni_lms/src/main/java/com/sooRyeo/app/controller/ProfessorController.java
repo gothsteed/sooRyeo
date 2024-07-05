@@ -1,5 +1,7 @@
 package com.sooRyeo.app.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
@@ -110,6 +112,31 @@ public class ProfessorController {
       
 	      return mav;
 	}
+	
+	
+	@GetMapping(value = "/professor/courseList.lms")  
+	public ModelAndView professor_course(HttpServletRequest request, ModelAndView mav, Professor professor) {// 교수 진행 강의 목록
 		
+		List<Professor> courseList = service.professor_course(request);
+		
+		if(courseList == null) {// 정보가 없다면
+			mav.setViewName("redirect:/professor/dashboard.lms");
+			return mav;
+		}
+		
+		mav.addObject(courseList);
+		mav.setViewName("professor_courseList.professor");
+		
+		return mav;
+	}
+	
+	
+	@GetMapping(value = "/professor/courseDetail.lms")  
+	public ModelAndView professor_courseDetail(ModelAndView mav) {// 교수 진행 강의 상세
+	
+		mav.setViewName("professor_courseDetail.professor");
+		
+		return mav;
+	}
 	
 }

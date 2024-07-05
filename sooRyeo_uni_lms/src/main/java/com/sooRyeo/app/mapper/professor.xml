@@ -89,6 +89,43 @@
 		where prof_id = to_number(#{prof_id})
 	</update>
 	
+	
+	<resultMap id="professorCourseMap" type="com.sooRyeo.app.domain.Professor">
+        	<id property="prof_id" column="prof_id"/>
+        	<result property="name" column="prof_name"/>
+        <association property="course" javaType="com.sooRyeo.app.domain.Course">
+            <id property="course_seq" column="course_seq"/>
+            <result property="capacity" column="capacity"/>
+            <result property="semester_date" column="semester_date"/>
+        </association>
+        <association property="curriculum" javaType="com.sooRyeo.app.domain.Curriculum">
+            <id property="curriculum_seq" column="course_seq"/>
+            <result property="grade" column="grade"/>
+            <result property="fk_department_seq" column="fk_department_seq"/>
+            <result property="name" column="name"/>
+            <result property="credit" column="credit"/>
+            <result property="required" column="required"/>
+            <result property="exist" column="exist"/>
+        </association>
+    </resultMap>
+	<select id="professor_course" resultMap="professorCourseMap" parameterType="String">
+		SELECT P.prof_id AS prof_id,
+			P.name AS prof_name, 
+       		C.COURSE_SEQ AS course_seq, 
+       		C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       		C.CAPACITY AS capacity, 
+       		C.SEMESTER_DATE AS semester_date,
+       		CU.fk_department_seq AS fk_department_seq, 
+       		CU.grade AS grade, 
+       		CU.name AS name, 
+       		CU.credit AS credit, 
+       		CU.required AS required, 
+       		CU.exist AS exist 
+		FROM tbl_professor P
+		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
+		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+		where P.prof_id = to_number(#{prof_id}) 
+	</select>
 
 
 </mapper>

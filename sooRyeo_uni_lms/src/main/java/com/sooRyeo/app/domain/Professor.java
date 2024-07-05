@@ -25,7 +25,12 @@ public class Professor {
     
     private Department department;
     
+    private Course course;
+    
+    private Curriculum curriculum;
+    
     private MultipartFile attach;
+    
     
 	public Integer getProf_id() {
 		return prof_id;
@@ -62,13 +67,28 @@ public class Professor {
 		return img_name;
 	}
 	
+	
+	
 	public Department getDepartment() {
 		return department;
 	}
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-		
+	public Course getCourse() {
+		return course;
+	}
+	public void setCourse(Course course) {
+		this.course = course;
+	}	
+	public Curriculum getCurriculum() {
+		return curriculum;
+	}
+	public void setCurriculum(Curriculum curriculum) {
+		this.curriculum = curriculum;
+	}
+	
+	
 	
 	public MultipartFile getAttach() {
 		return attach;
