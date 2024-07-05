@@ -27,6 +27,15 @@ span.error {
 	font-size: 9pt;
 }
 
+form.profile-form img#profile  {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: white;
+    margin-left: 80%;
+    margin-top: 10%;
+}
+
 </style>
 
 
@@ -38,12 +47,19 @@ span.error {
 	        
 			<form action="#" name="studentFrm" method="post" enctype="multipart/form-data" class="profile-form">
 				<div class="d-flex">
-					<div style="width:15%; height:50px; margin-left:10%; margin-bottom: 10%;">
-						<img src="<%=ctxPath%>/resources/images/student.png" class="img-fluid rounded-start" />
+					<%-- ==== 원래 있는 이미지파일 보여주기 ==== --%>
+					<div class="profile">
+						<c:if test="${empty sessionScope.loginuser.img_name}"> <%-- 이미지가 없을 경우 --%>
+	           				<img id="profile" src="<%=ctxPath%>/resources/images/student.png" alt="Profile Picture">
+	           			</c:if>
+	           			<c:if test="${not empty sessionScope.loginuser.img_name}"> <%-- 이미지가 있을 경우 --%>
+	           				<img id="profile" src="<%=ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" alt="Profile Picture">
+	           			</c:if>
 					</div>
-					<div style="width:25%;" class="prodInputName" style="padding-bottom: 10px; margin-left:5%;"></div>
-					<div><img id="previewImg" width="150" />
-						<input class="form-control" type="file" name="attach" id="formFile" style="margin-top: 10%;">
+					<%-- ==== 이미지파일 미리 보여주기 ==== --%>
+					<div style="width:25%;" class="prodInputName" ></div>
+					<div><img id="previewImg" width="150" style="margin-top: 10%; margin-left:50%;" />
+						<input class="form-control" type="file" name="attach" id="formFile" style="margin-top: 10%; margin-left:50%;">
 					</div>
 				</div>
 					
@@ -121,13 +137,15 @@ span.error {
 	                     	<input type="text" id="extraAddress" name="extraAddress" class="form-control"  value="${requestScope.member_student.extraAddress}"/>
 	                             <%-- 주소 중복체크 --%>
 	                             <span id="zipcodeSearch"><button type="button" class="btn btn-outline-success btn-sm mt-3 mb-3">우편번호 찾기</button></span>
+	                             <span id="addressCheckResult"></span>
 	                  	</div>
 	                  	
 
 					</div>
 				</div>
-				<div class="card-footer" style="padding-left:800px;">
-					<button type="button" class="btn btn-success" id="updateBtn" onclick="goEdit('<%=ctxPath%>')">수정하기</button>
+				<div class="card-footer">
+					<button type="button" class="btn btn-success" style="margin-left:70%;" id="updateBtn" onclick="goEdit('<%=ctxPath%>')">수정하기</button>
+					<input type="reset"  class="btn btn-danger" style="margin-left:3%;" value="취소하기" onclick="self.close()" />
 				</div>
 			</form>
 	    	

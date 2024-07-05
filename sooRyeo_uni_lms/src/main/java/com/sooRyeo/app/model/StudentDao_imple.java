@@ -96,11 +96,11 @@ public class StudentDao_imple implements StudentDao {
 
 	// 계정에 파일이 있는지 확인
 	@Override
-	public StudentDTO select_file_name(Map<String, String> paraMap) {
+	public String select_file_name(Map<String, String> paraMap) {
 		
-		StudentDTO student = sqlSession.selectOne("student.select_file_name", paraMap);
+		String fileName = sqlSession.selectOne("student.select_file_name", paraMap);
 		
-		return student;
+		return fileName;
 		
 	} // end of public StudentDTO select_file_name
 

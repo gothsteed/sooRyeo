@@ -31,7 +31,7 @@ public interface StudentDao {
 	int emailDuplicateCheck(Map<String, String> paraMap);
 
 	// 계정에 파일이 있는지 확인
-	StudentDTO select_file_name(Map<String, String> paraMap);
+	String select_file_name(Map<String, String> paraMap);
 
 	// 계정에 기존 파일 삭제
 	int delFilename(String student_id);

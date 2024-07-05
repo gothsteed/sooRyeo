@@ -7,8 +7,9 @@
 <mapper namespace="student">
 
 	<select id="selectStudent" resultType="com.sooRyeo.app.domain.Student" parameterType="com.sooRyeo.app.dto.LoginDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		SELECT * 
-		FROM tbl_student 
+		SELECT *
+		FROM tbl_department JOIN tbl_student
+		ON tbl_department.department_seq = tbl_student.fk_department_seq
 		WHERE student_id = #{id} AND pwd = #{password}	
 	</select>
 	
@@ -82,7 +83,7 @@
 	</select>
 
 	<!-- 학생정보 - 계정에 파일이 있는지 확인 -->
-	<select id="select_file_name" resultType="com.sooRyeo.app.dto.StudentDTO" parameterType="HashMap">
+	<select id="select_file_name" resultType="String" parameterType="HashMap">
 		select img_name
 		from tbl_student
 		where student_id = to_number(#{student_id}) 
