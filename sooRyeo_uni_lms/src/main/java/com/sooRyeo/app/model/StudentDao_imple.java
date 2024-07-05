@@ -29,14 +29,6 @@ public class StudentDao_imple implements StudentDao {
 		
 	} // end of public Student selectStudent
 
-
-	// 수업명, 교수명  select
-	@Override
-	public List<Map<String, String>> classList(int userid) {
-		List<Map<String, String>> classList = sqlSession.selectList("student.classList", userid);
-		return classList;
-	}
-
 	// 내정보 보기
 	@Override
 	public StudentDTO getViewInfo(String login_userid) {
@@ -65,5 +57,21 @@ public class StudentDao_imple implements StudentDao {
 		return emailDuplicateCheck;
 		
 	} // end of public String emailDuplicateCheck
+
+	
+	// 수업리스트 보여주기
+	@Override
+	public List<Map<String, String>> classList(int userid) {
+		List<Map<String, String>> classList = sqlSession.selectList("student.classList", userid);
+		return classList;
+	}
+	
+	
+	// 과제리스트  보여주기
+	@Override
+	public List<Map<String, String>> assignment_List(int userid) {
+		List<Map<String, String>> assignment_List = sqlSession.selectList("student.assignment_List", userid);
+		return assignment_List;
+	}
 	
 }

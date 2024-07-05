@@ -8,11 +8,12 @@ import com.sooRyeo.app.dto.StudentDTO;
 
 public interface StudentService {
 	
-	// 수업명, 교수명  select 
+	// 수업리스트 보여주기 
 	List<Map<String, String>> classList(int userid);
 	
+	// 과제리스트 보여주기
+	List<Map<String, String>> assignment_List(int userid);
 	
-
 	// 내정보 보기
 	StudentDTO getViewInfo(HttpServletRequest request);
 
@@ -21,6 +22,8 @@ public interface StudentService {
 
 	// 이메일 중복확인
 	String emailDuplicateCheck(String email);
+
+
 	
 
 	

@@ -11,7 +11,7 @@ public interface StudentDao {
 
 	Student selectStudent(LoginDTO loginDTO);
 
-	// 수업명, 교수명  select
+	// 수업리스트 보여주기
 	List<Map<String, String>> classList(int userid);
 	
 	// 내정보 보기
@@ -22,5 +22,8 @@ public interface StudentDao {
 
 	// 이메일 중복확인
 	String emailDuplicateCheck(String email);
+
+	// 과제리스트 보여주기
+	List<Map<String, String>> assignment_List(int userid);
 
 }
