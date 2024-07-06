@@ -191,6 +191,13 @@ public class AdminService_imple implements AdminService {
 		System.out.println("수정 성공");
 		return ResponseEntity.ok().body("수정 성공하였습니다");
 	}
+
+	@Override
+	public ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
+		mav.addObject("departments", departmentDao.departmentList_select());
+		mav.setViewName("courseRegister.admin");
+		return mav;
+	}
 	
 	
 

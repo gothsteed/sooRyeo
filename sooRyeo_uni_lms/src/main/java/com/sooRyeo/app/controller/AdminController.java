@@ -26,7 +26,7 @@ import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
-
+import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
@@ -41,8 +41,10 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 
+	
 	@Autowired
-	private DepartmentService departmentService;
+	private CourseService courseService;
+	
 	
 	@Autowired
 	private FileManager fileManager;
@@ -243,6 +245,22 @@ public class AdminController {
 	public ResponseEntity<String> updateCurriculumREST(HttpServletRequest request, ModelAndView mav, @RequestBody CurriculumRequestDto requestDto) {
 		return adminService.updateCurriculum(request, mav, requestDto);
 	}
+	
+	@RequestMapping(value = "/admin/courseRegister.lms", method = RequestMethod.GET)
+	public ModelAndView courseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
+
+		return adminService.makeCourseRegiseterPage(request, mav);
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/profTimetableJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
+	public String getProfTimetableJSON(HttpServletRequest request, ModelAndView mav) {
+		
+		return courseService.getProfTimetable(request, mav);
+	}
+	
+	
 	
 	
 }

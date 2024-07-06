@@ -40,5 +40,7 @@ public interface AdminService {
 	ResponseEntity<String> updateCurriculum(HttpServletRequest request, ModelAndView mav,
 			CurriculumRequestDto requestDto);
 
+	ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav);
+
 
 }
