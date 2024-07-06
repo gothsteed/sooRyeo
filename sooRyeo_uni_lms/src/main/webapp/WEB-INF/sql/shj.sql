@@ -96,9 +96,15 @@ values(lecture_seq.nextval, '5', '4단원 영상', '4주차 수업 자료', '제
 insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
 values(lecture_seq.nextval, '12', '1단원 영상', '1주차 수업 자료', '제 1장. ', '');
 
+select *
+from tbl_lecture;
 
+tbl_course
 
-
+select lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content
+from tbl_lecture join tbl_course
+on tbl_lecture.fk_course_seq = tbl_course.course_seq
+where fk_course_seq = '4';
 
 
 

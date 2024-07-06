@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
@@ -135,5 +136,17 @@ public class StudentDao_imple implements StudentDao {
 		List<Map<String, String>> assignment_List = sqlSession.selectList("student.assignment_List", userid);
 		return assignment_List;
 	}
+
+	// 수업  - 내 강의보기
+	@Override
+	public List<Lecture> getlectureList(String fk_course_seq) {
+		
+		List<Lecture> lectureList = sqlSession.selectList("student.getlectureList", fk_course_seq);
+		
+		return lectureList;
+		
+	} // end of public List<Lecture> getlectureList
+
+	
 	
 }

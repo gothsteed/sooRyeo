@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
@@ -358,8 +359,6 @@ public class StudentService_imple implements StudentService {
 		return n1*n2;
 	}
 
-	
-
 
 	// 내수업리스트
 	@Override
@@ -377,6 +376,20 @@ public class StudentService_imple implements StudentService {
 		List<Map<String, String>> assignment_List = dao.assignment_List(userid);
 		return assignment_List;
 	}
+
+
+
+	// 수업  - 내 강의보기
+	@Override
+	public List<Lecture> getlectureList(String fk_course_seq) {
+		
+		List<Lecture> lectureList = dao.getlectureList(fk_course_seq);
+		
+		return lectureList;
+		
+	} // end of public List<Lecture> getlectureList
+
+
 
 	
 	

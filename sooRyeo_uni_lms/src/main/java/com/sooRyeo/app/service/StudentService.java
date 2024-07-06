@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.dto.StudentDTO;
 
 public interface StudentService {
@@ -31,6 +32,9 @@ public interface StudentService {
 
 	// 학생 정보 수정
 	int student_info_edit(StudentDTO student, MultipartHttpServletRequest mrequest);
+
+	// 수업  - 내 강의보기
+	List<Lecture> getlectureList(String fk_course_seq);
 
 
 

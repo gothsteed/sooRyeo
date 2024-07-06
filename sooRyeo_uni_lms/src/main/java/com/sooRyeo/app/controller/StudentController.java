@@ -7,6 +7,7 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
@@ -131,6 +133,7 @@ public class StudentController {
 		return json.toString();
 	}
 	
+	
 	// 이메일 중복
 	@ResponseBody
 	@PostMapping(value = "/student/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
@@ -140,6 +143,7 @@ public class StudentController {
 		
 		return json.toString();
 	}
+	
 	
 	// 학생 정보 수정
 	@PostMapping(value = "/student/student_info_edit.lms")
@@ -164,21 +168,37 @@ public class StudentController {
 	
 	
 	
-
-	
-	
-
-	
-	
-	
 	// 수업  - 내 강의보기
-	@RequestMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
-	public String myLecture() {
-		return "myLecture.student";
-		// /WEB-INF/views/student/{1}.jsp
+	@ResponseBody
+	@GetMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
+	public String myLecture(HttpServletRequest request) {
+		
+		String fk_course_seq = request.getParameter("fk_course_seq");
+		
+		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(lectureList != null) {
+			
+			for(Lecture lecture : lectureList) {
+				
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("lecture_seq", lecture.getLecture_seq());
+				jsonObj.put("fk_course_seq", lecture.getFk_course_seq());
+				jsonObj.put("video_file_name", lecture.getVideo_file_name());
+				jsonObj.put("lecture_file_name", lecture.getLecture_file_name());
+				jsonObj.put("lecture_title", lecture.getLecture_title());
+				jsonObj.put("lecture_content", lecture.getLecture_content());
+				
+				jsonArr.put(jsonObj);
+			} // end of for
+			
+		}
+
+		return jsonArr.toString();
 		
 	} // end of public String myLecture
-	
 	
 	
 	
