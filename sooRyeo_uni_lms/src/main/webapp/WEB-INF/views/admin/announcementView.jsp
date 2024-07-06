@@ -3,6 +3,9 @@
 <%
    String ctxPath = request.getContextPath();
 %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div class="container">
     <div class="card">
         <div class="card-header" style="text-align: center; background-color: #d1e0e0">
@@ -13,21 +16,26 @@
 			  <thead>
 			    <tr>
 			      <th scope="col" style="width:10%;">제목</th>
-			      <th scope="col">${requestScope.a_title}</th>
+			      <th scope="col">${requestScope.an.a_title}</th>
 			    </tr>
 			  </thead>
 			  <tbody class="table-group-divider">
 			    <tr>
 			      <th scope="row">날짜</th>
-			      <td>021024121</td>
+			      <td>${requestScope.an.writeday}</td>
 			    </tr>
 			    <tr>
 			      <th scope="row" >내용</th>
-			      <td>내용이 들어갑니다.</td>
+			      <td>${requestScope.an.a_content}</td>
 			    </tr>
 			    <tr>
 			      <th scope="row">첨부파일</th>
-			      <td colspan="2">Larry the Bird</td>
+			      <c:if test="${requestScope.an.attatched_file != null}">
+				      <td colspan="2">${requestScope.an.attatched_file}</td>
+			      </c:if>
+			      <c:if test="${requestScope.an.attatched_file == null}">
+				      <td colspan="2">첨부파일이 없습니다.</td>
+			      </c:if>
 			    </tr>
 			  </tbody>
 			</table>

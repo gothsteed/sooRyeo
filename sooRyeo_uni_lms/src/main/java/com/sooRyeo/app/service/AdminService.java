@@ -35,7 +35,7 @@ public interface AdminService {
 	String getCurriculumPage(HttpServletRequest request, ModelAndView mav,CurriculumPageRequestDto requestDto);
 
 	// 학사공지사항 리스트를 select 해오는 메소드
-	Pager<Announcement> getAnnouncement(int currentPage);
+	Pager<Announcement> getAnnouncement(Map<String, Object> paraMap);
 
 	ResponseEntity<String> deleteCurriculum(HttpServletRequest request, ModelAndView mav);
 
@@ -47,6 +47,9 @@ public interface AdminService {
 
 	// 글 한개를 불러오는 메소드
 	Announcement getView(Map<String, String> paraMap);
+
+	// 조회수 증가없이 글을 불러오는 메소드
+	Announcement getView_no_increase_readCount(Map<String, String> paraMap);
 
 
 }

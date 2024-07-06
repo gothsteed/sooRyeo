@@ -22,7 +22,7 @@ public interface AdminDao {
 	String emailDuplicateCheck(String email);
 
 	// 학사공지사항 리스트를 select 해오는 메소드
-	Pager<Announcement> getAnnouncement(int currentPage);
+	Pager<Announcement> getAnnouncement(Map<String, Object> paraMap);
 
 	// 학사공지사항 글의 개수를 알아오는 메소드
 	int getTotalElementCount();

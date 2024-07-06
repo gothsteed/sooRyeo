@@ -241,7 +241,7 @@ public class AdminController {
 			searchWord = searchWord.trim();
 		}
 		
-		Map<String, String> paraMap = new HashMap<>();
+		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("searchWord",searchWord);
 		
 		int currentPage = 0;
@@ -250,19 +250,21 @@ public class AdminController {
 		} catch (Exception e) {
 			currentPage = 1;
 		}
+		String goBackURL = MyUtil.getCurrentURL(request);
+		paraMap.put("currentPage", currentPage);
 		
 		// 학사공지사항을 전부 불러오는 메소드
-		Pager<Announcement> announcementList =  adminService.getAnnouncement(currentPage);
+		Pager<Announcement> announcementList =  adminService.getAnnouncement(paraMap);
 		
 		// System.out.println(announcementList.getObjectList());
 		
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
-		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms"));
+		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms", "searchWord="+searchWord));
 		mav.setViewName("announcement.admin");
 		
-		String goBackURL = MyUtil.getCurrentURL(request);
+		
 		
 		mav.addObject("goBackURL",goBackURL);
 		
@@ -392,13 +394,13 @@ public class AdminController {
             //     그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
             //     단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은 
             //     실행하지 않도록 해주어야 한다. !!! === //
-
+			
 			// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
 			Announcement an = null;
 			
 			if("yes".equals( (String)session.getAttribute("readCountPermission") )) {
 				// 글목록보기인 /list.action 페이지를 클릭한 다음에 특정글을 조회해온 경우이다.
-
+				
 				an = adminService.getView(paraMap);
 				// 글 조회수 증가와 함께 글 1개를 조회를 해오는 것
 				// System.out.println("~~ 확인용 글내용 : " + boardvo.getContent());

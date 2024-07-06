@@ -45,20 +45,21 @@ public class AdminDao_imple implements AdminDao {
 	}
 
 	@Override
-	public Pager<Announcement> getAnnouncement(int currentPage) {
+	public Pager<Announcement> getAnnouncement(Map<String, Object> paraMap) {
 		
 		int sizePerPage = 10;
+		
+		int currentPage = (int) paraMap.get("currentPage");
 		
 		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
 		int endRno = startRno + sizePerPage - 1; // 끝 행번호
 		
-		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("startRno", startRno);
 		paraMap.put("endRno", endRno);
 		paraMap.put("currentShowPageNo", currentPage);
 		List<Announcement> announcementList = sqlSession.selectList("admin.getAnnouncement", paraMap);
 		
-		int totalElementCount = sqlSession.selectOne("admin.getTotalElementCount");
+		int totalElementCount = sqlSession.selectOne("admin.getTotalElementCount", paraMap);
 		
 		
 		

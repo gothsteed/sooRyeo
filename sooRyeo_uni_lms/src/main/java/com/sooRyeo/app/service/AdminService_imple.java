@@ -152,8 +152,8 @@ public class AdminService_imple implements AdminService {
 	}
 
 	@Override
-	public Pager<Announcement> getAnnouncement(int currentPage) {
-		Pager<Announcement> announcementList = admindao.getAnnouncement(currentPage);
+	public Pager<Announcement> getAnnouncement(Map<String, Object> paraMap) {
+		Pager<Announcement> announcementList = admindao.getAnnouncement(paraMap);
 		return announcementList;
 	}
 
@@ -219,6 +219,15 @@ public class AdminService_imple implements AdminService {
 		Announcement an = admindao.getView(paraMap); // 글 1개 조회하기
 
 		return an;
+	}
+
+	// 조회수 증가없이 글을 불러오는 메소드
+	@Override
+	public Announcement getView_no_increase_readCount(Map<String, String> paraMap) {
+		
+		Announcement an = admindao.getView(paraMap);
+		return an;
+		
 	}
 	
 	

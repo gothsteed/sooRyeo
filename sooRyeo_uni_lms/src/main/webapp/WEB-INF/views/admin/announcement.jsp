@@ -37,6 +37,13 @@
 		document.getElementsByName("searchWord")[0].value = value;
 	}
 
+	function goSearch(){
+		const frm = document.goViewFrm;
+		<%-- frm.method = "get"; --%>						 <%-- 이거 두개 빼면  --%>
+		<%-- frm.action = "<%= ctxPath%>/list.action"; --%>  <%-- 자기페이지로 간다. --%>
+		frm.submit();
+	}// end of function goSearch(){}--------------------------------------------
+	
 </script>
 
 <div class="container">
@@ -51,7 +58,7 @@
 				 </div>
 				<input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" oninput="updateSearchWord(this.value)">
 				&nbsp;&nbsp;&nbsp;
-				<button type="button" class="btn btn-primary btn-sm">검색하기</button>
+				<button type="button" class="btn btn-primary btn-sm"  onclick="goSearch()">검색하기</button>
 			</div>
 			<table class="table">
 			  <thead>
