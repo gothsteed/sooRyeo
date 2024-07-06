@@ -169,34 +169,18 @@ public class StudentController {
 	
 	
 	// 수업  - 내 강의보기
-	@ResponseBody
 	@GetMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
-	public String myLecture(HttpServletRequest request) {
+	public ModelAndView myLecture(ModelAndView mav, HttpServletRequest request) {
 		
-		String fk_course_seq = request.getParameter("fk_course_seq");
+		String fk_course_seq = request.getParameter("course_seq");
 		
 		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
 		
-		JSONArray jsonArr = new JSONArray();
+		mav.addObject("lectureList", lectureList);
 		
-		if(lectureList != null) {
-			
-			for(Lecture lecture : lectureList) {
-				
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("lecture_seq", lecture.getLecture_seq());
-				jsonObj.put("fk_course_seq", lecture.getFk_course_seq());
-				jsonObj.put("video_file_name", lecture.getVideo_file_name());
-				jsonObj.put("lecture_file_name", lecture.getLecture_file_name());
-				jsonObj.put("lecture_title", lecture.getLecture_title());
-				jsonObj.put("lecture_content", lecture.getLecture_content());
-				
-				jsonArr.put(jsonObj);
-			} // end of for
-			
-		}
+		mav.setViewName("myLecture.student");
 
-		return jsonArr.toString();
+		return mav;
 		
 	} // end of public String myLecture
 	

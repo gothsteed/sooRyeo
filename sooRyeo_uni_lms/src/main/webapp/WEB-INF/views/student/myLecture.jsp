@@ -83,14 +83,17 @@ function scrollToTarget_down() {
 <h3>주차 별 학습활동</h3>
 <hr>
 	<div class="card mb-5">
-		<h5 class="card-header" style="font-weight:bold;">1주차 [3월 01일 ~ 3월 08일]</h5>
+		<c:forEach var="lecture" items="${requestScope.lectureList}">
+		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_seq}번째 강의</h5>
 		<div class="card-body">
-			<h5 class="card-title">제 1장. 집에 가고 싶은 이유</h5>
+			<h5 class="card-title">${lecture.lecture_title}</h5>
 			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;1단원 영상</a>
+			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
+			<!-- 영상 보는 기간, 재생시간 -->
 			<span class="card-text" style="color:orange;">2024-07-01 ~ 2024-07-31 <span style="color:green;">&nbsp;36:00</span></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;1주차 수업 자료</a>
+			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
 		</div>
+		</c:forEach>
 	</div>
 </div>
 <div id="target2"></div>

@@ -15,6 +15,8 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
 <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
+
+
 <title>SooRyeo Univ.</title>
 
 
@@ -99,13 +101,32 @@
 </style>
 
 
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+	$("div.border").click(function(e){
+		
+		// alert($(this).find("input[name='course_seq']").val());
+		location.href = "<%=ctxPath%>/student/myLecture.lms?course_seq=" + $(this).find("input[name='course_seq']").val();
+		
+	}); // end of $("div.border").click(function(e){})
+ 	
+	
+}); // end of $(document).ready(function(){})
+
+</script>
+
+
 <div style="display: flex; width : 100%;" class="row">
 
 	<div style="margin-top: 5%; width : 80%; border: solid 0px green;">
 	
 		<c:forEach var="mapList" items="${requestScope.mapList}">
+		
 			<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-			   <div style="display: flex;">
+			   <input type="hidden" name="course_seq" value="${mapList.course_seq}"/>
+			   <div style="display: flex;" >
 			      <div><img src="<%= ctxPath%>/resources/images/user.png" style="width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
 			      <c:if test="${mapList.department_seq != null && mapList.required == '1'}">
 			      	<div class="majorO rounded">전공필수</div>
@@ -123,9 +144,10 @@
 					  <div style="font-size: 20pt; color: black;">${mapList.className}</div>
 		         	  <div style="font-size: 12pt; color: black;">${mapList.professorName}</div>	
 			      </div>
-			      <div style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
+			      <div class="arrow" style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
 			   </div>
 			</div>
+			
 		</c:forEach>
 
 	</div>
