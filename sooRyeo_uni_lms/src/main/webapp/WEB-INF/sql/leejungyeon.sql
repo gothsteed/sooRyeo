@@ -6,7 +6,7 @@ CREATE TABLE tbl_department (
 --  Ð° 
 ALTER TABLE tbl_department
    ADD
-      CONSTRAINT PK_tbl_department --  Ð°   âº»Å°
+      CONSTRAINT PK_tbl_department --  Ð°   âº»Å?
       PRIMARY KEY (
          department_seq --  Ð°  Úµ 
       );
@@ -35,7 +35,7 @@ CREATE TABLE tbl_student (
    grade             SMALLINT      NOT NULL, --  Ð³ 
    address           NVARCHAR2(200) NOT NULL, --  Ö¼ 
    email             NVARCHAR2(200) NOT NULL, --  Ì¸   
-   register_date     DATE          NOT NULL, --    Ð³âµµ
+   register_date     DATE          NOT NULL, --    Ð³âµ?
    status            SMALLINT      NOT NULL, --         
    fk_department_seq Number        NOT NULL  --  Ð°  Úµ 
 
@@ -63,7 +63,7 @@ ALTER TABLE tbl_student MODIFY tel NVARCHAR2(200);
 
 ALTER TABLE tbl_student
    ADD
-      CONSTRAINT PK_tbl_student --  Ð»   âº»Å°
+      CONSTRAINT PK_tbl_student --  Ð»   âº»Å?
       PRIMARY KEY (
          student_id --  Ð¹ 
       );
@@ -102,7 +102,7 @@ ALTER TABLE tbl_professor MODIFY tel NVARCHAR2(200);
 
 ALTER TABLE tbl_professor
    ADD
-      CONSTRAINT PK_tbl_professor --       âº»Å°
+      CONSTRAINT PK_tbl_professor --       âº»Å?
       PRIMARY KEY (
          prof_id --       È£
       );
@@ -136,7 +136,7 @@ ALTER TABLE tbl_admin MODIFY tel NVARCHAR2(200);
 
 ALTER TABLE tbl_admin
    ADD
-      CONSTRAINT PK_tbl_admin --         âº»Å°
+      CONSTRAINT PK_tbl_admin --         âº»Å?
       PRIMARY KEY (
          admin_seq --           Ìµ 
       );
@@ -220,7 +220,7 @@ drop table tbl_announcement;
 
 ALTER TABLE tbl_announcement
    ADD
-      CONSTRAINT PK_tbl_announcement --  Ð»          âº»Å°
+      CONSTRAINT PK_tbl_announcement --  Ð»          âº»Å?
       PRIMARY KEY (
          announcement_seq --                
       );
@@ -247,7 +247,7 @@ CREATE SEQUENCE recruitment_notice_seq
   
 ALTER TABLE tbl_recruitment_notice
    ADD
-      CONSTRAINT PK_tbl_recruitment_notice -- Ã¤           âº»Å°
+      CONSTRAINT PK_tbl_recruitment_notice -- Ã¤           âº»Å?
       PRIMARY KEY (
          recruitment_notice_seq -- Ã¤                
       );
@@ -265,7 +265,7 @@ CREATE SEQUENCE curriculum_type_seq
   
   ALTER TABLE tbl_curriculum_type
    ADD
-      CONSTRAINT PK_tbl_curriculum_type --     Å¸    âº»Å°
+      CONSTRAINT PK_tbl_curriculum_type --     Å¸    âº»Å?
       PRIMARY KEY (
          curriculum_type_seq --     Å¸ Ô½     
       );
@@ -288,7 +288,7 @@ CREATE SEQUENCE curriculum_seq
   
   ALTER TABLE tbl_curriculum
    ADD
-      CONSTRAINT PK_tbl_curriculum --       âº»Å°
+      CONSTRAINT PK_tbl_curriculum --       âº»Å?
       PRIMARY KEY (
          curriculum_seq --           
       );
@@ -327,7 +327,7 @@ CREATE SEQUENCE time_seq
   
   ALTER TABLE tbl_time
    ADD
-      CONSTRAINT PK_tbl_time --  Ã° Ç¥  âº»Å°
+      CONSTRAINT PK_tbl_time --  Ã° Ç¥  âº»Å?
       PRIMARY KEY (
          time_seq --  Ã°       
       );
@@ -339,7 +339,7 @@ CREATE TABLE tbl_course (
    fk_curriculum_seq Number NOT NULL, --           
    fk_time_seq       Number NOT NULL, --  Ã°       
    capacity          Number NOT NULL, --     
-   semester_date     DATE   NOT NULL  --      âµµ Ð± 
+   semester_date     DATE   NOT NULL  --      âµ? Ð± 
 );
 
 drop table tbl_course;
@@ -353,7 +353,7 @@ CREATE SEQUENCE course_seq
 
 ALTER TABLE tbl_course
    ADD
-      CONSTRAINT PK_tbl_course --           âº»Å°
+      CONSTRAINT PK_tbl_course --           âº»Å?
       PRIMARY KEY (
          course_seq --               
       );
@@ -407,7 +407,7 @@ CREATE SEQUENCE lecture_seq
 
 ALTER TABLE tbl_lecture
    ADD
-      CONSTRAINT PK_tbl_lecture --       âº»Å°
+      CONSTRAINT PK_tbl_lecture --       âº»Å?
       PRIMARY KEY (
          lecture_seq -- lecture_seq
       );
@@ -424,11 +424,11 @@ ALTER TABLE tbl_lecture
       );
 
 CREATE TABLE tbl_attendance (
-   attendance_seq Number NOT NULL, --  â¼®      
+   attendance_seq Number NOT NULL, --  â¼?      
    fk_course_seq  Number             NOT NULL, --               
    fk_student_id  Number             NOT NULL, --  Ð¹ 
-   isAttended     CHAR(1)             NOT NULL, --  â¼®    
-   attended_date  DATE               NOT NULL  --  â¼®  Â¥
+   isAttended     CHAR(1)             NOT NULL, --  â¼?    
+   attended_date  DATE               NOT NULL  --  â¼?  Â¥
 );
 
 CREATE SEQUENCE attendance_seq
@@ -439,14 +439,14 @@ CREATE SEQUENCE attendance_seq
 
 ALTER TABLE tbl_attendance
    ADD
-      CONSTRAINT PK_tbl_attendance --  â¼®  âº»Å°
+      CONSTRAINT PK_tbl_attendance --  â¼?  âº»Å?
       PRIMARY KEY (
-         attendance_seq --  â¼®      
+         attendance_seq --  â¼?      
       );
 
 ALTER TABLE tbl_attendance
    ADD
-      CONSTRAINT FK_tbl_cours_tbl_atten --          ->  â¼®
+      CONSTRAINT FK_tbl_cours_tbl_atten --          ->  â¼?
       FOREIGN KEY (
          fk_course_seq --               
       )
@@ -456,7 +456,7 @@ ALTER TABLE tbl_attendance
         
 ALTER TABLE tbl_attendance
    ADD
-      CONSTRAINT FK_tbl_stud_tbl_attend --  Ð»  ->  â¼®
+      CONSTRAINT FK_tbl_stud_tbl_attend --  Ð»  ->  â¼?
       FOREIGN KEY (
          fk_student_id --  Ð¹ 
       )
@@ -480,7 +480,7 @@ CREATE SEQUENCE registered_course_seq
   
   ALTER TABLE tbl_registered_course
    ADD
-      CONSTRAINT PK_tbl_registered_course --       Ã»  âº»Å°
+      CONSTRAINT PK_tbl_registered_course --       Ã»  âº»Å?
       PRIMARY KEY (
          registered_course_seq --       Ã»      
       );
@@ -526,7 +526,7 @@ CREATE SEQUENCE grade_seq
   
   ALTER TABLE tbl_grade
    ADD
-      CONSTRAINT PK_tbl_grade --       âº»Å°
+      CONSTRAINT PK_tbl_grade --       âº»Å?
       PRIMARY KEY (
          grade_seq --           
       );
@@ -565,7 +565,7 @@ CREATE SEQUENCE assignment_seq
   
 ALTER TABLE tbl_assignment
    ADD
-      CONSTRAINT PK_tbl_assignment --       âº»Å°
+      CONSTRAINT PK_tbl_assignment --       âº»Å?
       PRIMARY KEY (
          assignment_seq --           
       );
@@ -603,7 +603,7 @@ CREATE SEQUENCE assignment_submit_seq
   
   ALTER TABLE tbl_assignment_submit
    ADD
-      CONSTRAINT PK_tbl_assignment_submit --           âº»Å°
+      CONSTRAINT PK_tbl_assignment_submit --           âº»Å?
       PRIMARY KEY (
          assignment_submit_seq --          
       );
@@ -701,8 +701,8 @@ from tbl_curriculum_type;
 ALTER TABLE tbl_curriculum
 MODIFY fk_department_seq NUMBER NULL;
 
-ALTER TABLE tbl_curriculum
-MODIFY FK_CURRICULUM_TYPE_SEQ NUMBER NULL;
+ALTER TABLE tbl_professor
+MODIFY EXTRAADDRESS NVARCHAR2(200) NULL;
 
 
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
@@ -720,7 +720,7 @@ INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_departmen
 VALUES (curriculum_seq.nextval, 1, 7, 1, 'È¸   Ð¿   ', 3, 1);
 
 INSERT INTO tbl_curriculum (curriculum_seq, fk_curriculum_type_seq, fk_department_seq, grade, name, credit, Required)
-VALUES (curriculum_seq.nextval, 1, 2, 1, ' î¿µÃ¼  ', 3, 1);
+VALUES (curriculum_seq.nextval, 1, 2, 1, ' î¿µÃ?  ', 3, 1);
 
 select *
 from tbl_curriculum;
@@ -961,11 +961,188 @@ END;
 
 select *
 from tbl_curriculum
-where fk_department_seq = 3;
+where fk_department_seq = 5;
 
 desc tbl_curriculum;
 
+ALTER TABLE tbl_professor
+MODIFY EXTRAADDRESS NVARCHAR2(200) NULL;
 
+
+desc tbl_professor;
+
+
+desc tbl_course;
+
+ALTER TABLE tbl_course
+DROP COLUMN FK_TIME_SEQ;
+
+ALTER TABLE tbl_time
+ADD fk_course_seq NUMBER;
+
+
+ALTER TABLE tbl_time
+ADD CONSTRAINT fk_course_seq
+FOREIGN KEY (fk_course_seq)
+REFERENCES tbl_course(course_seq);
+
+desc tbl_time;
+
+
+CREATE TABLE tbl_schedule (
+	schedule_seq  Number        NOT NULL, -- »õ ÄÃ·³
+	title         NVARCHAR2(300) NOT NULL, -- »õ ÄÃ·³4
+	schedule_type SMALLINT      NOT NULL, -- »õ ÄÃ·³5
+	start_date    DATE          NOT NULL, -- »õ ÄÃ·³2
+	end_date      DATE          NOT NULL  -- »õ ÄÃ·³3
+);
+
+ALTER TABLE tbl_schedule
+	ADD
+		CONSTRAINT PK_tbl_schedule -- »õ Å×ÀÌºí2 ±âº»Å°
+		PRIMARY KEY (
+			schedule_seq -- »õ ÄÃ·³
+		);
+
+create sequence schedule_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+drop table tbl_assignment;
+
+
+CREATE TABLE tbl_assignment (
+	schedule_seq_assignment Number         NOT NULL, -- »õ ÄÃ·³
+	fk_course_seq           Number         NOT NULL, -- °³¼³¼ö¾÷½ÃÄö½º
+	content                 NVARCHAR2(1000)  NOT NULL, -- °úÁ¦ ³»¿ë
+	attatched_file          NVARCHAR2(200) NULL      -- Ã·ºÎÆÄÀÏ
+);
+
+
+
+
+ALTER TABLE tbl_assignment
+	ADD
+		CONSTRAINT PK_tbl_assignment -- °úÁ¦ ±âº»Å°
+		PRIMARY KEY (
+			schedule_seq_assignment -- »õ ÄÃ·³
+		);
+        
+ALTER TABLE tbl_assignment
+	ADD
+		CONSTRAINT FK_tbl_cour_tbl_assig -- °³¼³¼ö¾÷ -> °úÁ¦
+		FOREIGN KEY (
+			fk_course_seq -- °³¼³¼ö¾÷½ÃÄö½º
+		)
+		REFERENCES tbl_course ( -- °³¼³¼ö¾÷
+			course_seq -- °³¼³¼ö¾÷½ÃÄö½º
+		);
+
+ALTER TABLE tbl_assignment
+	ADD
+		CONSTRAINT FK_tbl_sche_tbl_assign -- »õ Å×ÀÌºí2 -> °úÁ¦
+		FOREIGN KEY (
+			schedule_seq_assignment -- »õ ÄÃ·³
+		)
+		REFERENCES tbl_schedule ( -- »õ Å×ÀÌºí2
+			schedule_seq -- »õ ÄÃ·³
+		);
+
+desc tbl_assignment;
+
+CREATE TABLE tbl_assignment_submit (
+    assignment_submit_seq      Number          NOT NULL, -- Á¦Ãâ½ÃÄö½º
+    fk_schedule_seq_assignment Number          NULL,     -- »õ ÄÃ·³
+    fk_student_id              Number          NOT NULL, -- ÇÐ¹ø
+    title                      NVARCHAR2(200)  NOT NULL, -- Á¦¸ñ
+    content                    NVARCHAR2(1000) NOT NULL, -- ³»¿ë
+    score                      Number          NULL,     -- Á¡¼ö
+    submit_datetime            DATE            DEFAULT SYSDATE NOT NULL, -- Á¦Ãâ½Ã°£
+    attatched_file             NVARCHAR2(200)  NULL      -- Ã·ºÎÆÄÀÏ
+);
+
+ALTER TABLE tbl_assignment_submit
+	ADD
+		CONSTRAINT PK_tbl_assignment_submit -- °úÁ¦Á¦Ãâ ±âº»Å°
+		PRIMARY KEY (
+			assignment_submit_seq -- Á¦Ãâ½ÃÄö½º
+		);
+
+ALTER TABLE tbl_assignment_submit
+	ADD
+		CONSTRAINT FK_student_TO_assig_submit -- ÇÐ»ý -> °úÁ¦Á¦Ãâ
+		FOREIGN KEY (
+			fk_student_id -- ÇÐ¹ø
+		)
+		REFERENCES tbl_student ( -- ÇÐ»ý
+			student_id -- ÇÐ¹ø
+		);
+
+
+ALTER TABLE tbl_assignment_submit
+	ADD
+		CONSTRAINT FK_assign_TO_assign_submit -- °úÁ¦ -> °úÁ¦Á¦Ãâ
+		FOREIGN KEY (
+			fk_schedule_seq_assignment -- »õ ÄÃ·³
+		)
+		REFERENCES tbl_assignment ( -- °úÁ¦
+			schedule_seq_assignment -- »õ ÄÃ·³
+		);
+
+
+CREATE TABLE tbl_todo (
+	schedule_seq Number         NOT NULL, -- »õ ÄÃ·³
+	content      NVARCHAR2(500) NULL      -- »õ ÄÃ·³2
+);
+
+
+ALTER TABLE tbl_todo
+	ADD
+		CONSTRAINT PK_tbl_todo -- tbl_todo ±âº»Å°
+		PRIMARY KEY (
+			schedule_seq -- »õ ÄÃ·³
+		);
+        
+        
+        ALTER TABLE tbl_time
+DROP COLUMN period;
+
+ALTER TABLE tbl_time
+ADD (
+    start_period SMALLINT,
+    end_period SMALLINT
+);
+
+desc tbl_time;
+
+
+select *
+from tbl_time;
+
+DELETE FROM tbl_time;
+commit;
+
+ALTER TABLE tbl_time
+MODIFY (
+    start_period SMALLINT NOT NULL,
+    end_period SMALLINT NOT NULL
+);
+
+
+select *
+from tbl_time;
+
+
+
+select *
+from tbl_course;
+
+desc tbl_course;
 
 
 

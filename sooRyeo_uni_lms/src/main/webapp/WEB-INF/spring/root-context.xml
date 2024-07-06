@@ -51,4 +51,7 @@
 	<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
 
 
+ <bean id="jacksonConfig" class="com.sooRyeo.app.config.JacksonConfig" />
+ <bean id="objectMapper" factory-bean="jacksonConfig" factory-method="objectMapper" />
+
 </beans>
