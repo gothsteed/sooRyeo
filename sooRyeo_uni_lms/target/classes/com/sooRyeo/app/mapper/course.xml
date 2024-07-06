@@ -6,7 +6,7 @@
 
 
 	<resultMap id="CourseJoinCurriculum" type="com.sooRyeo.app.domain.Course">
-		<id property="course_seq" column="curriculum_seq" />
+		<id property="course_seq" column="course_seq" />
 		<result property="fk_professor_id" column="fk_professor_id" />
 		<result property="fk_curriculum_seq" column="fk_curriculum_seq" />
 		<result property="fk_time_seq" column="fk_time_seq" />
