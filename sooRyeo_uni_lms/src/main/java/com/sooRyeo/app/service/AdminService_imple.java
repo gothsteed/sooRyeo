@@ -198,6 +198,11 @@ public class AdminService_imple implements AdminService {
 		
 		int totalElementCount = admindao.getTotalElementCount();
 		return totalElementCount;
+	@Override
+	public ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
+		mav.addObject("departments", departmentDao.departmentList_select());
+		mav.setViewName("courseRegister.admin");
+		return mav;
 	}
 	
 	

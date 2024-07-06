@@ -43,6 +43,7 @@ public interface AdminService {
 
 	// 학사공지사항 글의 개수를 알아오는 메소드
 	int getTotalElementCount();
+	ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav);
 
 
 }
