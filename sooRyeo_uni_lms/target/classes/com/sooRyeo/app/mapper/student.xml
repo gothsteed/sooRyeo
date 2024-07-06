@@ -64,6 +64,7 @@
 		from tbl_lecture join tbl_course
 		on tbl_lecture.fk_course_seq = tbl_course.course_seq
 		where fk_course_seq = #{fk_course_seq}
+		order by lecture_seq asc
 	</select>
 	
 	

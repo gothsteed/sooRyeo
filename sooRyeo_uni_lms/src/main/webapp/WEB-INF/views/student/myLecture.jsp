@@ -16,7 +16,7 @@
 .btns {
   display: flex;
   position: fixed;
-  right: 200px;
+  right: 150px;
   bottom: 200px;
 }
 
@@ -45,7 +45,7 @@ function scrollToTarget_down() {
 </script>
 
 <div id="target"></div>
-<div class="container ml-5">
+<div class="container mt-5">
 <h3>강의 개요</h3>
 <hr>
 	<div class="card-body" style="">
@@ -65,7 +65,7 @@ function scrollToTarget_down() {
 </div>
 
 
-<div class="container ml-5" style="margin-top:5%;">
+<div class="container" style="margin-top:5%;">
 <h3>이번주 강의</h3>
 <hr>
 	<div class="card mb-5">
@@ -80,13 +80,13 @@ function scrollToTarget_down() {
 	</div>
 
 
-<h3>주차 별 학습활동</h3>
+<h3 style="margin-top:10%;">강의 목록</h3>
 <hr>
 	<div class="card mb-5">
 		<c:forEach var="lecture" items="${requestScope.lectureList}">
-		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_seq}번째 강의</h5>
+		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title} </h5>
 		<div class="card-body">
-			<h5 class="card-title">${lecture.lecture_title}</h5>
+			<h5 class="card-title">${lecture.lecture_content}</h5>
 			<hr>
 			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
 			<!-- 영상 보는 기간, 재생시간 -->

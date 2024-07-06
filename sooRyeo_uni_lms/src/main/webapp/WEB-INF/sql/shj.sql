@@ -91,22 +91,28 @@ values(lecture_seq.nextval, '5', '3단원 영상', '3주차 수업 자료', '제
 insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
 values(lecture_seq.nextval, '5', '4단원 영상', '4주차 수업 자료', '제 4장. 한국현대시특강', '당대의 현실과 시문학의 자율성을 함께 살펴보면서 연구');
 
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
+values(lecture_seq.nextval, '5', '5단원 영상', '5주차 수업 자료', '제 5장. 한국현대소설특강', '특정한 경향을 띠는 작품들을 중심으로 한 소설사적 시각이나 연구방법론을 취하여 새로운 해석 및 평가');
+
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
+values(lecture_seq.nextval, '5', '6단원 영상', '6주차 수업 자료', '제 6장. 한국현대작가집중연구', '다양한 시각과 관점에서 작가와 작품의 관계를 파악하고 한 작가와 그의 문학 작품의 독특한 특질');
+
+
 
 -- 12번 개설수업 회계학원론
 insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
 values(lecture_seq.nextval, '12', '1단원 영상', '1주차 수업 자료', '제 1장. ', '');
 
 select *
-from tbl_lecture;
+from tbl_lecture
+order by lecture_seq asc;
 
-tbl_course
+select *
+from tbl_course;
 
 select lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content
 from tbl_lecture join tbl_course
 on tbl_lecture.fk_course_seq = tbl_course.course_seq
 where fk_course_seq = '4';
-
-
-
 
 
