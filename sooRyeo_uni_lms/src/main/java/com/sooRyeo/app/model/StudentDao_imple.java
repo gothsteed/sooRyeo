@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
@@ -29,14 +30,6 @@ public class StudentDao_imple implements StudentDao {
 		return student;
 		
 	} // end of public Student selectStudent
-
-
-	// 수업명, 교수명  select
-	@Override
-	public List<Map<String, String>> classList(int userid) {
-		List<Map<String, String>> classList = sqlSession.selectList("student.classList", userid);
-		return classList;
-	}
 
 	// 내정보 보기
 	@Override
@@ -96,11 +89,11 @@ public class StudentDao_imple implements StudentDao {
 
 	// 계정에 파일이 있는지 확인
 	@Override
-	public StudentDTO select_file_name(Map<String, String> paraMap) {
+	public String select_file_name(Map<String, String> paraMap) {
 		
-		StudentDTO student = sqlSession.selectOne("student.select_file_name", paraMap);
+		String fileName = sqlSession.selectOne("student.select_file_name", paraMap);
 		
-		return student;
+		return fileName;
 		
 	} // end of public StudentDTO select_file_name
 
@@ -126,6 +119,33 @@ public class StudentDao_imple implements StudentDao {
 		
 	} // end of public int student_info_edit
 
+
+	
+	
+	// 수업리스트 보여주기
+	@Override
+	public List<Map<String, String>> classList(int userid) {
+		List<Map<String, String>> classList = sqlSession.selectList("student.classList", userid);
+		return classList;
+	}
+	
+	
+	// 과제리스트  보여주기
+	@Override
+	public List<Map<String, String>> assignment_List(int userid) {
+		List<Map<String, String>> assignment_List = sqlSession.selectList("student.assignment_List", userid);
+		return assignment_List;
+	}
+
+	// 수업  - 내 강의보기
+	@Override
+	public List<Lecture> getlectureList(String fk_course_seq) {
+		
+		List<Lecture> lectureList = sqlSession.selectList("student.getlectureList", fk_course_seq);
+		
+		return lectureList;
+		
+	} // end of public List<Lecture> getlectureList
 
 	
 	

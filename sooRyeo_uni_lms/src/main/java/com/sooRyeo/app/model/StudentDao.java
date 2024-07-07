@@ -3,6 +3,7 @@ package com.sooRyeo.app.model;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
@@ -12,7 +13,7 @@ public interface StudentDao {
 
 	Student selectStudent(LoginDTO loginDTO);
 
-	// 수업명, 교수명  select
+	// 수업리스트 보여주기
 	List<Map<String, String>> classList(int userid);
 	
 	// 내정보 보기
@@ -31,12 +32,19 @@ public interface StudentDao {
 	int emailDuplicateCheck(Map<String, String> paraMap);
 
 	// 계정에 파일이 있는지 확인
-	StudentDTO select_file_name(Map<String, String> paraMap);
+	String select_file_name(Map<String, String> paraMap);
 
 	// 계정에 기존 파일 삭제
 	int delFilename(String student_id);
 
 	// 학생 정보 수정
 	int student_info_edit(Map<String, String> paraMap);
+
+	// 과제리스트 보여주기
+	List<Map<String, String>> assignment_List(int userid);
+
+	// 수업  - 내 강의보기
+	List<Lecture> getlectureList(String fk_course_seq);
+
 
 }

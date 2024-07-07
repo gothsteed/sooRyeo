@@ -5,6 +5,8 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -26,10 +28,21 @@ public class Student {
     private Date register_date;
     private Short status;
     private Integer fk_department_seq;
-    
-    private String birthday; 		// 생년월일
+    private String department_name;
+    private String img_name;
 
     
+    private String birthday; 		// 생년월일
+    
+    
+	public String getImg_name() {
+		return img_name;
+	}
+
+	public String getDepartment_name() {
+		return department_name;
+	}
+
 	public Integer getStudent_id() {
 		return student_id;
 	}
@@ -124,6 +137,7 @@ public class Student {
 		extraAddress = paraMap.get("extraAddress");
 		tel = paraMap.get("tel");
 		email = paraMap.get("email");
+		img_name = paraMap.get("img_name");
 		
 		setDecodedEmail(aES256);
 		setDecodeTel(aES256);

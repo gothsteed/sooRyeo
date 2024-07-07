@@ -29,6 +29,7 @@ $(document).ready(function(){
             // 암호가 정규표현식에 위배된 경우 
             $("input#stuPwd").val("");
             $("input#stuPwd").parent().find("span.error").show();
+            $("span#pwdCheckResult").html("");
             return;
         }
         else {
@@ -50,9 +51,15 @@ $(document).ready(function(){
                 
                 if(json.n != 0){
                     // 입력한 비밀번호가 이미 데이터베이스에 저장되어 있다면
-                    $("span#pwdCheckResult").html("해당 비밀번호는 이미 사용중 이므로<br>다른 비밀번호를 입력하세요.").css({"color":"red","font-size":14});
-                    $("input#stuPwd").val("");
-                    b_pwdcheck_click = false;
+                    if(confirm("기존 비밀번호를 유지하시겠습니까?")) {
+                        $("span#pwdCheckResult").html("해당 비밀번호는 사용가능합니다.").css({"color":"navy","font-size":14});
+                    }
+                    else {  // 유지 취소
+                        $("input#stuPwd").val("");
+                        b_pwdcheck_click = false;
+                        return;
+                    }
+
                 }
                 else{
  
@@ -371,28 +378,6 @@ function goEdit(ctxPath) {
     }
     // *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //
 
-    
-    // *** "우편번호찾기" 를 클릭했는지 검사하기 시작 *** //
-    if(!b_zipcodeSearch_click) {
-        // "우편번호찾기" 를 클릭 안 했을 경우
-		alert("우편번호찾기를 클릭하셔서 우편번호를 입력하셔야 합니다.");
-		return; // goRegister() 함수를 종료한다.
-    }
-    // *** "우편번호찾기" 를 클릭했는지 검사하기 끝 *** //
-
-    // *** 우편번호 및 주소에 값을 입력했는지 검사하기 시작 *** //
-	const postcode = $("input#postcode").val().trim();
-	const address = $("input#address").val().trim();
-	const detailAddress = $("input#detailAddress").val().trim();
-	const extraAddress = $("input#extraAddress").val().trim();
-	
-	if(postcode == "" || address == "" || detailAddress == "" || extraAddress == "") {
-		alert("우편번호 및 주소를 입력하셔야 합니다.");
-		return; // goRegister() 함수를 종료한다.
-	}
-	// *** 우편번호 및 주소에 값을 입력했는지 검사하기 끝 *** //
-	
-	
 	goEdit_noAttach(ctxPath);
 
 } // end of function goEdit()---------------------
