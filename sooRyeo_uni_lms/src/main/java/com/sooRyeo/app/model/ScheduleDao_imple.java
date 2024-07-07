@@ -1,6 +1,8 @@
 package com.sooRyeo.app.model;
 
+
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,27 @@ public class ScheduleDao_imple implements ScheduleDao {
 	
 	// 스케줄테이블 select
 	@Override
-	public List<Schedule> showSchedule() {
-		List<Schedule> Schedule = sqlSession.selectList("schedule.showSchedule");
+	public List<Schedule> showAssignment(int userid) {
+		List<Schedule> Schedule = sqlSession.selectList("schedule.showAssignment", userid);
+		// Schedule = sqlSession.selectList("schedule.showExam");
+
 		return Schedule;
 	}
+
+
+	// 내 일정 테이블 select
+	@Override
+	public List<Schedule> showTodo(int userid) {
+		List<Schedule> Schedule = sqlSession.selectList("schedule.showTodo", userid);
+		return Schedule;
+	}
+
+	// 일정상세보기
+	@Override
+	public Map<String, String> detailSchedule(String schedule_seq) {
+		Map<String, String> map =  sqlSession.selectOne("schedule.detailSchedule");
+		return map;
+	}
+
 
 }
