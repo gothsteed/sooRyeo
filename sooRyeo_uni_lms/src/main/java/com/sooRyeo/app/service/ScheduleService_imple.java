@@ -33,8 +33,8 @@ public class ScheduleService_imple implements ScheduleService {
 
 	// 일정상세보기 
 	@Override
-	public Map<String, String> detailSchedule(String schedule_seq) {
-		Map<String, String> map =  dao.detailSchedule(schedule_seq);
+	public Map<String, String> detailSchedule(String schedule_seq, String schedule_type) {
+		Map<String, String> map =  dao.detailSchedule(schedule_seq, schedule_type);
 		return map;
 	}
 

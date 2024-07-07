@@ -91,7 +91,7 @@ button.btn_edit{
                         				
                                         id: item.schedule_seq,
                                         title: item.title,
-                                        url: "<%= ctxPath%>/schedule/detailSchedule.lms?schedule_seq="+item.schedule_seq,
+                                        url: "<%= ctxPath%>/schedule/detailSchedule.lms?schedule_seq="+item.schedule_seq + "&schedule_type="+item.schedule_type,
                                         start: start_date,
                                         end: end_date
                         				

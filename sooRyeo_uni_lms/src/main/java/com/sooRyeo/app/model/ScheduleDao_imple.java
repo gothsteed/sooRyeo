@@ -1,6 +1,7 @@
 package com.sooRyeo.app.model;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,13 @@ public class ScheduleDao_imple implements ScheduleDao {
 
 	// 일정상세보기
 	@Override
-	public Map<String, String> detailSchedule(String schedule_seq) {
-		Map<String, String> map =  sqlSession.selectOne("schedule.detailSchedule");
+	public Map<String, String> detailSchedule(String schedule_seq, String schedule_type) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("schedule_seq", schedule_seq);
+		paraMap.put("schedule_type", schedule_type);
+		
+		Map<String, String> map =  sqlSession.selectOne("schedule.detailSchedule", paraMap);
 		return map;
 	}
 

@@ -14,6 +14,6 @@ public interface ScheduleDao {
 	List<Schedule> showTodo(int userid);
 	
 	// 일정상세보기
-	Map<String, String> detailSchedule(String schedule_seq);
+	Map<String, String> detailSchedule(String schedule_seq, String schedule_type);
 
 }

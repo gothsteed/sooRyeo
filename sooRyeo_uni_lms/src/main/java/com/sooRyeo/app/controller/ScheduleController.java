@@ -84,10 +84,12 @@ public class ScheduleController {
 	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
 		
 		String schedule_seq = request.getParameter("schedule_seq");
+		String  schedule_type =request.getParameter("schedule_type");
 		
 		try {
 			Integer.parseInt(schedule_seq);
-			Map<String,String> map = service.detailSchedule(schedule_seq);
+			Integer.parseInt(schedule_type);
+			Map<String,String> map = service.detailSchedule(schedule_seq, schedule_type);
 			mav.addObject("map", map);
 			mav.setViewName("schedule/detailSchedule.student");
 		} catch (NumberFormatException e) {
