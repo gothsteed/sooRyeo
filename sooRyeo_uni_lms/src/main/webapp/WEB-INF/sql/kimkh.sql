@@ -146,3 +146,9 @@ INSERT INTO tbl_time (time_seq, day_of_week, fk_course_seq, start_period, end_pe
 VALUES (time_seq.nextval, 1, 4, 1, 3);
 commit;
 
+
+select C.course_seq, C.fk_professor_id, C.fk_curriculum_seq, S.name, S.grade, S.fk_department_seq
+from tbl_course C
+JOIN tbl_registered_course R ON R.fk_course_seq = C.course_seq
+JOIN tbl_student S ON S.student_id = R.fk_student_id
+where C.course_seq = 4

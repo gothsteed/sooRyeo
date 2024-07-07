@@ -8,6 +8,12 @@
 %>     
 
 <%-- Bootstrap CSS --%>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<%-- jQueryUI CSS 및 JS --%>
+<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
+<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
 
 
@@ -77,6 +83,23 @@ function scrollToTarget_down() {
 			<span class="card-text" style="color:orange;">2024-07-01 ~ 2024-07-31 <span style="color:green;">&nbsp;36:00</span></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;1주차 수업 자료</a>
 		</div>
+		<table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>수강생 이름</th>
+                    <th>학년</th>
+                    <th>학과</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>강민정</td>
+                    <td>1</td>
+                    <td>컴퓨터공학과</td>
+                </tr>
+                <!-- 다른 수강생 데이터를 여기에 추가 -->
+            </tbody>
+        </table>
 	</div>
 
 
@@ -104,10 +127,4 @@ function scrollToTarget_down() {
   	<div class="moveTopBtn" onclick="scrollToTarget_up()"><img src="<%=ctxPath%>/resources/images/btn_up_light.png"></div>
   	<div class="moveDownBtn" onclick="scrollToTarget_down()"><img src="<%=ctxPath%>/resources/images/btn_down_light.png"></div>
 </div>
-
-
-
-
-
-
 
