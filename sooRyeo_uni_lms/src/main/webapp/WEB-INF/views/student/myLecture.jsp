@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>   
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>   
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
  
@@ -7,12 +8,7 @@
 %>     
 
 <%-- Bootstrap CSS --%>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-<%-- jQueryUI CSS 및 JS --%>
-<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
-<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
 
 <style type="text/css">
@@ -20,7 +16,7 @@
 .btns {
   display: flex;
   position: fixed;
-  right: 200px;
+  right: 150px;
   bottom: 200px;
 }
 
@@ -49,7 +45,7 @@ function scrollToTarget_down() {
 </script>
 
 <div id="target"></div>
-<div class="container ml-5">
+<div class="container mt-5">
 <h3>강의 개요</h3>
 <hr>
 	<div class="card-body" style="">
@@ -69,7 +65,7 @@ function scrollToTarget_down() {
 </div>
 
 
-<div class="container ml-5" style="margin-top:5%;">
+<div class="container" style="margin-top:5%;">
 <h3>이번주 강의</h3>
 <hr>
 	<div class="card mb-5">
@@ -84,37 +80,20 @@ function scrollToTarget_down() {
 	</div>
 
 
-<h3>주차 별 학습활동</h3>
+<h3 style="margin-top:10%;">강의 목록</h3>
 <hr>
 	<div class="card mb-5">
-		<h5 class="card-header" style="font-weight:bold;">1주차 [3월 01일 ~ 3월 08일]</h5>
+		<c:forEach var="lecture" items="${requestScope.lectureList}">
+		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title} </h5>
 		<div class="card-body">
-			<h5 class="card-title">제 1장. 집에 가고 싶은 이유</h5>
+			<h5 class="card-title">${lecture.lecture_content}</h5>
 			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;1단원 영상</a>
+			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
+			<!-- 영상 보는 기간, 재생시간 -->
 			<span class="card-text" style="color:orange;">2024-07-01 ~ 2024-07-31 <span style="color:green;">&nbsp;36:00</span></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;1주차 수업 자료</a>
+			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
 		</div>
-	</div>
-	<div class="card mb-5">
-		<h5 class="card-header" style="font-weight:bold;">2주차 [3월 01일 ~ 3월 08일]</h5>
-		<div class="card-body">
-			<h5 class="card-title">제 2장. 집이 좋은 이유</h5>
-			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;2단원 영상</a>
-			<span class="card-text" style="color:orange;">2024-07-01 ~ 2024-07-31 <span style="color:green;">&nbsp;36:00</span></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;2주차 수업 자료</a>
-		</div>
-	</div>
-	<div class="card mb-5">
-		<h5 class="card-header" style="font-weight:bold;">3주차 [3월 01일 ~ 3월 08일]</h5>
-		<div class="card-body">
-			<h5 class="card-title">제 3장. 집에 가는 이유</h5>
-			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;3단원 영상</a>
-			<span class="card-text" style="color:orange;">2024-07-01 ~ 2024-07-31 <span style="color:green;">&nbsp;36:00</span></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;3주차 수업 자료</a>
-		</div>
+		</c:forEach>
 	</div>
 </div>
 <div id="target2"></div>

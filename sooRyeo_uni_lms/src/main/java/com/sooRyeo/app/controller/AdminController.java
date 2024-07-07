@@ -1,7 +1,11 @@
 package com.sooRyeo.app.controller;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,19 +24,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
+import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
-
+import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.service.DepartmentService;
+import com.sooRyeo.app.common.MyUtil;
 
 @Controller
 @RequireLogin(type = Admin.class)
@@ -41,8 +49,10 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 
+	
 	@Autowired
-	private DepartmentService departmentService;
+	private CourseService courseService;
+	
 	
 	@Autowired
 	private FileManager fileManager;
@@ -220,15 +230,222 @@ public class AdminController {
 	
 	
 	@GetMapping("/admin/announcement.lms")
-	public ModelAndView announcement(ModelAndView mav, Announcement an) {
-	
-		List<Announcement> announcementList =  adminService.getAnnouncement(an);
-		
-		mav.addObject("announcementList", announcementList);
-		mav.setViewName("announcement.admin");
+	public ModelAndView announcement(ModelAndView mav, Announcement an, HttpServletRequest request) {
 
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		String searchWord = request.getParameter("searchWord");
+		
+		if(searchWord == null) {
+			searchWord = "";
+		}
+		if(searchWord != null) {
+			searchWord = searchWord.trim();
+		}
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("searchWord",searchWord);
+		
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		String goBackURL = MyUtil.getCurrentURL(request);
+		paraMap.put("currentPage", currentPage);
+		
+		// 학사공지사항을 전부 불러오는 메소드
+		Pager<Announcement> announcementList =  adminService.getAnnouncement(paraMap);
+		
+		// System.out.println(announcementList.getObjectList());
+		
+		mav.addObject("announcementList", announcementList.getObjectList());
+		mav.addObject("currentPage", announcementList.getPageNumber());
+		mav.addObject("perPageSize", announcementList.getPerPageSize());
+		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms", "searchWord="+searchWord));
+		mav.setViewName("announcement.admin");
+		
+		
+		
+		mav.addObject("goBackURL",goBackURL);
+		
 		return mav;
 	}
+	
+	@RequestMapping("/admin/announcementView.lms")
+	public ModelAndView view(ModelAndView mav, HttpServletRequest request) {
+		
+		String seq = "";
+		String goBackURL = "";
+		String searchWord = "";
+		
+		// redirect 되어서 넘어온 데이터가 있는지 꺼내어 와본다.
+		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request); // ? 는 아무거나 라는 의미 == object
+				
+		if(inputFlashMap != null) { // redirect 되어서 넘어온 데이터가 있다면 이라는 의미
+			
+			@SuppressWarnings("unchecked") // 경고 표시를 하지 말라는 뜻이다.
+			Map<String,String> redirect_map = (Map<String,String>) inputFlashMap.get("redirect_map"); // 리턴타입이 오브젝트라 캐스팅한 것.
+			// "redirect_map" 값은  /view_2.action 에서  redirectAttr.addFlashAttribute("키", 밸류값); 을 할때 준 "키" 이다. 
+	        // "키" 값을 주어서 redirect 되어서 넘어온 데이터를 꺼내어 온다. 
+	        // "키" 값을 주어서 redirect 되어서 넘어온 데이터의 값은 Map<String, String> 이므로 Map<String, String> 으로 casting 해준다.
+
+			// === #143. 이전글제목, 다음글제목 보기 시작 === //
+	           System.out.println("~~~ 확인용 seq : " + redirect_map.get("seq"));
+	           seq = redirect_map.get("seq");
+	           goBackURL = redirect_map.get("goBackURL");
+	           searchWord = redirect_map.get("searchWord");
+	           
+	           try {
+	               searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8"); // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다. 
+	               goBackURL = URLDecoder.decode(redirect_map.get("goBackURL"), "UTF-8");   // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다.
+	          } catch (UnsupportedEncodingException e) {
+	              e.printStackTrace();
+	          }
+
+	           System.out.println("~~~ 확인용 goBackURL : " + goBackURL);
+	           System.out.println("~~~ 확인용 searchWord : " + searchWord);
+	           /*
+	            ~~~ 확인용 seq : 207
+				~~~ 확인용 goBackURL : /list.action?searchType=name&searchWord=%EC%A0%95%ED%99%94
+				~~~ 확인용 searchType : name
+				~~~ 확인용 searchWord : 정화  ==> 인코드 해줬기 때문에 한글이 제대로 나옴	
+	           */
+            // === #143. 이전글제목, 다음글제목 보기 끝 === //
+			
+		}
+		//////////////////////////////////////////////////////////////////////////
+		else { // redirect 되어서 넘어온 데이터가 아닌 경우
+			
+			// == 조회하고자 하는 글번호 받아오기 ==
+	           
+	        // 글목록보기인 /list.action 페이지에서 특정 글제목을 클릭하여 특정글을 조회해온 경우  
+	        // 또는 
+	        // 글목록보기인 /list.action 페이지에서 특정 글제목을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 form 을 사용해서 POST 방식으로 넘어온 경우이므로 "양식 다시 제출 확인" 이라는 대화상자가 뜨게 되며 "계속" 이라는 버튼을 클릭하면 이전에 입력했던 데이터를 자동적으로 입력해서 POST 방식으로 진행된다. 그래서  request.getParameter("seq"); 은 null 이 아닌 번호를 입력받아온다.     
+	        // 그런데 "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서 "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 그래서  request.getParameter("seq"); 은 null 이 된다. 
+			seq = request.getParameter("seq");
+			// System.out.println("~~~~~~ 확인용 seq : " + seq);
+            // ~~~~~~ 확인용 seq : 213
+            // ~~~~~~ 확인용 seq : null
+			
+			// === #134. 특정글을 조회한 후 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 만들기 위함. === //
+			goBackURL = request.getParameter("goBackURL");
+			// System.out.println("확인용(view.action) goBackURL : " + goBackURL);
+			/*
+			   	이것은 잘못된 것이다 (get 방식일 때)
+			 	확인용(view.action) goBackURL : /list.action?searchType=
+			 	
+			 	올바른 것 (POST 방식일 때)
+			 	확인용(view.action) goBackURL : /list.action?searchType=subject&searchWord=%EC%A0%95%ED%99%94
+			*/
+			
+			
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 시작  <<< //
+			searchWord = request.getParameter("searchWord");
+			
+			if(searchWord == null) {
+				searchWord = "";
+			}
+			
+			// System.out.println("확인용(view.action) searchType : " + searchType);
+			// System.out.println("확인용(view.action) searchWord : " + searchWord);
+			/*
+			    확인용(view.action) searchType : subject
+			    확인용(view.action) searchWord : jav
+			*/
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 끝  <<< // 
+		}
+		
+		mav.addObject("goBackURL", goBackURL);
+		
+		
+		try {
+			Integer.parseInt(seq);
+			/* 
+	            "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는   
+			            원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서   
+			        "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 
+			            그래서  request.getParameter("seq"); 은 null 이 된다. 
+			            즉, 글번호인 seq 가 null 이 되므로 DB 에서 데이터를 조회할 수 없게 된다.     
+			            또한 seq 는 null 이므로 Integer.parseInt(seq); 을 하면  NumberFormatException 이 발생하게 된다. 
+		    */
+			
+			HttpSession session =  request.getSession();
+			Admin loginuser = (Admin)session.getAttribute("loginuser");
+			
+			String login_userid = null;
+			if(loginuser != null) {
+				login_userid = String.valueOf(loginuser.getAdmin_seq());
+				// login_userid 는 로그인 되어진 사용자의 userid 이다.
+			}
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("seq", seq);
+			paraMap.put("login_userid", login_userid);
+			
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 시작  <<< //
+			paraMap.put("searchWord",searchWord);
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 끝  <<< //
+			
+			// === #68. !!! 중요 !!! 
+            //     글1개를 보여주는 페이지 요청은 select 와 함께 
+            //     DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
+            //     이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
+            //     매번 글조회수 증가가 발생한다.
+            //     그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
+            //     단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은 
+            //     실행하지 않도록 해주어야 한다. !!! === //
+			
+			// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
+			Announcement an = null;
+			
+			if("yes".equals( (String)session.getAttribute("readCountPermission") )) {
+				// 글목록보기인 /list.action 페이지를 클릭한 다음에 특정글을 조회해온 경우이다.
+				
+				an = adminService.getView(paraMap);
+				// 글 조회수 증가와 함께 글 1개를 조회를 해오는 것
+				// System.out.println("~~ 확인용 글내용 : " + boardvo.getContent());
+				
+				session.removeAttribute("readCountPermission"); // 용도 폐기 
+		    	// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+			}
+			else { // 위에 if 까지 갔다가 readCountPermission 이것을 폐기한 후 새로고침을 통해 바로 /view.action 으로 간 경우이다.
+				// 글목록에서 특정 글제목을 클릭하여 본 상태에서
+                // 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
+                // System.out.println("글목록에서 특정 글제목을 클릭하여 본 상태에서 웹브라우저에서 새로고침(F5)을 클릭한 경우");
+				
+				an = adminService.getView_no_increase_readCount(paraMap);
+				// 글 조회수 증가는 없고 단순히 글 1개만 조회를 해오는 것
+				
+				// 또는 redirect 해주기 (예 : 버거킹 www.burgerking.co.kr 메뉴소개)
+				/*
+					mav.setViewName("redirect:/list.action");
+					return mav;
+				*/
+				
+				if(an == null) {
+					mav.setViewName("redirect:/admin/announcement.lms");
+					return mav;
+				}
+			}
+
+			mav.addObject("an", an);
+			
+			// === #139. 이전글제목, 다음글제목 보기 === //
+			mav.addObject("paraMap", paraMap);
+			
+			mav.setViewName("announcementView.admin");
+			
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/admin/announcement.lms");
+		}
+		
+		return mav;
+	}
+	
+	
 	
 	
 	@ResponseBody
@@ -243,6 +460,29 @@ public class AdminController {
 	public ResponseEntity<String> updateCurriculumREST(HttpServletRequest request, ModelAndView mav, @RequestBody CurriculumRequestDto requestDto) {
 		return adminService.updateCurriculum(request, mav, requestDto);
 	}
+	
+	@RequestMapping(value = "/admin/courseRegister.lms", method = RequestMethod.GET)
+	public ModelAndView courseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
+
+		return adminService.makeCourseRegiseterPage(request, mav);
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/profTimetableJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
+	public String getProfTimetableJSON(HttpServletRequest request, ModelAndView mav) {
+		
+		return courseService.getProfTimetable(request, mav);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/courseInsertJSON.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> courseInsertJSON(HttpServletRequest request, @RequestBody CourseInsertReqeustDTO courseInsertReqeustDTO) {
+		
+		
+		return courseService.insertCourse(request, courseInsertReqeustDTO);
+	}
+	
 	
 	
 }

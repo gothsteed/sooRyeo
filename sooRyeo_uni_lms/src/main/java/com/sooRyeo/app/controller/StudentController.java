@@ -7,6 +7,7 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.StudentService;
@@ -90,6 +93,8 @@ public class StudentController {
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
+	
+	
 	// 내정보 보기
 	@RequestMapping(value="/student/myInfo.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView myInfo(ModelAndView mav, HttpServletRequest request) {
@@ -107,115 +112,75 @@ public class StudentController {
 	} // end of public ModelAndView myInfo
 	
 	
-	
-	
-	// 내정보 수정 및 파일 첨부(이미지)
-	@PostMapping(value="/student/myInfoUpdate.lms")
-	public ModelAndView myInfoUpdate(HttpServletRequest request, ModelAndView mav, StudentDTO student, MultipartHttpServletRequest mrequest) {
-		
-		String tel = request.getParameter("a2") + request.getParameter("hp2") + request.getParameter("hp3"); // 전화번호
-		
-		student.setTel(tel);
-		
-		
-		MultipartFile attach =  student.getAttach();
-        /*
-        	1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다. 
-        	>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
-                              우리는 WAS의 webapp/resources/files 라는 폴더로 지정해준다.
-                              조심할 것은  Package Explorer 에서  files 라는 폴더를 만드는 것이 아니다.       
-	    */
-	    // WAS 의 webapp 의 절대경로를 알아와야 한다. 
-	    HttpSession session = mrequest.getSession(); 
-	    String root = session.getServletContext().getRealPath("/");
-	     
-	    // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
-	    // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
-	     
-	    String path = root+"resources"+File.separator+"files";
-	    /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
-       		     운영체제가 Windows 이라면 File.separator 는  "\" 이고,
-                                   운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
-	    */
-	    // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
-	    // System.out.println("~~~ 확인용 path => " + path);
-	    // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
-	    /*
-	   		2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
-	    */
-	    String newFileName = "";
-	    // WAS(톰캣)의 디스크에 저장될 파일명
-     
-	    byte[] bytes = null;
-	    // 첨부 파일의 내용물을 담은 것
-     
-	    try {
-	    	bytes = attach.getBytes();
-	    	// 첨부파일의 내용물을 읽어오는 것
-		
-	    	String originalFilename =  attach.getOriginalFilename();
-	    	// attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다.
-		
-	    	// System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
-	    	// ~~~ 확인용 originalFilename => LG_싸이킹청소기_사용설명서.pdf 
-		
-	    	newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-	    	// 첨부되어진 파일을 업로드 하는 것이다.
-		
-	    	// System.out.println("~~~ 확인용 newFileName => " + newFileName);
-	    	// ~~~ 확인용 newFileName => 2024062712074811660790417300.xlsx
-		
-	    	/*
-           		3. BoardVO boardvo 에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주기  
-	    	*/
-	    	student.setImg_name(newFileName);
-		   // WAS(톰캣)에 저장된 파일명(2024062712074811660790417300.xlsx) 이다.	
-		   
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-	
-
-	int n = studentservice.myInfoUpdate(student);
-	
-	if(n == 1) {
-		mav.addObject("message", "정보 수정을 성공하였습니다.");
-		mav.addObject("loc", request.getContextPath()+"/student/myInfo.lms");
-		mav.setViewName("msg");
-	}
-	else {
-		mav.addObject("message", "정보 수정을 실패하였습니다.");
-		mav.addObject("loc", request.getContextPath()+"/student/myInfo.lms");
-		mav.setViewName("msg");
-	}
-	
-	return mav;
-		
-	} // end of public ModelAndView myInfoUpdate
-	
-	
-	
-	
+	// 비밀번호 중복
 	@ResponseBody
-	@PostMapping(value="/student/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
-	public String addComment(String email) {
+	@PostMapping(value = "/student/pwdDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
+	public String pwdDuplicateCheck(HttpServletRequest request, StudentDTO student) {	
 		
-		String emailDuplicateCheck = studentservice.emailDuplicateCheck(email);
-		// 수정시 입력한 이메일이 이미 있는 이메일인지 검사하는 메소드
+		JSONObject json = studentservice.pwdDuplicateCheck(request);						
 		
-		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("emailDuplicateCheck", emailDuplicateCheck);
+		return json.toString();
+	}
+
+	
+	// 전화번호 중복
+	@ResponseBody
+	@PostMapping(value = "/student/telDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
+	public String telDuplicateCheck(HttpServletRequest request, StudentDTO student) {		
 		
-		return jsonObj.toString();
-	} // end of public String addComment
+		JSONObject json = studentservice.telDuplicateCheck(request);						
+		
+		return json.toString();
+	}
+	
+	
+	// 이메일 중복
+	@ResponseBody
+	@PostMapping(value = "/student/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
+	public String emailDuplicateCheck(HttpServletRequest request, StudentDTO student) {	
+		
+		JSONObject json = studentservice.emailDuplicateCheck(request);						
+		
+		return json.toString();
+	}
+	
+	
+	// 학생 정보 수정
+	@PostMapping(value = "/student/student_info_edit.lms")
+	public ModelAndView professor_info_edit( ModelAndView mav, StudentDTO student, MultipartHttpServletRequest mrequest) {
+		     
+		
+	      int n = studentservice.student_info_edit(student, mrequest);
+      
+	      if(n == 1) {
+	    	  mav.addObject("message", "학생정보 수정을 성공하였습니다.");
+	    	  mav.addObject("loc", mrequest.getContextPath()+"/student/dashboard.lms");
+	    	  mav.setViewName("msg");
+	      }
+	      else {
+	    	  mav.addObject("message", "학생정보 수정이 실패하였습니다.");
+	    	  mav.addObject("loc", mrequest.getContextPath()+ "/student/myInfo.lms");
+	    	  mav.setViewName("msg");
+	      }
+      
+	      return mav;
+	}
 	
 	
 	
 	// 수업  - 내 강의보기
-	@RequestMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
-	public String myLecture() {
-		return "myLecture.student";
-		// /WEB-INF/views/student/{1}.jsp
+	@GetMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
+	public ModelAndView myLecture(ModelAndView mav, HttpServletRequest request) {
+		
+		String fk_course_seq = request.getParameter("course_seq");
+		
+		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
+		
+		mav.addObject("lectureList", lectureList);
+		
+		mav.setViewName("myLecture.student");
+
+		return mav;
 		
 	} // end of public String myLecture
 	

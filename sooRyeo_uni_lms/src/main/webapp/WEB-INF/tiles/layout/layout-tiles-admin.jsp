@@ -194,6 +194,8 @@ body {
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 	
+	
+	
 
 
 	<div class="sidebar">
@@ -203,31 +205,48 @@ body {
 			<p>${requesetScope.loginuser.department_name}</p>
 		</div>
 		<ul class="nav flex-column">
-			<li class="nav-item"><a href="#dashboard" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
+			<li class="nav-item"><a href="<%=ctxPath %>/admin/dashboard.lms" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
 
 			<li class="nav-item dropdown"><a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>회원관리</a>
 				<div class="dropdown-menu" aria-labelledby="classesMenu">
-					<a class="dropdown-item" href="<%=ctxPath%>/admin/MemberCheck.lms">회원조회</a> <a class="dropdown-item" href="<%=ctxPath%>/admin/MemberRegister.lms">학생등록</a>
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/MemberCheck.lms">회원조회</a> 
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/MemberRegister.lms">학생등록</a>
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/ProfessorRegister.lms">교수등록</a>
 				</div></li>
 			<li class="nav-item"><a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>수업관리</a>
 				<div class="dropdown-menu" aria-labelledby="scheduleMenu">
-					<a class="dropdown-item" href="<%=ctxPath%>/admin/add_curriculum.lms">커리큘럼 추가</a> <a class="dropdown-item" href="<%=ctxPath%>/admin/curriculum.lms">커리큘럼 관리</a> <a class="dropdown-item" href="#">강의 관리</a> <a class="dropdown-item" href="<%=ctxPath%>/admin/add_course.lms">강의개설</a>
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/add_curriculum.lms">커리큘럼 추가</a> 
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/curriculum.lms">커리큘럼 관리</a> 
+					<a class="dropdown-item" href="#">강의 관리</a> 
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/courseRegister.lms">강의개설</a>
 				</div></li>
 			<li class="nav-item"><a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>장학금관리</a>
 				<div class="dropdown-menu" aria-labelledby="gradesMenu">
-					<a class="dropdown-item" href="#">장학생등록</a> <a class="dropdown-item" href="#">우리 안한게 뭐가 있지</a> <a class="dropdown-item" href="#">어 맞아 정답ㅎㅎㅎㅎㅎ</a>
-				</div></li>
+					<a class="dropdown-item" href="#">장학생등록</a> 
+					<a class="dropdown-item" href="#">우리 안한게 뭐가 있지</a> 
+					<a class="dropdown-item" href="#">어 맞아 정답ㅎㅎㅎㅎㅎ</a>
+				</div>
+			</li>
 			<li class="nav-item"><a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티관리</a>
 				<div class="dropdown-menu" aria-labelledby="groupsMenu">
-					<a class="dropdown-item" href="#">내 친구</a> <a class="dropdown-item" href="#">커뮤니티</a>
-				</div></li>
-			<li class="nav-item"><a href="#settings" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
-			<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="certificatesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="icon">📜</span>증명서
+					<a class="dropdown-item" href="#">내 친구</a> 
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/announcement.lms">학사공지사항</a>
+				</div>
+			</li>
+			<li class="nav-item">
+				<a href="#settings" class="nav-link">
+					<span class="icon">⚙️</span>내정보
+				</a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="certificatesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="icon">📜</span>증명서
 			</a>
 				<div class="dropdown-menu" aria-labelledby="certificatesDropdown">
-					<a class="dropdown-item" href="#certificate1">성적증명서</a> <a class="dropdown-item" href="#certificate2">재학증명서</a> <a class="dropdown-item" href="#certificate3">졸업증명서</a>
-				</div></li>
+					<a class="dropdown-item" href="#certificate1">성적증명서</a> 
+					<a class="dropdown-item" href="#certificate2">재학증명서</a> 
+					<a class="dropdown-item" href="#certificate3">졸업증명서</a>
+				</div>
+			</li>
 			<li class="nav-item"><a href="<%=ctxPath%>/logout.lms" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
 		</ul>
 	</div>

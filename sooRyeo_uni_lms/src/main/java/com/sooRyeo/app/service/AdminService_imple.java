@@ -3,6 +3,7 @@ package com.sooRyeo.app.service;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -151,8 +152,8 @@ public class AdminService_imple implements AdminService {
 	}
 
 	@Override
-	public List<Announcement> getAnnouncement(Announcement an) {
-		List<Announcement> announcementList = admindao.getAnnouncement(an);
+	public Pager<Announcement> getAnnouncement(Map<String, Object> paraMap) {
+		Pager<Announcement> announcementList = admindao.getAnnouncement(paraMap);
 		return announcementList;
 	}
 
@@ -178,12 +179,6 @@ public class AdminService_imple implements AdminService {
 	public ResponseEntity<String> updateCurriculum(HttpServletRequest request, ModelAndView mav,
 			CurriculumRequestDto requestDto) {
 		
-		System.out.println(requestDto.getName());
-		System.out.println(requestDto.getRequired());
-		System.out.println(requestDto.getCredit());
-		System.out.println(requestDto.getCurriculum_seq());
-		System.out.println(requestDto.getFk_department_seq());
-		System.out.println(requestDto.getGrade());
 		
 		int result  = curriculumDao.updateCurriculum(requestDto);
 		
@@ -196,6 +191,51 @@ public class AdminService_imple implements AdminService {
 		
 		System.out.println("수정 성공");
 		return ResponseEntity.ok().body("수정 성공하였습니다");
+	}
+
+	// 학사공지사항 글의 개수를 알아오는 메소드
+	@Override
+	public int getTotalElementCount() {
+		
+		int totalElementCount = admindao.getTotalElementCount();
+		return totalElementCount;	
+	}
+	
+	
+	@Override
+	public ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
+		mav.addObject("departments", departmentDao.departmentList_select());
+		mav.setViewName("courseRegister.admin");
+		return mav;
+	}
+
+	@Override
+	public Announcement getView(Map<String, String> paraMap) {
+		
+		String login_userid = paraMap.get("login_userid");
+		// paraMap.get("login_userid") 은 로그인을 한 상태이라면 로그인한 사용자의 userid 이고,
+        // 로그인을 하지 않은 상태이라면  paraMap.get("login_userid") 은 null 이다.
+		
+		if( login_userid != null &&
+			login_userid != "202400001" &&
+					  paraMap != null ) {
+			// 글 조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 한다.
+			
+			int n = admindao.increase_viewCount(paraMap.get("seq")); // 글 조회수 1증가 하기
+		}
+		
+		Announcement an = admindao.getView(paraMap); // 글 1개 조회하기
+
+		return an;
+	}
+
+	// 조회수 증가없이 글을 불러오는 메소드
+	@Override
+	public Announcement getView_no_increase_readCount(Map<String, String> paraMap) {
+		
+		Announcement an = admindao.getView(paraMap);
+		return an;
+		
 	}
 	
 	

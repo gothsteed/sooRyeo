@@ -1,7 +1,7 @@
 package com.sooRyeo.app.domain;
 
 public class Announcement {
-
+	
 	private Integer announcement_seq;
 	private String a_title;
 	private String a_content;

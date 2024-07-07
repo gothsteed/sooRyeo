@@ -210,7 +210,7 @@ from tbl_course;
 		on A.fk_course_seq = C.course_seq
 		join B
 		on C.course_seq = A.fk_course_seq
-		where fk_student_id = '202400005';
+		where fk_student_id = '202400005'
 
 
 
@@ -326,3 +326,7 @@ values('2','국어학개론 교수님과 점심식사', '202400005');
 
 select *
 from tbl_todo;
+values(SCHEDULE_SEQ.nextval, '교수님과 식사', '3', to_date('2024-07-28 12:00','yyyy-mm-dd hh24:mi'), to_date('2024-07-28 14:00','yyyy-mm-dd hh24:mi'));
+
+
+

@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
+
 <!DOCTYPE html>
 <% String ctxPath = request.getContextPath(); %>
 <html lang="en">
@@ -168,15 +174,21 @@
     </style>
 </head>
 <body>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     
     <div class="sidebar">
-        <div class="profile">
-            <img src="<%=ctxPath%>/resources/images/student.png" alt="Profile Picture">
-            <h3>${requestScope.loginuser.name}</h3>
-            <p>${requestScope.loginuser.department_name}</p>
+        <div class="profile">        
+        	<c:if test="${empty sessionScope.loginuser.img_name}"> <%-- 이미지가 없을 경우 --%>
+            	<img src="<%=ctxPath%>/resources/images/student.png" alt="Profile Picture">
+            </c:if>
+            <c:if test="${not empty sessionScope.loginuser.img_name}"> <%-- 이미지가 있을 경우 --%>
+            	<img src="<%=ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" alt="Profile Picture">
+            </c:if>
+            <h3 style="color:black;">${sessionScope.loginuser.name}</h3>
+            <p style="color:black;">학번 : ${sessionScope.loginuser.student_id}</p>
+            <p style="color:black;">${sessionScope.loginuser.department_name}</p>
         </div>
         <ul class="nav flex-column">
             <li class="nav-item"><a href="<%=ctxPath%>/student/dashboard.lms" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
@@ -184,7 +196,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="classesMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
-                    <a class="dropdown-item" href="<%=ctxPath%>/student/lectureList.lms">내 수업</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/classList.lms">내 수업</a>
                     <a class="dropdown-item" href="#">수강신청</a>
                     <a class="dropdown-item" href="#">수강취소</a>
                     <a class="dropdown-item" href="#">출석현황</a>
