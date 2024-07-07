@@ -1,6 +1,7 @@
 package com.sooRyeo.app.domain;
 
 import java.util.Date;
+import java.util.List;
 
 
 public class Course {	

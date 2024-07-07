@@ -16,8 +16,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.service.ProfessorService;
+import com.sooRyeo.app.service.StudentService;
 
 
 @Controller
@@ -28,6 +31,8 @@ public class ProfessorController {
 	// @Qualifier("boardService_imple") DAO는 하나이기 때문에 Qualifier를 통해 지정할 필요가 거의 없다.
 	private ProfessorService service;
 	
+	@Autowired
+	private StudentService Studentservice;
 	
 	@RequestMapping(value = "/professor/dashboard.lms")
 	public ModelAndView professor_dashboard(ModelAndView mav) {// 대시보드 뷰단
@@ -126,6 +131,9 @@ public class ProfessorController {
 			return mav;
 		}
 		
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("courseList", courseList);
 		mav.setViewName("professor_courseList.professor");
 		
@@ -134,8 +142,12 @@ public class ProfessorController {
 	
 	
 	@GetMapping(value = "/professor/courseDetail.lms")  
-	public ModelAndView professor_courseDetail(ModelAndView mav) {// 교수 진행 강의 상세
-	
+	public ModelAndView professor_courseDetail(HttpServletRequest request, ModelAndView mav) {// 교수 진행 강의 상세
+				
+		String fk_course_seq = request.getParameter("course_seq");
+		List<Lecture> lectureList = Studentservice.getlectureList(fk_course_seq);	
+		
+		mav.addObject("lectureList", lectureList);
 		mav.setViewName("professor_courseDetail.professor");
 		
 		return mav;

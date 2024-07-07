@@ -107,6 +107,11 @@ from tbl_time
 select *
 from tbl_course
 
+-- 
+select *
+from tbl_lecture
+
+
 -- 수업
 select *
 from tbl_curriculum

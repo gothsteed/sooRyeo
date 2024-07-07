@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
