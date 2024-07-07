@@ -138,46 +138,12 @@
 		where student_id = to_number(#{student_id})
 	</update>
 
-
-	<!-- 수업 - 이번주 강의보기 - 과제리스트 보여주기  -->
-	<resultMap type="HashMap" id="assignmentMap">
-		<result property="professorName" column="professorName"  javaType="String" />
-		<result property="className" 	 column="className" 	 javaType="String" />
-		<result property="title"         column="title" 	     javaType="String" />
-		<result property="end_datetime"  column="end_datetime" 	 javaType="String" />
-		<result property="assignment_submit_seq"  column="assignment_submit_seq" 	 javaType="String" />
-	</resultMap>
-	
+	<!-- 수업 - 이번주 강의보기 - 과제리스트 보여주기 
 	<select id="assignment_List" parameterType="int" resultMap="assignmentMap">
-		WITH
-		A AS(
-		 	<![CDATA[ 
-			select fk_course_seq, end_datetime, D.title, assignment_submit_seq
-			from tbl_assignment D left join tbl_assignment_submit
-			on assignment_seq = fk_assignment_seq
-			where sysdate < end_datetime
-			]]>
-		),
-		B AS(
-			select prof_id, name
-			from tbl_professor
-		),
-		C AS(
-			select fk_student_id, course_seq, fk_professor_id, fk_curriculum_seq, name
-			from tbl_registered_course join tbl_course
-			on fk_course_seq = course_seq
-			join tbl_curriculum
-			on fk_curriculum_seq = curriculum_seq
-		)
-		
-		select B.name as professorName, A.title, C.name as className, A.end_datetime, assignment_submit_seq
-		from A join C
-		on A.fk_course_seq = C.course_seq
-		join B
-		on C.course_seq = A.fk_course_seq
-		where fk_student_id = #{userid}
+		select *
+		from tbl_assignment
 	</select>
-
+ 	-->
 	
 	
 	

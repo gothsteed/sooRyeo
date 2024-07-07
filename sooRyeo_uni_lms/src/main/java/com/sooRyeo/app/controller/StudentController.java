@@ -177,7 +177,7 @@ public class StudentController {
 	
 	
 	
-	// 수업 - 내 강의보기 - 과제리스트 보여주기
+	/* 수업 - 내 강의보기 - 과제리스트 보여주기
 	@GetMapping("/student/assignment_List.lms")
 	public String assignment_List(HttpServletRequest request) {
 		
@@ -194,5 +194,6 @@ public class StudentController {
 		return "assignment_List.student";
 		// /WEB-INF/views/student/{1}.jsp
 	}
+	*/
 	
 }

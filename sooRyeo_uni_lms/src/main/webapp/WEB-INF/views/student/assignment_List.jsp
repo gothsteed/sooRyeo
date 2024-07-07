@@ -29,7 +29,7 @@
   </thead>
   <tbody>
     <tr class="row">
-    
+    <%-- 
     <c:forEach var="mapList" items="${requestScope.mapList}" varStatus="status">
 	    <c:if test="${mapList.assignment_submit_seq == null}">
 		      <th scope="row" class="col-2">&nbsp;&nbsp;&nbsp;${status.count}</th>
@@ -39,7 +39,7 @@
 		      <td class="col-2" style="text-align: center">${mapList.end_datetime}</td>
 		</c:if>
     </c:forEach>
-        
+    --%>    
     </tr>
   </tbody>
 </table>

@@ -151,7 +151,7 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public List<Lecture> getlectureList_week
 
 	
-	// 수업 - 이번주 강의보기 - 과제리스트 보여주기
+	/* 수업 - 이번주 강의보기 - 과제리스트 보여주기
 	@Override
 	public List<Map<String, String>> assignment_List(int userid) {
 		
@@ -160,5 +160,5 @@ public class StudentDao_imple implements StudentDao {
 		return assignment_List;
 		
 	} // end of public List<Map<String, String>> assignment_List
-	
+	*/
 }

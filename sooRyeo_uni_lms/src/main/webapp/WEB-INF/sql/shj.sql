@@ -159,8 +159,8 @@ desc tbl_lecture;
 select *
 from tbl_assignment;
 
-
-
+select *
+from tbl_schedule;
 
 
 
