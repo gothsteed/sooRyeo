@@ -72,10 +72,8 @@
 	</select>
 
 	<update id="increase_readCount" parameterType="String">
-		update
-		tbl_announcement set viewCount = viewCount + 1
-		where announcement_seq =
-		#{seq}
+		update tbl_announcement set viewCount = viewCount + 1
+		where announcement_seq = #{seq}
 	</update>
 
 	<select id="getView" parameterType="HashMap"

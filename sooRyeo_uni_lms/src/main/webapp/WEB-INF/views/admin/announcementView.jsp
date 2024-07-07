@@ -37,13 +37,17 @@
 				      <td colspan="2">첨부파일이 없습니다.</td>
 			      </c:if>
 			    </tr>
+			    <tr>
+			      <th scope="row" >조회수</th>
+			      <td>${requestScope.an.viewcount}</td>
+			    </tr>
 			  </tbody>
 			</table>
 			<div style="display: flex; justify-content: space-between; width: 100%;">
                 <button type="button" class="btn btn-secondary">이전글</button>
                 <div>
-	                <button type="button" class="btn btn-secondary">전체목록보기</button>
-	                <button type="button" class="btn btn-secondary">검색목록보기</button>
+	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/admin/announcement.lms'">전체목록보기</button>
+	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">검색목록보기</button>
                 </div>
                 <button type="button" class="btn btn-secondary">다음글</button>
             </div>
