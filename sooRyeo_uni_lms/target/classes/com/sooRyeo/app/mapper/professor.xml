@@ -25,6 +25,8 @@
             <result property="department_name" column="department_name"/>
         </association>
     </resultMap>
+    
+    
 	<select id="selectInfo" resultMap="professorResultMap" parameterType="com.sooRyeo.app.domain.Professor">
 		SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS
 		FROM 

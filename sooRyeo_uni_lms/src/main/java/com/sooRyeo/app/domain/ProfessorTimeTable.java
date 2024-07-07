@@ -10,9 +10,6 @@ public class ProfessorTimeTable implements TimeTable {
 	private Integer prof_id;
 	private List<Course> courseList;
 	
-	
-	
-	
 
 	public ProfessorTimeTable(Integer prof_id, List<Course> courseList) {
 		super();
@@ -21,9 +18,14 @@ public class ProfessorTimeTable implements TimeTable {
 	}
 
 	@Override
-	public boolean addCourse(Course course, CourseDao courseDao) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean canAddCourse(Course newCourse) {
+		for(Course course : courseList) {
+			if(course.isTimeConflict(newCourse)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	@Override
