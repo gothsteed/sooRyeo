@@ -15,9 +15,6 @@ public interface StudentService {
 	// 수업리스트 보여주기 
 	List<Map<String, String>> classList(int userid);
 	
-	// 과제리스트 보여주기
-	List<Map<String, String>> assignment_List(int userid);
-	
 	// 내정보 보기
 	StudentDTO getViewInfo(HttpServletRequest request);
 
@@ -35,6 +32,12 @@ public interface StudentService {
 
 	// 수업  - 내 강의보기
 	List<Lecture> getlectureList(String fk_course_seq);
+
+	// 수업 - 이번주 강의보기
+	List<Lecture> getlectureList_week(String fk_course_seq);
+
+	// 수업 - 이번주 강의보기 - 과제리스트 보여주기
+	List<Map<String, String>> assignment_List(int userid);
 
 
 

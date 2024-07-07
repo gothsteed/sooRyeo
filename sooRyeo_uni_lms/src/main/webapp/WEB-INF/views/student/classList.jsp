@@ -98,6 +98,12 @@
 	margin-left: 8%;
 }
 
+
+.border:hover {
+	background-color: #e9ecef; /* Hover state for table rows */
+	cursor: pointer; /* Indicate row is clickable */
+}
+
 </style>
 
 
@@ -111,7 +117,6 @@ $(document).ready(function(){
 		location.href = "<%=ctxPath%>/student/myLecture.lms?course_seq=" + $(this).find("input[name='course_seq']").val();
 		
 	}); // end of $("div.border").click(function(e){})
- 	
 	
 }); // end of $(document).ready(function(){})
 
@@ -120,36 +125,45 @@ $(document).ready(function(){
 
 <div style="display: flex; width : 100%;" class="row">
 
-	<div style="margin-top: 5%; width : 80%; border: solid 0px green;">
-	
-		<c:forEach var="mapList" items="${requestScope.mapList}">
+	<div style="margin-top: 3%; width: 80%;">
+		<h3 class="ml-5" style="font-weight:bold;"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%;"/>내 수업 목록</h3>
+		<hr class="mb-5">
 		
-			<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-			   <input type="hidden" name="course_seq" value="${mapList.course_seq}"/>
-			   <div style="display: flex;" >
-			      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
-			      <c:if test="${mapList.department_seq != null && mapList.required == '1'}">
-			      	<div class="majorO rounded">전공필수</div>
-			      </c:if>
-			      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
-			      	<div class="majorX rounded">전공선택</div>
-			      </c:if>
-			      <c:if test="${mapList.department_seq == null && mapList.required == '1'}">
-			      	<div class="no-majorO rounded">교양필수</div>
-			      </c:if>
-			      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
-			      	<div class="no-majorX rounded">교양선택</div>
-			      </c:if>
-			      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">
-					  <div style="font-size: 20pt; color: black;">${mapList.className}</div>
-		         	  <div style="font-size: 12pt; color: black;">${mapList.professorName}</div>	
-			      </div>
-			      <div class="arrow" style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
-			   </div>
-			</div>
-			
-		</c:forEach>
-
+		<c:if test="${empty requestScope.mapList}">
+		
+			<span style="margin-left:10%; font-weight:bold; color:red; font-size:18pt;">수강중인 수업이 없습니다.</span>
+		
+		</c:if>
+		
+		<c:if test="${not empty requestScope.mapList}">
+		
+			<c:forEach var="mapList" items="${requestScope.mapList}">
+				<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
+				   <input type="hidden" name="course_seq" value="${mapList.course_seq}"/>
+				   <div style="display: flex;" >
+				      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
+				      <c:if test="${mapList.department_seq != null && mapList.required == '1'}">
+				      	<div class="majorO rounded">전공필수</div>
+				      </c:if>
+				      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
+				      	<div class="majorX rounded">전공선택</div>
+				      </c:if>
+				      <c:if test="${mapList.department_seq == null && mapList.required == '1'}">
+				      	<div class="no-majorO rounded">교양필수</div>
+				      </c:if>
+				      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
+				      	<div class="no-majorX rounded">교양선택</div>
+				      </c:if>
+				      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">
+						  <div style="font-size: 20pt; color: black;">${mapList.className}</div>
+			         	  <div style="font-size: 12pt; color: black;">${mapList.professorName}</div>	
+				      </div>
+				      <div class="arrow" style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
+				   </div>
+				</div>
+			</c:forEach>
+		
+		</c:if>
 	</div>
 	
 	

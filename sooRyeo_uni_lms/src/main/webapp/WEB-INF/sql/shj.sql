@@ -64,44 +64,50 @@ select *
 from tbl_curriculum;
 
 -- 4번 개설수업 국어학개론
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '4', '1단원 영상', '1주차 수업 자료', '제 1장. 국어학개론의 이해', '1) 국어학개론의 이해');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '4', '1단원 영상', '1주차 수업 자료', '제 1장. 국어학개론의 이해', '1) 국어학개론의 이해', to_date(20240707, 'yyyy-mm-dd'), to_date(20240714,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '4', '2단원 영상', '2주차 수업 자료', '제 2장. 언어와 언어학', '1) 통계를 통해 본 자연언어의 모습 2) 인간과 언어');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '4', '2단원 영상', '2주차 수업 자료', '제 2장. 언어와 언어학', '1) 통계를 통해 본 자연언어의 모습 2) 인간과 언어', to_date(20240714, 'yyyy-mm-dd'), to_date(20240721,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '4', '3단원 영상', '3주차 수업 자료', '제 3장. 한국어의 말소리(1):자음 ', '1) 자음과 모음의 구분 2) 말소리의 생성 과정');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '4', '3단원 영상', '3주차 수업 자료', '제 3장. 한국어의 말소리(1):자음 ', '1) 자음과 모음의 구분 2) 말소리의 생성 과정', to_date(20240721, 'yyyy-mm-dd'), to_date(20240728,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '4', '4단원 영상', '4주차 수업 자료', '제 4장. 한국어의 말소리(2): 모음과 초분절음', '1) 자음과 모음의 구분 2) 모음의 분류 : 단모음/이중모음 3) 단모음의 분류 기준 4) 한국어의 초분절음');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '4', '4단원 영상', '4주차 수업 자료', '제 4장. 한국어의 말소리(2): 모음과 초분절음', '1) 자음과 모음의 구분 2) 모음의 분류 : 단모음/이중모음 3) 단모음의 분류 기준 4) 한국어의 초분절음', to_date(20240728, 'yyyy-mm-dd'), to_date(20240804,'yyyy-mm-dd'));
 
 commit;
 
 -- 5번 개설수업 현대문학
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '5', '1단원 영상', '1주차 수업 자료', '제 1장. 한국현대작가론특강', '개화기에서 1970년대 소설작품의 특징');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '5', '1단원 영상', '1주차 수업 자료', '제 1장. 한국현대작가론특강', '개화기에서 1970년대 소설작품의 특징', to_date(20240707, 'yyyy-mm-dd'), to_date(20240714,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '5', '2단원 영상', '2주차 수업 자료', '제 2장. 한국현대시인론특강', '문학세계에 이르는 총체적인 문제들을 연구');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '5', '2단원 영상', '2주차 수업 자료', '제 2장. 한국현대시인론특강', '문학세계에 이르는 총체적인 문제들을 연구', to_date(20240714, 'yyyy-mm-dd'), to_date(20240721,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '5', '3단원 영상', '3주차 수업 자료', '제 3장. 한국현대비평론특강', '한국현대비평을 문학사적인 측면과 비평가론적인 측면에서 심도있게 탐구');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '5', '3단원 영상', '3주차 수업 자료', '제 3장. 한국현대비평론특강', '한국현대비평을 문학사적인 측면과 비평가론적인 측면에서 심도있게 탐구', to_date(20240721, 'yyyy-mm-dd'), to_date(20240728,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '5', '4단원 영상', '4주차 수업 자료', '제 4장. 한국현대시특강', '당대의 현실과 시문학의 자율성을 함께 살펴보면서 연구');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '5', '4단원 영상', '4주차 수업 자료', '제 4장. 한국현대시특강', '당대의 현실과 시문학의 자율성을 함께 살펴보면서 연구', to_date(20240728, 'yyyy-mm-dd'), to_date(20240804,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '5', '5단원 영상', '5주차 수업 자료', '제 5장. 한국현대소설특강', '특정한 경향을 띠는 작품들을 중심으로 한 소설사적 시각이나 연구방법론을 취하여 새로운 해석 및 평가');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '5', '5단원 영상', '5주차 수업 자료', '제 5장. 한국현대소설특강', '특정한 경향을 띠는 작품들을 중심으로 한 소설사적 시각이나 연구방법론을 취하여 새로운 해석 및 평가', to_date(20240804, 'yyyy-mm-dd'), to_date(20240811,'yyyy-mm-dd'));
 
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '5', '6단원 영상', '6주차 수업 자료', '제 6장. 한국현대작가집중연구', '다양한 시각과 관점에서 작가와 작품의 관계를 파악하고 한 작가와 그의 문학 작품의 독특한 특질');
-
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '5', '6단원 영상', '6주차 수업 자료', '제 6장. 한국현대작가집중연구', '다양한 시각과 관점에서 작가와 작품의 관계를 파악하고 한 작가와 그의 문학 작품의 독특한 특질', to_date(20240811, 'yyyy-mm-dd'), to_date(20240818,'yyyy-mm-dd'));
 
 
 -- 12번 개설수업 회계학원론
-insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content)
-values(lecture_seq.nextval, '12', '1단원 영상', '1주차 수업 자료', '제 1장. ', '');
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '12', '1단원 영상', '1주차 수업 자료', '제 1장. K-IFRS의 개념체계 (1)', '1. 재무보고와 재무제표', to_date(20240707, 'yyyy-mm-dd'), to_date(20240714,'yyyy-mm-dd'));
+
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '12', '2단원 영상', '2주차 수업 자료', '제 2장. K-IFRS의 개념체계 (1)', '2. 재무회계의 목적', to_date(20240714, 'yyyy-mm-dd'), to_date(20240721,'yyyy-mm-dd'));
+
+insert into tbl_lecture(lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content, start_date, end_date)
+values(lecture_seq.nextval, '12', '3단원 영상', '3주차 수업 자료', '제 3장. K-IFRS의 개념체계 (1)', '3. 재무제표 작성의 기본 가정', to_date(20240721, 'yyyy-mm-dd'), to_date(20240728,'yyyy-mm-dd'));
+
 
 select *
 from tbl_lecture
@@ -110,9 +116,51 @@ order by lecture_seq asc;
 select *
 from tbl_course;
 
-select lecture_seq, fk_course_seq, video_file_name, lecture_file_name, lecture_title, lecture_content
+select lecture_seq, fk_course_seq
+     , video_file_name, lecture_file_name, lecture_title
+     , lecture_content
+     , start_date
+     , end_date
 from tbl_lecture join tbl_course
 on tbl_lecture.fk_course_seq = tbl_course.course_seq
-where fk_course_seq = '4';
+where fk_course_seq = '4'
+order by lecture_seq asc
+
+
+
+select lecture_seq, fk_course_seq
+     , video_file_name, lecture_file_name, lecture_title
+     , lecture_content
+     , start_date
+     , end_date
+from tbl_lecture join tbl_course
+on tbl_lecture.fk_course_seq = tbl_course.course_seq
+where fk_course_seq = '5' AND start_date <= sysdate AND sysdate <= end_date
+order by lecture_seq asc
+
+
+
+
+
+
+---- *** 어떤 테이블에 새로운 컬럼 추가하기 *** ----
+/*
+    alter table 테이블명 add 추가할컬럼명 데이터타입;
+*/
+alter table tbl_lecture 
+add start_date date;
+
+alter table tbl_lecture 
+add end_date date;
+-- Table TBL_LECTURE이(가) 변경되었습니다.
+
+desc tbl_lecture;
+
+select *
+from tbl_assignment;
+
+
+
+
 
 

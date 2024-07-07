@@ -1,5 +1,6 @@
 package com.sooRyeo.app.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.sooRyeo.app.model.StudentDao;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -369,27 +371,37 @@ public class StudentService_imple implements StudentService {
 	}
 
 
-	// 과제리스트 보여주기
+	// 수업  - 내 강의보기
+	@Override
+	public List<Lecture> getlectureList(String fk_course_seq) {
+		
+		List<Lecture> lectureList = dao.getlectureList(fk_course_seq);
+
+		return lectureList;
+		
+	} // end of public List<Lecture> getlectureList
+
+
+
+	// 수업 - 이번주 강의보기
+	@Override
+	public List<Lecture> getlectureList_week(String fk_course_seq) {
+		
+		List<Lecture> lectureList_week = dao.getlectureList_week(fk_course_seq);
+		
+		return lectureList_week;
+		
+	} // end of public List<Lecture> getlectureList_week
+
+	
+	
+	// 수업 - 이번주 강의보기 - 과제리스트 보여주기
 	@Override
 	public List<Map<String, String>> assignment_List(int userid) {
 		
 		List<Map<String, String>> assignment_List = dao.assignment_List(userid);
 		return assignment_List;
 	}
-
-
-
-	// 수업  - 내 강의보기
-	@Override
-	public List<Lecture> getlectureList(String fk_course_seq) {
-		
-		List<Lecture> lectureList = dao.getlectureList(fk_course_seq);
-		
-		return lectureList;
-		
-	} // end of public List<Lecture> getlectureList
-
-
 
 	
 	
