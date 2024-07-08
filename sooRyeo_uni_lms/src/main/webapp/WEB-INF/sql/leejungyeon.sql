@@ -1135,12 +1135,14 @@ MODIFY (
 
 
 select *
-from tbl_time;
+from tbl_time
+where fk_course_seq = 4;
 
 
 
 select *
-from tbl_course;
+from tbl_course
+where fk_professor_seq =202400002;
 
 desc tbl_course;
 
