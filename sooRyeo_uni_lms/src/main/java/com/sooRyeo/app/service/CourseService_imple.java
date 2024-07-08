@@ -65,6 +65,21 @@ public class CourseService_imple implements CourseService {
 		
 		return n == 1? ResponseEntity.ok("성공") : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버오류");
 	}
+
+	@Override
+	public ResponseEntity<String> deleteCourse(HttpServletRequest request) {
+		
+		int course_seq = Integer.parseInt(request.getParameter("course_seq"));
+		
+		int result = courseDao.updateToDeleteCourse(course_seq);
+		
+		
+		if(result != 1) {
+			return ResponseEntity.internalServerError().body("오류 발생");
+		}
+		
+		return ResponseEntity.ok("패강 성공");
+	}
 	
 
 }

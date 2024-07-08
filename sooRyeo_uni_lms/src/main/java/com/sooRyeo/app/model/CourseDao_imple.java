@@ -76,4 +76,10 @@ public class CourseDao_imple implements CourseDao {
 		return result;
 	}
 
+	@Override
+	public int updateToDeleteCourse(int course_seq) {
+		
+		return sqlsession.update("course.updateToDelete", course_seq);
+	}
+
 }

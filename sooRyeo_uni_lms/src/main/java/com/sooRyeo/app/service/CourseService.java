@@ -13,4 +13,6 @@ public interface CourseService {
 
 	ResponseEntity<String> insertCourse(HttpServletRequest request, CourseInsertReqeustDTO courseInsertReqeustDTO);
 
+	ResponseEntity<String> deleteCourse(HttpServletRequest request);
+
 }
