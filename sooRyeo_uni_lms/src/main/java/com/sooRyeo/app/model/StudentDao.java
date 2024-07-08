@@ -46,6 +46,4 @@ public interface StudentDao {
 	// 수업 - 이번주 강의보기
 	List<Lecture> getlectureList_week(String fk_course_seq);
 
-	// 수업 - 이번주 강의보기 - 과제리스트 보여주기
-	// List<Map<String, String>> assignment_List(int userid);
 }

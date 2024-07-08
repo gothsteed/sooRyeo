@@ -395,14 +395,7 @@ public class StudentService_imple implements StudentService {
 
 	
 	
-	/* 수업 - 이번주 강의보기 - 과제리스트 보여주기
-	@Override
-	public List<Map<String, String>> assignment_List(int userid) {
-		
-		List<Map<String, String>> assignment_List = dao.assignment_List(userid);
-		return assignment_List;
-	}
-	 */
+
 	
 	
 	

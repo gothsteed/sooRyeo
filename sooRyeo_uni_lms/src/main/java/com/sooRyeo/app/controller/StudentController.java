@@ -1,31 +1,24 @@
 package com.sooRyeo.app.controller;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Lecture;
-import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.StudentService;
@@ -177,23 +170,14 @@ public class StudentController {
 	
 	
 	
-	/* 수업 - 내 강의보기 - 과제리스트 보여주기
+	// 수업 - 내 강의보기 - 과제리스트 보여주기
 	@GetMapping("/student/assignment_List.lms")
 	public String assignment_List(HttpServletRequest request) {
 		
-		HttpSession session = request.getSession();
-		
-		Student loginuser = (Student)session.getAttribute("loginuser");
-		
-		int userid = loginuser.getStudent_id();
-		
-		List<Map<String, String>> mapList = service.assignment_List(userid);
-		
-		request.setAttribute("mapList", mapList);
 		
 		return "assignment_List.student";
 		// /WEB-INF/views/student/{1}.jsp
 	}
-	*/
+
 	
 }

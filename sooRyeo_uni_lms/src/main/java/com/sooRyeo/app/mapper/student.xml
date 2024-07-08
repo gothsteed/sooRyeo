@@ -138,12 +138,7 @@
 		where student_id = to_number(#{student_id})
 	</update>
 
-	<!-- 수업 - 이번주 강의보기 - 과제리스트 보여주기 
-	<select id="assignment_List" parameterType="int" resultMap="assignmentMap">
-		select *
-		from tbl_assignment
-	</select>
- 	-->
+
 	
 	
 	
