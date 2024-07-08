@@ -378,9 +378,6 @@ function goEdit(ctxPath) {
     }
     // *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //
 
-
-
-	
 	goEdit_noAttach(ctxPath);
 
 } // end of function goEdit()---------------------

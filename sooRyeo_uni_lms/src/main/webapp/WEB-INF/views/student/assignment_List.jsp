@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -28,20 +29,24 @@
   </thead>
   <tbody>
     <tr class="row">
-      <th scope="row" class="col-2">&nbsp;&nbsp;&nbsp;1</th>
-      <td class="col-4">시 한편 써보기</td>
-      <td class="col-2" style="text-align: center">국어학개론</td>
-      <td class="col-2" style="text-align: center">홍길동</td>
-      <td class="col-2" style="text-align: center">07-05 ~ 07-15</td>
+    
+    <c:forEach var="mapList" items="${requestScope.mapList}" varStatus="status">
+	    <c:if test="${mapList.assignment_submit_seq == null}">
+		      <th scope="row" class="col-2">&nbsp;&nbsp;&nbsp;${status.count}</th>
+		      <td class="col-4">${mapList.title}</td>
+		      <td class="col-2" style="text-align: center">${mapList.className}</td>
+		      <td class="col-2" style="text-align: center">${mapList.professorName}</td>
+		      <td class="col-2" style="text-align: center">${mapList.end_datetime}</td>
+		</c:if>
+    </c:forEach>
+        
     </tr>
-    <tr class="row">
-      <th scope="row" class="col-2">&nbsp;&nbsp;&nbsp;2</th>
-      <td class="col-4">시 한편 써보기</td>
-      <td class="col-2" style="text-align: center">국어학개론</td>
-      <td class="col-2" style="text-align: center">홍길동</td>
-      <td class="col-2" style="text-align: center">07-05 ~ 07-15</td>
-    </tr>
-
-
   </tbody>
 </table>
+
+
+
+
+
+
+

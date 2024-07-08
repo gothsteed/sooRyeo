@@ -7,6 +7,7 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
@@ -53,6 +55,8 @@ public class StudentController {
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
+	
+	// 수업리스트 보여주기
 	@GetMapping(value="/student/classList.lms")
 	public String classList(HttpServletRequest request) {
 		
@@ -71,9 +75,19 @@ public class StudentController {
 	}
 	
 	
+	// 과제리스트 보여주기
 	@GetMapping("/student/assignment_List.lms")
 	public String assignment_List(HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		int userid = loginuser.getStudent_id();
+		
+		List<Map<String, String>> mapList = service.assignment_List(userid);
+		
+		request.setAttribute("mapList", mapList);
 		
 		return "assignment_List.student";
 		// /WEB-INF/views/student/{1}.jsp
@@ -119,6 +133,7 @@ public class StudentController {
 		return json.toString();
 	}
 	
+	
 	// 이메일 중복
 	@ResponseBody
 	@PostMapping(value = "/student/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
@@ -128,6 +143,7 @@ public class StudentController {
 		
 		return json.toString();
 	}
+	
 	
 	// 학생 정보 수정
 	@PostMapping(value = "/student/student_info_edit.lms")
@@ -152,21 +168,21 @@ public class StudentController {
 	
 	
 	
-
-	
-	
-
-	
-	
-	
 	// 수업  - 내 강의보기
-	@RequestMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
-	public String myLecture() {
-		return "myLecture.student";
-		// /WEB-INF/views/student/{1}.jsp
+	@GetMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
+	public ModelAndView myLecture(ModelAndView mav, HttpServletRequest request) {
+		
+		String fk_course_seq = request.getParameter("course_seq");
+		
+		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
+		
+		mav.addObject("lectureList", lectureList);
+		
+		mav.setViewName("myLecture.student");
+
+		return mav;
 		
 	} // end of public String myLecture
-	
 	
 	
 	

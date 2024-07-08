@@ -31,7 +31,7 @@ import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
-import com.sooRyeo.app.dto.LoginDTO;
+import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
@@ -465,6 +465,13 @@ public class AdminController {
 		return courseService.getProfTimetable(request, mav);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/admin/courseInsertJSON.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> courseInsertJSON(HttpServletRequest request, @RequestBody CourseInsertReqeustDTO courseInsertReqeustDTO) {
+		
+		
+		return courseService.insertCourse(request, courseInsertReqeustDTO);
+	}
 	
 	
 	

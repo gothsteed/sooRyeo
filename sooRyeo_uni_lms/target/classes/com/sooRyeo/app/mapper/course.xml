@@ -31,18 +31,38 @@
 
 	</insert>
 
+	<insert id="registerCourse" parameterType="HashMap">
+
+	</insert>
+
+
+	<insert id="openCourse" parameterType="HashMap">
+		<selectKey keyProperty="course_seq" resultType="int" order="BEFORE">
+			SELECT course_seq.nextval FROM dual
+		</selectKey>
+		INSERT INTO
+		tbl_course (course_seq, fk_professor_id, fk_curriculum_seq, capacity, semester_date)
+		VALUES (#{course_seq}, #{fk_professor_id}, #{fk_curriculum_seq}, #{capacity}, TO_DATE(to_char(sysdate), 'YYYY-MM-DD'))
+	</insert>
+
+
+
+	<insert id="insertCourseTime" parameterType="HashMap">
+		INSERT INTO tbl_time (time_seq, fk_course_seq, day_of_week, start_period, end_period)
+		VALUES (time_seq.nextval, #{fk_course_seq}, #{day_of_week}, #{start_period}, #{end_period})
+	</insert>
 
 	<select id="getProfCourseList" parameterType="int" resultMap="CourseJoinCurriculum">
 		select *
-		from 
+		from
 		tbl_course v1
 		join
 		tbl_curriculum v2
 		on v1.fk_curriculum_seq = v2.curriculum_seq
 		where v1.FK_PROFESSOR_ID= ${prof_id}
 	</select>
-	
-	
+
+
 	<select id="getCourseTimes" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
 		select *
 		from tbl_time
