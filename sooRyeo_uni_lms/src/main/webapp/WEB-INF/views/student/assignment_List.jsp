@@ -17,6 +17,8 @@
 
 
 
+<h3 class="mt-3 mb-3" style="margin-left:10%;">과제</h3>
+<hr>
 <table class="table" style="width: 80%; margin: 3% auto;">
   <thead>
     <tr class="row table-success">
@@ -28,6 +30,7 @@
     </tr>
   </thead>
   <tbody>
+  <%-- 
     <tr class="row">
     
     <c:forEach var="mapList" items="${requestScope.mapList}" varStatus="status">
@@ -39,8 +42,9 @@
 		      <td class="col-2" style="text-align: center">${mapList.end_datetime}</td>
 		</c:if>
     </c:forEach>
-        
+    
     </tr>
+     --%>   
   </tbody>
 </table>
 

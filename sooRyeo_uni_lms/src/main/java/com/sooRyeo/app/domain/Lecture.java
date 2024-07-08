@@ -1,5 +1,7 @@
 package com.sooRyeo.app.domain;
 
+import java.util.Date;
+
 public class Lecture {
 	
     private Integer lecture_seq;
@@ -8,6 +10,8 @@ public class Lecture {
     private String lecture_file_name;
     private String lecture_title;
     private String lecture_content;
+    private Date start_date;
+    private Date end_date;
     
     
 	public Integer getLecture_seq() {
@@ -27,6 +31,12 @@ public class Lecture {
 	}
 	public String getLecture_content() {
 		return lecture_content;
+	}
+	public Date getStart_date() {
+		return start_date;
+	}
+	public Date getEnd_date() {
+		return end_date;
 	}
     
     
