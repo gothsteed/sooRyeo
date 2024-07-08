@@ -17,6 +17,8 @@
 
 
 
+<h3 class="mt-3 mb-3" style="margin-left:10%;">과제</h3>
+<hr>
 <table class="table" style="width: 80%; margin: 3% auto;">
   <thead>
     <tr class="row table-success">

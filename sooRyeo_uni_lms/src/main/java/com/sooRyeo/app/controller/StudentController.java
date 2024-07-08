@@ -175,6 +175,7 @@ public class StudentController {
 	public String assignment_List(HttpServletRequest request) {
 		
 		
+		
 		return "assignment_List.student";
 		// /WEB-INF/views/student/{1}.jsp
 	}
