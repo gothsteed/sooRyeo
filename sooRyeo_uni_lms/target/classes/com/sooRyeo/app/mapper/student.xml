@@ -66,7 +66,7 @@
 		from tbl_lecture join tbl_course
 		on tbl_lecture.fk_course_seq = tbl_course.course_seq
 		where fk_course_seq = #{fk_course_seq}
-		order by lecture_seq asc
+		order by lecture_seq asc <!-- where exist = 1 -->
 	</select>
 	
 	
@@ -139,13 +139,60 @@
 	</update>
 
 
+	<!-- 수업 - 내 강의 - 과제 -->
+	<resultMap type="HashMap" id="assignmentMap">
+		<result property="title" 			column="title"				javaType="String" />
+		<result property="content" 			column="content"			javaType="String" />
+		<result property="start_date" 		column="start_date"			javaType="Date" />
+		<result property="end_date" 		column="end_date"			javaType="Date" />
+		<result property="submit_datetime" 	column="submit_datetime"	javaType="Date" />
+	</resultMap>
+	
+	<select id="getassignment_List" parameterType="int" resultMap="assignmentMap">
+		SELECT V.title as title
+			 , V.content as content
+			 , V.start_date as start_date
+			 , V.end_date as end_date
+			 , B.submit_datetime as submit_datetime
+		FROM
+		(
+		    select *
+		    from tbl_assignment A join tbl_schedule S
+		    on A.schedule_seq_assignment = S.schedule_seq
+		    where schedule_type = 1
+		)V LEFT JOIN
+		(
+		    select *
+		    from tbl_assignment_submit
+		) B
+		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+	</select>
 	
 	
 	
-	
-	
-	
-	
+	<!-- 수업 - 내 강의 - 과제제출 -->
+	<select id="getassignment_detail_List" resultType="String" parameterType="HashMap" >
+		SELECT V.schedule_seq_assignment as schedule_seq_assignment
+	     , V.title as title
+	     , V.content as content
+	     , V.start_date as start_date
+	     , V.end_date as end_date
+	     , B.score as score
+	     , B.submit_datetime as submit_datetime
+	     , B.attatched_file as attatched_file
+		FROM
+		(
+		    select *
+		    from tbl_assignment A join tbl_schedule S
+		    on A.schedule_seq_assignment = S.schedule_seq
+		    where schedule_type = 1
+		)V LEFT JOIN
+		(
+		    select *
+		    from tbl_assignment_submit
+		) B
+		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+	</select>
 	
 	
 	

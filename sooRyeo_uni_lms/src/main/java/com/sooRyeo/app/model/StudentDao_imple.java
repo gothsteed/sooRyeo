@@ -151,4 +151,26 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public List<Lecture> getlectureList_week
 
 	
+	// 수업 - 내 강의 - 과제
+	@Override
+	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
+		
+		List<Map<String, String>> assignment_List = sqlSession.selectList("student.getassignment_List", fk_course_seq);
+		
+		return assignment_List;
+		
+	} // end of public List<Map<String, String>> getassignment_List
+
+	
+	// 수업 - 내 강의 - 과제 - 제출
+	@Override
+	public List<Map<String, String>> getassignment_detail_List() {
+		
+		List<Map<String, String>> assignment_detail_List = sqlSession.selectList("student.getassignment_detail_List");
+		
+		return assignment_detail_List;
+		
+	} // end of public List<Map<String, String>> getassignment_detail_List
+
+	
 }

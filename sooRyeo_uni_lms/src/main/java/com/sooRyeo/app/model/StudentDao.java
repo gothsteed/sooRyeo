@@ -3,6 +3,7 @@ package com.sooRyeo.app.model;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -45,5 +46,11 @@ public interface StudentDao {
 
 	// 수업 - 이번주 강의보기
 	List<Lecture> getlectureList_week(String fk_course_seq);
+
+	// 수업 - 내 강의 - 과제
+	List<Map<String, String>> getassignment_List(String fk_course_seq);
+
+	// 수업 - 내 강의 - 과제 - 제출
+	List<Map<String, String>> getassignment_detail_List();
 
 }

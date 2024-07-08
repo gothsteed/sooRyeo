@@ -36,6 +36,12 @@ public interface StudentService {
 	// 수업 - 이번주 강의보기
 	List<Lecture> getlectureList_week(String fk_course_seq);
 
+	// 수업 - 내 강의 - 과제
+	List<Map<String, String>> getassignment_List(String fk_course_seq);
+
+	// 수업 - 내 강의 - 과제 - 제출
+	List<Map<String, String>> getassignment_detail_List();
+
 
 
 	

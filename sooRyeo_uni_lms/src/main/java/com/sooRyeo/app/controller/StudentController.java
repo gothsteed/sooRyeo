@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Lecture;
@@ -153,7 +154,6 @@ public class StudentController {
 		 
 		String fk_course_seq = request.getParameter("course_seq");
 		
-		
 		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
 		
 		// 수업 - 이번주 강의보기
@@ -170,15 +170,50 @@ public class StudentController {
 	
 	
 	
-	// 수업 - 내 강의보기 - 과제리스트 보여주기
-	@GetMapping("/student/assignment_List.lms")
-	public String assignment_List(HttpServletRequest request) {
+	// 수업 - 내 강의 - 과제
+	@GetMapping(value="/student/assignment_List.lms", produces="text/plain;charset=UTF-8")
+	public ModelAndView assignment_List(ModelAndView mav, HttpServletRequest request) {
 		
+		String fk_course_seq = request.getParameter("course_seq");		
 		
+		List<Map<String, String>> assignment_List = service.getassignment_List(fk_course_seq);
 		
-		return "assignment_List.student";
-		// /WEB-INF/views/student/{1}.jsp
-	}
+		mav.addObject("assignment_List", assignment_List);
+		
+		mav.setViewName("assignment_List.student");
+		
+		return mav;
+		
+	} // end of public ModelAndView assignment_List
 
+	
+	
+	// 수업 - 내 강의 - 과제 - 제출
+	@GetMapping(value="/student/assignment_detail_List.lms", produces="text/plain;charset=UTF-8")
+	public ModelAndView assignment_detail_List(ModelAndView mav, HttpServletRequest request) {
+		
+		List<Map<String, String>> assignment_detail_List = service.getassignment_detail_List();
+		
+		mav.addObject("assignment_detail_List", assignment_detail_List);
+		
+		mav.setViewName("assignment_detail_List.student");
+		
+		return mav;
+		
+	} // end of public ModelAndView assignment_detail_List
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
