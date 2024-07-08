@@ -304,18 +304,18 @@ select *
 from tbl_assignment;
 
 
-select fk_student_id, SCHEDULE_SEQ, TITLE, SCHEDULE_TYPE, START_DATE, END_DATE
+select fk_student_id, A.course_seq, SCHEDULE_SEQ, TITLE, SCHEDULE_TYPE, START_DATE, END_DATE
 from tbl_schedule join tbl_assignment
 on schedule_seq = schedule_seq_assignment
 join tbl_course A
 on course_seq = fk_course_seq
 join tbl_registered_course B
 on B.fk_course_seq = A.course_seq
-where fk_student_id = '202400005'
+where fk_student_id = '202400005';
 
 
 
-select B.SCHEDULE_SEQ, TITLE, SCHEDULE_TYPE, START_DATE, END_DATE
+select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
 from tbl_todo A join tbl_schedule B
 on A.schedule_seq = B.SCHEDULE_SEQ
 where fk_student_id = '202400005';

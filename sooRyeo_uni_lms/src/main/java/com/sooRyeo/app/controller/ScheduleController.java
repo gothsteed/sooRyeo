@@ -1,5 +1,6 @@
 package com.sooRyeo.app.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ScheduleController {
 	
 	
 	@GetMapping("/student/scheduleManagement.lms")
-	public ModelAndView showSchedule(ModelAndView mav) {
+	public ModelAndView showSchedule(ModelAndView mav, HttpServletRequest request) {
 		
 		mav.setViewName("schedule/scheduleManagement.student");
 		return mav;
@@ -48,13 +49,14 @@ public class ScheduleController {
 		int userid = loginuser.getStudent_id();
 		
 		List<Schedule> assignment_list = service.showAssignment(userid);
-		List<Schedule> todo_list = service.showTodo(userid);
+		List<Map<String, String>> todo_list = service.showTodo(userid);
 		
 		JSONArray jsonArr = new JSONArray();
 		for(Schedule schedule : assignment_list) {
 			JSONObject jsonobj  = new JSONObject();
 			jsonobj.put("schedule_seq", schedule.getSchedule_seq());
 			jsonobj.put("schedule_type", schedule.getSchedule_type());
+			jsonobj.put("course_seq", schedule.getSchedule_type());
 			jsonobj.put("title", schedule.getTitle());
 			jsonobj.put("start_date", schedule.getStart_date());
 			jsonobj.put("end_date", schedule.getEnd_date());
@@ -62,16 +64,19 @@ public class ScheduleController {
 			jsonArr.put(jsonobj);
 		}
 		
-		for(Schedule schedule : todo_list) {
+		for(Map<String, String> schedule : todo_list) {
 			JSONObject jsonobj  = new JSONObject();
-			jsonobj.put("schedule_seq", schedule.getSchedule_seq());
-			jsonobj.put("schedule_type", schedule.getSchedule_type());
-			jsonobj.put("title", schedule.getTitle());
-			jsonobj.put("start_date", schedule.getStart_date());
-			jsonobj.put("end_date", schedule.getEnd_date());
+			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
+			jsonobj.put("schedule_type", schedule.get("schedule_type"));
+			jsonobj.put("title", schedule.get("title"));
+			jsonobj.put("content", schedule.get("content"));
+			jsonobj.put("start_date", schedule.get("start_date"));
+			jsonobj.put("end_date", schedule.get("end_date"));
 			
 			jsonArr.put(jsonobj);
 		}
+		
+		
 		
 		return jsonArr.toString();
 	}

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%
  	String ctxPath = request.getContextPath();
@@ -65,6 +66,38 @@ button.btn_edit{
 
 <body>
     <div id='calendar'></div>
+    
+    <!-- Edit Modal -->
+    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">내 개인 일정</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                    	<label for="taskId" class="col-form-label">일정 제목</label>
+                        <input type="text" class="form-control" id="calendar_title" name="calendar_title">
+                        <label for="taskId" class="col-form-label">일정 내용</label>
+                        <input type="text" class="form-control" id="calendar_content" name="calendar_content">
+                        <label for="taskId" class="col-form-label">시작 시간</label>
+                        <input type="date" class="form-control" id="calendar_date_time" name="calendar_start_time">
+                        <label for="taskId" class="col-form-label">종료 날짜</label>
+                        <input type="date" class="form-control" id="calendar_end_date" name="calendar_end_date">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" id="addCalendar">수정</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        id="sprintSettingModalClose">취소</button>
+                </div>
+    
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -86,14 +119,30 @@ button.btn_edit{
                         			
                         			var start_date = moment(item.start_date).format('YYYY-MM-DD HH:mm:ss');
                         			var end_date = moment(item.end_date).format('YYYY-MM-DD HH:mm:ss');
+                        			var color = "";
+                        			var url = "";
+                        			
+                        			if(item.schedule_type == '1') {
+                        				color = "#175F30";
+                        				url = "<%= ctxPath%>/student/myLecture.lms?course_seq="+item.course_seq	
+                        			}
+                        			if(item.schedule_type == '2') {
+                        				color = "#A0D468";
+                        				url = "<%= ctxPath%>/student/myLecture.lms?course_seq="+item.course_seq
+                        			}
+                        			if(item.schedule_type == '3') {
+                        				color = "#FFD400";                        
+                        			}
                         			
                         			events.push({
                         				
                                         id: item.schedule_seq,
                                         title: item.title,
-                                        url: "<%= ctxPath%>/schedule/detailSchedule.lms?schedule_seq="+item.schedule_seq + "&schedule_type="+item.schedule_type,
+                                        url: url,
                                         start: start_date,
-                                        end: end_date
+                                        end: end_date,
+                                        color: color,
+                                        content: item.content
                         				
                         			});
                         			
@@ -107,11 +156,53 @@ button.btn_edit{
                             failureCallback();
                         }
                     });
+                },
+                eventClick: function(info) {
+                	
+                	/*
+                    let startStr = info.event.start.toLocaleString('ko-KR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      weekday: 'long',
+                      hour: 'numeric',
+                      minute: 'numeric'
+                    });
+                    
+                    let endStr = info.event.end.toLocaleString('ko-KR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        weekday: 'long',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                      });
+                    
+                 	let date = startStr + "-" +endStr.substring(20);
+                 	*/
+                 	
+                 	
+                	
+                 	$("input[name='calendar_title']").val(info.event.title);
+	                $("input[name='calendar_content']").val(info.event.extendedProps.content);
+	                var startDate = moment(info.event.start).format('YYYY-MM-DD');
+	                // $('#eventStartDate').val(startDate);
+	                $("input[name='calendar_start_time']").val(startDate);
+	                $("input[name='calendar_end_time']").val(info.event.end);
+	                
+                	$("#calendarModal").modal("show");
+                	
                 }
+                
             });
             calendar.render();
         });
         
+        
+        
     </script>
+    
+    
+    
 </body>
 

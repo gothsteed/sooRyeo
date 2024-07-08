@@ -12,7 +12,7 @@ public interface ScheduleService {
 	List<Schedule> showAssignment(int userid);
 
 	// 일정테이블 select 
-	List<Schedule> showTodo(int userid);
+	List<Map<String, String>> showTodo(int userid);
 	
 	// 일정상세보기 
 	Map<String, String> detailSchedule(String schedule_seq, String schedule_type);

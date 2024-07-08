@@ -24,9 +24,10 @@ public class ScheduleService_imple implements ScheduleService {
 	}
 
 	
+	// 내개인일정테이블 select
 	@Override
-	public List<Schedule> showTodo(int userid) {
-		List<Schedule> schedule = dao.showTodo(userid);
+	public List<Map<String, String>> showTodo(int userid) {
+		List<Map<String, String>> schedule = dao.showTodo(userid);
 		return schedule;
 	}
 

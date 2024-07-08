@@ -32,8 +32,8 @@ public class ScheduleDao_imple implements ScheduleDao {
 
 	// 내 일정 테이블 select
 	@Override
-	public List<Schedule> showTodo(int userid) {
-		List<Schedule> Schedule = sqlSession.selectList("schedule.showTodo", userid);
+	public List<Map<String, String>> showTodo(int userid) {
+		List<Map<String, String>> Schedule = sqlSession.selectList("schedule.showTodo", userid);
 		return Schedule;
 	}
 

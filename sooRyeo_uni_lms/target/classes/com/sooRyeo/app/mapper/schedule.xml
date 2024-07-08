@@ -9,7 +9,7 @@
 
 	<!--  과제 읽어오기  -->
 	<select id="showAssignment" resultType="com.sooRyeo.app.domain.Schedule" parameterType="Int">
-			select fk_student_id, schedule_seq, title, schedule_type, start_date, end_date
+			select fk_student_id, A.course_seq as course_seq, schedule_seq, title, schedule_type, start_date, end_date
 			from tbl_schedule join tbl_assignment
 			on schedule_seq = schedule_seq_assignment
 			join tbl_course A
@@ -21,18 +21,24 @@
 	
 	
 	<!--  내 개인일정 읽어오기  -->
-	<select id="showTodo" resultType="com.sooRyeo.app.domain.Schedule" parameterType="Int">
-			select B.schedule_seq, title, schedule_type, start_date, end_date
+	<resultMap type="HashMap" id="todoMap">
+		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+		<result column="content" property="content" javaType="String" />
+		<result column="title" property="title" javaType="String" />
+		<result column="schedule_type" property="schedule_type" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+	</resultMap>
+	
+	
+	<select id="showTodo" parameterType="Int" resultMap="todoMap">
+			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
 			from tbl_todo A join tbl_schedule B
 			on A.schedule_seq = B.schedule_seq
 			where fk_student_id = #{userid}
 	</select>
 	
 	
-	<!-- 일정 상세 보기 -->
-	<select id="detailSchedule" parameterType="string" resultMap="detailSchedule_Map">
-			
-	</select>
-	
+
 
 </mapper>
