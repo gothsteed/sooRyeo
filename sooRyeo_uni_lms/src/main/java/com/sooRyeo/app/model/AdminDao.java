@@ -33,4 +33,7 @@ public interface AdminDao {
 	// 조회수를 증가시키는 메소드
 	int increase_viewCount(String string);
 
+	// 고정글을 불러오는 메소드
+	List<Announcement> getStaticList();
+
 }

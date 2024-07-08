@@ -88,4 +88,12 @@ public class AdminDao_imple implements AdminDao {
 		return n;
 	}
 
+
+	// 고정글을 불러오는 메소드
+	@Override
+	public List<Announcement> getStaticList() {
+		List<Announcement> getStaticList = sqlSession.selectList("admin.getStaticList");
+		return getStaticList;
+	}
+
 }

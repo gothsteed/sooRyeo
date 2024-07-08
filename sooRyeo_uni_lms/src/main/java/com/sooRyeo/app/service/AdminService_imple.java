@@ -214,7 +214,7 @@ public class AdminService_imple implements AdminService {
 		
 		int n = admindao.increase_viewCount(paraMap.get("seq")); //
 		Announcement an = admindao.getView(paraMap); // 글 1개 조회하기
-
+		
 		return an;
 	}
 
@@ -225,6 +225,14 @@ public class AdminService_imple implements AdminService {
 		Announcement an = admindao.getView(paraMap);
 		return an;
 		
+	}
+
+	// 고정글을 불러오는 메소드
+	@Override
+	public List<Announcement> getStaticList() {
+
+		List<Announcement> getStaticList = admindao.getStaticList();
+		return getStaticList;
 	}
 	
 	
