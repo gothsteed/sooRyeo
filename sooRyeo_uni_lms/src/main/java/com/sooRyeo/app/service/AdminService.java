@@ -52,5 +52,8 @@ public interface AdminService {
 	// 조회수 증가없이 글을 불러오는 메소드
 	Announcement getView_no_increase_readCount(Map<String, String> paraMap);
 
+	// 고정글을 불러오는 메소드
+	List<Announcement> getStaticList();
+
 
 }

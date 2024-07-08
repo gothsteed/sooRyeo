@@ -49,3 +49,61 @@ ALTER TABLE tbl_announcement ADD viewcount number DEFAULT 0 NOT NULL;
 
 ALTER TABLE tbl_recruitment_notice ADD writeday date DEFAULT sysdate NOT NULL;
 ALTER TABLE tbl_recruitment_notice ADD viewcount number DEFAULT 0 NOT NULL;
+
+
+
+
+SELECT previousseq, previoussubject, announcement_seq, a_title,
+		a_content
+		, viewcount, writeday
+		, nextseq, nextsubject
+		, attatched_file
+		from
+		(
+		select lag (announcement_seq) over(order by announcement_seq desc) AS
+		previousseq
+		, lag (a_title,1) over(order by announcement_seq desc) AS
+		previoussubject
+		, announcement_seq
+		, lead (announcement_seq) over(order by announcement_seq desc) AS
+		nextseq
+		, lead (a_title, 1) over(order by announcement_seq desc) AS Nextsubject
+		, attatched_file, writeday, viewcount, a_title, a_content
+		from tbl_announcement
+		--where announcement_seq = 2
+		) V
+		WHERE V.announcement_seq = 2
+
+SELECT previousseq, previoussubject, announcement_seq, a_title,	a_content
+		, viewcount, writeday
+		, nextseq, nextsubject
+		, attatched_file
+		from
+		(
+			select lag (announcement_seq) over(order by announcement_seq desc) AS previousseq
+			, lag (a_title,1) over(order by announcement_seq desc) AS previoussubject
+			, announcement_seq
+			, lead (announcement_seq) over(order by announcement_seq desc) AS nextseq
+			, lead (a_title, 1) over(order by announcement_seq desc) AS Nextsubject
+			, attatched_file, writeday, viewcount, a_title, a_content
+			from tbl_announcement 
+            where lower(a_title) like '%'||lower('학생')||'%'
+		) V
+		WHERE V.announcement_seq = 3
+
+select 고정글(5)
+
+UNION ALL
+여기부터만 페이징 처리
+select 안고정글(10)
+
+ALTER TABLE tbl_announcement ADD status number DEFAULT 0 NOT NULL;
+
+select *
+from tbl_announcement;
+
+update tbl_announcement set status = 1
+		where announcement_seq in(1,2,3);
+
+commit;
+
