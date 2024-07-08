@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -40,7 +41,7 @@
 
 	border:solid 1px #A0D468;
 	background-color: #A0D468;
-	width: 8%;
+	width: 12%;
 	height: 22px;
 	font-size: 11pt;
 	text-align: center;
@@ -54,7 +55,7 @@
 
 	border:solid 1px #FFD400;
 	background-color: #FFD400;
-	width: 8%;
+	width: 12%;
 	height: 22px;
 	font-size: 11pt;
 	text-align: center;
@@ -68,7 +69,7 @@
 
 	border:solid 1px #FF9500;
 	background-color: #FF9500;
-	width: 8%;
+	width: 12%;
 	height: 22px;
 	font-size: 11pt;
 	text-align: center;
@@ -108,7 +109,7 @@ $(document).ready(function(){
 	$("div.arrow").click(function(e){
 		
 		// alert($(this).find("input[name='course_seq']").val());
-		location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq=" + $(this).parent().parent().find("input[name='course_seq']").val();
+		location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq="+$(this).parent().parent().find("input[name='course_seq']").val();
 		
 	}); // end of $("div.border").click(function(e){})
  	
@@ -121,20 +122,20 @@ $(document).ready(function(){
 <div style="display: flex; width : 100%;" class="row">
 
 	<div style="margin-top: 5%; width : 80%; border: solid 0px green;">
-		<c:forEach var="courseList" items="${requestScope.courseList}" varStatus="status">
+		<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
 		
 			<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-			   <input type="hidden" name="course_seq" value="${courseList.course.course_seq}"/>
+			   <input type="hidden" name="course_seq" value="${course.course_seq}"/>
 			   <div style="display: flex;" >
 			      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
 			      <c:choose>
-                	<c:when test="${courseList.curriculum.fk_department_seq != null && courseList.curriculum.required == '1'}">
+                	<c:when test="${course.curriculum.fk_department_seq != null && course.curriculum.required == 1}">
                     	<div class="majorO rounded">전공필수</div>
                 	</c:when>
-                	<c:when test="${courseList.curriculum.fk_department_seq != null && courseList.curriculum.required == '0'}">
+                	<c:when test="${course.curriculum.fk_department_seq != null && course.curriculum.required == 0}">
                     	<div class="majorX rounded">전공선택</div>
                 	</c:when>
-                	<c:when test="${courseList.curriculum.fk_department_seq == null && courseList.curriculum.required == '1'}">
+                	<c:when test="${course.curriculum.fk_department_seq == null && course.curriculum.required == 1}">
                     	<div class="no-majorO rounded">교양필수</div>
                 	</c:when>
                 	<c:otherwise>
@@ -142,19 +143,21 @@ $(document).ready(function(){
                 	</c:otherwise>
             	  </c:choose>
 			      <div style="width: 80%; margin-left: 3%; margin-top: 1%; margin-bottom: 1%;">
-					  <div style="font-size: 20pt; color: black;">${courseList.curriculum.name}&nbsp;&nbsp;<span style="font-size: 16pt;">${courseList.curriculum.credit}학점</span></div>
-		         	  <div style="font-size: 12pt; color: black;">
-		         	  	${courseList.name}&nbsp;&nbsp;
-		         	  	<c:choose>
-                        	<c:when test="${courseList.time.day_of_week == 1}">월</c:when>
-                        	<c:when test="${courseList.time.day_of_week == 2}">화</c:when>
-                        	<c:when test="${courseList.time.day_of_week == 3}">수</c:when>
-                        	<c:when test="${courseList.time.day_of_week == 4}">목</c:when>
-                        	<c:when test="${courseList.time.day_of_week == 5}">금</c:when>
-                        	<c:otherwise>요일없음</c:otherwise>
-                    	</c:choose>
-                    	&nbsp;${courseList.time.start_period}-${courseList.time.end_period}교시
-                 	  </div>
+					  <div style="font-size: 20pt; color: black;">${course.curriculum.name}&nbsp;&nbsp;<span style="font-size: 16pt;">${course.curriculum.credit}학점</span></div>
+			         	  <div style="font-size: 12pt; color: black;">
+			         	  	${requestScope.loginuser.name}&nbsp;&nbsp;
+			         	  	<c:forEach var="time" items="${course.timeList}" varStatus="status">
+				         	  	<c:choose>
+		                        	<c:when test="${time.day_of_week == 1}">월</c:when>
+		                        	<c:when test="${time.day_of_week == 2}">화</c:when>
+		                        	<c:when test="${time.day_of_week == 3}">수</c:when>
+		                        	<c:when test="${time.day_of_week == 4}">목</c:when>
+		                        	<c:when test="${time.day_of_week == 5}">금</c:when>
+		                        	<c:otherwise>요일없음</c:otherwise>
+		                    	</c:choose>
+		                    	&nbsp;${time.start_period}-${time.end_period}교시
+	                    	</c:forEach>
+	                 	  </div>	  
 			      </div>
 			      <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
 			   </div>

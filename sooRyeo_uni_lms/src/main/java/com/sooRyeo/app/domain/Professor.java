@@ -25,12 +25,6 @@ public class Professor {
     
     private Department department;
     
-    private Course course;
-    
-    private Curriculum curriculum;
-    
-    private Time time;
-    
     private MultipartFile attach;
     
     
@@ -77,24 +71,7 @@ public class Professor {
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-	public Course getCourse() {
-		return course;
-	}
-	public void setCourse(Course course) {
-		this.course = course;
-	}	
-	public Curriculum getCurriculum() {
-		return curriculum;
-	}
-	public void setCurriculum(Curriculum curriculum) {
-		this.curriculum = curriculum;
-	}
-	public Time getTime() {
-		return time;
-	}
-	public void setTime(Time time) {
-		this.time = time;
-	}
+
 	
 	
 	public MultipartFile getAttach() {

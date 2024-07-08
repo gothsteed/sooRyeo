@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.ProfessorTimeTable;
+import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.dto.LoginDTO;
 
 public interface ProfessorDao {
@@ -32,8 +34,13 @@ public interface ProfessorDao {
 	// 계정에 기존 파일 삭제
 	int delFilename(String prof_id);
 	
-	// 교수 진행 강의 목록 
-	List<Professor> professor_course(String prof_id);
+	// 교수 진행 강의 목록 2
+	ProfessorTimeTable getProfTimeTable(int prof_id);
+	
+	// 강의 수강생 목록 
+	List<Map<String, String>> studentList(String fk_course_seq);
+	
+
 	
 
 

@@ -84,28 +84,23 @@ SELECT P.prof_id AS prof_id,
        CU.credit AS credit, 
        CU.required AS required, 
        CU.exist AS exist,
-       CASE 
-        WHEN T.DAY_OF_WEEK = 1 THEN '월'
-        WHEN T.DAY_OF_WEEK = 2 THEN '화'
-        WHEN T.DAY_OF_WEEK = 3 THEN '수'
-        WHEN T.DAY_OF_WEEK = 4 THEN '목'
-        WHEN T.DAY_OF_WEEK = 5 THEN '금'
-        ELSE '요일없음'
-       END AS day_of_week,
+       T.DAY_OF_WEEK AS day_of_week,
        T.start_period AS start_period,
        T.end_period AS end_period
 FROM tbl_professor P
 JOIN tbl_course C ON P.prof_id = C.fk_professor_id
 JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
 JOIN tbl_time T ON C.course_seq = T.fk_course_seq
-WHERE P.prof_id = 202400002;
+WHERE P.prof_id = 202400002 and C.exist = 1;
 
 select *
 from tbl_time
 
 -- 개설수업
 select *
-from tbl_course
+from tbl_course C
+JOIN tbl_time T on C.course_seq = T.fk_course_seq
+where fk_professor_id = 202400002
 
 -- 
 select *
@@ -140,6 +135,10 @@ select *
 from tbl_department
 
 select *
+from tbl_student
+
+
+select *
 from tbl_time
 
 INSERT INTO tbl_time (time_seq, day_of_week, fk_course_seq, start_period, end_period)
@@ -147,8 +146,61 @@ VALUES (time_seq.nextval, 1, 4, 1, 3);
 commit;
 
 
-select C.course_seq, C.fk_professor_id, C.fk_curriculum_seq, S.name, S.grade, S.fk_department_seq
+select ROW_NUMBER() OVER(ORDER BY S.name asc) row_num, C.course_seq, C.fk_professor_id, C.fk_curriculum_seq, S.name, S.grade, S.fk_department_seq, D.department_name
 from tbl_course C
 JOIN tbl_registered_course R ON R.fk_course_seq = C.course_seq
 JOIN tbl_student S ON S.student_id = R.fk_student_id
+JOIN tbl_department D ON D.department_seq = S.fk_department_seq
 where C.course_seq = 4
+
+
+SELECT
+			C.COURSE_SEQ AS course_seq,
+			C.FK_PROFESSOR_ID AS fk_professor_id, 
+       		C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       		C.CAPACITY AS capacity, 
+       		C.SEMESTER_DATE AS semester_date,
+       		CU.curriculum_seq AS curriculum_seq,
+       		CU.fk_department_seq AS fk_department_seq, 
+       		CU.grade AS grade, 
+       		CU.name AS name, 
+       		CU.credit AS credit, 
+       		CU.required AS required,
+            T.time_seq,
+            T.day_of_week,
+            T.start_period,
+            T.end_period
+		FROM 
+		tbl_course C
+		join tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+        join tbl_time T ON C.course_seq = T.fk_course_seq
+		where C.FK_PROFESSOR_ID= 202400002 and C.exist = 1
+        
+        
+        
+        
+        select *
+        FROM 
+		tbl_course C
+		join tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+        where C.FK_PROFESSOR_ID= 202400002 and C.exist = 1
+        
+        
+        select *
+        from
+        tbl_course C
+        join tbl_time T ON C.course_seq = T.fk_course_seq
+        where C.FK_PROFESSOR_ID= 202400002 and C.exist = 1
+        
+        
+        select *
+        from
+        tbl_course C
+        join tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+        join tbl_time T ON C.course_seq = T.fk_course_seq
+        where C.FK_PROFESSOR_ID= 202400002 and C.exist = 1
+        
+        select *
+        from
+        tbl_time T
+        join tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq

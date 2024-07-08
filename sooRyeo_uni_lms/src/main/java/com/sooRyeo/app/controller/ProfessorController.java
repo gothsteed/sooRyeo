@@ -1,8 +1,10 @@
 package com.sooRyeo.app.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.service.ProfessorService;
 import com.sooRyeo.app.service.StudentService;
 
@@ -33,6 +37,8 @@ public class ProfessorController {
 	
 	@Autowired
 	private StudentService Studentservice;
+	
+	
 	
 	@RequestMapping(value = "/professor/dashboard.lms")
 	public ModelAndView professor_dashboard(ModelAndView mav) {// 대시보드 뷰단
@@ -122,7 +128,14 @@ public class ProfessorController {
 	@GetMapping(value = "/professor/courseList.lms")  
 	public ModelAndView professor_course(HttpServletRequest request, ModelAndView mav, Professor professor) {// 교수 진행 강의 목록
 		
-		List<Professor> courseList = service.professor_course(request);
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		int prof_id = loginuser.getProf_id();
+		
+		ProfessorTimeTable timeTable = service.courseList(prof_id);
+		
+		List<Course> courseList = timeTable.getCourseList();
 		
 		if(courseList == null) {// 정보가 없다면
 			  mav.addObject("message", "담당한 강의가 없습니다.");
@@ -135,6 +148,7 @@ public class ProfessorController {
 		
 		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("courseList", courseList);
+		mav.addObject("loginuser", loginuser);
 		mav.setViewName("professor_courseList.professor");
 		
 		return mav;
@@ -145,9 +159,11 @@ public class ProfessorController {
 	public ModelAndView professor_courseDetail(HttpServletRequest request, ModelAndView mav) {// 교수 진행 강의 상세
 				
 		String fk_course_seq = request.getParameter("course_seq");
-		List<Lecture> lectureList = Studentservice.getlectureList(fk_course_seq);	
+		List<Lecture> lectureList = Studentservice.getlectureList(fk_course_seq);
+		List<Map<String, String>> studentList = service.studentList(fk_course_seq);
 		
 		mav.addObject("lectureList", lectureList);
+		mav.addObject("studentList", studentList);
 		mav.setViewName("professor_courseDetail.professor");
 		
 		return mav;

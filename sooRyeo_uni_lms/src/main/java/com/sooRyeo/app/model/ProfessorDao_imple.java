@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.ProfessorTimeTable;
+import com.sooRyeo.app.domain.Time;
+import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.dto.LoginDTO;
 
 @Repository
@@ -95,11 +99,27 @@ public class ProfessorDao_imple implements ProfessorDao {
 
 
 	@Override
-	public List<Professor> professor_course(String prof_id) {
+	public ProfessorTimeTable getProfTimeTable(int prof_id) {
 		
-		List<Professor> professorList  = sqlSession.selectList("professor.professor_course", prof_id);		
+		List<Course> profCourseList = sqlSession.selectList("professor.getProfCourseList", prof_id);
 		
-		return professorList;
+		for(Course course : profCourseList) {
+			
+			int course_seq = course.getCourse_seq();
+			List<Time> times = sqlSession.selectList("professor.getCourseTimeList", course_seq);
+			course.setTimeList(times);
+		}
+		
+		return new ProfessorTimeTable(prof_id, profCourseList);
+	}
+	
+	
+	@Override
+	public List<Map<String, String>> studentList(String fk_course_seq) {
+		
+		List<Map<String, String>> studentList = sqlSession.selectList("professor.studentList", fk_course_seq);
+		
+		return studentList;
 	}
 
 

@@ -23,7 +23,9 @@ import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
+import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.model.ProfessorDao;
 
 
@@ -348,46 +350,20 @@ public class ProfessorService_imple implements ProfessorService {
 
 	
 	@Override
-	public List<Professor> professor_course(HttpServletRequest request) {
+	public ProfessorTimeTable courseList(int prof_id) {		
 		
-		HttpSession session = request.getSession();
-		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		ProfessorTimeTable profTimeTable = dao.getProfTimeTable(prof_id);			
 		
+		return profTimeTable;
+	}
+
+
+	@Override
+	public List<Map<String, String>> studentList(String fk_course_seq) {
 		
-		String prof_id = Integer.toString(loginuser.getProf_id());
+		List<Map<String, String>> studentList = dao.studentList(fk_course_seq);
 		
-		List<Professor> professorList = dao.professor_course(prof_id);
-		
-		for (Professor professor : professorList) {
-		    System.out.println("Professor ID: " + professor.getProf_id());
-		    // 추가 속성들을 출력
-		    Course course = professor.getCourse();
-		    if (course != null) {
-		        System.out.println("Course ID: " + course.getCourse_seq());
-		        System.out.println("Course Capacity: " + course.getCapacity());
-		        System.out.println("Semester Date: " + course.getSemester_date());
-		    }
-		    Curriculum curriculum = professor.getCurriculum();
-		    if (curriculum != null) {
-		        System.out.println("Curriculum ID: " + curriculum.getCurriculum_seq());
-		        System.out.println("Department Seq: " + curriculum.getFk_department_seq());
-		        System.out.println("Grade: " + curriculum.getGrade());
-		        System.out.println("Name: " + curriculum.getName());
-		        System.out.println("Credit: " + curriculum.getCredit());
-		        System.out.println("Required: " + curriculum.getRequired());
-		        System.out.println("Exist: " + curriculum.getExist());
-		    }
-		    Time time = professor.getTime();
-		    if (time != null) {
-		        System.out.println("Day_of_week: " + time.getDay_of_week());
-		        System.out.println("Start_period: " + time.getStart_period());
-		        System.out.println("End_period: " + time.getEnd_period());   
-		    }
-		    
-		}
-		
-		
-		return professorList;
+		return studentList;
 	}
     
     

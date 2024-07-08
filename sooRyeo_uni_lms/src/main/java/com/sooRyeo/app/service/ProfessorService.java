@@ -1,6 +1,7 @@
 package com.sooRyeo.app.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.RegisterDTO;
 
 public interface ProfessorService {
@@ -29,7 +31,10 @@ public interface ProfessorService {
 	int professor_info_edit(Professor professor, MultipartHttpServletRequest mrequest);
 	
 	// 교수 진행 강의 목록 
-	List<Professor> professor_course(HttpServletRequest request);
+	ProfessorTimeTable courseList(int prof_id);
+	
+	// 강의 수강생 목록
+	List<Map<String, String>> studentList(String fk_course_seq);
 	
 
 }

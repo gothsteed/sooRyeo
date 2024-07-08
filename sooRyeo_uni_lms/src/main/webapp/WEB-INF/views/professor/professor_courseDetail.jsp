@@ -26,6 +26,16 @@
   bottom: 200px;
 }
 
+.table-container {
+    max-height: 300px; 
+    overflow-y: auto; 
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f5f5f5; 
+}
+
+
 
 
 </style>
@@ -67,6 +77,33 @@ function scrollToTarget_down() {
 			<span id="tasks" style="color:black; font-weight: bold;">과제</span>
 			<br>
 		</button>
+		<div class="table-container mt-3">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>이름</th>
+						<th>학년</th>
+						<th>학과</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${not empty requestScope.studentList}">
+					<c:forEach var="student" items="${requestScope.studentList}" varStatus="status">
+					<tr>
+						<td>${student.name}</td>
+						<td>${student.grade}</td>
+						<td>${student.department_name}</td>
+					</tr>
+					</c:forEach>
+					</c:if>
+					<c:if test="${empty requestScope.studentList}">
+					<tr>
+						<td colspan="3">수강생이 없습니다.</td>
+					</tr>
+					</c:if>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 

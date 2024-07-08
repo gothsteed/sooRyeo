@@ -90,30 +90,21 @@
 	</update>
 	
 	
-	<resultMap id="professorCourseMap" type="com.sooRyeo.app.domain.Professor">
-        	<id property="prof_id" column="prof_id"/>
-        	<result property="name" column="prof_name"/>
-        <association property="course" javaType="com.sooRyeo.app.domain.Course">
-            <id property="course_seq" column="course_seq"/>
-            <result property="capacity" column="capacity"/>
-            <result property="semester_date" column="semester_date"/>
-        </association>
-        <association property="curriculum" javaType="com.sooRyeo.app.domain.Curriculum">
-            <id property="curriculum_seq" column="course_seq"/>
-            <result property="grade" column="grade"/>
-            <result property="fk_department_seq" column="fk_department_seq"/>
-            <result property="name" column="name"/>
-            <result property="credit" column="credit"/>
-            <result property="required" column="required"/>
-            <result property="exist" column="exist"/>
-        </association>
-        <association property="time" javaType="com.sooRyeo.app.domain.Time">
-            <id property="day_of_week" column="day_of_week"/>
-            <result property="start_period" column="start_period"/>
-            <result property="end_period" column="end_period"/>
-
-        </association>
-    </resultMap>
+<!-- 해시맵으로 불러와본 것	
+	<resultMap type="HashMap" id="professorCourseMap">
+		<result property="prof_id" 				column="prof_id" 	 	 	javaType="int" />
+		<result property="prof_name" 	 		column="prof_name" 		 	javaType="String" />
+		<result property="course_seq" 			column="course_seq"  		javaType="int" />
+		<result property="fk_curriculum_seq" 	column="fk_curriculum_seq" 	javaType="int" />
+		<result property="semester_date" 		column="semester_date"      javaType="date" />
+		<result property="fk_department_seq" 	column="fk_department_seq"  javaType="int" />
+		<result property="capacity" 			column="capacity"      		javaType="int" />
+		<result property="grade" 				column="grade"      		javaType="int" />
+		<result property="name" 				column="name"      			javaType="String" />
+		<result property="credit" 				column="credit"      		javaType="int" />
+		<result property="required" 			column="required"      		javaType="int" />
+		<result property="exist" 				column="exist"      		javaType="int" />
+	</resultMap>
 	<select id="professor_course" resultMap="professorCourseMap" parameterType="String">
 		SELECT P.prof_id AS prof_id,
        		P.name AS prof_name,
@@ -126,16 +117,88 @@
        		CU.name AS name, 
        		CU.credit AS credit, 
        		CU.required AS required, 
-       		CU.exist AS exist,
-       		T.DAY_OF_WEEK AS day_of_week,
-       		T.start_period AS start_period,
-       		T.end_period AS end_period
+       		CU.exist AS exist
 		FROM tbl_professor P
 		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
 		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
-		JOIN tbl_time T ON C.course_seq = T.fk_course_seq
-		where P.prof_id = to_number(#{prof_id}) 
+		where P.prof_id = to_number(#{prof_id}) and C.exist = 1 
+	</select> -->
+	
+	
+	<!-- ================================ 타임테이블 도메인 사용해본 것 ================================  -->	
+	
+	<resultMap id="CourseJoinCurriculum" type="com.sooRyeo.app.domain.Course">
+		<id property="course_seq" column="course_seq" />
+		<result property="fk_professor_id" column="fk_professor_id" />
+		<result property="fk_curriculum_seq" column="fk_curriculum_seq" />
+		<result property="fk_time_seq" column="fk_time_seq" />
+		<result property="capacity" column="capacity" />
+		<result property="semester_date" column="semester_date" />
+		<association property="curriculum" javaType="com.sooRyeo.app.domain.Curriculum">
+			<id property="curriculum_seq" column="curriculum_seq" />
+			<result property="fk_department_seq" column="fk_department_seq" />
+			<result property="grade" column="grade" />
+			<result property="name" column="name" />
+			<result property="credit" column="credit" />
+			<result property="required" column="required" />
+		</association>
+	</resultMap>
+	<select id="getProfCourseList" parameterType="int" resultMap="CourseJoinCurriculum">
+		SELECT
+			C.COURSE_SEQ AS course_seq,
+			C.FK_PROFESSOR_ID AS fk_professor_id, 
+       		C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       		C.CAPACITY AS capacity, 
+       		C.SEMESTER_DATE AS semester_date,
+       		CU.curriculum_seq AS curriculum_seq,
+       		CU.fk_department_seq AS fk_department_seq, 
+       		CU.grade AS grade, 
+       		CU.name AS name, 
+       		CU.credit AS credit, 
+       		CU.required AS required
+		FROM 
+		tbl_course C
+		join tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		where C.FK_PROFESSOR_ID= ${prof_id} and C.exist = 1
 	</select>
+	
+	
+	<select id="getCourseTimeList" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
+		select time_seq, day_of_week, fk_course_seq, start_period, end_period
+		from tbl_time
+		where fk_course_seq = ${course_seq}
+	</select>
+	
+	
+	<resultMap type="HashMap" id="studentListMap">
+		<result property="course_seq" 				column="course_seq" 	 	 		javaType="int" />
+		<result property="fk_professor_id" 	 		column="fk_professor_id" 		 	javaType="int" />
+		<result property="fk_curriculum_seq" 		column="fk_curriculum_seq"  		javaType="int" />
+		<result property="name" 					column="name" 						javaType="String" />
+		<result property="grade" 					column="grade"      				javaType="int" />
+		<result property="fk_department_seq" 		column="fk_department_seq"  		javaType="int" />
+		<result property="department_name" 			column="department_name"      		javaType="String" />
+	</resultMap>
+	<select id="studentList" parameterType="String" resultMap="studentListMap">
+		select ROW_NUMBER() OVER(ORDER BY S.name ASC) row_num, 
+		C.course_seq AS course_seq,
+		C.fk_professor_id AS fk_professor_id,
+		C.fk_curriculum_seq AS fk_curriculum_seq, 
+		S.name AS name, 
+		S.grade AS grade, 
+		S.fk_department_seq AS fk_department_seq, 
+		D.department_name AS department_name
+		from tbl_course C
+		JOIN tbl_registered_course R ON R.fk_course_seq = C.course_seq
+		JOIN tbl_student S ON S.student_id = R.fk_student_id
+		JOIN tbl_department D ON D.department_seq = S.fk_department_seq
+		where C.course_seq = to_number(#{fk_course_seq})
+	</select>
+	
+	
+	
+	
+	
 
 
 </mapper>
