@@ -365,6 +365,18 @@ public class ProfessorService_imple implements ProfessorService {
 		
 		return studentList;
 	}
+
+
+	@Override
+	public List<Map<String, String>> paperAssignment(String fk_course_seq) {
+		
+		List<Map<String, String>> paperAssignment = dao.paperAssignment(fk_course_seq);
+		
+		return paperAssignment;
+	}
+
+	
+
     
     
     

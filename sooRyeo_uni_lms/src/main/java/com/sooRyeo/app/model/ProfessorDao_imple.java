@@ -123,6 +123,15 @@ public class ProfessorDao_imple implements ProfessorDao {
 	}
 
 
+	@Override
+	public List<Map<String, String>> paperAssignment(String fk_course_seq) {
+		
+		List<Map<String, String>> paperAssignment = sqlSession.selectList("professor.paperAssignment", fk_course_seq);
+		
+		return paperAssignment;
+	}
+
+
 
 
 

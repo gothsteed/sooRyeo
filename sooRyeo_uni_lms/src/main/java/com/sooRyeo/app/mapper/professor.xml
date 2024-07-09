@@ -196,6 +196,34 @@
 	</select>
 	
 	
+	<resultMap type="HashMap" id="AssignmentMap">
+		<result property="row_num" 					column="row_num" 	 	 			javaType="int" />
+		<result property="fk_course_seq" 			column="fk_course_seq" 	 	 		javaType="int" />
+		<result property="content" 					column="content" 	 	 			javaType="String" />
+		<result property="attatched_file" 			column="attatched_file" 	 	 	javaType="String" />
+		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment" 	javaType="int" />
+		<result property="schedule_seq" 			column="schedule_seq" 	 	 		javaType="int" />
+		<result property="title" 					column="title" 	 	 				javaType="String" />
+		<result property="start_date" 				column="start_date" 	 	 		javaType="DATE" />
+		<result property="end_date" 				column="end_date" 	 	 			javaType="DATE" />
+	</resultMap>
+	<select id="paperAssignment" parameterType="String" resultMap="AssignmentMap">
+	    select
+        ROW_NUMBER() OVER(ORDER BY S.start_date desc) row_num,
+        A.fk_course_seq as fk_course_seq,
+        A.content as content,
+        NVL(A.attatched_file, '없음') as attatched_file,
+        A.schedule_seq_assignment as schedule_seq_assignment,
+        S.schedule_seq as schedule_seq,
+        S.title as title,
+        S.start_date as start_date,
+        S.end_date as end_date 
+        from
+        tbl_assignment A
+        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+        where A.fk_course_seq = to_number(#{fk_course_seq})
+	</select>
+	
 	
 	
 	

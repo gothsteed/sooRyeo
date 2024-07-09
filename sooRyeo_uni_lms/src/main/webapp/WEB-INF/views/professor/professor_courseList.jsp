@@ -124,7 +124,7 @@ $(document).ready(function(){
 	<div style="margin-top: 5%; width : 80%; border: solid 0px green;">
 		<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
 		
-			<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
+			<div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
 			   <input type="hidden" name="course_seq" value="${course.course_seq}"/>
 			   <div style="display: flex;" >
 			      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>

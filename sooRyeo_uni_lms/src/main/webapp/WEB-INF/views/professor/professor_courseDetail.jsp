@@ -42,13 +42,24 @@
 
 <script type="text/javascript">
 
+$(document).ready(function(){
+	
+		
+
+
+
+	
+});// end of $(document).ready(function() 
+
+
+
 
 function scrollToTarget_up() {
 	
     var target = document.getElementById('target');
     target.scrollIntoView({ behavior: 'smooth' });
     
-}
+}// end of function scrollToTarget_up() 
 
 
 function scrollToTarget_down() {
@@ -56,22 +67,38 @@ function scrollToTarget_down() {
     var target = document.getElementById('target2');
     target2.scrollIntoView({ behavior: 'smooth' });
     
-}
+}// end of function scrollToTarget_down() 
+
+// Function Declaration ////////////////////
+
+	function goTest(){
+		
+		
+	}// end of function goAnnouncement() 
+	
+	
+	function goAssignment(){
+		
+		location.href = "<%=ctxPath%>/professor/paperAssignment.lms?=course_seq"+${fk_course_seq}; // 페이지 이동
+		
+	}// end of function goAssignment() 
+
+
 
 </script>
 
-<div id="target"></div>
 <div class="container mt-5">
 <h3>강의 개요</h3>
+<input type="hidden" name="course_seq" value="${}"/>
 <hr>
 	<div class="card-body" style="">
-		<button type="button" class="btn btn-outline-light" style="width:20%; height:150px;">
-			<img src="<%=ctxPath%>/resources/images/annoucement.png" class="img-fluid" style="width:30%;">
+		<button type="button" class="btn btn-outline-light" id="announcement" style="width:20%; height:150px;" onclick="goTest()">
+			<img src="<%=ctxPath%>/resources/images/test.png" class="img-fluid" style="width:30%;">
 			<br><br>
-			<span id="annoucement" style="color:black; font-weight: bold;">공지사항</span>
+			<span id="annoucement" style="color:black; font-weight: bold;">시험</span>
 			<br>
 		</button> 	
-		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;">
+		<button type="button" class="btn btn-outline-light ml-5" id="assignment" style="width:20%; height:150px;" onclick="goAssignment()">
 			<img src="<%=ctxPath%>/resources/images/tasks.png" class="img-fluid" style="width:30%;">
 			<br><br>
 			<span id="tasks" style="color:black; font-weight: bold;">과제</span>
@@ -80,7 +107,7 @@ function scrollToTarget_down() {
 		<div class="table-container mt-3">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table-success">
 						<th>이름</th>
 						<th>학년</th>
 						<th>학과</th>
@@ -109,54 +136,24 @@ function scrollToTarget_down() {
 
 
 <div class="container" style="margin-top:5%;">
-<h3>이번주 강의</h3>
-<hr>
-	<div class="card mb-5">
-		<h5 class="card-header" style="font-weight:bold;">1주차 [3월 01일 ~ 3월 08일]</h5>
-		<div class="card-body">
-			<h5 class="card-title">제 1장. 집에 가고 싶은 이유</h5>
-			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;1단원 영상</a>
-			<span class="card-text" style="color:orange;">2024-07-01 ~ 2024-07-31 <span style="color:green;">&nbsp;36:00</span></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;1주차 수업 자료</a>
-		</div>
-		<table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>수강생 이름</th>
-                    <th>학년</th>
-                    <th>학과</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>강민정</td>
-                    <td>1</td>
-                    <td>컴퓨터공학과</td>
-                </tr>
-                <!-- 다른 수강생 데이터를 여기에 추가 -->
-            </tbody>
-        </table>
-	</div>
-
-
-<h3 style="margin-top:10%;">강의 목록</h3>
-<hr>
-	<div class="card mb-5">
-		<c:forEach var="lecture" items="${requestScope.lectureList}">
-		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title} </h5>
-		<div class="card-body">
-			<h5 class="card-title">${lecture.lecture_content}</h5>
-			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
-			<!-- 영상 보는 기간, 재생시간 -->
-			<span class="card-text" style="color:orange;">2024-07-01 ~ 2024-07-31 <span style="color:green;">&nbsp;36:00</span></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
-		</div>
-		</c:forEach>
-	</div>
+	<h3>공지사항</h3>
+	<hr>
+	<table class="table table-border">
+		 <thead>
+			<tr class="table-success">
+				<th>글번호</th>
+				<th>제목</th>
+				<th>작성일</th>
+				<th>조회수</th>
+			</tr>
+		 </thead>
+		 <tbody class="table-group-divider">
+			<tr>
+				<td colspan="4">작성된 글이 없습니다.</td>
+			</tr>
+		</tbody>
+	</table>
 </div>
-<div id="target2"></div>
 
 
 

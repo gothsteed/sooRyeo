@@ -36,5 +36,8 @@ public interface ProfessorService {
 	// 강의 수강생 목록
 	List<Map<String, String>> studentList(String fk_course_seq);
 	
+	// 교수 시험, 과제관리
+	List<Map<String, String>> paperAssignment(String fk_course_seq);
+	
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -159,14 +160,66 @@ public class ProfessorController {
 	public ModelAndView professor_courseDetail(HttpServletRequest request, ModelAndView mav) {// 교수 진행 강의 상세
 				
 		String fk_course_seq = request.getParameter("course_seq");
-		List<Lecture> lectureList = Studentservice.getlectureList(fk_course_seq);
+		
+		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);	
+		
 		List<Map<String, String>> studentList = service.studentList(fk_course_seq);
 		
-		mav.addObject("lectureList", lectureList);
 		mav.addObject("studentList", studentList);
+		mav.addObject("fk_course_seq", fk_course_seq);
 		mav.setViewName("professor_courseDetail.professor");
 		
 		return mav;
+	}
+	
+	
+	@GetMapping(value = "/professor/paperAssignment.lms")  
+	public ModelAndView professor_paperAssignment(HttpServletRequest request, ModelAndView mav) {// 교수 과제, 시험관리 페이지
+		
+		String fk_course_seq = request.getParameter("course_seq");
+		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		
+		mav.addObject("fk_course_seq", fk_course_seq);
+		mav.setViewName("professor_paperAssignment.professor");
+		
+		return mav;
+	}
+	
+	
+	@ResponseBody
+	@GetMapping(value = "/professor/paperAssignmentJson.lms")  
+	public String professor_paperAssignmentJson(HttpServletRequest request) {// 과제, 시험정보 가져오기
+		
+		String fk_course_seq = request.getParameter("course_seq");
+		
+		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		
+		List<Map<String,String>> paperAssignment = service.paperAssignment(fk_course_seq);
+		// 회원등록시 입력한 이메일이 이미 있는 이메일인지 검사하는 메소드
+		
+        JSONArray jsonArr = new JSONArray();
+        
+        for(Map<String, String> map : paperAssignment) {
+           
+           JSONObject jsonObj = new JSONObject();
+           jsonObj.put("row_num", map.get("row_num"));
+           jsonObj.put("fk_course_seq", map.get("fk_course_seq"));
+           jsonObj.put("content", map.get("content"));
+           jsonObj.put("attatched_file", map.get("attatched_file"));
+           jsonObj.put("schedule_seq_assignment", map.get("schedule_seq_assignment"));
+           jsonObj.put("schedule_seq", map.get("schedule_seq"));
+           jsonObj.put("title", map.get("title"));
+           jsonObj.put("start_date", map.get("start_date"));
+           jsonObj.put("end_date", map.get("end_date"));
+           
+           jsonArr.put(jsonObj);
+           
+        }// end of for--------------------------------
+        
+        System.out.println(jsonArr.toString());
+        
+        return jsonArr.toString();
+		
 	}
 	
 }

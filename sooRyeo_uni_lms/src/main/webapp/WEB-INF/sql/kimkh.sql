@@ -191,6 +191,7 @@ SELECT
         tbl_course C
         join tbl_time T ON C.course_seq = T.fk_course_seq
         where C.FK_PROFESSOR_ID= 202400002 and C.exist = 1
+        order by T.day_of_week asc;
         
         
         select *
@@ -204,3 +205,28 @@ SELECT
         from
         tbl_time T
         join tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+        
+        select *
+        from
+        tbl_assignment
+        
+        select *
+        from
+        tbl_schedule
+    
+        
+        --- 과제 테이블 셀렉트용 --
+        select
+        ROW_NUMBER() OVER(ORDER BY S.start_date desc) row_num,
+        A.fk_course_seq,
+        A.content,
+        NVL(A.attatched_file, '없음') as attatched_file,
+        A.schedule_seq_assignment,
+        S.schedule_seq,
+        S.title,
+        S.start_date,
+        S.end_date
+        from
+        tbl_assignment A
+        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+        where A.fk_course_seq = 4
