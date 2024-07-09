@@ -12,6 +12,7 @@ import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -51,6 +52,12 @@ public interface AdminService {
 
 	// 조회수 증가없이 글을 불러오는 메소드
 	Announcement getView_no_increase_readCount(Map<String, String> paraMap);
+
+	// 고정글을 불러오는 메소드
+	List<Announcement> getStaticList();
+
+	// 공지사항 쓰기 메소드
+	int addList(BoardDTO bdto);
 
 
 }

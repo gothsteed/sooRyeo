@@ -5,24 +5,25 @@ import java.util.List;
 import com.sooRyeo.app.model.CourseDao;
 
 public class StudentTimeTable implements TimeTable {
-	
+
 	private Integer studentId;
 	private List<Course> courseList;
-	
-	
 
 	@Override
-	public boolean addCourse(Course newCourse, CourseDao courseDao) {
-		
-		for(Course course : courseList) {
-			if(course.isConflict(newCourse)) {
+	public boolean canAddCourse(Course newCourse) {
+
+		for (Course course : courseList) {
+			if (course.isSameCurriculum(newCourse)) {
+				return false;
+			}
+
+			if (course.isTimeConflict(newCourse)) {
 				return false;
 			}
 		}
-		
-		return courseDao.registerCourse(newCourse, studentId) == 1 ? true : false;
-		
-		
+
+		return true;
+
 	}
 
 	@Override

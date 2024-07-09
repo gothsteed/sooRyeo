@@ -23,10 +23,6 @@
 		frm.seq.value = announcement_seq;
 		frm.goBackURL.value = goBackURL;
 		
-		if(${not empty requestScope.paraMap}){ // 검색조건이 있을 경우
-			frm.searchWord.value = "${requestScope.paraMap.searchWord}";
-		};
-		
 		frm.method = "post";
 		frm.action = "<%= ctxPath %>/admin/announcementView.lms";
 		frm.submit();
@@ -70,6 +66,16 @@
 			    </tr>
 			  </thead>
 			  <tbody>
+			  
+			  <c:forEach var="fix" items="${requestScope.staticList}" varStatus="status"  begin="0" end="4">    
+			    <tr style="background-color: #d1e0e0;">
+			      <th scope="row" style="font-weight: bold; color: red;">♬</th>
+			      <td><span type="button" class="a_title" onclick="goView('${fix.announcement_seq}')">${fix.a_title}</span></td>
+			      <td>${fix.writeday}</td>
+			      <td>${fix.viewcount}</td>
+			    </tr>
+			  </c:forEach>  
+			  
 			  <c:forEach var="list" items="${requestScope.announcementList}" varStatus="status">    
 			    <tr>
 			      <th scope="row">${((requestScope.currentPage- 1) * requestScope.perPageSize) + status.count}</th>
@@ -78,6 +84,7 @@
 			      <td>${list.viewcount}</td>
 			    </tr>
               </c:forEach>
+              
 			  </tbody>
 			</table>
 			<div class="pagination justify-content-center">${requestScope.pageBar}</div>
@@ -86,7 +93,7 @@
 </div>
 
 <form name="goViewFrm">
-	<input type="text" name="seq" />
-	<input type="text" name="goBackURL" />
-	<input type="text" name="searchWord" />  
+	<input type="hidden" name="seq" />
+	<input type="hidden" name="goBackURL" />
+	<input type="hidden" name="searchWord" value="${searchWord}"/>  
 </form>
