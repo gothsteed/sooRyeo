@@ -7,11 +7,10 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
-
 	// Function Declaration
 	function goView(announcement_seq){
 		const goBackURL = "${requestScope.goBackURL}";
-
+		
 		const frm = document.goViewFrm
 		frm.seq.value = announcement_seq;
 		frm.goBackURL.value = goBackURL;
@@ -20,10 +19,9 @@
 		frm.action = "<%= ctxPath%>/admin/announcementView_2.lms";
 		frm.submit();
 		
-		
 	}// end of function goView('${boardvo.seq}'){}-----------------------------------------
-
 </script>
+
 <div class="container">
     <div class="card">
         <div class="card-header" style="text-align: center; background-color: #d1e0e0">
@@ -49,7 +47,7 @@
 			    <tr>
 			      <th scope="row">첨부파일</th>
 			      <c:if test="${requestScope.an.attatched_file != null}">
-				      <td colspan="2">${requestScope.an.attatched_file}</td>
+				      <td colspan="2">${requestScope.an.orgfilename}</td>
 			      </c:if>
 			      <c:if test="${requestScope.an.attatched_file == null}">
 				      <td colspan="2">첨부파일이 없습니다.</td>
