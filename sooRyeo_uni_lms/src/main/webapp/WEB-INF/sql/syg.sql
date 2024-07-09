@@ -17,6 +17,9 @@ from tbl_student;
 select *
 from tbl_professor;
 
+select *
+from tbl_admin;
+
 delete from tbl_student
 where student_id = '202400010';
 2024070414003518453562059800.png
@@ -45,10 +48,10 @@ values (ANNOUNCEMENT_SEQ.nextval, '학생들 이번학기는 개강을 안해요
 commit;
 
 ALTER TABLE tbl_announcement ADD writeday date DEFAULT sysdate NOT NULL;
-ALTER TABLE tbl_announcement ADD viewcount number DEFAULT 0 NOT NULL;
+ALTER TABLE tbl_announcement ADD orgfilename nvarchar2(50);
 
 ALTER TABLE tbl_recruitment_notice ADD writeday date DEFAULT sysdate NOT NULL;
-ALTER TABLE tbl_recruitment_notice ADD viewcount number DEFAULT 0 NOT NULL;
+ALTER TABLE tbl_recruitment_notice ADD orgfilename nvarchar2(50);
 
 
 
@@ -107,3 +110,8 @@ update tbl_announcement set status = 1
 
 commit;
 
+
+delete from tbl_announcement
+where 1=1;
+
+ALTER TABLE tbl_announcement MODIFY orgfilename nvarchar2(200);

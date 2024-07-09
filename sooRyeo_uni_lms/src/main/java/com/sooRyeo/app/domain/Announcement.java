@@ -9,6 +9,7 @@ public class Announcement {
 	private Integer viewcount;
 	private String attatched_file;
 	private Integer status;
+	private String orgfilename;
 	
 	private Integer previousseq;
 	private String previoussubject;
@@ -17,6 +18,9 @@ public class Announcement {
 	
 	
 	
+	public String getOrgfilename() {
+		return orgfilename;
+	}
 	public Integer getStatus() {
 		return status;
 	}

@@ -7,6 +7,7 @@ import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -35,5 +36,8 @@ public interface AdminDao {
 
 	// 고정글을 불러오는 메소드
 	List<Announcement> getStaticList();
+
+	// 공지사항 쓰기 메소드
+	int addList(BoardDTO bdto);
 
 }

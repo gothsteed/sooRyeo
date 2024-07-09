@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
@@ -128,7 +130,7 @@ public class AdminController {
 	     */
 	     // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
 	     // System.out.println("~~~ 확인용 path => " + path);
-	     // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+	     // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
 		 /*
 		   2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 	     */
@@ -365,7 +367,6 @@ public class AdminController {
 				// 글 조회수 증가와 함께 글 1개를 조회를 해오는 것
 				// System.out.println("~~ 확인용 글내용 : " + boardvo.getContent());
 				
-				
 				session.removeAttribute("readCountPermission"); // 용도 폐기 
 		    	// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
 			}
@@ -450,6 +451,107 @@ public class AdminController {
 		
 		return mav;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	// 게시판 글쓰기 폼페이지 요청
+	@GetMapping("/admin/addList.lms")
+	public ModelAndView addList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		mav.setViewName("addList.admin");
+		return mav;
+	}
+	
+	@PostMapping("/admin/addListEnd.lms")
+	public ModelAndView addListend(ModelAndView mav, MultipartHttpServletRequest mrequest, BoardDTO bdto) {
+		
+		MultipartFile attach =  bdto.getAttach();
+		
+		String orgFilename = "";
+		
+		if(attach != null) {
+	         HttpSession session = mrequest.getSession(); 
+	         String root = session.getServletContext().getRealPath("/");
+	         // webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
+	         
+	         String path = root+"resources"+File.separator+"files";
+	         String newFileName = "";
+	         // WAS(톰캣)의 디스크에 저장될 파일명
+	         
+	         byte[] bytes = null;
+	         // 첨부 파일의 내용물을 담은 것
+	         
+	         try {
+				bytes = attach.getBytes();
+				// 첨부파일의 내용물을 읽어오는 것
+				
+				String originalFilename =  attach.getOriginalFilename();
+
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				// WAS(톰캣)에 저장된 파일명(2024062712074811660790417300.xlsx) 이다.	
+				orgFilename = originalFilename;
+				
+				bdto.setAttatched_file(newFileName);
+				bdto.setOrgfilename(orgFilename);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		int n = 0;
+		n = adminService.addList(bdto);
+		
+		if(n == 1) {
+			mav.addObject("message", "글쓰기를 성공하였습니다.");
+			mav.addObject("loc", mrequest.getContextPath()+"/admin/announcement.lms");
+			mav.setViewName("msg");
+		}
+		else {
+			mav.addObject("message", "글쓰기를 실패하였습니다.");
+			mav.addObject("loc", mrequest.getContextPath()+"/admin/addList.lms");
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/admin/deleteCurriculumREST.lms", method = RequestMethod.DELETE, produces="text/plain;charset=UTF-8")
