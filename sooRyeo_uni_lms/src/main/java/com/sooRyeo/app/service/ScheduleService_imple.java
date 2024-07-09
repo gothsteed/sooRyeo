@@ -32,12 +32,27 @@ public class ScheduleService_imple implements ScheduleService {
 	}
 
 
-	// 일정상세보기 
+	// 내 개인일정 update - 스케줄테이블 update
 	@Override
-	public Map<String, String> detailSchedule(String schedule_seq, String schedule_type) {
-		Map<String, String> map =  dao.detailSchedule(schedule_seq, schedule_type);
-		return map;
+	public int update_tbl_schedule(String schedule_seq, String title, String start_date, String end_date) {
+		
+		int n1 = dao.update_tbl_schedule(schedule_seq, title, start_date, end_date);
+		return n1;
 	}
+
+
+	// 내 개인일정 수정 - todo테이블 update
+	@Override
+	public int update_tbl_todo(String schedule_seq, String content) {
+		int n2 = dao.update_tbl_todo(schedule_seq, content);
+		return n2;
+	}
+
+
+	
+
+
+
 
 
 }

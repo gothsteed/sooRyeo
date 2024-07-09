@@ -13,8 +13,14 @@ public interface ScheduleService {
 
 	// 일정테이블 select 
 	List<Map<String, String>> showTodo(int userid);
+
+	// 내 개인일정 수정 - 스케줄테이블 update
+	int update_tbl_schedule(String schedule_seq, String title, String start_date, String end_date);
+
+	// 내 개인일정 수정 - todo테이블 update
+	int update_tbl_todo(String schedule_seq, String content);
+
 	
-	// 일정상세보기 
-	Map<String, String> detailSchedule(String schedule_seq, String schedule_type);
+	
 
 }

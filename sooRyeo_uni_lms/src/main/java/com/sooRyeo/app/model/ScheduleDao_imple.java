@@ -37,17 +37,34 @@ public class ScheduleDao_imple implements ScheduleDao {
 		return Schedule;
 	}
 
-	// 일정상세보기
+
+	// 내 개인일정 update - 스케줄테이블 update
 	@Override
-	public Map<String, String> detailSchedule(String schedule_seq, String schedule_type) {
+	public int update_tbl_schedule(String schedule_seq, String title, String start_date, String end_date) {
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("schedule_seq", schedule_seq);
-		paraMap.put("schedule_type", schedule_type);
+		paraMap.put("title", title);
+		paraMap.put("start_date", start_date);
+		paraMap.put("end_date", end_date);
 		
-		Map<String, String> map =  sqlSession.selectOne("schedule.detailSchedule", paraMap);
-		return map;
+		int n1= sqlSession.update("schedule.update_tbl_schedule", paraMap);
+		return n1;
 	}
+
+
+	// 내 개인일정 update - todo테이블 update
+	@Override
+	public int update_tbl_todo(String schedule_seq, String content) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("schedule_seq", schedule_seq);
+		paraMap.put("content", content);
+		
+		int n2 = sqlSession.update("schedule.update_tbl_todo", paraMap);
+		return n2;
+	}
+
 
 
 }

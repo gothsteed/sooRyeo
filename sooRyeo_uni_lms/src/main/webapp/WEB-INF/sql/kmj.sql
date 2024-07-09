@@ -329,4 +329,8 @@ from tbl_todo;
 values(SCHEDULE_SEQ.nextval, '교수님과 식사', '3', to_date('2024-07-28 12:00','yyyy-mm-dd hh24:mi'), to_date('2024-07-28 14:00','yyyy-mm-dd hh24:mi'));
 
 
+update tbl_member set idle = 1
+where userid = 'yy6037';
+
+
 

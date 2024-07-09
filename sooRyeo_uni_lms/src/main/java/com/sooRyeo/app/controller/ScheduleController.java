@@ -1,6 +1,5 @@
 package com.sooRyeo.app.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -53,6 +52,7 @@ public class ScheduleController {
 		
 		JSONArray jsonArr = new JSONArray();
 		for(Schedule schedule : assignment_list) {
+			
 			JSONObject jsonobj  = new JSONObject();
 			jsonobj.put("schedule_seq", schedule.getSchedule_seq());
 			jsonobj.put("schedule_type", schedule.getSchedule_type());
@@ -60,6 +60,8 @@ public class ScheduleController {
 			jsonobj.put("title", schedule.getTitle());
 			jsonobj.put("start_date", schedule.getStart_date());
 			jsonobj.put("end_date", schedule.getEnd_date());
+			
+			// System.out.println(schedule.getStart_date());
 			
 			jsonArr.put(jsonobj);
 		}
@@ -76,32 +78,28 @@ public class ScheduleController {
 			jsonArr.put(jsonobj);
 		}
 		
-		
-		
 		return jsonArr.toString();
 	}
-	
-	
-	
 
-	// === 일정상세보기 ===
-	@RequestMapping(value="/schedule/detailSchedule.lms")
-	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
+	
+	// 내 개인일정 update 하기
+	@ResponseBody
+	@PostMapping("/schedule/updateSchedule.lms")
+	public String updateSchedule(HttpServletRequest request) {
 		
 		String schedule_seq = request.getParameter("schedule_seq");
-		String  schedule_type =request.getParameter("schedule_type");
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+		String start_date = request.getParameter("start_date");
+		String end_date = request.getParameter("end_date");
 		
-		try {
-			Integer.parseInt(schedule_seq);
-			Integer.parseInt(schedule_type);
-			Map<String,String> map = service.detailSchedule(schedule_seq, schedule_type);
-			mav.addObject("map", map);
-			mav.setViewName("schedule/detailSchedule.student");
-		} catch (NumberFormatException e) {
-			mav.setViewName("redirect:/schedule/scheduleManagement.lms");
-		}
+		int n1 = service.update_tbl_schedule(schedule_seq, title, start_date, end_date);
+		int n2 = service.update_tbl_todo(schedule_seq, content);
 		
-		return mav;
+		JSONObject jsonobj  = new JSONObject();
+		jsonobj.put("result", n1*n2);
+		
+		return jsonobj.toString();
 	}
 
 

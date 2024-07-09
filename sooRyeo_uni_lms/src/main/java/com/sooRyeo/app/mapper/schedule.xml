@@ -39,6 +39,22 @@
 	</select>
 	
 	
+	
+	<!-- 내 개인일정 수정  - 스케줄 테이블 업데이트  -->
+	<update id="update_tbl_schedule" parameterType="HashMap">
+		update tbl_schedule set title = #{title}, 
+								start_date = to_date(#{start_date}, 'yyyy-mm-dd hh24:mi:ss'),
+								end_date = to_date(#{end_date}, 'yyyy-mm-dd hh24:mi:ss')
+		where schedule_seq = #{schedule_seq}
+	</update>
+	
+	
+	<!-- 내 개인일정 수정 - todo테이블 업데이트  -->
+	<update id="update_tbl_todo" parameterType="HashMap">
+		update tbl_todo set content = #{content}
+		where schedule_seq = #{schedule_seq}
+	</update>
+	
 
 
 </mapper>
