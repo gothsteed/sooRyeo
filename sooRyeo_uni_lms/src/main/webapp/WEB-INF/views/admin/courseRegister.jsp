@@ -700,7 +700,7 @@ function addForm() {
                     <option value="8">8교시</option>
                 </select>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" style="margin-top:5%">
                 <button type="button" class="btn btn-danger" onclick="removeForm(this)">삭제</button>
             </div>
         </form>
@@ -796,7 +796,7 @@ function clearScheduleForms() {
 			</div>
 
 			<div class="card-body">
-				<div class="form-group col-md-2">
+				<div class="form-group col-md-5 pl-0">
 					<label for="capacity-0">수강 정원</label> <input type="number" class="form-control" id="capacity" required min="1">
 				</div>
 				<div id="form-container">
@@ -835,7 +835,7 @@ function clearScheduleForms() {
 								<option value="8">8교시</option>
 							</select>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-2" style="margin-top:5%">
 							<button type="button" class="btn btn-danger" onclick="removeForm(this)">삭제</button>
 						</div>
 					</form>
