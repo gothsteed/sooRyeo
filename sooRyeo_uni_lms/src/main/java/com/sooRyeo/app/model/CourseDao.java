@@ -11,4 +11,6 @@ public interface CourseDao {
 
 	TimeTable getProfTimeTable(int prof_id);
 
+	int updateToDeleteCourse(int course_seq);
+
 }

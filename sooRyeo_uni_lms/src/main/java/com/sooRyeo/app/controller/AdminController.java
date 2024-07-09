@@ -28,6 +28,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
@@ -267,8 +269,6 @@ public class AdminController {
 		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms", "searchWord="+searchWord));
 		mav.setViewName("announcement.admin");
 		
-		
-		
 		mav.addObject("goBackURL",goBackURL);
 		
 		return mav;
@@ -305,8 +305,8 @@ public class AdminController {
 	              e.printStackTrace();
 	          }
 
-	           System.out.println("~~~ 확인용 goBackURL : " + goBackURL);
-	           System.out.println("~~~ 확인용 searchWord : " + searchWord);
+	           // System.out.println("~~~ 확인용 goBackURL : " + goBackURL);
+	           // System.out.println("~~~ 확인용 searchWord : " + searchWord);
 	           /*
 	            ~~~ 확인용 seq : 207
 				~~~ 확인용 goBackURL : /list.action?searchType=name&searchWord=%EC%A0%95%ED%99%94
@@ -371,19 +371,9 @@ public class AdminController {
 			            즉, 글번호인 seq 가 null 이 되므로 DB 에서 데이터를 조회할 수 없게 된다.     
 			            또한 seq 는 null 이므로 Integer.parseInt(seq); 을 하면  NumberFormatException 이 발생하게 된다. 
 		    */
-			
-			HttpSession session =  request.getSession();
-			Admin loginuser = (Admin)session.getAttribute("loginuser");
-			
-			String login_userid = null;
-			if(loginuser != null) {
-				login_userid = String.valueOf(loginuser.getAdmin_seq());
-				// login_userid 는 로그인 되어진 사용자의 userid 이다.
-			}
-			
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("seq", seq);
-			paraMap.put("login_userid", login_userid);
+			HttpSession session =  request.getSession();
 			
 			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 시작  <<< //
 			paraMap.put("searchWord",searchWord);
@@ -481,6 +471,14 @@ public class AdminController {
 		
 		
 		return courseService.insertCourse(request, courseInsertReqeustDTO);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/courseDeleteREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> courseDeleteREST(HttpServletRequest request) {
+		
+		
+		return courseService.deleteCourse(request);
 	}
 	
 	

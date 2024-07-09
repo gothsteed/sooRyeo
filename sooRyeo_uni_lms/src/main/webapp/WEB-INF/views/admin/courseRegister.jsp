@@ -366,27 +366,42 @@ function fillTimetable(data) {
     const courseListContainer = document.getElementById('course-list-container');
     courseListContainer.innerHTML = ''; // Clear previous course list
 
-    const courseList = document.createElement('ul');
+    // Create table
+    const table = document.createElement('table');
+    table.className = 'table table-bordered table-hover';
+    
+    // Create table header
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+        <tr>
+            <th>강의명</th>
+            <th>삭제</th>
+            <th>수정</th>
+        </tr>
+    `;
+    table.appendChild(thead);
+
+    // Create table body
+    const tbody = document.createElement('tbody');
+
     data.courseList.forEach((course, index) => {
         const color = colors[index % colors.length];
+        const row = document.createElement('tr');
+        row.style.backgroundColor = color;
+        
+        row.innerHTML = `
+            <td>\${course.curriculum.name}</td>
+            <td><button class="btn btn-danger btn-sm delete-course" data-course-id="\${course.course_seq}">삭제</button></td>
+            <td><button class="btn btn-success btn-sm edit-course" data-course-id="\${course.course_seq}">수정</button></td>
+        `;
 
-        // Add course to the course list
-        const courseItem = document.createElement('li');
-        courseItem.textContent = course.curriculum.name;
-        courseItem.style.backgroundColor = color;
+        tbody.appendChild(row);
+        
 
-        courseList.appendChild(courseItem);
-
-        // Fill the timetable
         course.timeList.forEach(time => {
-            const dayMap = {
-                1: 'monday',
-                2: 'tuesday',
-                3: 'wednesday',
-                4: 'thursday',
-                5: 'friday'
-            };
-            const day = dayMap[time.day_of_week];
+
+            // Fill the timetable
+            const day = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'][time.day_of_week - 1];
             if (isTimeslotAvailable(day, time.start_period, time.end_period)) {
                 const slotId = day + "-" + time.start_period;
                 const slot = document.getElementById(slotId);
@@ -408,7 +423,53 @@ function fillTimetable(data) {
             }
         });
     });
-    courseListContainer.appendChild(courseList); // Append the course list to the container
+
+    table.appendChild(tbody);
+    courseListContainer.appendChild(table);
+
+    // Add event listeners for delete buttons
+    document.querySelectorAll('.delete-course').forEach(button => {
+        button.addEventListener('click', function() {
+            const courseId = this.getAttribute('data-course-id');
+            deleteCourse(courseId);
+        });
+    });
+}
+
+
+function deleteCourse(courseId) {
+    // Implement the logic to delete the course
+    console.log(`Deleting course with ID: \${courseId}`);
+    
+    
+    if(!confirm("패강하시겠습니다?")) {
+    	return false;
+    }
+	
+    
+    fetch('<%=ctxPath%>/admin/courseDeleteREST.lms', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({"course_seq" : courseId})
+    })
+    .then(result => {
+        if (result.ok) {
+            // If the insertion was successful, update the timetable
+			let profId = document.getElementById("professor-search").value;
+            fetchProfTimeTable(profId);
+            alert("강의가 성공적으로 패강되었습니다.");
+        } else {
+            alert("잠시후 다시 시도해 주세요: " + result.body);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert("패강 중 오류가 발생했습니다.");
+    });
+
+
 }
 
 function resetTimetable() {
