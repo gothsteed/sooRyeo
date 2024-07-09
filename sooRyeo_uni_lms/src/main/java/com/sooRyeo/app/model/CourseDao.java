@@ -2,6 +2,7 @@ package com.sooRyeo.app.model;
 
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.TimeTable;
+import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 
 public interface CourseDao {
 
@@ -12,5 +13,9 @@ public interface CourseDao {
 	TimeTable getProfTimeTable(int prof_id);
 
 	int updateToDeleteCourse(int course_seq);
+
+	Course getCourse(int course_seq);
+
+	int updateCourse(CourseUpdateRequestDto requestDto);
 
 }

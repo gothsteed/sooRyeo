@@ -190,7 +190,7 @@ function addSchedule() {
         console.log(endPeriod)
         
         if (startPeriod > endPeriod) {
-            alert("End period must be greater than or equal to start period.");
+            alert("끝나는 교시는 시작교시와 같거나 커야합니다");
             return;
         }
 
@@ -379,6 +379,7 @@ function fillTimetable(data) {
             <th>수정</th>
         </tr>
     `;
+    
     table.appendChild(thead);
 
     // Create table body
@@ -434,7 +435,177 @@ function fillTimetable(data) {
             deleteCourse(courseId);
         });
     });
+    
+    
+    document.querySelectorAll('.edit-course').forEach(button => {
+        button.addEventListener('click', function() {
+            const courseId = this.getAttribute('data-course-id');
+            openEditModal(courseId);
+        });
+    });
 }
+
+
+function openEditModal(courseId) {
+    const course = findCourseById(courseId);
+    if (!course) return;
+
+    document.getElementById('editCourseId').value = courseId;
+    document.getElementById('editCapacity').value = course.capacity;
+    
+    const timeSlotsContainer = document.getElementById('editTimeSlots');
+    timeSlotsContainer.innerHTML = '';
+    
+    course.timeList.forEach((time, index) => {
+        addEditTimeSlot(time, index);
+    });
+    
+    $('#editCourseModal').modal('show');
+}
+
+function addEditTimeSlot(time = null, index = null) {
+    const timeSlotsContainer = document.getElementById('editTimeSlots');
+    const slotId = index !== null ? index : timeSlotsContainer.children.length;
+    
+    const timeSlotHtml = 
+        '<div class="form-row mt-3" id="editTimeSlot-' + slotId + '">' +
+            '<div class="form-group col-md-3">' +
+                '<label for="editDayOfWeek-' + slotId + '">요일</label>' +
+                '<select class="form-control" id="editDayOfWeek-' + slotId + '" required>' +
+                    '<option value="1"' + (time && time.day_of_week === 1 ? ' selected' : '') + '>월</option>' +
+                    '<option value="2"' + (time && time.day_of_week === 2 ? ' selected' : '') + '>화</option>' +
+                    '<option value="3"' + (time && time.day_of_week === 3 ? ' selected' : '') + '>수</option>' +
+                    '<option value="4"' + (time && time.day_of_week === 4 ? ' selected' : '') + '>목</option>' +
+                    '<option value="5"' + (time && time.day_of_week === 5 ? ' selected' : '') + '>금</option>' +
+                '</select>' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+                '<label for="editStartPeriod-' + slotId + '">시작 교시</label>' +
+                '<select class="form-control" id="editStartPeriod-' + slotId + '" required>' +
+                    generatePeriodOptions(time ? time.start_period : 1) +
+                '</select>' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+                '<label for="editEndPeriod-' + slotId + '">끝 교시</label>' +
+                '<select class="form-control" id="editEndPeriod-' + slotId + '" required>' +
+                    generatePeriodOptions(time ? time.end_period : 1) +
+                '</select>' +
+            '</div>' +
+            '<div class="form-group col-md-3">' +
+                '<label>&nbsp;</label>' +
+                '<button type="button" class="btn btn-danger form-control" onclick="removeEditTimeSlot(' + slotId + ')">삭제</button>' +
+            '</div>' +
+        '</div>';
+    
+    timeSlotsContainer.insertAdjacentHTML('beforeend', timeSlotHtml);
+}
+
+function removeEditTimeSlot(slotId) {
+    const slotElement = document.getElementById('editTimeSlot-' + slotId);
+    if (slotElement) {
+        slotElement.remove();
+    }
+}
+
+function generatePeriodOptions(selectedPeriod) {
+    let options = '';
+    for (let i = 1; i <= 8; i++) {
+        options += '<option value="' + i + '"' + (i === selectedPeriod ? ' selected' : '') + '>' + i + '교시</option>';
+    }
+    return options;
+}
+
+function saveEditCourse() {
+    const courseId = parseInt( document.getElementById('editCourseId').value);
+    const capacity = parseInt(document.getElementById('editCapacity').value);
+    const timeSlots = document.getElementById('editTimeSlots').children;
+    const timeSlotsArray = Array.from(timeSlots);
+    
+    
+    let timeData = [];
+    
+    timeSlotsArray.forEach(slot => {
+    	const slotId = slot.id.split('-')[1];
+    	
+    	let day_of_week = parseInt(document.getElementById('editDayOfWeek-' + slotId).value);
+    	let start_period = parseInt(document.getElementById('editStartPeriod-' + slotId).value);
+    	let end_period = parseInt(document.getElementById('editEndPeriod-' + slotId).value);
+    	
+    	console.log(day_of_week)
+    	console.log(start_period)
+    	console.log(end_period)
+    	
+        if (start_period > end_period) {
+            alert("끝나는 교시는 시작교시와 같거나 커야합니다");
+            return;
+        }
+        
+        const data = {
+                "day_of_week": day_of_week,
+                "start_period": start_period,
+                "end_period": end_period
+            };
+        
+        timeData.push(data);
+    	
+    })
+    
+
+    
+    const jsonData = {
+    		"course_seq" : courseId,
+    		"capacity" : capacity,
+    		"timeList" : timeData
+
+    }
+    console.log(jsonData);
+    
+    fetch('<%=ctxPath%>/admin/courseUpdateREST.lms', {
+        method: 'POST',
+        headers: {
+        	'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(jsonData),
+    })
+    .then(data => {
+        if (data.ok) {
+            $('#editCourseModal').modal('hide');
+            let profId = document.getElementById("professor-search").value;
+            fetchProfTimeTable(profId);
+        } else {
+            console.error('Failed to update course:', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function findCourseById(course_seq) {
+    let result;
+    
+    $.ajax({
+        url: '<%=ctxPath%>/admin/getCourseREST.lms',
+        method: 'POST',
+        data: { "course_seq": course_seq },
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            if (data) {
+                console.log(data);
+                result = data;
+            } else {
+                console.error('강의 정보 가져오기 실패:', data.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+    
+    return result;
+}
+
 
 
 function deleteCourse(courseId) {
@@ -504,7 +675,7 @@ function addForm() {
                 </select>
             </div>
             <div class="form-group col-md-2">
-                <label for="start-period-${formCounter}">시작 교시</label> 
+                <label for="start-period-\${formCounter}">시작 교시</label> 
                 <select class="form-control" id="start-period-\${formCounter}" required>
                     <option value="1">1교시</option>
                     <option value="2">2교시</option>
@@ -517,7 +688,7 @@ function addForm() {
                 </select>
             </div>
             <div class="form-group col-md-2">
-                <label for="end-period-${formCounter}">끝 교시</label> 
+                <label for="end-period-\${formCounter}">끝 교시</label> 
                 <select class="form-control" id="end-period-\${formCounter}" required>
                     <option value="1">1교시</option>
                     <option value="2">2교시</option>
@@ -779,6 +950,36 @@ function clearScheduleForms() {
 	</div>
 
 	<br>
+
+
+
+	<!-- Add this modal structure to your HTML file -->
+	<div class="modal fade" id="editCourseModal" tabindex="-1" role="dialog" aria-labelledby="editCourseModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editCourseModalLabel">강의 수정</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="editCourseForm">
+						<input type="hidden" id="editCourseId">
+						<div class="form-group">
+							<label for="editCapacity">수강 정원</label> <input type="number" class="form-control" id="editCapacity" required min="1">
+						</div>
+						<div id="editTimeSlots"></div>
+						<button type="button" class="btn btn-secondary mt-2" onclick="addEditTimeSlot()">시간 추가</button>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+					<button type="button" class="btn btn-primary" onclick="saveEditCourse()">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 </div>
