@@ -65,7 +65,7 @@ button.btn_edit{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
 <body>
-    <div id='calendar'></div>
+    <div id='calendar' style="margin: 0 auto; width : 90%; height : 800px;"></div>
     
     <!-- Edit Modal -->
     <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -122,6 +122,11 @@ button.btn_edit{
 	        document.addEventListener('DOMContentLoaded', function() {
 	            var calendarEl = document.getElementById('calendar');
 	            var calendar = new FullCalendar.Calendar(calendarEl, {
+	            headerToolbar: {
+	      	    	  left: 'prev,next today',
+	      	          center: 'title',
+	      	          right: 'dayGridMonth dayGridWeek dayGridDay'
+	      	    },
 	            	initialView: 'dayGridMonth',
 	                locale: 'ko',
 	                events:function(info, successCallback, failureCallback) {
