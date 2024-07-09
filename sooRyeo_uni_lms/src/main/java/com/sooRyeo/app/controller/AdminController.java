@@ -3,6 +3,7 @@ package com.sooRyeo.app.controller;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.domain.Department;
@@ -245,6 +247,7 @@ public class AdminController {
 		}
 		if(searchWord != null) {
 			searchWord = searchWord.trim();
+			mav.addObject("searchWord", searchWord);
 		}
 		
 		Map<String, Object> paraMap = new HashMap<>();
@@ -262,8 +265,10 @@ public class AdminController {
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  adminService.getAnnouncement(paraMap);
 		
-		// System.out.println(announcementList.getObjectList());
+		// 고정글을 불러오는 메소드
+		List<Announcement> staticList = adminService.getStaticList();
 		
+		mav.addObject("staticList", staticList);
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
@@ -294,10 +299,11 @@ public class AdminController {
 	        // "키" 값을 주어서 redirect 되어서 넘어온 데이터의 값은 Map<String, String> 이므로 Map<String, String> 으로 casting 해준다.
 
 			// === #143. 이전글제목, 다음글제목 보기 시작 === //
-	           System.out.println("~~~ 확인용 seq : " + redirect_map.get("seq"));
 	           seq = redirect_map.get("seq");
 	           goBackURL = redirect_map.get("goBackURL");
 	           searchWord = redirect_map.get("searchWord");
+	           
+	           // System.out.println("~~~ 확인용 searchWord : " + redirect_map.get("searchWord"));
 	           
 	           try {
 	               searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8"); // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다. 
@@ -305,62 +311,22 @@ public class AdminController {
 	          } catch (UnsupportedEncodingException e) {
 	              e.printStackTrace();
 	          }
-
-	           // System.out.println("~~~ 확인용 goBackURL : " + goBackURL);
-	           // System.out.println("~~~ 확인용 searchWord : " + searchWord);
-	           /*
-	            ~~~ 확인용 seq : 207
-				~~~ 확인용 goBackURL : /list.action?searchType=name&searchWord=%EC%A0%95%ED%99%94
-				~~~ 확인용 searchType : name
-				~~~ 확인용 searchWord : 정화  ==> 인코드 해줬기 때문에 한글이 제대로 나옴	
-	           */
-            // === #143. 이전글제목, 다음글제목 보기 끝 === //
-			
 		}
-		//////////////////////////////////////////////////////////////////////////
 		else { // redirect 되어서 넘어온 데이터가 아닌 경우
-			
-			// == 조회하고자 하는 글번호 받아오기 ==
-	           
-	        // 글목록보기인 /list.action 페이지에서 특정 글제목을 클릭하여 특정글을 조회해온 경우  
-	        // 또는 
-	        // 글목록보기인 /list.action 페이지에서 특정 글제목을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 form 을 사용해서 POST 방식으로 넘어온 경우이므로 "양식 다시 제출 확인" 이라는 대화상자가 뜨게 되며 "계속" 이라는 버튼을 클릭하면 이전에 입력했던 데이터를 자동적으로 입력해서 POST 방식으로 진행된다. 그래서  request.getParameter("seq"); 은 null 이 아닌 번호를 입력받아온다.     
-	        // 그런데 "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는 원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서 "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 그래서  request.getParameter("seq"); 은 null 이 된다. 
+		
 			seq = request.getParameter("seq");
-			// System.out.println("~~~~~~ 확인용 seq : " + seq);
-            // ~~~~~~ 확인용 seq : 213
-            // ~~~~~~ 확인용 seq : null
-			
-			// === #134. 특정글을 조회한 후 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 만들기 위함. === //
+
 			goBackURL = request.getParameter("goBackURL");
-			// System.out.println("확인용(view.action) goBackURL : " + goBackURL);
-			/*
-			   	이것은 잘못된 것이다 (get 방식일 때)
-			 	확인용(view.action) goBackURL : /list.action?searchType=
-			 	
-			 	올바른 것 (POST 방식일 때)
-			 	확인용(view.action) goBackURL : /list.action?searchType=subject&searchWord=%EC%A0%95%ED%99%94
-			*/
-			
-			
+
 			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 시작  <<< //
 			searchWord = request.getParameter("searchWord");
 			
 			if(searchWord == null) {
 				searchWord = "";
 			}
-			
-			// System.out.println("확인용(view.action) searchType : " + searchType);
-			// System.out.println("확인용(view.action) searchWord : " + searchWord);
-			/*
-			    확인용(view.action) searchType : subject
-			    확인용(view.action) searchWord : jav
-			*/
-			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 끝  <<< // 
 		}
 		
 		mav.addObject("goBackURL", goBackURL);
-		
 		
 		try {
 			Integer.parseInt(seq);
@@ -399,6 +365,7 @@ public class AdminController {
 				// 글 조회수 증가와 함께 글 1개를 조회를 해오는 것
 				// System.out.println("~~ 확인용 글내용 : " + boardvo.getContent());
 				
+				
 				session.removeAttribute("readCountPermission"); // 용도 폐기 
 		    	// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
 			}
@@ -427,6 +394,7 @@ public class AdminController {
 			// === #139. 이전글제목, 다음글제목 보기 === //
 			mav.addObject("paraMap", paraMap);
 			
+			
 			mav.setViewName("announcementView.admin");
 			
 		} catch (NumberFormatException e) {
@@ -437,7 +405,51 @@ public class AdminController {
 	}
 	
 	
-	
+	@PostMapping("/admin/announcementView_2.lms")
+	public ModelAndView announcementView_2(ModelAndView mav, HttpServletRequest request, RedirectAttributes redirectAttr) {
+		
+		// 조회하고자 하는 글번호 받아오기
+		String seq = request.getParameter("seq");
+		
+		// === #141. 이전글제목, 다음글제목 보기 시작  === //
+		String goBackURL = request.getParameter("goBackURL");
+		String searchWord = request.getParameter("searchWord");
+		
+		/* 
+	        redirect:/ 를 할때 "한글데이터는 0에서 255까지의 허용 범위 바깥에 있으므로 인코딩될 수 없습니다" 라는 
+	        java.lang.IllegalArgumentException 라는 오류가 발생한다.
+	                    이것을 방지하려면 아래와 같이 하면 된다.
+        */
+		try {
+	         searchWord = URLEncoder.encode(searchWord, "UTF-8");
+	         goBackURL = URLEncoder.encode(goBackURL, "UTF-8");
+	         
+	      } catch (UnsupportedEncodingException e) {
+	         e.printStackTrace();
+	      }
+		// === #141. 이전글제목, 다음글제목 보기 끝  === //
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		// ==== redirect(GET방식임) 시 데이터를 넘길때 GET 방식이 아닌 POST 방식처럼 데이터를 넘기려면 RedirectAttributes 를 사용하면 된다. 시작 ==== //
+    	/////////////////////////////////////////////////////////////////////////////////
+		Map<String, String> redirect_map = new HashMap<>();
+		redirect_map.put("seq",seq); // 여기서 redirect_map 이것 안에 seq를 담아주고, 밑에서  addFlashAttribute를 사용하여 redirectAttr 이곳에 넣어준다.
+		// === #142. 이전글제목, 다음글제목 보기 시작  === //
+		redirect_map.put("goBackURL",goBackURL);
+		redirect_map.put("searchWord",searchWord);
+		// === #142. 이전글제목, 다음글제목 보기 끝  === //
+		
+		redirectAttr.addFlashAttribute("redirect_map", redirect_map); // 밑에  mav.setViewName("redirect:/view.action") 이것을 할때 redirect_map 이것을 같이 담아서 보내버린다. 그래서 POST'처럼' 이라고 하는 듯.
+		// redirectAttr.addFlashAttribute("키", 밸류값); 으로 사용하는데 오로지 1개의 데이터만 담을 수 있으므로 여러개의 데이터를 담으려면 Map 을 사용해야 한다.
+		
+		mav.setViewName("redirect:/admin/announcementView.lms"); // 실제로 redirect:/view.action은 POST 방식이 아닌 GET 방식이다. 
+		/////////////////////////////////////////////////////////////////////////////////
+		// ==== redirect(GET방식임) 시 데이터를 넘길때 GET 방식이 아닌 POST 방식처럼 데이터를 넘기려면 RedirectAttributes 를 사용하면 된다. 끝 ==== //
+		
+		return mav;
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/admin/deleteCurriculumREST.lms", method = RequestMethod.DELETE, produces="text/plain;charset=UTF-8")
@@ -457,7 +469,6 @@ public class AdminController {
 
 		return adminService.makeCourseRegiseterPage(request, mav);
 	}
-	
 	
 	@ResponseBody
 	@RequestMapping(value = "/admin/profTimetableJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
