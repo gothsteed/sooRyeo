@@ -19,4 +19,10 @@ public interface ScheduleDao {
 	// 내 개인일정 update - todo테이블 update
 	int update_tbl_todo(String schedule_seq, String content);
 
+	// 내 개인일정 insert - 스케줄테이블 insert
+	int insert_tbl_schedule(String title, String start_date, String end_date, String content, int userid);
+
+
+	
+
 }

@@ -101,13 +101,29 @@ public class ScheduleController {
 		
 		return jsonobj.toString();
 	}
+	
+	
+	@ResponseBody
+	@PostMapping("/schedule/insertSchedule.lms")
+	public String insertSchedule(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
+		String title =request.getParameter("title");
+		String content = request.getParameter("content");
+		String start_date = request.getParameter("start_date");
+		String end_date = request.getParameter("end_date");
+		
+		int n = service.insert_tbl_schedule(title, start_date, end_date, content, userid);
+		
+		JSONObject jsonobj  = new JSONObject();
+		jsonobj.put("result", n);
+		
+		return jsonobj.toString();
+	}
 
 
-
-	
-	
-	
-	
-	
 	
 }

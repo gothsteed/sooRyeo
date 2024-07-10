@@ -66,5 +66,32 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 
+	// 내 개인일정 insert - 스케줄테이블 insert
+	@Override
+	public int insert_tbl_schedule(String title, String start_date, String end_date, String content, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("title", title);
+		paraMap.put("start_date", start_date);
+		paraMap.put("end_date", end_date);
+		
+		sqlSession.insert("schedule.insert_tbl_schedule", paraMap);
+		
+		System.out.println(paraMap.get("schedule_seq"));
+		String schedule_seq = (String) paraMap.get("schedule_seq");
+		
+		paraMap.put("schedule_seq", schedule_seq);
+		paraMap.put("content", content);
+		paraMap.put("userid", String.valueOf(userid));
+		
+		int n = sqlSession.insert("schedule.insert_tbl_todo", paraMap);
+		
+		return n;
+	}
+
+
+
+
+
 
 }

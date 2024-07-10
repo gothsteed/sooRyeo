@@ -40,7 +40,7 @@
 	
 	
 	
-	<!-- 내 개인일정 수정  - 스케줄 테이블 업데이트  -->
+	<!-- 내 개인일정 수정  - 스케줄 테이블 update -->
 	<update id="update_tbl_schedule" parameterType="HashMap">
 		update tbl_schedule set title = #{title}, 
 								start_date = to_date(#{start_date}, 'yyyy-mm-dd hh24:mi:ss'),
@@ -49,11 +49,28 @@
 	</update>
 	
 	
-	<!-- 내 개인일정 수정 - todo테이블 업데이트  -->
+	<!-- 내 개인일정 수정 - todo테이블 update  -->
 	<update id="update_tbl_todo" parameterType="HashMap">
 		update tbl_todo set content = #{content}
 		where schedule_seq = #{schedule_seq}
 	</update>
+	
+	
+	<!-- 내 개인일정 추가 스케줄 테이블 insert -->
+	<insert id="insert_tbl_schedule" parameterType="HashMap">
+		<selectKey keyProperty="schedule_seq" resultType="String" order="BEFORE">
+			select schedule_seq.nextval FROM dual
+		</selectKey>
+		insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, start_date, end_date)
+		values(#{schedule_seq}, #{title}, '3', to_date(#{start_date}, 'yyyymmddhh24miss'), to_date(#{end_date}, 'yyyymmddhh24miss'))
+	</insert>
+	
+	
+	<!-- 내 개인일정 추가 todo테이블 insert -->
+	<insert id="insert_tbl_todo" parameterType="HashMap">
+		insert into tbl_todo(Schedule_Seq, content, fk_student_id)
+		values(#{schedule_seq}, #{content}, #{userid})
+	</insert>
 	
 
 

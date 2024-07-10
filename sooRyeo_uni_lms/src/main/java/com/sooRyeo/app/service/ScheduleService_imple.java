@@ -49,6 +49,18 @@ public class ScheduleService_imple implements ScheduleService {
 	}
 
 
+	// 내 개인일정 insert - 스케줄테이블 insert
+	@Override
+	public int insert_tbl_schedule(String title, String start_date, String end_date, String content, int userid) {
+		
+		int n = dao.insert_tbl_schedule(title, start_date, end_date, content, userid);
+		return n;
+	}
+
+
+
+
+
 	
 
 
