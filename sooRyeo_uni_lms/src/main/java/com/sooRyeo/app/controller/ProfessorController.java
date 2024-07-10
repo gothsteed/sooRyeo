@@ -1,5 +1,9 @@
 package com.sooRyeo.app.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
@@ -173,24 +180,28 @@ public class ProfessorController {
 	}
 	
 	
-	@GetMapping(value = "/professor/paperAssignment.lms")  
-	public ModelAndView professor_paperAssignment(HttpServletRequest request, ModelAndView mav) {// 교수 과제, 시험관리 페이지
+	@GetMapping(value = "/professor/assignment.lms")  
+	public ModelAndView professor_paperAssignment(HttpServletRequest request, ModelAndView mav) {// 교수 과제관리 페이지
 		
 		String fk_course_seq = request.getParameter("course_seq");
-		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		// System.out.println("확인용2 fk_course_seq : " + fk_course_seq);
+		String goBackURL = MyUtil.getCurrentURL(request);
 		
+		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("fk_course_seq", fk_course_seq);
-		mav.setViewName("professor_paperAssignment.professor");
+		mav.setViewName("professor_assignment.professor");
 		
 		return mav;
 	}
 	
 	
 	@ResponseBody
-	@GetMapping(value = "/professor/paperAssignmentJson.lms")  
-	public String professor_paperAssignmentJson(HttpServletRequest request) {// 과제, 시험정보 가져오기
+	@GetMapping(value = "/professor/assignmentJson.lms", produces = "text/plain;charset=UTF-8")  
+	public String professor_paperAssignmentJson(HttpServletRequest request) {// 과제 테이블에 띄우기
 		
 		String fk_course_seq = request.getParameter("course_seq");
+		
+		SimpleDateFormat sdfmt = new SimpleDateFormat("yyyy-MM-dd");
 		
 		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
 		
@@ -209,17 +220,106 @@ public class ProfessorController {
            jsonObj.put("schedule_seq_assignment", map.get("schedule_seq_assignment"));
            jsonObj.put("schedule_seq", map.get("schedule_seq"));
            jsonObj.put("title", map.get("title"));
-           jsonObj.put("start_date", map.get("start_date"));
-           jsonObj.put("end_date", map.get("end_date"));
+           jsonObj.put("start_date", sdfmt.format(map.get("start_date")));
+           jsonObj.put("end_date", sdfmt.format(map.get("end_date")));
            
            jsonArr.put(jsonObj);
            
         }// end of for--------------------------------
         
-        System.out.println(jsonArr.toString());
+        // System.out.println(jsonArr.toString());
         
         return jsonArr.toString();
 		
 	}
+	
+	
+	@GetMapping("/professor/assign_enroll.lms")
+	public ModelAndView professor_assign_enroll(ModelAndView mav, HttpServletRequest request){// 과제 등록하기
+		
+		String fk_course_seq = request.getParameter("course_seq");
+		
+		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		
+		mav.addObject("fk_course_seq", fk_course_seq);
+		mav.setViewName("professor_assign_enroll.professor");
+		return mav;
+	}
+	
+	
+	@PostMapping("/professor/assignmentDetail.lms")
+	public ModelAndView professor_assign_view(ModelAndView mav, HttpServletRequest request) {// 교수 과제상세 페이지
+
+		String fk_course_seq = "";
+		String goBackURL = "";
+		
+		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+		// redirect 되어서 넘어온 데이터가 있는지 꺼내어 와본다.		
+		
+		if(inputFlashMap != null) { // redirect 되어서 넘어온 데이터가 있다면
+			
+			@SuppressWarnings("unchecked")
+			Map<String, String> redirect_map = (Map<String, String>)inputFlashMap.get("redirect_map");			
+			// "키" 값을 주어서 redirect 되어서 넘어온 데이터를 꺼내어 온다. 
+			// "키" 값을 주어서 redirect 되어서 넘어온 데이터의 값은 Map<String, String> 이므로 Map<String, String> 으로 casting 해준다.
+  
+            // System.out.println("~~~ 확인용 seq : " + redirect_map.get("seq"));
+			fk_course_seq = redirect_map.get("fk_course_seq");
+			
+		}
+		///////////////////////////////////////////////////////////////////////
+		else { // redirect 되어서 넘어온 데이터가 없다면
+			// == 조회하고자 하는 과제번호 받아오기 ==
+	           	
+			fk_course_seq = request.getParameter("fk_course_seq");
+			
+			// #134. 특정글을 조회한 후 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 만들기 위함.  
+			goBackURL = request.getParameter("goBackURL");
+			// System.out.println("~~~ 확인용(view.action) goBackURL : " + goBackURL);
+			/* 
+			 	잘못된 방식(get 방식 일 경우 & 앞에서 데이터값이 끊기기 때문이다.)
+			 	~~~ 확인용(view.action) goBackURL : /list.action?searchType=subject
+			  	올바른 방식(post 방식 일 경우)
+			  	~~~ 확인용(view.action) goBackURL : /list.action?searchType=subject&searchWord=%EC%A0%95%ED%99%94&currentShowPageNo=3
+			 */
+			
+			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. <<< 시작  // 
+			
+		}
+		
+		mav.addObject("goBackURL", goBackURL);
+		
+		try {
+			
+			HttpSession session = request.getSession();
+			Professor loginuser = (Professor)session.getAttribute("loginuser");
+			
+			String login_userid = null;
+			if(loginuser != null) {
+				login_userid = String.valueOf(loginuser.getProf_id());
+				// login_userid 는 로그인 되어진 사용자의 userid
+			}
+			
+			Map<String, String> paraMap = new HashMap<>();
+			paraMap.put("fk_course_seq", fk_course_seq);
+			paraMap.put("login_userid", login_userid);
+
+			System.out.println("확인용 fk_course_seq :" + fk_course_seq);
+			
+			AssignJoinSchedule assign_view = service.assign_view(fk_course_seq);
+			
+			String content = assign_view.getAssignment().getContent();
+			System.out.println("확인용 content : " + content);
+			
+			mav.addObject("assign_view", assign_view);
+			mav.setViewName("professor_assignDetail.professor");
+			
+		} catch (NumberFormatException e) {
+			mav.setViewName("redirect:/professor/assignment.lms");
+		}
+				
+		return mav; 
+	}
+	
 	
 }

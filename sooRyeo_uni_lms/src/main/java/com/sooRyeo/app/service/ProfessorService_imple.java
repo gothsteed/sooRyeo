@@ -20,6 +20,7 @@ import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.common.Sha256;
+import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Professor;
@@ -373,6 +374,15 @@ public class ProfessorService_imple implements ProfessorService {
 		List<Map<String, String>> paperAssignment = dao.paperAssignment(fk_course_seq);
 		
 		return paperAssignment;
+	}
+
+
+	@Override
+	public AssignJoinSchedule assign_view(String fk_course_seq) {
+		
+		AssignJoinSchedule assign_view = dao.assign_view(fk_course_seq);
+		
+		return assign_view;
 	}
 
 	

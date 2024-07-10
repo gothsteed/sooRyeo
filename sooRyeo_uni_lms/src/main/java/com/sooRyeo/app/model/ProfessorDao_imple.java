@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -129,6 +130,15 @@ public class ProfessorDao_imple implements ProfessorDao {
 		List<Map<String, String>> paperAssignment = sqlSession.selectList("professor.paperAssignment", fk_course_seq);
 		
 		return paperAssignment;
+	}
+
+
+	@Override
+	public AssignJoinSchedule assign_view(String fk_course_seq) {
+		
+		AssignJoinSchedule assign_view = sqlSession.selectOne("professor.assign_view", fk_course_seq);
+		
+		return assign_view;
 	}
 
 

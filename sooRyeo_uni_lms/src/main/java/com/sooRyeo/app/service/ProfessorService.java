@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -38,6 +39,9 @@ public interface ProfessorService {
 	
 	// 교수 시험, 과제관리
 	List<Map<String, String>> paperAssignment(String fk_course_seq);
+	
+	// 과제 상세보기
+	AssignJoinSchedule assign_view(String fk_course_seq);
 	
 
 }

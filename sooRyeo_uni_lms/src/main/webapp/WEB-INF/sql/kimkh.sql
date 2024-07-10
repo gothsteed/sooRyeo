@@ -221,6 +221,7 @@ SELECT
         A.fk_course_seq,
         A.content,
         NVL(A.attatched_file, '없음') as attatched_file,
+        -- A.orgfilename as orgfilename, 
         A.schedule_seq_assignment,
         S.schedule_seq,
         S.title,
@@ -230,3 +231,9 @@ SELECT
         tbl_assignment A
         join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
         where A.fk_course_seq = 4
+        
+        
+        
+insert into spring_test(no, name, writeday) values(102, '박보영', default);
+
+insert into spring_test(no, name, writeday) values(103, '변우석', default); 

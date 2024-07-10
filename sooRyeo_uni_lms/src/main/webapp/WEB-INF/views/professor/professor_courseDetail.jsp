@@ -79,7 +79,7 @@ function scrollToTarget_down() {
 	
 	function goAssignment(){
 		
-		location.href = "<%=ctxPath%>/professor/paperAssignment.lms?=course_seq"+${fk_course_seq}; // 페이지 이동
+		location.href = "<%=ctxPath%>/professor/assignment.lms?course_seq="+${fk_course_seq}; // 페이지 이동
 		
 	}// end of function goAssignment() 
 
@@ -89,7 +89,7 @@ function scrollToTarget_down() {
 
 <div class="container mt-5">
 <h3>강의 개요</h3>
-<input type="hidden" name="course_seq" value="${}"/>
+<input type="hidden" name="course_seq" value=""/>
 <hr>
 	<div class="card-body" style="">
 		<button type="button" class="btn btn-outline-light" id="announcement" style="width:20%; height:150px;" onclick="goTest()">
