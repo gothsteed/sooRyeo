@@ -123,6 +123,22 @@ public class ScheduleController {
 		
 		return jsonobj.toString();
 	}
+	
+	
+	@ResponseBody
+	@PostMapping("/schedule/deleteSchedule.lms")
+	public String deleteSchedule(HttpServletRequest request) {
+		
+		String schedule_seq =request.getParameter("schedule_seq");
+		
+		int n1 = service.delete_tbl_todo(schedule_seq);
+		int n2 = service.delete_tbl_schedule(schedule_seq);
+		
+		JSONObject jsonobj  = new JSONObject();
+		jsonobj.put("result", n1*n2);
+		
+		return jsonobj.toString();
+	}
 
 
 	

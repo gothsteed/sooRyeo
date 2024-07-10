@@ -72,6 +72,18 @@
 		values(#{schedule_seq}, #{content}, #{userid})
 	</insert>
 	
+	
+	<!-- 내 개인일정 삭제  - todo 테이블에 delete -->
+	<delete id="delete_tbl_todo" parameterType="String">
+		delete from tbl_todo where schedule_seq = #{schedule_seq}
+	</delete>
+	
+	
+	<!-- 내 개인일정 삭제  - 스케줄 테이블에 delete -->
+	<delete id="delete_tbl_schedule" parameterType="String">
+		delete from tbl_schedule where schedule_seq = #{schedule_seq}
+	</delete>
+	
 
 
 </mapper>

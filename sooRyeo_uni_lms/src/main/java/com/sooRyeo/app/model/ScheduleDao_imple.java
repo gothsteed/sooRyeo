@@ -89,6 +89,23 @@ public class ScheduleDao_imple implements ScheduleDao {
 		return n;
 	}
 
+	// 내 개인일정 삭제 - todo 테이블 delete
+	@Override
+	public int delete_tbl_todo(String schedule_seq) {
+		int n1 = sqlSession.delete("schedule.delete_tbl_todo", schedule_seq);
+		return n1;
+	}
+	
+	// 내 개인일정 삭제 - 스케줄 테이블 delete
+	@Override
+	public int delete_tbl_schedule(String schedule_seq) {
+		int n2 = sqlSession.delete("schedule.delete_tbl_schedule", schedule_seq);
+		return n2;
+	}
+
+
+
+
 
 
 

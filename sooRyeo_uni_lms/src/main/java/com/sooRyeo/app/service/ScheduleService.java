@@ -22,6 +22,14 @@ public interface ScheduleService {
 
 	// 내 개인일정 추가 - 스케줄테이블 insert
 	int insert_tbl_schedule(String title, String start_date, String end_date, String content, int userid);
+
+	// 내 개인일정 삭제 - todo 테이블 delete
+	int delete_tbl_todo(String schedule_seq);
+	
+	// 내 개인일정 삭제 - 스케줄 테이블 delete
+	int delete_tbl_schedule(String schedule_seq);
+
+
 	
 
 	

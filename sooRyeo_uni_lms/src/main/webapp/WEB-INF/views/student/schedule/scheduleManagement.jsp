@@ -111,7 +111,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-warning" id="EditCalendar">수정</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                        id="sprintSettingModalClose">삭제</button>
+                        id="deleteModal">삭제</button>
                 </div>
     
             </div>
@@ -582,13 +582,9 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 				processData: false,  // form 데이터를 보내려면 같이 작성해야됨
 				success: function(json){
 					
-					if( json.result != 1) {
-						alert("수정 실패!");
-						return;
-					}
 					if( json.result == 1) {
 						$('#calendarModal').modal('hide');
-						alert("수정 성공!");
+						alert("일정 수정 성공!");
 						makeSchedule();
 						//location.href="javascript:history.go(0)";
 						return;
@@ -596,13 +592,55 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 					
 				},
 		        error: function(xhr, status, error) {
-		            console.error('Error:', error);
+						alert("일정 수정 실패!");
 		        }
 
 			});
 			
 		});
 		
+		
+		// 삭제버튼 클릭 했을 시
+		$("button#deleteModal").click(function() {
+			
+			if( confirm("일정을 삭제하시겠습니까?")){
+				
+				// 스케줄시퀀스 가져오기
+				var schedule_seq = $("input[name='schedule_seq']").val();
+				
+			 	const formData = new FormData();
+	            formData.append('schedule_seq', schedule_seq);
+				
+				
+				$.ajax({
+					url : "<%= ctxPath%>/schedule/deleteSchedule.lms",
+					method : "POST",
+					data: formData,
+					dataType : 'json',
+					contentType: false,	 
+					processData: false,
+					success : function(json) {
+						
+						if( json.result == 1) {
+							$('#calendarModal').modal('hide');
+							alert("일정 삭제 성공!");
+							makeSchedule();
+							//location.href="javascript:history.go(0)";
+							return;
+						}
+						
+					},
+					error: function(xhr, status, error) {
+			            alert("일정 삭제 실패!");
+			        }
+					
+					
+				});
+				
+			}
+			
+			
+		});
 		
 		// insertModal 모달이 닫히면 안에 쓰던 내용 다 지우기
 		$('#insertModal').on('hidden.bs.modal', function () {
