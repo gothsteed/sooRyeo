@@ -9,10 +9,19 @@ public class BoardDTO {
 	private String attatched_file;
 	private String orgfilename;
 	private int Listtype;
+	private int seq;
 	
 	private MultipartFile attach;
 
 	
+	public int getSeq() {
+		return seq;
+	}
+
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+
 	public String getOrgfilename() {
 		return orgfilename;
 	}
