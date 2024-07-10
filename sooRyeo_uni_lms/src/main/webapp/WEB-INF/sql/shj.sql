@@ -161,9 +161,11 @@ from tbl_assignment;
 select *
 from tbl_schedule;
 
+SELECT *
+FROM all_sequences;
 
 
-SELECT V.title, V.content, V.start_date, V.end_date, B.submit_datetime
+SELECT V.title, V.content, V.start_date, V.end_date, B.submit_datetime, B.fk_student_id
 FROM
 (
     select *
@@ -176,7 +178,6 @@ FROM
     from tbl_assignment_submit
 ) B
 on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
-
 
 
 

@@ -410,9 +410,9 @@ public class StudentService_imple implements StudentService {
 
 	// 수업 - 내 강의 - 과제 - 제출
 	@Override
-	public List<Map<String, String>> getassignment_detail_List() {
+	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
 		
-		List<Map<String, String>> assignment_detail_List = dao.getassignment_detail_List();
+		List<Map<String, String>> assignment_detail_List = dao.getassignment_detail_List(schedule_seq_assignment);
 		
 		return assignment_detail_List;
 		

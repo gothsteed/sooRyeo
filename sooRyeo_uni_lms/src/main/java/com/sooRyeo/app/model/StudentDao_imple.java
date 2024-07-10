@@ -164,7 +164,7 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 수업 - 내 강의 - 과제 - 제출
 	@Override
-	public List<Map<String, String>> getassignment_detail_List() {
+	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
 		
 		List<Map<String, String>> assignment_detail_List = sqlSession.selectList("student.getassignment_detail_List");
 		

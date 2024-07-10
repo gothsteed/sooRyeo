@@ -51,6 +51,6 @@ public interface StudentDao {
 	List<Map<String, String>> getassignment_List(String fk_course_seq);
 
 	// 수업 - 내 강의 - 과제 - 제출
-	List<Map<String, String>> getassignment_detail_List();
+	List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment);
 
 }

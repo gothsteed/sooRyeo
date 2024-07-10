@@ -171,7 +171,19 @@
 	
 	
 	<!-- 수업 - 내 강의 - 과제제출 -->
-	<select id="getassignment_detail_List" resultType="String" parameterType="HashMap" >
+	<resultMap type="HashMap" id="assignment_detail_Map">
+		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment"	javaType="Int" />
+		<result property="title" 					column="title"						javaType="String" />
+		<result property="content" 					column="content"					javaType="String" />
+		<result property="start_date" 				column="start_date"					javaType="Date" />
+		<result property="end_date" 				column="end_date"					javaType="Date" />
+		<result property="score" 					column="score"						javaType="Int" />
+		<result property="submit_datetime" 			column="submit_datetime"			javaType="Date" />
+		<result property="attatched_file" 			column="attatched_file"				javaType="String" />
+		<result property="student_id" 				column="student_id"					javaType="Int" />
+	</resultMap>
+	
+	<select id="getassignment_detail_List" parameterType="int" resultMap="assignment_detail_Map" >
 		SELECT V.schedule_seq_assignment as schedule_seq_assignment
 	     , V.title as title
 	     , V.content as content
@@ -180,6 +192,7 @@
 	     , B.score as score
 	     , B.submit_datetime as submit_datetime
 	     , B.attatched_file as attatched_file
+	     , B.fk_student_id as student_id
 		FROM
 		(
 		    select *

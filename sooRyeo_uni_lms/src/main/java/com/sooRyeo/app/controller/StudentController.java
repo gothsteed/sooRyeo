@@ -192,7 +192,9 @@ public class StudentController {
 	@GetMapping(value="/student/assignment_detail_List.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView assignment_detail_List(ModelAndView mav, HttpServletRequest request) {
 		
-		List<Map<String, String>> assignment_detail_List = service.getassignment_detail_List();
+		String schedule_seq_assignment = request.getParameter("schedule_seq");
+		
+		List<Map<String, String>> assignment_detail_List = service.getassignment_detail_List(schedule_seq_assignment);
 		
 		mav.addObject("assignment_detail_List", assignment_detail_List);
 		
