@@ -17,6 +17,8 @@ span.move  {cursor: pointer; color: navy;}
 
 .moveColor {color: #660029; font-weight: bold; background-color: #ffffe6;}
 
+td.comment {text-align: center;}
+
 a {text-decoration: none !important;}
 
 </style>
@@ -27,108 +29,12 @@ a {text-decoration: none !important;}
 
 $(document).ready(function(){
 	
-    // === #144. Ajax 로 불러온 댓글내용들을 페이징 처리하기 === //
-    
-    goViewComment(1); // 페이징 처리 한 댓글 읽어오기
-    
-	$("span.move").hover(function(e){
-			              $(e.target).addClass("moveColor");
-                        }, 
-                        function(e){
-   	                      $(e.target).removeClass("moveColor");  
-   	                      
-    }); // end of $("span.move").hover
-	
-	$("input:text[name='content']").bind("keydown", function(e){
-		
-		if(e.keyCode == 13){ // 엔터
-			goAddWrite();
-		} // end of if(e.keyCode == 13)
-			
-	}); // end of $("input:text[name='content']").bind("keydown"){})
-	
-	
-	
-	// ===== 댓글 수정 ===== //
-	let origin_comment_content = "";
-	
-	$(document).on("click", "button.btnUpdateComment", function(e){
-	    
-		const $btn = $(e.target);
-		
-		if($(e.target).text() == "수정"){
-		 alert("댓글수정");
-		 //	alert($(e.target).parent().parent().children("td:nth-child(2)").text()); // 수정전 댓글내용
-		    const $content = $(e.target).parent().parent().children("td:nth-child(2)");
-		    origin_comment_content = $(e.target).parent().parent().children("td:nth-child(2)").text();
-		    $content.html(`<input id='comment_update' type='text' value='\${origin_comment_content}' size='40' />`); // 댓글내용을 수정할 수 있도록 input 태그를 만들어 준다.
-		    
-		    $(e.target).text("완료").removeClass("btn-secondary").addClass("btn-info");
-		    $(e.target).next().next().text("취소").removeClass("btn-secondary").addClass("btn-danger"); 
-		    
-		    $(document).on("keyup", "input#comment_update", function(e){
-		    	if(e.keyCode == 13){
-		    	  // alert("엔터했어요~~");
-		    	  // alert($btn.text()); // "완료"
-		    		 $btn.click();
-		    	}
-		    });
-		}
-		
-		else if($(e.target).text() == "완료"){
-		  // alert("댓글수정완료");
-		  // alert($(e.target).next().val()); // 수정해야할 댓글시퀀스 번호 
-		  // alert($(e.target).parent().parent().children("td:nth-child(2)").children("input").val()); // 수정후 댓글내용
-		     const content = $(e.target).parent().parent().children("td:nth-child(2)").children("input").val(); 
-		  
-		     $.ajax({
-		    	 url:"${pageContext.request.contextPath}/updateComment.action",
-		    	 type:"post",
-		    	 data:{"seq":$(e.target).next().val(),
-		    		   "content":content},
-		    	 dataType:"json",
-		    	 success:function(json){
-		    	  // $(e.target).parent().parent().children("td:nth-child(2)").html(content);
-		          // goReadComment();  // 페이징 처리 안한 댓글 읽어오기
-		    		
-		          ////////////////////////////////////////////////////
-		          // goViewComment(1); // 페이징 처리 한 댓글 읽어오기   
-		             
-		             const currentShowPageNo = $(e.target).parent().parent().find("input.currentShowPageNo").val(); 
-                  // alert("currentShowPageNo : "+currentShowPageNo);		          
-                     goViewComment(currentShowPageNo); // 페이징 처리 한 댓글 읽어오기
-		    	  ////////////////////////////////////////////////////
-		    	  
-		    	     $(e.target).text("수정").removeClass("btn-info").addClass("btn-secondary");
-		    		 $(e.target).next().next().text("삭제").removeClass("btn-danger").addClass("btn-secondary");
-		    	 },
-		    	 error: function(request, status, error){
-				    alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-				 }
-		     });
-		}
-		
-	}); 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+ 
 	
 }); // end of $(document).ready(function(){})
 
 
-// Function Declaration
-
-
 </script>  
-
-
 
 
 <div style="display: flex;">
@@ -136,83 +42,79 @@ $(document).ready(function(){
 
  	<h3 style="margin-bottom: 2%; margin-top:3%; font-weight:bold;">과제 내용보기</h3>
 	<hr style="margin-bottom: 3%;">
+	 <c:forEach var="item" items="${requestScope.assignment_detail_List}">
 		<table class="table table-bordered table table-striped" style="width: 1024px; word-wrap: break-word; table-layout: fixed;"> 
+	   	 
 	   	  <tr>
-	   		  <th style="width: 15%">과제번호</th>
-	   	      <td></td>
+	   		<th style="width: 15%">과제번호</th>
+   				<td style="font-weight:bold;">${item.schedule_seq_assignment}</td>
 	   	  </tr>	
 	   	
 	   	  <tr>
-	   		  <th>제목</th>
-	   	      <td></td>
+   		  	<th>제목</th>
+   	      		<td style="font-weight:bold;">${item.title}</td>
 	   	  </tr> 
 	   	
 	   	  <tr>
 	   		  <th>내용</th>
-	   	      <td>
-	   	      <p style="word-break: break-all;"></p>
-	   	      </td>
+	   	      	<td>
+	   	      	<p style="word-break: break-all;">${item.content}</p>
+	   	      	</td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>시작일자</th>
-	   	      <td></td>
+	   	      	<td><fmt:formatDate value="${item.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>마감일자</th>
-	   	      <td></td>
+	   	      	<td style="color:red;"><fmt:formatDate value="${item.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>점수</th>
-	   	      <td></td>
+		   		 <td>  
+			   		 <c:if test="${item.score == null}">
+			   		  	<p style="color:green;">아직 채점되지 않은 과제입니다.</p>
+			   		 </c:if>
+			   		 <c:if test="${item.score != null}">
+			   		  	${item.score}
+			   		 </c:if>
+	   	     	</td>
 	   	  </tr>
-	   	  
 	   	  <tr>
 	   		  <th>제출시간</th>
-	   	      <td></td>
+		   	      <td>			   		 
+		   	      	<c:if test="${item.submit_datetime == null}">
+				   		<p style="color:green;">아직 제출되지 않은 과제입니다.</p>
+				   	</c:if>
+				   		 <c:if test="${item.submit_datetime != null}">
+				   		  	${item.submit_datetime}
+				   	</c:if>
+				  </td>
 	   	  </tr>
 
 	   	  <%-- === #182. 첨부파일 이름 및 파일크기를 보여주고 첨부파일을 다운로드 되도록 만들기  --%>
 	   	  <tr>
 	   		  <th>첨부파일</th>
-	   	      <td>
-	   	        <c:if test="">
-	   	           <a href=""></a>  
-	   	        </c:if>
-	   	        <c:if test="">
-	   	           
-	   	        </c:if>
-	   	      </td>
+		   		  <td>			   		 
+		   	      	<c:if test="${item.attatched_file == null}">
+				   		<p style="color:green;">첨부파일이 없습니다.</p>
+				   	</c:if>
+				   		 <c:if test="${item.attatched_file != null}">
+				   		  	${item.attatched_file}
+				   	</c:if>
+				  </td>
 	   	  </tr>
 	   	</table>
-	 
+	 </c:forEach>
 	 
 	 
 	 <div class="mt-5">
-	    <%-- === #137. 이전글제목, 다음글제목 보기 --%>
-	    <%-- >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  시작  <<< --%>
-	    <div style="margin-bottom: 1%;">이전글제목&nbsp;&nbsp;<span class="move" onclick=""></span></div>
-	 	<div style="margin-bottom: 1%;">다음글제목&nbsp;&nbsp;<span class="move" onclick=""></span></div>
-	    <%-- >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.  끝  <<< --%>   
-	    	
-	 	<br>
-	 	
-	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="">전체목록보기</button> 
+	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/student/assignment_List.lms'">목록보기</button> 
 
 	 
-	 	<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="">글수정하기</button>
-	 	<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="">글삭제하기</button> 
-
-	 	
-	 	
- 	 	<%-- === #161.어떤 글에 대한 답변글쓰기는 로그인 되어진 교수들만 답변글쓰기가 가능하다. === --%>
- 
-    	<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="">답변글쓰기</button> 
-	
-	 	
-	 	
 	 	<%-- === #83. 댓글쓰기 폼 추가 === --%>
  	    <h3 style="margin-top: 50px;">댓글쓰기</h3>
  	    
@@ -221,8 +123,7 @@ $(document).ready(function(){
 			   <tr style="height: 30px;">
 			      <th width="10%">학번</th>
 			      <td>
-			         <input type="text" name="fk_userid" value="" readonly /> 
-			         <input type="text" name="name" value="" readonly />
+			         <input type="text" name="student_id" value="" readonly />
 			      </td>
 			   </tr>
 			   

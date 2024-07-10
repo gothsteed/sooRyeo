@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
@@ -160,6 +162,9 @@ public class StudentController {
 		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
 		
 		mav.addObject("lectureList", lectureList);
+		
+		mav.addObject("fk_course_seq", fk_course_seq);
+		
 		mav.addObject("lectureList_week", lectureList_week);
 		
 		mav.setViewName("myLecture.student");
@@ -188,11 +193,11 @@ public class StudentController {
 
 	
 	
-	// 수업 - 내 강의 - 과제 - 제출
+	// 수업 - 내 강의 - 과제 - 상세내용
 	@GetMapping(value="/student/assignment_detail_List.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView assignment_detail_List(ModelAndView mav, HttpServletRequest request) {
 		
-		String schedule_seq_assignment = request.getParameter("schedule_seq");
+		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		
 		List<Map<String, String>> assignment_detail_List = service.getassignment_detail_List(schedule_seq_assignment);
 		

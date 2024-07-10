@@ -408,7 +408,7 @@ public class StudentService_imple implements StudentService {
 
 
 
-	// 수업 - 내 강의 - 과제 - 제출
+	// 수업 - 내 강의 - 과제 - 상세내용
 	@Override
 	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
 		

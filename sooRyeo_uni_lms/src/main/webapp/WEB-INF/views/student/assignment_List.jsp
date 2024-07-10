@@ -26,7 +26,9 @@ $(document).ready(function(){
 	
 	$("tr.row").click(function(e){
 		
-		location.href = "<%=ctxPath%>/student/assignment_detail_List.lms";
+		// alert($(this).find("input[name='schedule_seq_assignment']").val());
+		
+		location.href = "<%=ctxPath%>/student/assignment_detail_List.lms?schedule_seq_assignment="+$(this).find("input[name='schedule_seq_assignment']").val();
 		
 	}); // end of $("div.border").click(function(e){})
 	
@@ -54,10 +56,12 @@ $(document).ready(function(){
 	    <c:forEach var="assignment_List" items="${requestScope.assignment_List}" varStatus="status">
 		    <c:if test="${assignment_List.assignment_submit_seq == null}">
 			      <th scope="row" class="col-2">&nbsp;&nbsp;&nbsp;${status.count}</th>
-			      <td class="col-4">${assignment_List.title}</td>
-			      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-			      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-			      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.submit_datetime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+				      <td class="col-4">${assignment_List.title}</td>
+				      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+				      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+				      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.submit_datetime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+				      <input type="hidden" name="schedule_seq_assignment" value="${assignment_List.schedule_seq_assignment}"/>
+				      <input type="hidden" name="course_seq" value="${assignment_List.fk_course_seq}"/>
 			</c:if>
 			<c:if test="${assignment_List.assignment_submit_seq != null}">
 				 <div style="padding: 20px 0; font-size: 16pt; color: red;" >제출할 과제가 존재하지 않습니다</div> 

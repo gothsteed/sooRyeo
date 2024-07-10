@@ -42,6 +42,15 @@ function scrollToTarget_down() {
     
 }
 
+function goAssignment_List(){
+	
+	// alert(${requestScope.fk_course_seq});
+	
+	location.href = "<%=ctxPath%>/student/assignment_List.lms?fk_course_seq="+${requestScope.fk_course_seq};
+	
+}
+
+
 </script>
 
 <div id="target"></div>
@@ -55,12 +64,13 @@ function scrollToTarget_down() {
 			<span id="annoucement" style="color:black; font-weight: bold;">공지사항</span>
 			<br>
 		</button> 	
-		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;" onclick="location.href='assignment_List.lms'">
+		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;" onclick="goAssignment_List();">
 			<img src="<%=ctxPath%>/resources/images/tasks.png" class="img-fluid" style="width:30%;">
 			<br><br>
 			<span id="tasks" style="color:black; font-weight: bold;">과제</span>
 			<br>
 		</button>
+			<input type="hidden" name="fk_course_seq" value="${requestScope.fk_course_seq}"/>
 	</div>
 </div>
 
@@ -70,6 +80,8 @@ function scrollToTarget_down() {
 <hr>
 	<div class="card mb-5">
 		<c:forEach var="lecture_week" items="${requestScope.lectureList_week}">
+		
+
 		<h5 class="card-header" style="font-weight:bold;">${lecture_week.lecture_title}</h5>
 		<div class="card-body">
 			<h5 class="card-title">${lecture_week.lecture_content}</h5>
