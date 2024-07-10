@@ -20,6 +20,7 @@ import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
@@ -214,7 +215,7 @@ public class AdminService_imple implements AdminService {
 		
 		int n = admindao.increase_viewCount(paraMap.get("seq")); //
 		Announcement an = admindao.getView(paraMap); // 글 1개 조회하기
-
+		
 		return an;
 	}
 
@@ -225,6 +226,22 @@ public class AdminService_imple implements AdminService {
 		Announcement an = admindao.getView(paraMap);
 		return an;
 		
+	}
+
+	// 고정글을 불러오는 메소드
+	@Override
+	public List<Announcement> getStaticList() {
+
+		List<Announcement> getStaticList = admindao.getStaticList();
+		return getStaticList;
+	}
+
+	// 공지사항 쓰기 메소드
+	@Override
+	public int addList(BoardDTO bdto) {
+
+		int n = admindao.addList(bdto); //
+		return n;
 	}
 	
 	

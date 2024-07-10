@@ -8,12 +8,15 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
 import com.sooRyeo.app.domain.TimeTable;
+import com.sooRyeo.app.dto.CourseUpdateRequestDto;
+import com.sooRyeo.app.dto.TimeDto;
 
 import oracle.sql.ROWID;
 
@@ -80,6 +83,49 @@ public class CourseDao_imple implements CourseDao {
 	public int updateToDeleteCourse(int course_seq) {
 		
 		return sqlsession.update("course.updateToDelete", course_seq);
+	}
+
+	@Override
+	public Course getCourse(int course_seq) {
+		Course course = sqlsession.selectOne("course.getCourse", course_seq);
+		course.setTimeList( sqlsession.selectList("course.getCourseTimes", course_seq));
+		
+		return course;
+	}
+
+	@Override
+	public int updateCourse(CourseUpdateRequestDto requestDto) {
+		
+		int n = sqlsession.update("course.updateCourse", requestDto);
+		
+		if(n != 1) {
+			System.out.println("수정실패!!");
+			return 0;
+		}
+		
+		n = sqlsession.delete("course.deleteCourseTime", requestDto);
+		
+		
+
+		
+		int ns=0;
+		
+		for(TimeDto timeDto : requestDto.getTimeList()) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("fk_course_seq", requestDto.getCourse_seq());
+			map.put("day_of_week", timeDto.getDay_of_week());
+			map.put("start_period", timeDto.getStart_period());
+			map.put("end_period", timeDto.getEnd_period());
+			
+			ns += sqlsession.insert("course.insertCourseTime", map);
+		}
+		
+		if(ns != requestDto.getTimeList().size()) {
+			System.out.println("수정실패!!");
+			return 0;
+		}
+		
+		return 1;
 	}
 
 }

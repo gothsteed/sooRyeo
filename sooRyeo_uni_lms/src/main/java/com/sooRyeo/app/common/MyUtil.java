@@ -21,7 +21,7 @@ public class MyUtil {
 	
 		
 		currentUrl = currentUrl.substring(startIndex);
-		System.out.println("myutil : " + currentUrl);
+		// System.out.println("myutil : " + currentUrl);
 		
 		return currentUrl;
 	}
