@@ -88,7 +88,6 @@
 	function goView(fk_course_seq){
 		
 		const goBackURL = "${requestScope.goBackURL}";
-		
 		<%-- 
 			아래처럼 get 방식으로 보내면 안된다. 왜냐하면 get방식에서 &는 전송될 데이터의 구분자로 사용되기 때문이다. 
 			location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;
@@ -105,7 +104,18 @@
 		frm.submit();	
 		
 	}// end of function goView() 
-			
+	
+	function goEnroll(){
+		
+		const frm = document.goViewFrm;
+		frm.fk_course_seq.value = "${requestScope.fk_course_seq}";
+		frm.goBackURL.value = "${requestScope.goBackURL}";
+		frm.action = "<%= ctxPath %>/professor/assign_enroll.lms";
+		frm.submit();
+		
+		
+	}
+	
 
 </script>
 
@@ -129,7 +139,7 @@
 			</table>
 		</div>
 		<%-- 페이징처리 할 부분 --%>
-		<button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/professor/assign_enroll.lms?course_seq=${requestScope.fk_course_seq}'">과제 등록</button>
+		<button type="button" class="btn btn-secondary" onclick="goEnroll()">과제 등록</button>
 	</div>
 </div>
 

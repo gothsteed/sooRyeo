@@ -238,9 +238,12 @@ public class ProfessorController {
 	public ModelAndView professor_assign_enroll(ModelAndView mav, HttpServletRequest request){// 과제 등록하기
 		
 		String fk_course_seq = request.getParameter("course_seq");
+		String goBackURL = request.getParameter("goBackURL");
 		
-		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		System.out.println("확인용 goBackURL : " + goBackURL);
 		
+		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("fk_course_seq", fk_course_seq);
 		mav.setViewName("professor_assign_enroll.professor");
 		return mav;
