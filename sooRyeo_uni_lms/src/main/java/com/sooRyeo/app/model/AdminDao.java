@@ -40,4 +40,10 @@ public interface AdminDao {
 	// 공지사항 쓰기 메소드
 	int addList(BoardDTO bdto);
 
+	// 공지사항을 삭제하는 메소드 
+	int del(Map<String, String> paraMap);
+
+	// 공지사항을 수정하는 메소드 
+	int edit(BoardDTO bdto);
+
 }

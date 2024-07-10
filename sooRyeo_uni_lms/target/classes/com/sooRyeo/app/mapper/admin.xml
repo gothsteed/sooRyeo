@@ -61,6 +61,7 @@
 		</if>
 		)V
 		where V.rno BETWEEN #{startRno} AND #{endRno}
+		order by writeday desc
 	</select>
 
 	<select id="getTotalElementCount" resultType="Integer" parameterType="HashMap">
@@ -116,5 +117,14 @@
 		</if>
 	</insert>
 
+	<delete id="del" parameterType="String">
+		delete from tbl_announcement
+		where announcement_seq = #{seq}
+	</delete>
 
+	<update id="edit" parameterType="com.sooRyeo.app.dto.BoardDTO">
+		update tbl_announcement set a_content = #{content}, a_title = #{title}
+		where announcement_seq = #{seq}
+	</update>
+	
 </mapper>
