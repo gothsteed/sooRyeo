@@ -243,7 +243,21 @@ public class AdminService_imple implements AdminService {
 		int n = admindao.addList(bdto); //
 		return n;
 	}
-	
+
+	// 공지사항을 삭제하는 메소드 
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = admindao.del(paraMap); //
+		return n;
+	}
+
+	// 공지사항을 수정하는 메소드 
+	@Override
+	public int edit(BoardDTO bdto) {
+		int n = admindao.edit(bdto);
+		return n;
+	}
+
 	
 
 }
