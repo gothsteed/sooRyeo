@@ -234,8 +234,6 @@ public class StudentController {
 		JSONObject jsonobj  = new JSONObject();
 		jsonobj.put("result", n);
 		
-		System.out.println("잘 나와라 " + n);
-		
 		return jsonobj.toString();
 	}
 	

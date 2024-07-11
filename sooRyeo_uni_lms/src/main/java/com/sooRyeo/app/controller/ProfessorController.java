@@ -30,14 +30,14 @@ public class ProfessorController {
 	@RequestMapping(value = "/professor/dashboard.lms", method = RequestMethod.GET)
 	public String professor() {// 대시보드 뷰단
 
-		return "professor_dashboard.professor";
+		return "professor_dashboard";
 	}
 	
 	
 	@RequestMapping(value = "/professor/request.lms", method = RequestMethod.GET)
 	public String professor_request() {// 교수 강의신청 뷰단
 
-		return "professor_request.professor";
+		return "professor_request";
 	}
 	
 	
@@ -49,12 +49,12 @@ public class ProfessorController {
 		// System.out.println("확인용 professor name : " + professor.getName());
 		
 		if(professor == null) {
-			mav.setViewName("redirect:/professor/dashboard.lms");
+			mav.setViewName("redirect:/professor/dashboard");
 			return mav;
 		}
 		
 		mav.addObject("professor", professor);
-		mav.setViewName("professor_info.professor");
+		mav.setViewName("professor_info");
 		
 		return mav;	
 	}
@@ -97,12 +97,12 @@ public class ProfessorController {
       
 	      if(n == 1) {
 	    	  mav.addObject("message", "교수정보 수정을 성공하였습니다.");
-	    	  mav.addObject("loc", mrequest.getContextPath()+"/professor/dashboard.lms");
+	    	  mav.addObject("loc", mrequest.getContextPath()+"/professor/dashboard");
 	    	  mav.setViewName("msg");
 	      }
 	      else {
 	    	  mav.addObject("message", "교수정보 수정이 실패하였습니다.");
-	    	  mav.addObject("loc", mrequest.getContextPath()+ "/professor/info.lms");
+	    	  mav.addObject("loc", mrequest.getContextPath()+ "/professor/info");
 	    	  mav.setViewName("msg");
 	      }
       
