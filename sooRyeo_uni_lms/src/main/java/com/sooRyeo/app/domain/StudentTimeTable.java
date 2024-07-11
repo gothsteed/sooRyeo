@@ -8,6 +8,18 @@ public class StudentTimeTable implements TimeTable {
 
 	private Integer studentId;
 	private List<Course> courseList;
+	
+	
+	public StudentTimeTable() {}
+	
+	public StudentTimeTable(Integer studentId, List<Course> courseList) {
+		this.studentId = studentId;
+		this.courseList = courseList;
+	}
+	
+		
+		
+	
 
 	@Override
 	public boolean canAddCourse(Course newCourse) {
@@ -37,5 +49,15 @@ public class StudentTimeTable implements TimeTable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public Integer getStudentId() {
+		return studentId;
+	}
+
+	public List<Course> getCourseList() {
+		return courseList;
+	}
+	
+	
 
 }

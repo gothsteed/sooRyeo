@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.model.DepartmentDao;
 import com.sooRyeo.app.model.StudentDao;
 
 import java.io.File;
@@ -43,6 +45,9 @@ public class StudentService_imple implements StudentService {
     
 	@Autowired
 	private FileManager fileManager;
+	
+	@Autowired
+	private DepartmentDao departmentDao;
 	
 	
 	
@@ -396,6 +401,13 @@ public class StudentService_imple implements StudentService {
 
 
 
+
+	@Override
+	public ModelAndView getCourseRegisterPage(HttpServletRequest request, ModelAndView mav) {
+		mav.addObject("departments", departmentDao.departmentList_select());
+		mav.setViewName("studentCourseRegister");
+		return mav;
+	}
 	// 수업 - 내 강의 - 과제
 	@Override
 	public List<Map<String, String>> getassignment_List(String fk_course_seq) {

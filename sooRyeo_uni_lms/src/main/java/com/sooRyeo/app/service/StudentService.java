@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
@@ -37,6 +38,7 @@ public interface StudentService {
 	// 수업 - 이번주 강의보기
 	List<Lecture> getlectureList_week(String fk_course_seq);
 
+	ModelAndView getCourseRegisterPage(HttpServletRequest request, ModelAndView mav);
 	// 수업 - 내 강의 - 과제
 	List<Map<String, String>> getassignment_List(String fk_course_seq);
 

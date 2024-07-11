@@ -21,10 +21,11 @@ import com.sooRyeo.app.domain.Student;
 @Component
 public class AuthAspect {
 	
-	/*
+	
 	@Before("@within(requireLogin) || @annotation(requireLogin)")
 	public void checkAuth(JoinPoint joinPoint, RequireLogin requireLogin) throws Throwable {
 		
+		/*
 		if(requireLogin == null) {
 			
 			requireLogin = joinPoint.getTarget().getClass().getAnnotation(RequireLogin.class);
@@ -39,7 +40,7 @@ public class AuthAspect {
 		
 		HttpServletRequest request = attributes.getRequest();
 		
-		Class type = requireLogin.type();
+		Class[] types = requireLogin.type();
 		
 		HttpSession session = request.getSession();
 
@@ -51,11 +52,16 @@ public class AuthAspect {
 		
 		System.out.println("getClass().getName() : " + session.getAttribute("loginuser").getClass().getName());
 		
-		if(!session.getAttribute("loginuser").getClass().getName().equalsIgnoreCase(type.getName())) {
-			
+		
+		for(Class type : types) {
+			if (session.getAttribute("loginuser").getClass().getName().equalsIgnoreCase(type.getName())) {
+				return;
+			}
 			throw new AuthException("권한이 없습니다");
-			
 		}
+		*/
+	
+		
 		
 		
 	}
@@ -73,7 +79,7 @@ public class AuthAspect {
 		
 		
 	}
-	*/
+	
 	
 
 }

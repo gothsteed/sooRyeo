@@ -17,6 +17,7 @@ public class ProfessorTimeTable implements TimeTable {
 		this.courseList = courseList;
 	}
 
+
 	@Override
 	public boolean canAddCourse(Course newCourse) {
 		for(Course course : courseList) {
@@ -28,13 +29,12 @@ public class ProfessorTimeTable implements TimeTable {
 		return true;
 	}
 
-	@Override
+
 	public int calculateCredit() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public int countCourses() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -43,6 +43,8 @@ public class ProfessorTimeTable implements TimeTable {
 	public Integer getProf_id() {
 		return prof_id;
 	}
+
+	
 
 	public List<Course> getCourseList() {
 		return courseList;

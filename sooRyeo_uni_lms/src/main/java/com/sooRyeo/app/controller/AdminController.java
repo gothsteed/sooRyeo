@@ -52,7 +52,7 @@ import com.sooRyeo.app.service.DepartmentService;
 import com.sooRyeo.app.common.MyUtil;
 
 @Controller
-@RequireLogin(type = Admin.class)
+@RequireLogin(type = {Admin.class})
 public class AdminController {
 	
 	@Autowired
@@ -677,12 +677,15 @@ public class AdminController {
 	
 	@PostMapping("/admin/aditListEnd.lms")
 	public ModelAndView editEnd(ModelAndView mav, BoardDTO bdto ,HttpServletRequest request) { // 원래는 request를 통해 getparameter 를 했지만, 이제는 spring이라  boardvo로 불러온다.
+		System.out.println("editing view");
 		
 		int n = adminService.edit(bdto);
 		
+		System.out.println("result : " + n);
+		
 		if(n==1) {
-			mav.addObject("message", "글수정 성공!!");
-			mav.addObject("loc", request.getContextPath()+"/announcementView.lms?seq="+bdto.getSeq());
+			mav.addObject("message", "글이 수정되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/announcementView.lms?seq="+bdto.getSeq());
 			mav.setViewName("msg");
 		}
 		
@@ -727,6 +730,7 @@ public class AdminController {
 	@RequestMapping(value = "/admin/courseDeleteREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> courseDeleteREST(HttpServletRequest request) {
 		
+		System.out.println("deleteing course");
 		
 		return courseService.deleteCourse(request);
 	}

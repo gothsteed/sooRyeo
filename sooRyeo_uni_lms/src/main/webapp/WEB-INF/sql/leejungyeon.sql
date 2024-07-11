@@ -1146,18 +1146,103 @@ where fk_professor_id = 202400002;
 
 desc tbl_time;
 
-desc tbl_curriculum;
+desc tbl_course;
 
 select *
 from tbl_curriculum;
+
+ALTER TABLE tbl_COURSE ADD register_count NUMBER DEFAULT 0;
+
+
+UPDATE tbl_COURSE C
+SET register_count = (
+    SELECT COUNT(*)
+    FROM tbl_registered_course E
+    WHERE E.fk_COURSE_SEQ = C.COURSE_SEQ
+);
+
+
 
 
 ALTER TABLE tbl_course
 ADD (EXIST Number(1) default 1);
 
-desc tbl_student;
+desc tbl_professor;
 
 
 
+		select *
+		from tbl_curriculum v0
+		join tbl_course v1 on v0.curriculum_seq = v1.fk_curriculum_seq
+		join tbl_professor v2 on v1.fk_professor_id = v2.prof_id
+
+
+select
+		v0.curriculum_seq as curriculum_seq,
+		v0.fk_department_seq as curriculum_fk_department_seq,
+		v0.grade as curriculum_grade,
+		v0.name as curriculum_name,
+		v0.credit as curriculum_credit,
+		v0.required as curriculum_required,
+		v0.exist as curriculum_exist,
+		v1.course_seq as course_seq,
+		v1.fk_professor_id as course_fk_professor_id,
+		v1.fk_curriculum_seq as course_fk_curriculum_seq,
+		v1.capacity as course_capacity,
+		v1.semester_date as course_semester_date,
+		v1.exist as course_exist,
+		v1.register_count as course_register_count,
+		v2.prof_id as professor_id,
+		v2.pwd as professor_pwd,
+		v2.name as professor_name,
+		v2.jubun as professor_jubun,
+		v2.tel as professor_tel,
+		v2.department_seq as professor_department_seq,
+		v2.email as professor_email,
+		v2.office_address as professor_office_address,
+		v2.employment_stat as professor_employment_stat,
+		v2.employment_date as professor_employment_date,
+		v2.img_name as professor_img_name
+		from
+
+		(
+		select *
+		from tbl_registered_course
+		where fk_student_id = 202400003
+		) t1
+		join tbl_course v1 on t1.fk_course_seq = v1.course_seq
+		join tbl_curriculum v0 on v1.fk_curriculum_seq = v0.curriculum_seq
+		join tbl_professor v2 on v1.fk_professor_id = v2.prof_id;
+        
+        
+        
+UPDATE tbl_COURSE C
+SET register_count = (
+    SELECT COUNT(*)
+    FROM tbl_registered_course E
+    WHERE E.fk_COURSE_SEQ = C.COURSE_SEQ
+); 
+
+rollback;
+
+
+select *
+from tbl_course;
+
+desc tbl_exam
+
+
+select * 
+from tbl_registered_course;
+
+delete  tbl_registered_course where registered_course_Seq = 6;
+commit;
+
+		UPDATE tbl_course
+		SET register_count = register_count-1
+		WHERE course_seq = 22;
+        
+        
+commit;
 
 
