@@ -1,6 +1,5 @@
 package com.sooRyeo.app.domain;
 
-import java.util.Date;
 
 public class Assignment {
 	

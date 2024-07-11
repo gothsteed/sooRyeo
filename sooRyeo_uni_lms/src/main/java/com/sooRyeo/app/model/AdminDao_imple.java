@@ -97,10 +97,23 @@ public class AdminDao_imple implements AdminDao {
 
 	@Override
 	public int addList(BoardDTO bdto) {
-		Map<String, String> paraMap = new HashMap<>();
-		
 		int n = sqlSession.insert("admin.addList", bdto);
 		return n;
 	}
+
+
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = sqlSession.delete("admin.del", paraMap);
+		return n;
+	}
+
+
+	@Override
+	public int edit(BoardDTO bdto) {
+		int n = sqlSession.update("admin.edit", bdto);
+		return n;
+	}
+
 
 }

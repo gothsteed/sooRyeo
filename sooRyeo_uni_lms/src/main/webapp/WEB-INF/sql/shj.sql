@@ -140,9 +140,6 @@ order by lecture_seq asc
 
 
 
-
-
-
 ---- *** 어떤 테이블에 새로운 컬럼 추가하기 *** ----
 /*
     alter table 테이블명 add 추가할컬럼명 데이터타입;
@@ -154,6 +151,8 @@ alter table tbl_lecture
 add end_date date;
 -- Table TBL_LECTURE이(가) 변경되었습니다.
 
+
+
 desc tbl_lecture;
 
 select *
@@ -161,6 +160,107 @@ from tbl_assignment;
 
 select *
 from tbl_schedule;
+
+SELECT *
+FROM all_sequences;
+
+
+SELECT V.schedule_seq_assignment, V.title, V.content, V.start_date, V.end_date, B.submit_datetime, B.fk_student_id
+FROM
+(
+    select *
+    from tbl_assignment A join tbl_schedule S
+    on A.schedule_seq_assignment = S.schedule_seq
+    where schedule_type = 1
+)V LEFT JOIN
+(
+    select *
+    from tbl_assignment_submit
+) B
+on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+
+SELECT 
+    A.schedule_seq_assignment as schedule_seq_assignment,
+    S.title as title,
+    A.content as content,
+    S.start_date as start_date,
+    S.end_date as end_date,
+    B.score as score,
+    B.submit_datetime as submit_datetime,
+    B.attatched_file as attatched_file,
+    A.fk_course_seq as fk_course_seq
+FROM
+    tbl_assignment A
+JOIN
+    tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+LEFT JOIN
+    tbl_assignment_submit B ON A.schedule_seq_assignment = B.fk_schedule_seq_assignment
+WHERE
+    S.schedule_type = 1
+
+
+SELECT V.title, V.content, V.start_date, V.end_date, B.submit_datetime
+FROM
+(
+    select *
+    from tbl_assignment A join tbl_schedule S
+    on A.schedule_seq_assignment = S.schedule_seq
+    where schedule_type = 1
+)V LEFT JOIN
+(
+    select *
+    from tbl_assignment_submit
+) B
+on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+
+
+
+-- 과제번호, 제목, 내용, 시작일자, 마감일자, 점수, 제출시간, 첨부파일
+SELECT V.schedule_seq_assignment as schedule_seq_assignment
+     , V.title as title
+     , V.content as content
+     , V.start_date as start_date
+     , V.end_date as end_date
+     , B.score as score
+     , B.submit_datetime as submit_datetime
+     , B.attatched_file as attatched_file
+FROM
+(
+    select *
+    from tbl_assignment A join tbl_schedule S
+    on A.schedule_seq_assignment = S.schedule_seq
+    where schedule_type = 1
+)V LEFT JOIN
+(
+    select *
+    from tbl_assignment_submit
+) B
+on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+
+
+
+
+SELECT V.title as title
+     , V.content as content
+     , V.start_date as start_date
+     , V.end_date as end_date
+     , B.submit_datetime as submit_datetime
+     , V.schedule_seq_assignment as schedule_seq_assignment
+     , V.fk_course_seq as fk_course_seq
+FROM
+(
+    select *
+    from tbl_assignment A join tbl_schedule S
+    on A.schedule_seq_assignment = S.schedule_seq
+    where schedule_type = 1
+)V LEFT JOIN
+(
+    select *
+    from tbl_assignment_submit
+) B
+on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+where V.fk_course_seq = '4';
+
 
 
 

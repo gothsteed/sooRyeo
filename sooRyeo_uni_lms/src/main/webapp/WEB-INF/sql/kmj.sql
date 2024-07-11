@@ -9,6 +9,8 @@ VALUES (generate_student_id(), 'password123', 'John Doe', '1234567890123', '0101
 select *
 from tbl_admin;
 
+
+
 -- 컬럼 이름 바꾸기
 alter table tbl_admin rename COLUMN admin_seq to admin_id;
 commit;
@@ -264,7 +266,76 @@ from tbl_schedule;
 
 
 insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, Start_Date, End_Date)
+values(SCHEDULE_SEQ.nextval, '교수님과 식사', '3', to_date('20240728120000','yyyymmddhh24miss'), to_date('20240728140000','yyyymmddhh24miss'));
+
+delete from tbl_schedule
+where schedule_seq = '1';
+
+commit;
+
+select *
+from tbl_schedule;
+
+
+commit;
+
+insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, Start_Date, End_Date)
+values(SCHEDULE_SEQ.nextval, '국어학개론 2학기 중간고사', '2', to_date('20240716140000','yyyymmddhh24miss'), to_date('20240716150000','yyyymmddhh24miss'));
+
+
+
+
+insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, Start_Date, End_Date)
+values(SCHEDULE_SEQ.nextval, '국어학개론 현대시읽고 레포트 작성하기', '1', to_date('20240722000000','yyyymmddhh24miss'), to_date('20240726235959','yyyymmddhh24miss'));
+
+
+insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content)
+values('5', '4', '현대시 하나를 읽고 소감문 레포트를 작성해서 내주세요.');
+
+commit;
+
+
+
+select *
+from tbl_schedule join tbl_assignment
+on schedule_seq = schedule_seq_assginment;
+
+select *
+from tbl_assignment;
+
+
+select fk_student_id, A.course_seq, SCHEDULE_SEQ, TITLE, SCHEDULE_TYPE, START_DATE, END_DATE
+from tbl_schedule join tbl_assignment
+on schedule_seq = schedule_seq_assignment
+join tbl_course A
+on course_seq = fk_course_seq
+join tbl_registered_course B
+on B.fk_course_seq = A.course_seq
+where fk_student_id = '202400005';
+
+
+
+select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+from tbl_todo A join tbl_schedule B
+on A.schedule_seq = B.SCHEDULE_SEQ
+where fk_student_id = '202400005';
+
+
+insert into tbl_todo(SCHEDULE_SEQ, CONTENT, FK_STUDENT_ID)
+values('2','국어학개론 교수님과 점심식사', '202400005');
+
+select *
+from tbl_todo;
 values(SCHEDULE_SEQ.nextval, '교수님과 식사', '3', to_date('2024-07-28 12:00','yyyy-mm-dd hh24:mi'), to_date('2024-07-28 14:00','yyyy-mm-dd hh24:mi'));
 
 
+update tbl_member set idle = 1
+where userid = 'yy6037';
+
+
+select *
+from tbl_todo
+
+select *
+from tbl_schedule;
 
