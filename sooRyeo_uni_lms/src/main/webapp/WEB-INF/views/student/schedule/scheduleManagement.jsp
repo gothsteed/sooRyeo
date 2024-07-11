@@ -77,7 +77,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">내 개인 일정</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">내 일정 수정</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
