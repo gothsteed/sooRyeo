@@ -1,6 +1,8 @@
 package com.sooRyeo.app.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -33,6 +36,7 @@ import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
@@ -128,7 +132,7 @@ public class AdminController {
 	     */
 	     // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
 	     // System.out.println("~~~ 확인용 path => " + path);
-	     // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+	     // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
 		 /*
 		   2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
 	     */
@@ -365,7 +369,6 @@ public class AdminController {
 				// 글 조회수 증가와 함께 글 1개를 조회를 해오는 것
 				// System.out.println("~~ 확인용 글내용 : " + boardvo.getContent());
 				
-				
 				session.removeAttribute("readCountPermission"); // 용도 폐기 
 		    	// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
 			}
@@ -388,12 +391,10 @@ public class AdminController {
 					return mav;
 				}
 			}
-
 			mav.addObject("an", an);
 			
-			// === #139. 이전글제목, 다음글제목 보기 === //
+			// 이전글제목, 다음글제목 보기를 위해 넣어준 것
 			mav.addObject("paraMap", paraMap);
-			
 			
 			mav.setViewName("announcementView.admin");
 			
@@ -451,6 +452,246 @@ public class AdminController {
 		return mav;
 	}
 	
+	
+	@GetMapping("/admin/download.lms")
+	public void download(HttpServletRequest request, HttpServletResponse response) {
+		
+		String seq = request.getParameter("seq");
+		
+		Map<String, String> paraMap = new HashMap<>();
+	    paraMap.put("seq", seq);
+	    paraMap.put("searchWord", "");
+	    
+	    response.setContentType("text/html; charset=UTF-8");
+	    
+	    PrintWriter out = null;
+	    // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+	    
+	    try {
+	    	Integer.parseInt(seq);
+	    	Announcement an = adminService.getView_no_increase_readCount(paraMap);
+	    	
+	    	if(an == null || (an != null && an.getAttatched_file() == null)) {
+	    		// 비정상적으로 다운로드 할 경우
+	    		
+	    		out = response.getWriter();
+	    		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+	    		
+	    		out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+	            return;
+	    	}
+	    	else {
+	    		// 정상적으로 다운로드 할 경우
+	    		
+	    		String fileName = an.getAttatched_file();
+	    		String orgFilename = an.getOrgfilename();
+	    		
+	    		HttpSession session = request.getSession(); 
+		        String root = session.getServletContext().getRealPath("/");
+		        // 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
+		        
+		        String path = root+"resources"+File.separator+"files";
+		        
+		        // ***** file 다운로드 하기 ***** //
+	            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
+	            flag = fileManager.doFileDownload(fileName, orgFilename, path, response); 
+	            // file 다운로드 성공시 flag 는 true
+	            
+	            if(!flag) {
+	               // 다운로드가 실패한 경우 메시지를 띄워준다. 
+	               out = response.getWriter();
+	               // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+	               
+	               out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+	            }
+	    	}
+		} catch (Exception e) {
+			try {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+		}
+	} // end of public void download(HttpServletRequest request, HttpServletResponse response) {}------------------
+	
+	
+	
+	// 게시판 글쓰기 폼페이지 요청
+	@GetMapping("/admin/addList.lms")
+	public ModelAndView addList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		mav.setViewName("addList.admin");
+		return mav;
+	}
+	
+	@PostMapping("/admin/addListEnd.lms")
+	public ModelAndView addListend(ModelAndView mav, MultipartHttpServletRequest mrequest, BoardDTO bdto) {
+		
+		MultipartFile attach =  bdto.getAttach();
+		
+		String orgFilename = "";
+		
+		if(attach != null) {
+	         HttpSession session = mrequest.getSession(); 
+	         String root = session.getServletContext().getRealPath("/");
+	         // webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
+	         
+	         String path = root+"resources"+File.separator+"files";
+	         String newFileName = "";
+	         // WAS(톰캣)의 디스크에 저장될 파일명
+	         
+	         byte[] bytes = null;
+	         // 첨부 파일의 내용물을 담은 것
+	         
+	         try {
+				bytes = attach.getBytes();
+				// 첨부파일의 내용물을 읽어오는 것
+				
+				String originalFilename =  attach.getOriginalFilename();
+
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				// WAS(톰캣)에 저장된 파일명(2024062712074811660790417300.xlsx) 이다.	
+				orgFilename = originalFilename;
+				
+				bdto.setAttatched_file(newFileName);
+				bdto.setOrgfilename(orgFilename);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		int n = 0;
+		n = adminService.addList(bdto);
+		
+		if(n == 1) {
+			mav.addObject("message", "글쓰기를 성공하였습니다.");
+			mav.addObject("loc", mrequest.getContextPath()+"/admin/announcement.lms");
+			mav.setViewName("msg");
+		}
+		else {
+			mav.addObject("message", "글쓰기를 실패하였습니다.");
+			mav.addObject("loc", mrequest.getContextPath()+"/admin/addList.lms");
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
+	
+	@PostMapping("/admin/del.lms")
+	public ModelAndView delEnd(ModelAndView mav,HttpServletRequest request) { // 여기서는 받아올것이 1개밖에 없어서 굳이 boardvo로 불러올 필요가 없어서 안적었다.
+		
+		String seq = request.getParameter("seq");
+		
+		/////////////////////////////////////////////////////////////////
+		// #184. 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 시작
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchWord","");
+		paraMap.put("seq", seq);
+		
+		Announcement an = adminService.getView_no_increase_readCount(paraMap);
+
+		String fileName = an.getAttatched_file();
+		// 20240701090336621493163800.png 이것이 WAS 톰캣 디스크에 저장된 파일명이다.
+		
+		if(fileName != null && !"".equals(fileName)) {
+			 // 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+             // 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다. 
+	         HttpSession session = request.getSession(); 
+	         String root = session.getServletContext().getRealPath("/");
+	         
+	         // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+	         // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+	         
+	         String path = root+"resources"+File.separator+"files";
+	         /*    File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+		               운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+		               운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+	         */
+	         // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+	         // System.out.println("~~~ 확인용 path => " + path);
+	         // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+	         
+	         paraMap.put("path", path); // 삭제해야할 파일이 저장된 경로
+	         paraMap.put("fileName", fileName); // 삭제해야할 파일이 저장된 경로
+	         
+	         try {
+                 fileManager.doFileDelete(fileName, path);
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+		}
+		// 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 끝
+		
+		int n = adminService.del(paraMap);
+		
+		if(n==1) {
+			mav.addObject("message", "글이 삭제되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/announcement.lms");
+			mav.setViewName("msg");
+		}
+		return mav;
+	}	
+	
+	@GetMapping("/admin/edit.lms")
+	public ModelAndView edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String seq = request.getParameter("seq");
+		
+		String message = "";
+		
+		try {
+			Integer.parseInt(seq);
+			
+			// 수정해야할 글 1개의 내용을 가져오기
+			Map<String,String> paraMap = new HashMap<>();
+			paraMap.put("seq", seq);
+			paraMap.put("searchWord", "");
+			
+			Announcement an = adminService.getView_no_increase_readCount(paraMap); // 조회수 증가 없이 글 한개만 조회하는 것(만들어둔 메소드).
+			
+			if(an == null) {
+				message = "글 수정이 불가합니다."; // 없는 번호를 입력했을 경우
+			}
+			else {
+				mav.addObject("an", an);
+				mav.setViewName("editList.admin");
+				
+				return mav;
+			}
+		} catch (NumberFormatException e) {
+			message = "글 수정이 불가합니다."; // get 방식으로 문자 입력을 시도할 경우 띄워준다.
+		}
+		String loc = "javascript:history.back()";
+		mav.addObject("message", message); // 이것 자체가 request에 담아주는 행위
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
+	
+	@PostMapping("/admin/aditListEnd.lms")
+	public ModelAndView editEnd(ModelAndView mav, BoardDTO bdto ,HttpServletRequest request) { // 원래는 request를 통해 getparameter 를 했지만, 이제는 spring이라  boardvo로 불러온다.
+		System.out.println("editing view");
+		
+		int n = adminService.edit(bdto);
+		
+		System.out.println("result : " + n);
+		
+		if(n==1) {
+			mav.addObject("message", "글이 수정되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/announcementView.lms?seq="+bdto.getSeq());
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
+
 	@ResponseBody
 	@RequestMapping(value = "/admin/deleteCurriculumREST.lms", method = RequestMethod.DELETE, produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> deleteCurriculumREST(HttpServletRequest request, ModelAndView mav) {

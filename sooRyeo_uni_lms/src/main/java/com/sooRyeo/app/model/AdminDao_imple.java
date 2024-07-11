@@ -13,6 +13,7 @@ import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -61,9 +62,6 @@ public class AdminDao_imple implements AdminDao {
 		
 		int totalElementCount = sqlSession.selectOne("admin.getTotalElementCount", paraMap);
 		
-		
-		
-		
 		return new Pager(announcementList, currentPage, sizePerPage, totalElementCount);
 	}
 
@@ -95,5 +93,27 @@ public class AdminDao_imple implements AdminDao {
 		List<Announcement> getStaticList = sqlSession.selectList("admin.getStaticList");
 		return getStaticList;
 	}
+
+
+	@Override
+	public int addList(BoardDTO bdto) {
+		int n = sqlSession.insert("admin.addList", bdto);
+		return n;
+	}
+
+
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = sqlSession.delete("admin.del", paraMap);
+		return n;
+	}
+
+
+	@Override
+	public int edit(BoardDTO bdto) {
+		int n = sqlSession.update("admin.edit", bdto);
+		return n;
+	}
+
 
 }

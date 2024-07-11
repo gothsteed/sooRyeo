@@ -27,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -407,6 +408,27 @@ public class StudentService_imple implements StudentService {
 		mav.setViewName("studentCourseRegister.student");
 		return mav;
 	}
+	// 수업 - 내 강의 - 과제
+	@Override
+	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
+		
+		List<Map<String, String>> assignment_List = dao.getassignment_List(fk_course_seq);
+		
+		return assignment_List;
+		
+	} // end of public List<Map<String, String>> getassignment_List
+
+
+
+	// 수업 - 내 강의 - 과제 - 상세내용
+	@Override
+	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
+		
+		List<Map<String, String>> assignment_detail_List = dao.getassignment_detail_List(schedule_seq_assignment);
+		
+		return assignment_detail_List;
+		
+	} // end of public List<Map<String, String>> getassignment_detail_List
 
 	
 	

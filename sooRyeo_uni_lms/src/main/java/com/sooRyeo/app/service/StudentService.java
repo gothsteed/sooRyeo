@@ -38,6 +38,11 @@ public interface StudentService {
 	List<Lecture> getlectureList_week(String fk_course_seq);
 
 	ModelAndView getCourseRegisterPage(HttpServletRequest request, ModelAndView mav);
+	// 수업 - 내 강의 - 과제
+	List<Map<String, String>> getassignment_List(String fk_course_seq);
+
+	// 수업 - 내 강의 - 과제 - 상세내용
+	List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment);
 
 
 

@@ -20,6 +20,7 @@ import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
@@ -234,7 +235,29 @@ public class AdminService_imple implements AdminService {
 		List<Announcement> getStaticList = admindao.getStaticList();
 		return getStaticList;
 	}
-	
+
+	// 공지사항 쓰기 메소드
+	@Override
+	public int addList(BoardDTO bdto) {
+
+		int n = admindao.addList(bdto); //
+		return n;
+	}
+
+	// 공지사항을 삭제하는 메소드 
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = admindao.del(paraMap); //
+		return n;
+	}
+
+	// 공지사항을 수정하는 메소드 
+	@Override
+	public int edit(BoardDTO bdto) {
+		int n = admindao.edit(bdto);
+		return n;
+	}
+
 	
 
 }

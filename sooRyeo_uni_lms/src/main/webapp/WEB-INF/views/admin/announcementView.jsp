@@ -7,11 +7,10 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
-
 	// Function Declaration
 	function goView(announcement_seq){
 		const goBackURL = "${requestScope.goBackURL}";
-
+		
 		const frm = document.goViewFrm
 		frm.seq.value = announcement_seq;
 		frm.goBackURL.value = goBackURL;
@@ -20,16 +19,36 @@
 		frm.action = "<%= ctxPath%>/admin/announcementView_2.lms";
 		frm.submit();
 		
+	}// end of function goView('${boardvo.seq}'){}-----------------------------------------
+
+	function goDel(){
+		
+		if(confirm("정말로 삭제하시겠습니까?")){
+			const frm = document.Del
+	
+			frm.method = "post";
+			frm.action = "<%= ctxPath%>/admin/del.lms";
+			frm.submit();
+		}
+		else{
+			return;
+		}
 		
 	}// end of function goView('${boardvo.seq}'){}-----------------------------------------
 
 </script>
+
 <div class="container">
     <div class="card">
         <div class="card-header" style="text-align: center; background-color: #d1e0e0">
             <h2>학사 공지사항</h2>
         </div>
         <div class="card-body">
+        	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="goDel()">글삭제하기</button>
+		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/admin/edit.lms?seq=${requestScope.an.announcement_seq}'">글수정하기</button>
+        	        <form name="Del">
+						<input type="hidden" name="announcement_seq" value="${requestScope.an.announcement_seq}"/>  
+					</form>
 			<table class="table">
 			  <thead>
 			    <tr>
@@ -49,7 +68,7 @@
 			    <tr>
 			      <th scope="row">첨부파일</th>
 			      <c:if test="${requestScope.an.attatched_file != null}">
-				      <td colspan="2">${requestScope.an.attatched_file}</td>
+				      <td colspan="2"><a href="<%= ctxPath%>/admin/download.lms?seq=${requestScope.an.announcement_seq}">${requestScope.an.orgfilename}</a></td>
 			      </c:if>
 			      <c:if test="${requestScope.an.attatched_file == null}">
 				      <td colspan="2">첨부파일이 없습니다.</td>
