@@ -206,9 +206,29 @@
 	    WHERE
 	        S.schedule_type = 1
 	</select>
+
+
+
+	<select id="select_prof_info" parameterType="String" resultType="com.sooRyeo.app.domain.Professor">
+		select prof_id, name
+		from tbl_course join tbl_professor
+		on fk_professor_id = prof_id
+		where course_seq = #{course_seq}
+	</select>
 	
 	
+	<insert id="insert_tbl_schedule" parameterType="HashMap">
+		<selectKey keyProperty="schedule_seq" resultType="String" order="BEFORE">
+			select schedule_seq.nextval FROM dual
+		</selectKey>
+		insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, start_date, end_date, confirm)
+		values(#{schedule_seq}, #{title}, '4', to_date(#{start_date}, 'yyyymmddhh24miss'), to_date(#{end_date}, 'yyyymmddhh24miss'), '0')
+	</insert>
 	
+	<insert id="insert_tbl_consult" parameterType="HashMap">
+		insert into tbl_consult(Schedule_Seq, fk_student_id, fk_prof_id, content)
+		values(#{schedule_seq}, #{userid}, #{prof_id}, #{content})
+	</insert>
 	
 	
 	

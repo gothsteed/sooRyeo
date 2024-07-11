@@ -80,6 +80,13 @@ commit;
 
 
 
+alter table tbl_schedule add confirm smallint default '1' not null;
+
+
+
+
+select *
+from tbl_schedule;
 
 
 WITH
@@ -109,19 +116,29 @@ where V.fk_student_id = '202400005';
 
 
 
+create table tbl_consult
+(schedule_seq    number
+,fk_student_id   number         not null
+,fk_prof_id      number         not null
+,content         Nvarchar2(30)  not null
 
+,CONSTRAINT PK_tbl_consult PRIMARY KEY (schedule_seq)
+,CONSTRAINT FK_tbl_student_tbl_consult FOREIGN KEY (fk_student_id) REFERENCES tbl_student (student_id)
+,CONSTRAINT FK_tbl_professor_tbl_consult FOREIGN KEY (fk_prof_id) REFERENCES tbl_professor (prof_id)
 
+);
 
-
-
+select *
+from tbl_consult;
 
 B.name as professorName, A.title, C.name as className, A.end_datetime, A.assignment_submit_seq
 
 UPDATE tbl_assignment SET end_datetime="to_date('2024-07-01 00:00:00','yyyy-mm-dd hh24:mi:ss')" WHERE assignment_seq='123';
 
 
-
-
+select *
+from tbl_curriculum
+where name = '영화로 보는 동유럽';
 
 WITH
 A AS(
@@ -269,12 +286,22 @@ insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, Start_Date, End_Dat
 values(SCHEDULE_SEQ.nextval, '교수님과 식사', '3', to_date('20240728120000','yyyymmddhh24miss'), to_date('20240728140000','yyyymmddhh24miss'));
 
 delete from tbl_schedule
-where schedule_seq = '1';
+where schedule_seq = '41';
+
+delete from tbl_consult
+where schedule_seq = '41';
 
 commit;
 
 select *
-from tbl_schedule;
+from tbl_schedule
+where schedule_seq = '33'; 
+
+select *
+from tbl_consult;
+
+delete from tbl_consult
+where schedule_seq = '36';
 
 
 commit;
@@ -339,3 +366,27 @@ from tbl_todo
 select *
 from tbl_schedule;
 
+select prof_id, name
+from tbl_course join tbl_professor
+on fk_professor_id = prof_id
+where course_seq = '4'
+
+commit;
+
+select *
+from tbl_schedule
+where Schedule_Seq = '33';
+
+ALTER TABLE tbl_consult
+CHANGE COLUMN COTENT content 
+
+drop table tbl_consult;
+
+ALTER TABLE tbl_consult CHANGE COLUMN COTENT CONTENT Nvarchar2(30);
+
+SELECT *
+FROM TBL_CONSULT;
+
+select *
+from tbl_schedule
+where Schedule_type = '4';
