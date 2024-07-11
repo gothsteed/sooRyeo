@@ -22,6 +22,21 @@
 
 <script type="text/javascript">
 
+	function goDelete(schedule_seq_assignment){
+		
+		const goBackURL = "${requestScope.goBackURL}";
+		
+		const frm = document.reviseFrm;
+		
+		frm.schedule_seq_assignment.value = schedule_seq_assignment;
+		frm.goBackURL.value = goBackURL;
+		frm.method = "post";
+		frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
+		frm.submit();
+		
+		
+		
+	}// end of function goDelete(schedule_seq_assignment) 
 
 
 </script>
@@ -81,5 +96,13 @@
 		<c:if test="${empty requestScope.assign_view}">
 			<div style="padding: 20px 0; font-size: 16pt; color: red;" >존재하지 않습니다</div> 
 		</c:if>
+		<button type="button" class="btn btn-secondary mr-2" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">목록으로 돌아가기</button>
+		<button type="button" class="btn btn-secondary mr-2" onclick="">과제 수정</button>
+		<button type="button" class="btn btn-secondary mr-2" onclick="goDelete(\${requestScope.assign_view.assignment.schedule_seq_assignment})">과제 삭제</button>
 	</div>
 </div>
+
+<form name="reviseFrm">
+	<input type="hidden" name="schedule_seq_assignment"/>
+	<input type="hidden" name="goBackURL"/>
+</form>

@@ -2,6 +2,7 @@ package com.sooRyeo.app.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +20,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
+import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.service.ProfessorService;
 import com.sooRyeo.app.service.StudentService;
 
@@ -46,7 +50,8 @@ public class ProfessorController {
 	@Autowired
 	private StudentService Studentservice;
 	
-	
+	@Autowired
+	private FileManager fileManager;
 	
 	@RequestMapping(value = "/professor/dashboard.lms")
 	public ModelAndView professor_dashboard(ModelAndView mav) {// 대시보드 뷰단
@@ -185,6 +190,7 @@ public class ProfessorController {
 		
 		String fk_course_seq = request.getParameter("course_seq");
 		// System.out.println("확인용2 fk_course_seq : " + fk_course_seq);
+		
 		String goBackURL = MyUtil.getCurrentURL(request);
 		
 		mav.addObject("goBackURL", goBackURL);
@@ -206,7 +212,7 @@ public class ProfessorController {
 		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
 		
 		List<Map<String,String>> paperAssignment = service.paperAssignment(fk_course_seq);
-		// 회원등록시 입력한 이메일이 이미 있는 이메일인지 검사하는 메소드
+		// 과제 목록 리스트로 담아오기
 		
         JSONArray jsonArr = new JSONArray();
         
@@ -240,8 +246,8 @@ public class ProfessorController {
 		String fk_course_seq = request.getParameter("course_seq");
 		String goBackURL = request.getParameter("goBackURL");
 		
-		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
-		System.out.println("확인용 goBackURL : " + goBackURL);
+		//System.out.println("확인용 goBackURL : " + goBackURL);
+		//System.out.println("확인용 fk_course_seq : " + fk_course_seq);
 		
 		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("fk_course_seq", fk_course_seq);
@@ -250,11 +256,64 @@ public class ProfessorController {
 	}
 	
 	
+	@PostMapping("/professor/assign_enroll_end.lms")
+	public ModelAndView professor_assign_enroll_end(ModelAndView mav, AssignScheInsertDTO dto, MultipartHttpServletRequest mrequest) {// 스케쥴, 과제 테이블 인풋 후 목록리다이렉트
+		
+		String fk_course_seq = mrequest.getParameter("fk_course_seq");
+		//System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+	    
+		dto.setTitle(mrequest.getParameter("title"));    
+	    //System.out.println("확인용 제목 : " + dto.getTitle());
+	    
+	    dto.setStartDate(mrequest.getParameter("startdate"));
+	    dto.setEndDate(mrequest.getParameter("enddate"));
+	    dto.setContent(mrequest.getParameter("content"));
+
+	    MultipartFile attach = dto.getAttach();
+
+	    if (attach != null && !attach.isEmpty()) {
+	        HttpSession session = mrequest.getSession();
+	        String root = session.getServletContext().getRealPath("/");
+	        String path = root + "resources" + File.separator + "files";
+
+	        String newFileName = "";
+	        byte[] bytes = null;
+		     // 첨부 파일의 내용물을 담은 것
+	        try {
+	            bytes = attach.getBytes();
+	            String originalFilename = attach.getOriginalFilename();
+	            newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+	            
+	            System.out.println("확인용 newFileName " + newFileName);
+	            
+	            dto.setAttatched_file(newFileName); // 업로드된 파일 이름 설정
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    int n = service.insert_tbl_schedule(dto, fk_course_seq);
+
+	    if (n != 1) {
+	        mav.addObject("message", "과제 등록을 실패하였습니다.");
+	        mav.addObject("loc", "javascript:history.back()");
+	        mav.setViewName("msg");
+	    } else {
+	        mav.addObject("message", "과제 등록을 성공했습니다.");
+	        mav.addObject("loc", mrequest.getContextPath() + "/professor/assignment.lms?course_seq=" + fk_course_seq);
+	        mav.setViewName("msg");
+	    }
+
+	    return mav;
+	}
+	
+	
 	@PostMapping("/professor/assignmentDetail.lms")
 	public ModelAndView professor_assign_view(ModelAndView mav, HttpServletRequest request) {// 교수 과제상세 페이지
 
 		String fk_course_seq = "";
 		String goBackURL = "";
+		String schedule_seq_assignment = "";
 		
 		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
 		// redirect 되어서 넘어온 데이터가 있는지 꺼내어 와본다.		
@@ -268,13 +327,13 @@ public class ProfessorController {
   
             // System.out.println("~~~ 확인용 seq : " + redirect_map.get("seq"));
 			fk_course_seq = redirect_map.get("fk_course_seq");
-			
+			goBackURL = redirect_map.get("goBackURL"); 
 		}
 		///////////////////////////////////////////////////////////////////////
 		else { // redirect 되어서 넘어온 데이터가 없다면
 			// == 조회하고자 하는 과제번호 받아오기 ==
 	           	
-			fk_course_seq = request.getParameter("fk_course_seq");
+			fk_course_seq = request.getParameter("course_seq");
 			
 			// #134. 특정글을 조회한 후 "검색된결과목록보기" 버튼을 클릭했을 때 돌아갈 페이지를 만들기 위함.  
 			goBackURL = request.getParameter("goBackURL");
@@ -287,7 +346,7 @@ public class ProfessorController {
 			 */
 			
 			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. <<< 시작  // 
-			
+			schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		}
 		
 		mav.addObject("goBackURL", goBackURL);
@@ -306,10 +365,12 @@ public class ProfessorController {
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("fk_course_seq", fk_course_seq);
 			paraMap.put("login_userid", login_userid);
-
-			System.out.println("확인용 fk_course_seq :" + fk_course_seq);
+			paraMap.put("schedule_seq_assignment", schedule_seq_assignment);
 			
-			AssignJoinSchedule assign_view = service.assign_view(fk_course_seq);
+			System.out.println("확인용 fk_course_seq :" + fk_course_seq);
+			System.out.println("schedule_seq_assignment :" + schedule_seq_assignment);
+			
+			AssignJoinSchedule assign_view = service.assign_view(paraMap);
 			
 			String content = assign_view.getAssignment().getContent();
 			System.out.println("확인용 content : " + content);
@@ -324,5 +385,26 @@ public class ProfessorController {
 		return mav; 
 	}
 	
+	
+	@PostMapping("/professor/assignmentDelete.lms")
+public ModelAndView professor_assignmentDelete(ModelAndView mav, HttpServletRequest request) {// 스케쥴, 과제 테이블 인풋 후 목록리다이렉트
+		
+		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");			 
+		String goBackURL = request.getParameter("goBackURL");
+		
+	    int n = service.assignmentDelete(schedule_seq_assignment);
+
+	    if (n != 1) {
+	        mav.addObject("message", "과제를 삭제할 수 없습니다.");
+	        mav.addObject("loc", "javascript:history.back()");
+	        mav.setViewName("msg");
+	    } else {
+	        mav.addObject("message", "과제가 삭제되었습니다.");
+	        mav.addObject("loc", request.getContextPath() + goBackURL);
+	        mav.setViewName("msg");
+	    }
+
+	    return mav;
+	}
 	
 }

@@ -239,7 +239,7 @@
          <result property="end_date" column="end_date" />
       </association>
    </resultMap>
-	<select id="assign_view" parameterType="String" resultMap="assignJoinScheduleMap">
+	<select id="assign_view" parameterType="HashMap" resultMap="assignJoinScheduleMap">
 		select
 		A.fk_course_seq as fk_course_seq,
 		A.schedule_seq_assignment as schedule_seq_assignment,
@@ -252,10 +252,29 @@
         from
         tbl_assignment A
         join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
-        where A.fk_course_seq = to_number(#{fk_course_seq})
+        where A.schedule_seq_assignment = to_number(#{schedule_seq_assignment}) and A.fk_course_seq = to_number(#{fk_course_seq})
 	</select>
 	
 	
+	<insert id="insert_tbl_schedule" parameterType="HashMap">
+		<selectKey keyProperty="schedule_seq" resultType="int" order="BEFORE">
+			SELECT schedule_seq.nextval FROM dual
+		</selectKey>
+		insert into tbl_schedule(schedule_seq, title, start_date, end_date, schedule_type) 
+		values(#{schedule_seq}, #{title}, to_date(#{startDate}, 'yyyymmddhh24miss'), to_date(#{endDate}, 'yyyymmddhh24miss'), 1)
+	</insert>
+	
+	
+	<insert id="insert_tbl_assignment" parameterType="HashMap">
+		insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file) 
+		values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content}, #{attatched_file} )
+	</insert>
+	
+	
+	<delete id="assignmentDelete" parameterType="String">
+		delete from tbl_assignment
+		where schedule_seq_assignment = to_number(#{schedule_seq_assignment})	
+	</delete>
 	
 
 

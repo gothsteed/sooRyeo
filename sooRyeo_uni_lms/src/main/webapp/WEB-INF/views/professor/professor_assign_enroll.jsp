@@ -168,7 +168,7 @@
 	        }// end of else if---------------------------------
 	    	
 			// 제목 유효성 검사
-			var subject = $("input#subject").val().trim();
+			var subject = $("input#title").val().trim();
 	        if(subject==""){
 				alert("제목을 입력하세요."); 
 				return;
@@ -209,7 +209,7 @@
 <div style="margin-left: 80px; width: 88%;">
 <h3>과제 등록</h3>
 
-	<form name="scheduleFrm">
+	<form name="scheduleFrm" enctype="multipart/form-data">
 		<table id="schedule" class="table table-bordered">
 			<tr>
 				<th>일자</th>
@@ -228,7 +228,7 @@
 			</tr>
 			<tr>
 				<th>제목</th>
-				<td><input type="text" id="subject" name="subject" class="form-control"/></td>
+				<td><input type="text" id="title" name="title" class="form-control"/></td>
 			</tr>
 			<tr>
 				<th>내용</th>
@@ -236,10 +236,10 @@
 			</tr>
 			<tr>
 				<th>첨부파일</th>
-				<td><input type="file" name="attatched_file" class="img_file" /><img id="previewImg" width="300"/></td>
+				<td><input type="file" name="attach"/><img id="previewImg" width="300"/></td>
 			</tr>
 		</table>
-		<input type="hidden" value="${sessionScope.loginuser.prof_id}" name="prof_id"/>
+		<input type="hidden" value="${requestScope.fk_course_seq}" name="fk_course_seq"/>
 	</form>
 	
 	<div style="float: right;">

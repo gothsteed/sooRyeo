@@ -27,6 +27,7 @@ import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
 import com.sooRyeo.app.domain.TimeTable;
+import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.model.ProfessorDao;
 
 
@@ -178,7 +179,7 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public int professor_info_edit(Professor professor,  MultipartHttpServletRequest mrequest) {
+	public int professor_info_edit(Professor professor, MultipartHttpServletRequest mrequest) {
 		
 		int n1 = 1;
 		int n2 = 0;
@@ -378,12 +379,37 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public AssignJoinSchedule assign_view(String fk_course_seq) {
+	public AssignJoinSchedule assign_view(Map<String, String> paraMap) {
 		
-		AssignJoinSchedule assign_view = dao.assign_view(fk_course_seq);
+		AssignJoinSchedule assign_view = dao.assign_view(paraMap);
 		
 		return assign_view;
 	}
+
+
+	@Override
+	public int insert_tbl_schedule(AssignScheInsertDTO dto, String fk_course_seq) {
+		
+		int n = 0;
+		
+		n = dao.insert_tbl_schedule(dto, fk_course_seq);
+		
+		return n;	
+	}
+
+
+	@Override
+	public int assignmentDelete(String schedule_seq_assignment) {
+		int n = 0;
+		
+		n = dao.assignmentDelete(schedule_seq_assignment);
+		
+		return n;
+	}
+
+
+
+	
 
 	
 

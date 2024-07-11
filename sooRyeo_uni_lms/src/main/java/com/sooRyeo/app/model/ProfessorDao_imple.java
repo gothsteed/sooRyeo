@@ -1,5 +1,6 @@
 package com.sooRyeo.app.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
 import com.sooRyeo.app.domain.TimeTable;
+import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 
 @Repository
@@ -134,12 +136,61 @@ public class ProfessorDao_imple implements ProfessorDao {
 
 
 	@Override
-	public AssignJoinSchedule assign_view(String fk_course_seq) {
+	public AssignJoinSchedule assign_view(Map<String, String> paraMap) {
 		
-		AssignJoinSchedule assign_view = sqlSession.selectOne("professor.assign_view", fk_course_seq);
+		AssignJoinSchedule assign_view = sqlSession.selectOne("professor.assign_view", paraMap);
 		
 		return assign_view;
 	}
+
+	
+	@Override
+	public int insert_tbl_schedule(AssignScheInsertDTO dto, String fk_course_seq) {
+		
+		int n = 0;
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("title", dto.getTitle());
+		paraMap.put("startDate", dto.getStartDate());
+		paraMap.put("endDate", dto.getEndDate());
+		
+		
+		n = sqlSession.insert("professor.insert_tbl_schedule", paraMap);
+		
+		if(n != 0) {
+			
+			String schedule_seq = String.valueOf(paraMap.get("schedule_seq"));
+			System.out.println("확인용 schedule_seq : " + schedule_seq);
+			System.out.println("확인용 fk_course_seq2 : " + fk_course_seq);
+			
+			paraMap.put("fk_course_seq", fk_course_seq);
+			paraMap.put("content", dto.getContent());
+			paraMap.put("schedule_seq_assignment", schedule_seq);
+			paraMap.put("attatched_file", dto.getAttatched_file());
+			
+			String attatched_file = paraMap.get("attatched_file");
+			System.out.println("확인용 attatched_file : " + attatched_file);
+			
+			n = sqlSession.insert("professor.insert_tbl_assignment", paraMap);
+				
+		}
+		
+		
+		return n;
+	}
+
+
+	@Override
+	public int assignmentDelete(String schedule_seq_assignment) {
+		
+		int n = 0;		
+		
+		System.out.println("확인용 schedule_seq_assignment : " + schedule_seq_assignment);
+		//n = sqlSession.delete("professor.assignmentDelete", schedule_seq_assignment);
+		
+		return n;
+	}
+
+
 
 
 

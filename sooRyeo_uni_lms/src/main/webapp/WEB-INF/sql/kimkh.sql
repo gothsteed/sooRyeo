@@ -234,6 +234,53 @@ SELECT
         
         
         
-insert into tbl_assignment(fk_course_seq, content, attatched_file) values(102, '박보영', default);
+insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file) values(102, '박보영', default);
 
 insert into tbl_schedule(schedule_seq, title, start_date, end_date) values(schedule_seq.nextval, '변우석', default, dd); 
+
+
+DELETE FROM tbl_schedule
+     WHERE schedule_seq = 30; 
+
+commit;
+
+insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file) values(27, 4, '제발들어가라', default);
+
+
+commit;
+
+-- 기존 외래 키 제약 조건 삭제
+ALTER TABLE tbl_assignment
+DROP CONSTRAINT FK_TBL_SCHE_TBL_ASSIGN;
+
+rollback;
+
+-- 새로운 외래 키 제약 조건 추가
+ALTER TABLE tbl_assignment
+ADD CONSTRAINT FK_TBL_SCHE_TBL_ASSIGN
+FOREIGN KEY (schedule_seq_assignment)
+REFERENCES tbl_schedule (schedule_seq)
+ON DELETE CASCADE;
+
+
+
+select
+A.fk_course_seq as fk_course_seq,
+A.schedule_seq_assignment as schedule_seq_assignment,
+A.content as content,
+NVL(A.attatched_file, '없음') as attatched_file,
+S.schedule_seq as schedule_seq,
+S.title as title,
+S.start_date as start_date,
+S.end_date as end_date 
+from
+tbl_assignment A
+join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+where A.schedule_seq_assignment = 5 and A.fk_course_seq = 4
+
+
+SELECT *
+FROM
+tbl_student S
+join tbl_registered_course R ON S.student_id = R.fk_student_id
+left join tbl_assignment_submit A ON S.student_id = A.fk_student_id

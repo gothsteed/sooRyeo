@@ -54,7 +54,8 @@
 					
 					v_html += `<tr>
 			      				<td style="text-align: center;">\${item.row_num}</td> 
-				            	<td><span class="subject" onclick="goView('\${item.fk_course_seq}')">\${item.title}</span></td>
+			      				<td style="text-align: center;">\${item.schedule_seq_assignment}</td> 
+				            	<td><span class="subject" onclick="goView('\${item.schedule_seq_assignment}')">\${item.title}</span></td>
 				            	<td style="text-align: center;">\${item.start_date}</td>
 				            	<td style="text-align: center;">\${item.end_date}</td>
 				            	<td style="text-align: center;">\${item.attatched_file}</td> 
@@ -85,9 +86,11 @@
 		
 	});// end of $(document).ready(function()
 	
-	function goView(fk_course_seq){
+	function goView(schedule_seq_assignment){
 		
 		const goBackURL = "${requestScope.goBackURL}";
+		const fk_course_seq = "${requestScope.fk_course_seq}";
+		
 		<%-- 
 			아래처럼 get 방식으로 보내면 안된다. 왜냐하면 get방식에서 &는 전송될 데이터의 구분자로 사용되기 때문이다. 
 			location.href=`<%= ctxPath%>/view.action?seq=\${seq}&goBackURL=\${goBackURL}`;
@@ -96,9 +99,10 @@
 			아래 #132 에 표기된 form 태그를 먼저 만든다. --%>				
 		
 		const frm = document.goViewFrm;
-		frm.fk_course_seq.value = fk_course_seq;
+		frm.course_seq.value = fk_course_seq;
 		frm.goBackURL.value = goBackURL;
-			
+		frm.schedule_seq_assignment.value = schedule_seq_assignment; 
+		
 		frm.method = "post";
 		frm.action = "<%= ctxPath%>/professor/assignmentDetail.lms";
 		frm.submit();	
@@ -107,9 +111,14 @@
 	
 	function goEnroll(){
 		
+		const goBackURL = "${requestScope.goBackURL}";
+		const fk_course_seq = "${requestScope.fk_course_seq}";
+		
 		const frm = document.goViewFrm;
-		frm.fk_course_seq.value = "${requestScope.fk_course_seq}";
-		frm.goBackURL.value = "${requestScope.goBackURL}";
+		frm.course_seq.value = fk_course_seq;
+		frm.goBackURL.value = goBackURL;
+		
+		frm.method = "get";
 		frm.action = "<%= ctxPath %>/professor/assign_enroll.lms";
 		frm.submit();
 		
@@ -120,7 +129,7 @@
 </script>
 
 <div class="container mt-5">
-<h3>과제 관리</h3>
+<h3>과제 관리 목록</h3>
 <hr>
 	<div class="card-body" style="">
 		<div class="table-container mt-3">
@@ -128,6 +137,7 @@
 				<thead>
 					<tr>
 						<th style="text-align: center;">글번호</th>
+						<th style="text-align: center;">과제번호</th>
 						<th style="text-align: center;">제목</th>
 						<th style="text-align: center;">시작일자</th>
 						<th style="text-align: center;">마감일자</th>
@@ -145,6 +155,7 @@
 
 
 <form name="goViewFrm">
-	<input type="hidden" name="fk_course_seq"/>
+	<input type="hidden" name="course_seq"/>
 	<input type="hidden" name="goBackURL"/>
+	<input type="hidden" name="schedule_seq_assignment"/>
 </form>
