@@ -234,6 +234,6 @@ SELECT
         
         
         
-insert into spring_test(no, name, writeday) values(102, '박보영', default);
+insert into tbl_assignment(fk_course_seq, content, attatched_file) values(102, '박보영', default);
 
-insert into spring_test(no, name, writeday) values(103, '변우석', default); 
+insert into tbl_schedule(schedule_seq, title, start_date, end_date) values(schedule_seq.nextval, '변우석', default, dd); 

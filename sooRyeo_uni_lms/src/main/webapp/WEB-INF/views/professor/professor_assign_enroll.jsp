@@ -118,96 +118,6 @@
 		});
 		
 				
-		// 내캘린더,사내캘린더 선택에 따른 서브캘린더 종류를 알아와서 select 태그에 넣어주기 
-		$("select.calType").change(function(){
-			var fk_lgcatgono = $("select.calType").val();      // 내캘린더이라면 1, 사내캘린더이라면 2 이다.
-			var fk_userid = $("input[name=fk_userid]").val();  // 로그인 된 사용자아이디
-			
-			if(fk_lgcatgono != "") { // 선택하세요 가 아니라면
-				$.ajax({
-						url: "<%= ctxPath%>/schedule/selectSmallCategory.action",
-						data: {"fk_lgcatgono":fk_lgcatgono, 
-							   "fk_userid":fk_userid},
-						dataType: "json",
-						success:function(json){
-							var html ="";
-							if(json.length>0){
-								
-								$.each(json, function(index, item){
-									html+="<option value='"+item.smcatgono+"'>"+item.smcatgoname+"</option>"
-								});
-								$("select.small_category").html(html);
-								$("select.small_category").show();
-							}
-						},
-						error: function(request, status, error){
-				            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-						}
-				});
-			}
-			
-			else {
-				// 선택하세요 이라면
-				$("select.small_category").hide();
-			}
-			
-		});
-		
-		
-		// 공유자 추가하기
-		$("input#joinUserName").bind("keyup",function(){
-				var joinUserName = $(this).val();
-			//	console.log("확인용 joinUserName : " + joinUserName);
-				$.ajax({
-					url:"<%= ctxPath%>/schedule/insertSchedule/searchJoinUserList.action",
-					data:{"joinUserName":joinUserName},
-					dataType:"json",
-					success : function(json){
-						var joinUserArr = [];
-				    
-					//  input태그 공유자입력란에 "이" 를 입력해본 결과를 json.length 값이 얼마 나오는지 알아본다. 
-					//	console.log(json.length);
-					
-						if(json.length > 0){
-							
-							$.each(json, function(index,item){
-								var name = item.name;
-								if(name.includes(joinUserName)){ // name 이라는 문자열에 joinUserName 라는 문자열이 포함된 경우라면 true , 
-									                             // name 이라는 문자열에 joinUserName 라는 문자열이 포함되지 않은 경우라면 false 
-								   joinUserArr.push(name+"("+item.userid+")");
-								}
-							});
-							
-							$("input#joinUserName").autocomplete({  // 참조 https://jqueryui.com/autocomplete/#default
-								source:joinUserArr,
-								select: function(event, ui) {       // 자동완성 되어 나온 공유자이름을 마우스로 클릭할 경우 
-									add_joinUser(ui.item.value);    // 아래에서 만들어 두었던 add_joinUser(value) 함수 호출하기 
-									                                // ui.item.value 이  선택한이름 이다.
-									return false;
-						        },
-						        focus: function(event, ui) {
-						            return false;
-						        }
-							}); 
-							
-						}// end of if------------------------------------
-					}// end of success-----------------------------------
-				});
-		});
-		
-
-		// x아이콘 클릭시 공유자 제거하기
-		$(document).on('click','div.displayUserList > span.plusUser > i',function(){
-				var text = $(this).parent().text(); // 이순신(leess/leesunsin@naver.com)
-				
-				var bool = confirm("공유자 목록에서 "+ text +" 회원을 삭제하시겠습니까?");
-				// 공유자 목록에서 이순신(leess/leesunsin@naver.com) 회원을 삭제하시겠습니까?
-				
-				if(bool) {
-					$(this).parent().remove();
-				}
-		});
-
 		
 		// 등록 버튼 클릭
 		$("button#register").click(function(){
@@ -264,12 +174,7 @@
 				return;
 			}
 	        
-	        // 캘린더 선택 유무 검사
-			var calType = $("select.calType").val().trim();
-			if(calType==""){
-				alert("캘린더 종류를 선택하세요."); 
-				return;
-			}
+
 			
 			// 달력 형태로 만들어야 한다.(시작일과 종료일)
 			// 오라클에 들어갈 date 형식(년월일시분초)으로 만들기
@@ -286,28 +191,8 @@
 			
 		//  console.log("색상 => " + $("input#color").val());
 			
-			// 공유자 넣어주기
-			var plusUser_elm = document.querySelectorAll("div.displayUserList > span.plusUser");
-			var joinUserArr = new Array();
-			
-			plusUser_elm.forEach(function(item,index,array){
-			//	console.log(item.innerText.trim());
-				/*
-					이순신(leess) 
-					아이유1(iyou1) 
-					설현(seolh) 
-				*/
-				joinUserArr.push(item.innerText.trim());
-			});
-			
-			var joinuser = joinUserArr.join(",");
-		//	console.log("공유자 => " + joinuser);
-			// 이순신(leess),아이유1(iyou1),설현(seolh) 
-			
-			$("input[name=joinuser]").val(joinuser);
-			
 			var frm = document.scheduleFrm;
-			frm.action="<%= ctxPath%>/schedule/registerSchedule_end.action";
+			frm.action="<%= ctxPath%>/professor/assign_enroll_end.lms";
 			frm.method="post";
 			frm.submit();
 
@@ -318,30 +203,6 @@
 
 	// ~~~~ Function Declaration ~~~~
 	
-	// div.displayUserList 에 공유자를 넣어주는 함수
-	function add_joinUser(value){  // value 가 공유자로 선택한이름 이다.
-		
-		var plusUser_es = $("div.displayUserList > span.plusUser").text();
-	
-	 // console.log("확인용 plusUser_es => " + plusUser_es);
-	    /*
-	    	확인용 plusUser_es => 
- 			확인용 plusUser_es => 이순신(leess/hanmailrg@naver.com)
- 			확인용 plusUser_es => 이순신(leess/hanmailrg@naver.com)아이유1(iyou1/younghak0959@naver.com)
- 			확인용 plusUser_es => 이순신(leess/hanmailrg@naver.com)아이유1(iyou1/younghak0959@naver.com)아이유2(iyou2/younghak0959@naver.com)
-	    */
-	
-		if(plusUser_es.includes(value)) {  // plusUser_es 문자열 속에 value 문자열이 들어있다라면 
-			alert("이미 추가한 회원입니다.");
-		}
-		
-		else {
-			$("div.displayUserList").append("<span class='plusUser'>"+value+"&nbsp;<i class='fas fa-times-circle'></i></span>");
-		}
-		
-		$("input#joinUserName").val("");
-		
-	}// end of function add_joinUser(value){}----------------------------			
 
 </script>
 
@@ -372,6 +233,10 @@
 			<tr>
 				<th>내용</th>
 				<td><textarea rows="10" cols="100" style="height: 200px;" name="content" id="content"  class="form-control"></textarea></td>
+			</tr>
+			<tr>
+				<th>첨부파일</th>
+				<td><input type="file" name="attatched_file" class="img_file" /><img id="previewImg" width="300"/></td>
 			</tr>
 		</table>
 		<input type="hidden" value="${sessionScope.loginuser.prof_id}" name="prof_id"/>
