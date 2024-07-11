@@ -120,8 +120,6 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public int student_info_edit
 
 
-	
-	
 	// 수업리스트 보여주기
 	@Override
 	public List<Map<String, String>> classList(int userid) {
@@ -129,13 +127,7 @@ public class StudentDao_imple implements StudentDao {
 		return classList;
 	}
 	
-	
-	// 과제리스트  보여주기
-	@Override
-	public List<Map<String, String>> assignment_List(int userid) {
-		List<Map<String, String>> assignment_List = sqlSession.selectList("student.assignment_List", userid);
-		return assignment_List;
-	}
+
 
 	// 수업  - 내 강의보기
 	@Override
@@ -148,5 +140,37 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public List<Lecture> getlectureList
 
 	
+	// 수업 - 이번주 강의보기
+	@Override
+	public List<Lecture> getlectureList_week(String fk_course_seq) {
+		
+		List<Lecture> lectureList_week = sqlSession.selectList("student.getlectureList_week", fk_course_seq);
+		
+		return lectureList_week;
+		
+	} // end of public List<Lecture> getlectureList_week
+
+	
+	// 수업 - 내 강의 - 과제
+	@Override
+	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
+		
+		List<Map<String, String>> assignment_List = sqlSession.selectList("student.getassignment_List", fk_course_seq);
+		
+		return assignment_List;
+		
+	} // end of public List<Map<String, String>> getassignment_List
+
+	
+	// 수업 - 내 강의 - 과제 - 상세내용
+	@Override
+	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
+		
+		List<Map<String, String>> assignment_detail_List = sqlSession.selectList("student.getassignment_detail_List", schedule_seq_assignment);
+		
+		return assignment_detail_List;
+		
+	} // end of public List<Map<String, String>> getassignment_detail_List
+
 	
 }

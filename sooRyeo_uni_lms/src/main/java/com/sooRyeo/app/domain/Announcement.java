@@ -8,8 +8,34 @@ public class Announcement {
 	private String writeday;
 	private Integer viewcount;
 	private String attatched_file;
+	private Integer status;
+	private String orgfilename;
+	
+	private Integer previousseq;
+	private String previoussubject;
+	private Integer nextseq;
+	private String nextsubject;
 	
 	
+	
+	public String getOrgfilename() {
+		return orgfilename;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public Integer getPreviousseq() {
+		return previousseq;
+	}
+	public String getPrevioussubject() {
+		return previoussubject;
+	}
+	public Integer getNextseq() {
+		return nextseq;
+	}
+	public String getNextsubject() {
+		return nextsubject;
+	}
 	public Integer getAnnouncement_seq() {
 		return announcement_seq;
 	}

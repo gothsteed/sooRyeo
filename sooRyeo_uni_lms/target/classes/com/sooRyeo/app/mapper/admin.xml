@@ -61,6 +61,7 @@
 		</if>
 		)V
 		where V.rno BETWEEN #{startRno} AND #{endRno}
+		order by writeday desc
 	</select>
 
 	<select id="getTotalElementCount" resultType="Integer" parameterType="HashMap">
@@ -72,37 +73,58 @@
 	</select>
 
 	<update id="increase_readCount" parameterType="String">
-		update
-		tbl_announcement set viewCount = viewCount + 1
-		where announcement_seq =
-		#{seq}
+		update tbl_announcement set viewCount = viewCount + 1
+		where announcement_seq = #{seq}
 	</update>
 
-	<select id="getView" parameterType="HashMap"
-		resultType="com.sooRyeo.app.domain.Announcement">
-		SELECT previousseq, previoussubject, announcement_seq, a_title,
-		a_content
+	<select id="getView" parameterType="HashMap" resultType="com.sooRyeo.app.domain.Announcement">
+		SELECT previousseq, previoussubject, announcement_seq, a_title,	a_content
 		, viewcount, writeday
 		, nextseq, nextsubject
-		, attatched_file
+		, attatched_file, orgfilename
 		from
 		(
-		select lag (announcement_seq) over(order by announcement_seq desc) AS
-		previousseq
-		, lag (a_title,1) over(order by announcement_seq desc) AS
-		previoussubject
-		, announcement_seq
-		, lead (announcement_seq) over(order by announcement_seq desc) AS
-		nextseq
-		, lead (a_title, 1) over(order by announcement_seq desc) AS Nextsubject
-		, attatched_file, writeday, viewcount, a_title, a_content
-		from tbl_announcement
-		where announcement_seq = #{seq}
-		<if test='searchWord != ""'>
-			and lower(a_title) like '%'||lower(#{searchWord})||'%'
-		</if>
+			select lag (announcement_seq) over(order by announcement_seq desc) AS previousseq
+			, lag (a_title,1) over(order by announcement_seq desc) AS previoussubject
+			, announcement_seq
+			, lead (announcement_seq) over(order by announcement_seq desc) AS nextseq
+			, lead (a_title, 1) over(order by announcement_seq desc) AS Nextsubject
+			, attatched_file, writeday, viewcount, a_title, a_content, orgfilename
+			from tbl_announcement
+			<if test='searchWord != ""'>
+				where lower(a_title) like '%' || lower(#{searchWord}) || '%'
+			</if>
 		) V
 		WHERE V.announcement_seq = #{seq}
 	</select>
 
+
+	<select id="getStaticList" resultType="com.sooRyeo.app.domain.Announcement">
+		SELECT *
+		FROM tbl_announcement
+		where status = 1
+	</select>
+
+
+	<insert id="addList" parameterType="integer">
+		<if test="attatched_file != null">
+			insert into tbl_announcement (announcement_seq, a_title, a_content, attatched_file, orgfilename, status)
+			values (ANNOUNCEMENT_SEQ.nextval, #{title}, #{content}, #{attatched_file}, #{orgfilename}, #{Listtype})
+		</if>
+		<if test="attatched_file == null">
+			insert into tbl_announcement (announcement_seq, a_title, a_content, status)
+			values (ANNOUNCEMENT_SEQ.nextval, #{title}, #{content}, #{Listtype})
+		</if>
+	</insert>
+
+	<delete id="del" parameterType="String">
+		delete from tbl_announcement
+		where announcement_seq = #{seq}
+	</delete>
+
+	<update id="edit" parameterType="com.sooRyeo.app.dto.BoardDTO">
+		update tbl_announcement set a_content = #{content}, a_title = #{title}
+		where announcement_seq = #{seq}
+	</update>
+	
 </mapper>

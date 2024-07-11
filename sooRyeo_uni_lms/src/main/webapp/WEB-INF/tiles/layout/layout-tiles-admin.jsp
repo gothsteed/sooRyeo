@@ -217,19 +217,17 @@ body {
 				<div class="dropdown-menu" aria-labelledby="scheduleMenu">
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/add_curriculum.lms">커리큘럼 추가</a> 
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/curriculum.lms">커리큘럼 관리</a> 
-					<a class="dropdown-item" href="#">강의 관리</a> 
-					<a class="dropdown-item" href="<%=ctxPath%>/admin/courseRegister.lms">강의개설</a>
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/courseRegister.lms">강의관리</a>
 				</div></li>
 			<li class="nav-item"><a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>장학금관리</a>
 				<div class="dropdown-menu" aria-labelledby="gradesMenu">
 					<a class="dropdown-item" href="#">장학생등록</a> 
-					<a class="dropdown-item" href="#">우리 안한게 뭐가 있지</a> 
-					<a class="dropdown-item" href="#">어 맞아 정답ㅎㅎㅎㅎㅎ</a>
 				</div>
 			</li>
 			<li class="nav-item"><a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티관리</a>
 				<div class="dropdown-menu" aria-labelledby="groupsMenu">
 					<a class="dropdown-item" href="#">내 친구</a> 
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/addList.lms">공지사항쓰기</a>
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/announcement.lms">학사공지사항</a>
 				</div>
 			</li>
