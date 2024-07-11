@@ -20,4 +20,12 @@ public interface CourseService {
 
 	ResponseEntity<String> updateCourse(HttpServletRequest request, CourseUpdateRequestDto requestDto);
 
+	ResponseEntity<String> getCourseList(HttpServletRequest request);
+
+	ResponseEntity<String> getLoginStudentTimeTable(HttpServletRequest request);
+
+	ResponseEntity<String> registerCourse(HttpServletRequest request);
+
+	ResponseEntity<String> dropStudentCourse(HttpServletRequest request);
+
 }

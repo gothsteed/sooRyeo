@@ -489,6 +489,7 @@ public class AdminController {
 	@RequestMapping(value = "/admin/courseDeleteREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> courseDeleteREST(HttpServletRequest request) {
 		
+		System.out.println("deleteing course");
 		
 		return courseService.deleteCourse(request);
 	}

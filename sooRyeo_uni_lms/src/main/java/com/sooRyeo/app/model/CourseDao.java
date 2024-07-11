@@ -1,6 +1,10 @@
 package com.sooRyeo.app.model;
 
+import java.util.List;
+
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.CourseJoinProfessor;
+import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 
@@ -17,5 +21,15 @@ public interface CourseDao {
 	Course getCourse(int course_seq);
 
 	int updateCourse(CourseUpdateRequestDto requestDto);
+
+	List<Course> getCourseList(Integer department_seq, Integer grade);
+
+	StudentTimeTable getRegisteredCourseList(Integer student_id);
+
+	int insertRegisterCourse(int course_seq, int student_id);
+
+	int editRegisterCount(int course_seq, int increment);
+
+	int deleteRegisteredCourse(int course_seq, int student_id);
 
 }

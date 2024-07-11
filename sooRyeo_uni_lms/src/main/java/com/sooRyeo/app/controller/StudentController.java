@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
 
 @Controller
@@ -35,6 +39,9 @@ public class StudentController {
 	
 	@Autowired
 	private FileManager fileManager;
+	
+	@Autowired
+	private CourseService courseService;
 	
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
@@ -179,6 +186,38 @@ public class StudentController {
 		return "assignment_List.student";
 		// /WEB-INF/views/student/{1}.jsp
 	}
+	
+	
+	
+	@GetMapping("/student/courseRegister.lms")
+	public ModelAndView cousrseRegister(HttpServletRequest request, ModelAndView mav) {
+	
+		return studentservice.getCourseRegisterPage(request, mav);
+		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	@GetMapping(value = "/student/courseJSON.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> cousrseREST(HttpServletRequest request) {
+		return courseService.getCourseList(request);
+	}
+	
+	@GetMapping(value = "/student/timetableJSON.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> timeTableREST(HttpServletRequest request) {
+		return courseService.getLoginStudentTimeTable(request);
+	}
+	
+	
+	@PostMapping(value = "/student/registerCourseREST.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> registerCourseREST(HttpServletRequest request) {
+		return courseService.registerCourse(request);
+	}
+	
+	
+	@PostMapping(value = "/student/dropCourseREST.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> dropCourseREST(HttpServletRequest request) {
+		return courseService.dropStudentCourse(request);
+	}
+
 
 	
 }

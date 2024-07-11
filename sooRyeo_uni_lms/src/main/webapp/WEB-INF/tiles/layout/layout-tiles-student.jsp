@@ -197,8 +197,7 @@
                 <a class="nav-link dropdown-toggle" href="#" id="classesMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
                     <a class="dropdown-item" href="<%=ctxPath%>/student/classList.lms">내 수업</a>
-                    <a class="dropdown-item" href="#">수강신청</a>
-                    <a class="dropdown-item" href="#">수강취소</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/courseRegister.lms">수강신청</a>
                     <a class="dropdown-item" href="#">출석현황</a>
                 </div>
             </li>
