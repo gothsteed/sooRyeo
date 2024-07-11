@@ -19,7 +19,7 @@ import com.sooRyeo.app.service.ProfessorService;
 
 
 @Controller
-@RequireLogin(type = Professor.class)
+@RequireLogin(type = {Professor.class})
 public class ProfessorController {
 	
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다.

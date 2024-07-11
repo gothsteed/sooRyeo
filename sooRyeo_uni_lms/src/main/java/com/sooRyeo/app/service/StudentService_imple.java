@@ -405,7 +405,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public ModelAndView getCourseRegisterPage(HttpServletRequest request, ModelAndView mav) {
 		mav.addObject("departments", departmentDao.departmentList_select());
-		mav.setViewName("studentCourseRegister.student");
+		mav.setViewName("studentCourseRegister");
 		return mav;
 	}
 	// 수업 - 내 강의 - 과제

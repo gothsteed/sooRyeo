@@ -30,7 +30,7 @@ import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
 
 @Controller
-@RequireLogin(type = Student.class)
+@RequireLogin(type = {Student.class})
 public class StudentController {
 	
 	@Autowired
@@ -49,14 +49,14 @@ public class StudentController {
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
 	public String student() {
 
-		return "student_Main.student";
+		return "student_Main";
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
 	@RequestMapping(value = "/student/lectureList.lms", method = RequestMethod.GET)
 	public String lectureList() {
 		
-		return "lectureList.student";
+		return "lectureList";
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
@@ -75,7 +75,7 @@ public class StudentController {
 		
 		request.setAttribute("mapList", mapList);
 
-		return "classList.student";
+		return "classList";
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
@@ -91,7 +91,7 @@ public class StudentController {
 		// System.out.println(member_student.getStatus());
 		
 		mav.addObject("member_student", member_student);
-		mav.setViewName("myInfo.student");
+		mav.setViewName("myInfo");
 		// /WEB-INF/views/student/{1}.jsp
 		
 		return mav;
@@ -173,7 +173,7 @@ public class StudentController {
 		
 		mav.addObject("lectureList_week", lectureList_week);
 		
-		mav.setViewName("myLecture.student");
+		mav.setViewName("myLecture");
 
 		return mav;
 		
@@ -190,7 +190,7 @@ public class StudentController {
 		List<Map<String, String>> assignment_List = service.getassignment_List(fk_course_seq);
 		mav.addObject("assignment_List", assignment_List);
 		
-		mav.setViewName("assignment_List.student");
+		mav.setViewName("assignment_List");
 		
 		return mav;
 		
@@ -241,7 +241,7 @@ public class StudentController {
 		
 		mav.addObject("assignment_detail_List", assignment_detail_List);
 		
-		mav.setViewName("assignment_detail_List.student");
+		mav.setViewName("assignment_detail_List");
 		
 		return mav;
 		

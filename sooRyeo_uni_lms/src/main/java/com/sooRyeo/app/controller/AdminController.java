@@ -52,7 +52,7 @@ import com.sooRyeo.app.service.DepartmentService;
 import com.sooRyeo.app.common.MyUtil;
 
 @Controller
-@RequireLogin(type = Admin.class)
+@RequireLogin(type = {Admin.class})
 public class AdminController {
 	
 	@Autowired
