@@ -38,6 +38,7 @@ import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
+import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
@@ -723,6 +724,30 @@ public class AdminController {
 		
 		
 		return courseService.insertCourse(request, courseInsertReqeustDTO);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/courseDeleteREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> courseDeleteREST(HttpServletRequest request) {
+		
+		
+		return courseService.deleteCourse(request);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/getCourseREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> getCourseREST(HttpServletRequest request) {
+		
+		return courseService.getCourse(request);
+	}
+	
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/admin/courseUpdateREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> courseUpdateREST(HttpServletRequest request, @RequestBody CourseUpdateRequestDto requestDto) {
+		
+		return courseService.updateCourse(request, requestDto);
 	}
 	
 	

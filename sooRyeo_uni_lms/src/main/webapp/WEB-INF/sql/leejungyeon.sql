@@ -1142,9 +1142,21 @@ where fk_course_seq = 4;
 
 select *
 from tbl_course
-where fk_professor_seq =202400002;
+where fk_professor_id = 202400002;
 
-desc tbl_course;
+desc tbl_time;
+
+desc tbl_curriculum;
+
+select *
+from tbl_curriculum;
+
+
+ALTER TABLE tbl_course
+ADD (EXIST Number(1) default 1);
+
+desc tbl_student;
+
 
 
 

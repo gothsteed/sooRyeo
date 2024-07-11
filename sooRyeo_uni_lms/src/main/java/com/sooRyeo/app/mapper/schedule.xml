@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="schedule">
+
+
+	<!--  과제 읽어오기  -->
+	<select id="showAssignment" resultType="com.sooRyeo.app.domain.Schedule" parameterType="Int">
+			select fk_student_id, A.course_seq as course_seq, schedule_seq, title, schedule_type, start_date, end_date
+			from tbl_schedule join tbl_assignment
+			on schedule_seq = schedule_seq_assignment
+			join tbl_course A
+			on course_seq = fk_course_seq
+			join tbl_registered_course B
+			on B.fk_course_seq = A.course_seq
+			where fk_student_id = #{userid}
+	</select>
+	
+	
+	<!--  내 개인일정 읽어오기  -->
+	<resultMap type="HashMap" id="todoMap">
+		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+		<result column="content" property="content" javaType="String" />
+		<result column="title" property="title" javaType="String" />
+		<result column="schedule_type" property="schedule_type" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+	</resultMap>
+	
+	
+	<select id="showTodo" parameterType="Int" resultMap="todoMap">
+			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+			from tbl_todo A join tbl_schedule B
+			on A.schedule_seq = B.schedule_seq
+			where fk_student_id = #{userid}
+	</select>
+	
+	
+	
+	<!-- 내 개인일정 수정  - 스케줄 테이블 update -->
+	<update id="update_tbl_schedule" parameterType="HashMap">
+		update tbl_schedule set title = #{title}, 
+								start_date = to_date(#{start_date}, 'yyyy-mm-dd hh24:mi:ss'),
+								end_date = to_date(#{end_date}, 'yyyy-mm-dd hh24:mi:ss')
+		where schedule_seq = #{schedule_seq}
+	</update>
+	
+	
+	<!-- 내 개인일정 수정 - todo테이블 update  -->
+	<update id="update_tbl_todo" parameterType="HashMap">
+		update tbl_todo set content = #{content}
+		where schedule_seq = #{schedule_seq}
+	</update>
+	
+	
+	<!-- 내 개인일정 추가 스케줄 테이블 insert -->
+	<insert id="insert_tbl_schedule" parameterType="HashMap">
+		<selectKey keyProperty="schedule_seq" resultType="String" order="BEFORE">
+			select schedule_seq.nextval FROM dual
+		</selectKey>
+		insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, start_date, end_date)
+		values(#{schedule_seq}, #{title}, '3', to_date(#{start_date}, 'yyyymmddhh24miss'), to_date(#{end_date}, 'yyyymmddhh24miss'))
+	</insert>
+	
+	
+	<!-- 내 개인일정 추가 todo테이블 insert -->
+	<insert id="insert_tbl_todo" parameterType="HashMap">
+		insert into tbl_todo(Schedule_Seq, content, fk_student_id)
+		values(#{schedule_seq}, #{content}, #{userid})
+	</insert>
+	
+	
+	<!-- 내 개인일정 삭제  - todo 테이블에 delete -->
+	<delete id="delete_tbl_todo" parameterType="String">
+		delete from tbl_todo where schedule_seq = #{schedule_seq}
+	</delete>
+	
+	
+	<!-- 내 개인일정 삭제  - 스케줄 테이블에 delete -->
+	<delete id="delete_tbl_schedule" parameterType="String">
+		delete from tbl_schedule where schedule_seq = #{schedule_seq}
+	</delete>
+	
+
+
+</mapper>

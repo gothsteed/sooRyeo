@@ -217,8 +217,7 @@ body {
 				<div class="dropdown-menu" aria-labelledby="scheduleMenu">
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/add_curriculum.lms">커리큘럼 추가</a> 
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/curriculum.lms">커리큘럼 관리</a> 
-					<a class="dropdown-item" href="#">강의 관리</a> 
-					<a class="dropdown-item" href="<%=ctxPath%>/admin/courseRegister.lms">강의개설</a>
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/courseRegister.lms">강의관리</a>
 				</div></li>
 			<li class="nav-item"><a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>장학금관리</a>
 				<div class="dropdown-menu" aria-labelledby="gradesMenu">
