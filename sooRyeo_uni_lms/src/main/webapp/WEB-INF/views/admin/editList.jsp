@@ -71,7 +71,7 @@
     	 // 폼(form)을 전송(submit)
     	 const frm = document.addFrm;
     	 frm.method = "post";
-    	 frm.action = "<%= ctxPath%>/admin/aditListEnd.lms";
+    	 frm.action = "<%= ctxPath%>/admin/editListEnd.lms";
     	 frm.submit();
     	 
      });

@@ -50,6 +50,12 @@ function goAssignment_List(){
 	
 }
 
+function goLectureNotice(seq){
+	
+	location.href = "<%=ctxPath%>/board/lecture_notice.lms?fk_course_seq="+${requestScope.fk_course_seq};
+	
+}
+
 
 function consulting() {
 	$("#ConsultingModal").modal("show");
@@ -251,7 +257,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 <h3>강의 개요</h3>
 <hr>
 	<div class="card-body" style="">
-		<button type="button" class="btn btn-outline-light" style="width:20%; height:150px;">
+		<button type="button" class="btn btn-outline-light" style="width:20%; height:150px;" onclick="goLectureNotice()">
 			<img src="<%=ctxPath%>/resources/images/annoucement.png" class="img-fluid" style="width:30%;">
 			<br><br>
 			<span id="annoucement" style="color:black; font-weight: bold;">공지사항</span>
