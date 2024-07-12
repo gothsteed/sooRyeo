@@ -226,7 +226,7 @@
 	</insert>
 	
 	<insert id="insert_tbl_consult" parameterType="HashMap">
-		insert into tbl_consult(Schedule_Seq, fk_student_id, fk_prof_id, content)
+		insert into tbl_consult(fk_Schedule_Seq, fk_student_id, fk_prof_id, content)
 		values(#{schedule_seq}, #{userid}, #{prof_id}, #{content})
 	</insert>
 	
