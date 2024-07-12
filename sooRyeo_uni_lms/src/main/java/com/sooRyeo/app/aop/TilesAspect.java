@@ -24,7 +24,7 @@ import com.sooRyeo.app.domain.Student;
 public class TilesAspect {
 
 	
-	@Around("@within(requireLogin) || @annotation(requireLogin) && !@annotation(org.springframework.web.bind.annotation.ResponseBody)")
+	@Around("(@within(requireLogin) || @annotation(requireLogin))  && !@annotation(org.springframework.web.bind.annotation.ResponseBody)")
 	public Object tilesAspect(ProceedingJoinPoint joinPoint,  RequireLogin requireLogin) throws Throwable {
 		Object result = joinPoint.proceed();
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -60,6 +60,7 @@ public class TilesAspect {
 				return viewName;
 			}
 			catch (JSONException e) {
+				System.out.println("parse fail");
 				return viewName + tile;
 			}
 		}
