@@ -93,6 +93,7 @@
 </div>
 
 <form name="goViewFrm">
+	<input type="hidden" name="fk_course_seq" value="${requestScope.fk_course_seq}" />
 	<input type="hidden" name="seq" />
 	<input type="hidden" name="goBackURL" />
 	<input type="hidden" name="searchWord" value="${searchWord}"/>  

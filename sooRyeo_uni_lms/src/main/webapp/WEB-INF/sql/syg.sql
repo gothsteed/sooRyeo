@@ -152,7 +152,7 @@ select *
 from tbl_course;
 
 insert into tbl_lecture_notice (lecture_notice_seq, fk_course_seq, l_title, l_content)
-values (lecture_notice_seq.nextval, 5 ,'국어수업은 필수입니다.', '국어수업을 꼭 수강하세요');
+values (lecture_notice_seq.nextval, 4 ,'게임 필수입니다.', '게임 컴퓨터 꼭 수강하세요');
 
 commit;
 
