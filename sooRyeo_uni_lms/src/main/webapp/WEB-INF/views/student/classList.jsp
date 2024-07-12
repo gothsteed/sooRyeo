@@ -151,7 +151,7 @@ $(document).ready(function(){
 				      <c:if test="${mapList.department_seq == null && mapList.required == '1'}">
 				      	<div class="no-majorO rounded">교양필수</div>
 				      </c:if>
-				      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
+				      <c:if test="${mapList.department_seq == null && mapList.required == '0'}">
 				      	<div class="no-majorX rounded">교양선택</div>
 				      </c:if>
 				      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">

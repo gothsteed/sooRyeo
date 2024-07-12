@@ -15,28 +15,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.ScheduleService;
 
 
 @Controller
+
 public class ScheduleController {
 	
 	@Autowired
 	private ScheduleService service;
 	
 	
-	
+	@RequireLogin(type = {Student.class})
 	@GetMapping("/student/scheduleManagement.lms")
 	public ModelAndView showSchedule(ModelAndView mav, HttpServletRequest request) {
 		
-		mav.setViewName("schedule/scheduleManagement.student");
+		mav.setViewName("schedule/scheduleManagement");
 		return mav;
 	}
 	
 	
-	
+	@RequireLogin(type = {Student.class})
 	@ResponseBody
 	@GetMapping("/api/schedules")
 	public String showSchedule(HttpServletRequest request) {
@@ -83,6 +85,7 @@ public class ScheduleController {
 
 	
 	// 내 개인일정 update 하기
+	@RequireLogin(type = {Student.class})
 	@ResponseBody
 	@PostMapping("/schedule/updateSchedule.lms")
 	public String updateSchedule(HttpServletRequest request) {
@@ -103,6 +106,7 @@ public class ScheduleController {
 	}
 	
 	
+	@RequireLogin(type = {Student.class})
 	@ResponseBody
 	@PostMapping("/schedule/insertSchedule.lms")
 	public String insertSchedule(HttpServletRequest request) {
@@ -125,6 +129,7 @@ public class ScheduleController {
 	}
 	
 	
+	@RequireLogin(type = {Student.class})
 	@ResponseBody
 	@PostMapping("/schedule/deleteSchedule.lms")
 	public String deleteSchedule(HttpServletRequest request) {

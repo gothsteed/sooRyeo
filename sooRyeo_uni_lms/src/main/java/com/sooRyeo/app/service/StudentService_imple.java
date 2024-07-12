@@ -430,6 +430,29 @@ public class StudentService_imple implements StudentService {
 		
 	} // end of public List<Map<String, String>> getassignment_detail_List
 
+
+
+	// 교수 이름, 교수 번호 select
+	@Override
+	public List<Professor> select_prof_info(String fk_course_seq) {
+		List<Professor> prof_info = dao.select_prof_info(fk_course_seq);
+		return prof_info;
+	}
+
+
+
+	// 스케줄, 상담 테이블에 insert
+	@Override
+	public int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid) {
+		
+		int n = dao.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid); 
+		return n;
+	}
+
+
+
+	
+
 	
 	
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
-import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.CourseService;
@@ -164,8 +165,12 @@ public class StudentController {
 		
 		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
 		
+		List<Professor> professor_info = service.select_prof_info(fk_course_seq);
+		
 		// 수업 - 이번주 강의보기
 		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
+		
+		mav.addObject("professor_info", professor_info);
 		
 		mav.addObject("lectureList", lectureList);
 		
@@ -248,17 +253,26 @@ public class StudentController {
 	} // end of public ModelAndView assignment_detail_List
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@ResponseBody
+	@PostMapping("/student/insert_schedule_consult.lms")
+	public String insert_schedule_consult(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
+		String prof_id = request.getParameter("prof_id");
+		String title =  request.getParameter("title");
+		String content = request.getParameter("content");
+		String start_date = request.getParameter("start_date");
+		String end_date = request.getParameter("end_date");
+		
+		int n = service.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
+		
+		JSONObject jsonobj  = new JSONObject();
+		jsonobj.put("result", n);
+		
+		return jsonobj.toString();
+	}
 	
 }
