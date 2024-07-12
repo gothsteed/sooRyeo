@@ -19,6 +19,11 @@
 
 
 <style>
+
+li.list-group-item {
+	height: 100px;
+}
+
 </style>
 
 
@@ -26,18 +31,14 @@
 </script>
 
 
-<div style="display: flex; width: 90%; margin: 0 auto;">
-	<div style="width : 80%; height: 800pt; border: solid 1px red;">
-		<div style="width : 90%; height: 500pt; margin: 5% auto; border: solid 1px green;">
+<div style="display: flex; width: 90%; height: 525pt; margin: 2% auto;">
+	<div class="shadow p-3 mb-5 bg-body rounded" style="width : 80%; height: 520pt;">
+		<div style="height: 50px; margin-left: 5%; margin-top: 3%; font-size: 25pt;">수업제목</div>
+		<div class="shadow-none bg-light rounded" style="width : 90%; height: 400pt; margin: 2% auto;">
 			동영상	
 		</div>
-		<div style="width : 90%; border: solid 1px black; margin: 0 auto; justify-content: space-between; display: flex;">
-		<button>이전버튼</button>
-		<button>다음버튼</button>
-		</div>
-	
 	</div>
-	<div style="width : 20%; height: 800pt; border: solid 1px blue;">
-	
+	<div class="shadow ml-5 mb-5 bg-body rounded" style="width : 20%; height: 520pt;">
+		수업내용
 	</div>
 </div>
