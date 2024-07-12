@@ -199,6 +199,15 @@ public class ProfessorDao_imple implements ProfessorDao {
 		return n;
 	}
 
+	
+	@Override
+	public AssignJoinSchedule assignmentEdit(String schedule_seq_assignment) {
+		
+		AssignJoinSchedule assign_edit = sqlSession.selectOne("professor.assignmentEdit", schedule_seq_assignment);
+		
+		return assign_edit;
+	}
+
 
 
 

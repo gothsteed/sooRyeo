@@ -57,6 +57,9 @@ public interface ProfessorDao {
 	
 	// 과제 삭제
 	int assignmentDelete(String schedule_seq_assignment);
+	
+	// 과제 수정
+	AssignJoinSchedule assignmentEdit(String schedule_seq_assignment);
 
 	
 	

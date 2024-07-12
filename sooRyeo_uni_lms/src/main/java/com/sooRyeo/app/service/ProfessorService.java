@@ -50,6 +50,9 @@ public interface ProfessorService {
 	// 과제 삭제
 	int assignmentDelete(String schedule_seq_assignment, MultipartHttpServletRequest mrequest);
 	
+	// 과제 수정
+	AssignJoinSchedule assignmentEdit(String schedule_seq_assignment);
+	
 	
 
 }
