@@ -3,7 +3,7 @@ package com.sooRyeo.app.domain;
 import java.util.Date;
 
 public class AssignmentSubmit {
-	
+   
     private Integer assignment_submit_seq;
     private Integer fk_schedule_seq_assignment;
     private Integer fk_student_id;
