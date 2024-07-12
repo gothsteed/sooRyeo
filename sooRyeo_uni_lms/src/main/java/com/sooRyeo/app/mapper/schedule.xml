@@ -7,6 +7,41 @@
 <mapper namespace="schedule">
 
 
+    <resultMap id="ScheduleResultMap" type="com.sooRyeo.app.domain.Schedule">
+        <id property="schedule_eq" column="schedule_seq"/>
+        <result property="title" column="title"/>
+        <result property="scheduleType" column="schedule_type"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="confirm" column="confirm"/>
+    </resultMap>
+
+    <!-- ResultMap for Student -->
+    <resultMap id="StudentResultMap" type="com.sooRyeo.app.domain.Student">
+        <id property="studentId" column="student_id"/>
+        <result property="fk_department_seq" column="fk_department_seq"/>
+        <result property="pwd" column="pwd"/>
+        <result property="name" column="name"/>
+        <result property="jubun" column="jubun"/>
+        <result property="tel" column="tel"/>
+        <result property="grade" column="grade"/>
+        <result property="address" column="address"/>
+        <result property="email" column="email"/>
+        <result property="register_year" column="register_year"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <!-- ResultMap for Consult -->
+    <resultMap id="ConsultResultMap" type="com.sooRyeo.app.domain.Consult">
+        <id property="fk_schedule_seq" column="fk_schedule_seq"/>
+        <result property="fk_student_id" column="fk_student_id"/>
+        <result property="fk_prof_id" column="fk_prof_id"/>
+        <result property="content" column="content"/>
+        <association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
+        <association property="student" javaType="com.sooRyeo.app.domain.Student" resultMap="StudentResultMap"/>
+    </resultMap>
+
+
 	<!--  과제 읽어오기  -->
 	
 	<resultMap type="HashMap" id="assignmentMap">
@@ -40,6 +75,8 @@
 		<result column="start_date" property="start_date" javaType="String" />
 		<result column="end_date" property="end_date" javaType="String" />
 	</resultMap>
+	
+	
 	
 	
 	<select id="showTodo" parameterType="Int" resultMap="todoMap">
@@ -94,6 +131,87 @@
 	<delete id="delete_tbl_schedule" parameterType="String">
 		delete from tbl_schedule where schedule_seq = #{schedule_seq}
 	</delete>
+	
+	<select id="getUnconfirmedConsultList" parameterType="HashMap" resultMap="ConsultResultMap">
+		
+select *
+from
+(
+select rownum as rno, 
+			schedule_seq,
+			title,
+			schedule_type, 
+			start_date,
+		    end_date,
+		    confirm,
+		    fk_student_id,
+		    fk_prof_id,
+		    content,
+		    student_id,
+		    fk_department_seq,
+		    pwd,
+		    name ,
+		    jubun ,
+		    tel ,
+		    grade,
+		    address,
+		    email,
+		    register_year,
+		    status
+		from
+		(
+		SELECT 
+		    s.schedule_seq,
+		    s.title,
+		    s.schedule_type,
+		    s.start_date,
+		    s.end_date,
+		    s.confirm,
+		    c.fk_student_id,
+		    c.fk_prof_id,
+		    c.content,
+		    st.student_id,
+		    st.fk_department_seq,
+		    st.pwd,
+		    st.name ,
+		    st.jubun ,
+		    st.tel ,
+		    st.grade,
+		    st.address,
+		    st.email,
+		    st.register_year,
+		    st.status
+		FROM
+		    tbl_schedule s
+		JOIN
+		    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+		JOIN
+		    tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+		    s.schedule_type = 4 AND s.confirm = 0
+		    AND c.fk_prof_id = #{professor_id}
+		order by  schedule_seq
+		
+		)
+)
+where rno between #{startRno} and #{endRno}
+
+	</select>
+	
+	<select id="getUnconfirmedConsultCount" >
+		SELECT 
+		    count(*)
+		FROM
+		    tbl_schedule s
+		JOIN
+		    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+		JOIN
+		    tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+		    s.schedule_type = 4 AND s.confirm = 0
+		    AND c.fk_prof_id = #{professor_id}
+	
+	</select>
 	
 
 
