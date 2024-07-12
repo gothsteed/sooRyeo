@@ -103,8 +103,10 @@ public class ScheduleService_imple implements ScheduleService {
 		
 		Pager<Consult> schedulePager = new Pager<Consult>(unconfirmedConsultList, currentPage, sizePerPage, totalElementCount);
 		
-		mav.addObject("scheduleList", schedulePager.getObjectList());
+		mav.addObject("consultList", schedulePager.getObjectList());
 		mav.addObject("pageBar", schedulePager.makePageBar(request.getContextPath() + "/professor/approveConsult.lms"));
+		mav.addObject("currentPage", schedulePager.getPageNumber());
+		mav.addObject("perPageSize", schedulePager.getPerPageSize());
 		mav.setViewName("consultApprove");
 		
 		

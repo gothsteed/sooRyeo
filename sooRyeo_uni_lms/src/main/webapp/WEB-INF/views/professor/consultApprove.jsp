@@ -60,28 +60,20 @@
 			  <thead>
 			    <tr>
 			      <th scope="col">NO</th>
-			      <th scope="col">제목</th>
+			      <th scope="col">학생이름</th>
 			      <th scope="col">날짜 / 시간</th>
-			      <th scope="col">조회수</th>
+			      <th scope="col">이메일</th>
 			    </tr>
 			  </thead>
 			  <tbody>
+
 			  
-			  <c:forEach var="fix" items="${requestScope.staticList}" varStatus="status"  begin="0" end="4">    
-			    <tr style="background-color: #d1e0e0;">
-			      <th scope="row" style="font-weight: bold; color: red;">♬</th>
-			      <td><span type="button" class="a_title" onclick="goView('${fix.announcement_seq}')">${fix.a_title}</span></td>
-			      <td>${fix.writeday}</td>
-			      <td>${fix.viewcount}</td>
-			    </tr>
-			  </c:forEach>  
-			  
-			  <c:forEach var="list" items="${requestScope.announcementList}" varStatus="status">    
+			  <c:forEach var="consult" items="${requestScope.consultList}" varStatus="status">
 			    <tr>
 			      <th scope="row">${((requestScope.currentPage- 1) * requestScope.perPageSize) + status.count}</th>
-			      <td><span type="button" class="a_title" onclick="goView('${list.announcement_seq}')">${list.a_title}</span></td>
-			      <td>${list.writeday}</td>
-			      <td>${list.viewcount}</td>
+			      <td>${consult.student.name}</td>
+					<td>${consult.schedule.start_date} ~ ${consult.schedule.end_date}</td>
+			      <td>${consult.student.email}</td>
 			    </tr>
               </c:forEach>
               
