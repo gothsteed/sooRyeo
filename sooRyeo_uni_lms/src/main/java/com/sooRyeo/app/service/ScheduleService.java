@@ -9,7 +9,7 @@ import com.sooRyeo.app.domain.Schedule;
 public interface ScheduleService {
 
 	// 과제테이블 select
-	List<Schedule> showAssignment(int userid);
+	List<Map<String, String>> showAssignment(int userid);
 
 	// 일정테이블 select 
 	List<Map<String, String>> showTodo(int userid);

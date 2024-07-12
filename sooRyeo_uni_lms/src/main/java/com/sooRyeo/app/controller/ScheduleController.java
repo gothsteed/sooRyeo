@@ -44,29 +44,28 @@ public class ScheduleController {
 	public String showSchedule(HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
-		
 		Student loginuser = (Student)session.getAttribute("loginuser");
-		
 		int userid = loginuser.getStudent_id();
 		
-		List<Schedule> assignment_list = service.showAssignment(userid);
+		List<Map<String, String>> assignment_list = service.showAssignment(userid);
 		List<Map<String, String>> todo_list = service.showTodo(userid);
 		
 		JSONArray jsonArr = new JSONArray();
-		for(Schedule schedule : assignment_list) {
-			
+		
+		for(Map<String, String> schedule : assignment_list) {
 			JSONObject jsonobj  = new JSONObject();
-			jsonobj.put("schedule_seq", schedule.getSchedule_seq());
-			jsonobj.put("schedule_type", schedule.getSchedule_type());
-			jsonobj.put("course_seq", schedule.getSchedule_type());
-			jsonobj.put("title", schedule.getTitle());
-			jsonobj.put("start_date", schedule.getStart_date());
-			jsonobj.put("end_date", schedule.getEnd_date());
-			
-			// System.out.println(schedule.getStart_date());
+			jsonobj.put("fk_student_id", schedule.get("fk_student_id"));
+			jsonobj.put("course_seq", schedule.get("course_seq"));
+			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
+			jsonobj.put("title", schedule.get("title"));
+			jsonobj.put("schedule_type", schedule.get("schedule_type"));
+			jsonobj.put("start_date", schedule.get("start_date"));
+			jsonobj.put("end_date", schedule.get("end_date"));
 			
 			jsonArr.put(jsonobj);
+			
 		}
+		
 		
 		for(Map<String, String> schedule : todo_list) {
 			JSONObject jsonobj  = new JSONObject();

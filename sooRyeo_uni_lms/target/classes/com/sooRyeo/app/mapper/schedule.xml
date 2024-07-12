@@ -8,7 +8,18 @@
 
 
 	<!--  과제 읽어오기  -->
-	<select id="showAssignment" resultType="com.sooRyeo.app.domain.Schedule" parameterType="Int">
+	
+	<resultMap type="HashMap" id="assignmentMap">
+		<result column="fk_student_id" property="fk_student_id" javaType="String" />
+		<result column="course_seq" property="course_seq" javaType="String" />
+		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+		<result column="title" property="title" javaType="String" />
+		<result column="schedule_type" property="schedule_type" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+	</resultMap>
+	
+	<select id="showAssignment" parameterType="Int" resultMap="assignmentMap">
 			select fk_student_id, A.course_seq as course_seq, schedule_seq, title, schedule_type, start_date, end_date
 			from tbl_schedule join tbl_assignment
 			on schedule_seq = schedule_seq_assignment
