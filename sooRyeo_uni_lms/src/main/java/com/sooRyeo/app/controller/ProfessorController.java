@@ -160,7 +160,7 @@ public class ProfessorController {
 		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("courseList", courseList);
 		mav.addObject("loginuser", loginuser);
-		mav.setViewName("professor_courseList.professor");
+		mav.setViewName("professor_courseList");
 		
 		return mav;
 	}
@@ -177,7 +177,7 @@ public class ProfessorController {
 		
 		mav.addObject("studentList", studentList);
 		mav.addObject("fk_course_seq", fk_course_seq);
-		mav.setViewName("professor_courseDetail.professor");
+		mav.setViewName("professor_courseDetail");
 		
 		return mav;
 	}
@@ -193,7 +193,7 @@ public class ProfessorController {
 		
 		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("fk_course_seq", fk_course_seq);
-		mav.setViewName("professor_assignment.professor");
+		mav.setViewName("professor_assignment");
 		
 		return mav;
 	}
@@ -249,7 +249,7 @@ public class ProfessorController {
 		
 		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("fk_course_seq", fk_course_seq);
-		mav.setViewName("professor_assign_enroll.professor");
+		mav.setViewName("professor_assign_enroll");
 		return mav;
 	}
 	
@@ -374,7 +374,7 @@ public class ProfessorController {
 			System.out.println("확인용 content : " + content);
 			
 			mav.addObject("assign_view", assign_view);
-			mav.setViewName("professor_assignDetail.professor");
+			mav.setViewName("professor_assignDetail");
 			
 		} catch (NumberFormatException e) {
 			mav.setViewName("redirect:/professor/assignment.lms");
