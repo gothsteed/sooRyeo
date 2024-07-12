@@ -69,13 +69,13 @@ public class AdminController {
 	@RequestMapping(value = "/admin/dashboard.lms", method = RequestMethod.GET)
 	public String admin_Main() {
 
-		return "admin_Main.admin";
+		return "admin_Main";
 	}
 	
 	@RequestMapping(value = "/admin/MemberCheck.lms", method = RequestMethod.GET)
 	public String MemberCheck() {
 		
-		return "MemberCheck.admin";
+		return "MemberCheck";
 	}
 	
 	@RequestMapping(value = "/admin/MemberRegister.lms", method = RequestMethod.GET)
@@ -86,7 +86,7 @@ public class AdminController {
 		
 		request.setAttribute("departmentList", departmentList);
 		
-		return "MemberRegister.admin";
+		return "MemberRegister";
 	}
 	
 	@RequestMapping(value = "/admin/ProfessorRegister.lms", method = RequestMethod.GET)
@@ -97,7 +97,7 @@ public class AdminController {
 		
 		request.setAttribute("departmentList", departmentList);
 		
-		return "ProfessorRegister.admin";
+		return "ProfessorRegister";
 	}
 
 	@PostMapping(value = "/admin/memberRegister_end.lms")
@@ -223,7 +223,7 @@ public class AdminController {
 
 		
 		mav.addObject("departments", departments);
-		mav.setViewName("add_curriculum.admin");
+		mav.setViewName("add_curriculum");
 		
 		return mav;
 	}
@@ -277,7 +277,7 @@ public class AdminController {
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
 		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms", "searchWord="+searchWord));
-		mav.setViewName("announcement.admin");
+		mav.setViewName("announcement");
 		
 		mav.addObject("goBackURL",goBackURL);
 		
@@ -384,7 +384,7 @@ public class AdminController {
 			// 이전글제목, 다음글제목 보기를 위해 넣어준 것
 			mav.addObject("paraMap", paraMap);
 			
-			mav.setViewName("announcementView.admin");
+			mav.setViewName("announcementView");
 			
 		} catch (NumberFormatException e) {
 			mav.setViewName("redirect:/admin/announcement.lms");
@@ -505,7 +505,7 @@ public class AdminController {
 	@GetMapping("/admin/addList.lms")
 	public ModelAndView addList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
-		mav.setViewName("addList.admin");
+		mav.setViewName("addList");
 		return mav;
 	}
 	
@@ -640,7 +640,7 @@ public class AdminController {
 			}
 			else {
 				mav.addObject("an", an);
-				mav.setViewName("editList.admin");
+				mav.setViewName("editList");
 				
 				return mav;
 			}

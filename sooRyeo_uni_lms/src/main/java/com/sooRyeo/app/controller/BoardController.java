@@ -2,6 +2,7 @@ package com.sooRyeo.app.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.common.MyUtil;
@@ -25,7 +28,6 @@ import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.service.LectureNoticeService;
-
 
 
 @Controller
@@ -60,7 +62,7 @@ public class BoardController {
 			mav.addObject("searchWord", searchWord);
 		}
 		
-		int fk_course_seq = Integer.parseInt(request.getParameter("fk_course_seq")==null?"1":request.getParameter("fk_course_seq"));
+		String fk_course_seq = request.getParameter("fk_course_seq");
 		
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("searchWord",searchWord);
@@ -88,10 +90,11 @@ public class BoardController {
 		// List<BoardDTO> staticList = LecService.getStaticList();
 		
 		// mav.addObject("staticList", staticList);
+		mav.addObject("fk_course_seq", fk_course_seq);
 		mav.addObject("lec_List", lec_List.getObjectList());
 		mav.addObject("currentPage", lec_List.getPageNumber());
 		mav.addObject("perPageSize", lec_List.getPerPageSize());
-		mav.addObject("pageBar", lec_List.makePageBar(request.getContextPath() + "/board/lecture_notice.lms", "searchWord="+searchWord));
+		mav.addObject("pageBar", lec_List.makePageBar(request.getContextPath() + "/board/lecture_notice.lms", "searchWord="+searchWord, "fk_course_seq="+fk_course_seq));
 		mav.setViewName("lecture_notice/lecture_notice.student");
 		
 		mav.addObject("goBackURL",goBackURL);
@@ -101,10 +104,11 @@ public class BoardController {
 	
 	@RequestMapping("/board/lecture_notice_view.lms")
 	public ModelAndView view(ModelAndView mav, HttpServletRequest request) {
-		
+		// 여기까지 컨제
 		String seq = "";
 		String goBackURL = "";
 		String searchWord = "";
+		String fk_course_seq = "";
 		
 		// redirect 되어서 넘어온 데이터가 있는지 꺼내어 와본다.
 		Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request); // ? 는 아무거나 라는 의미 == object
@@ -119,6 +123,7 @@ public class BoardController {
 	           seq = redirect_map.get("seq");
 	           goBackURL = redirect_map.get("goBackURL");
 	           searchWord = redirect_map.get("searchWord");
+	           fk_course_seq = request.getParameter("fk_course_seq");
 	           
 	           try {
 	               searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8"); // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다. 
@@ -132,7 +137,7 @@ public class BoardController {
 			seq = request.getParameter("seq");
 
 			goBackURL = request.getParameter("goBackURL");
-
+			fk_course_seq = request.getParameter("fk_course_seq");
 			// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것.
 			searchWord = request.getParameter("searchWord");
 			
@@ -195,6 +200,7 @@ public class BoardController {
 				}
 			}
 			mav.addObject("bdto", bdto);
+			mav.addObject("fk_course_seq", fk_course_seq);
 			
 			// 이전글제목, 다음글제목 보기를 위해 넣어준 것
 			mav.addObject("paraMap", paraMap);
@@ -208,7 +214,49 @@ public class BoardController {
 		return mav;
 	}
 	
-	
-	
+	@PostMapping("/board/lecture_notice_view_2.lms")
+	public ModelAndView announcementView_2(ModelAndView mav, HttpServletRequest request, RedirectAttributes redirectAttr) {
+		
+		// 조회하고자 하는 글번호 받아오기
+		String seq = request.getParameter("seq");
+		
+		// 이전글제목, 다음글제목 보기
+		String goBackURL = request.getParameter("goBackURL");
+		String searchWord = request.getParameter("searchWord");
+		String fk_course_seq = request.getParameter("fk_course_seq");
+		
+		/* 
+	        redirect:/ 를 할때 "한글데이터는 0에서 255까지의 허용 범위 바깥에 있으므로 인코딩될 수 없습니다" 라는 
+	        java.lang.IllegalArgumentException 라는 오류가 발생한다.
+	                    이것을 방지하려면 아래와 같이 하면 된다.
+        */
+		try {
+	         searchWord = URLEncoder.encode(searchWord, "UTF-8");
+	         goBackURL = URLEncoder.encode(goBackURL, "UTF-8");
+	         
+	      } catch (UnsupportedEncodingException e) {
+	         e.printStackTrace();
+	      }
+		// 이전글제목, 다음글제목 보기 끝
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		// ==== redirect(GET방식) 시 데이터를 넘길때 GET 방식이 아닌 POST 방식처럼 데이터를 넘기려면 RedirectAttributes 를 사용하면 된다. 시작 ==== //
+		Map<String, String> redirect_map = new HashMap<>();
+		redirect_map.put("seq",seq); // 여기서 redirect_map 이것 안에 seq를 담아주고, 밑에서  addFlashAttribute를 사용하여 redirectAttr 이곳에 넣어준다.
+		// 이전글제목, 다음글제목 보기
+		redirect_map.put("goBackURL",goBackURL);
+		redirect_map.put("searchWord",searchWord);
+		redirect_map.put("fk_course_seq",fk_course_seq);
+		
+		redirectAttr.addFlashAttribute("redirect_map", redirect_map);
+		// redirectAttr.addFlashAttribute("키", 밸류값); 으로 사용하는데 오로지 1개의 데이터만 담을 수 있으므로 여러개의 데이터를 담으려면 Map 을 사용해야 한다.
+		
+		mav.setViewName("redirect:/board/lecture_notice_view.lms"); // 실제로 redirect:/view.action은 POST 방식이 아닌 GET 방식이다. 
+		// ==== redirect(GET방식임) 시 데이터를 넘길때 GET 방식이 아닌 POST 방식처럼 데이터를 넘기려면 RedirectAttributes 를 사용하면 된다. 끝 ==== //
+		
+		return mav;
+	}
 	
 }

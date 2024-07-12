@@ -8,15 +8,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script>
 	// Function Declaration
-	function goView(announcement_seq){
+	function goView(seq){
 		const goBackURL = "${requestScope.goBackURL}";
 		
 		const frm = document.goViewFrm
-		frm.seq.value = announcement_seq;
+		frm.seq.value = seq;
 		frm.goBackURL.value = goBackURL;
 		
 		frm.method = "post";
-		frm.action = "<%= ctxPath%>/admin/announcementView_2.lms";
+		frm.action = "<%= ctxPath%>/board/lecture_notice_view_2.lms";
 		frm.submit();
 		
 	}// end of function goView('${boardvo.seq}'){}-----------------------------------------
@@ -72,15 +72,15 @@
 			  </tbody>
 			</table>
 			<div style="display: flex; justify-content: space-between; width: 100%;">
-				<c:if test="${requestScope.an.nextseq != null}">
-	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.nextseq}')">다음글</button>
+				<c:if test="${requestScope.bdto.nextseq != null}">
+	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.bdto.nextseq}')">다음글</button>
 				</c:if>
                 <div>
-	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/admin/announcement.lms'">전체목록보기</button>
+	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/board/lecture_notice.lms?fk_course_seq='+${requestScope.fk_course_seq}">전체목록보기</button>
 	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">검색목록보기</button>
                 </div>
-				<c:if test="${requestScope.an.previousseq != null}">
-	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.previousseq}')">이전글</button>
+				<c:if test="${requestScope.bdto.previousseq != null}">
+	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.bdto.previousseq}')">이전글</button>
 				</c:if>
             </div>
 		</div>
@@ -88,6 +88,7 @@
 </div>
 
 <form name="goViewFrm">
+	<input type="hidden" name="fk_course_seq" value="${requestScope.fk_course_seq}"/>
 	<input type="hidden" name="seq" />
 	<input type="hidden" name="goBackURL" />
 	<input type="hidden" name="searchWord" value="${requestScope.paraMap.searchWord}"/>  
