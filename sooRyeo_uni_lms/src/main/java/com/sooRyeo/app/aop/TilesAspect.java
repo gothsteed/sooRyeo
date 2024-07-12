@@ -7,6 +7,7 @@ import org.apache.tiles.evaluator.AbstractAttributeEvaluator;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,28 @@ import com.sooRyeo.app.domain.Student;
 @Component
 @Aspect
 public class TilesAspect {
+	
+	private boolean isJsonObject(String viewName) {
+		try {
+			new JSONObject(viewName);
+			return true;
+		} catch (JSONException e) {
+			return false;
+		}
+	}
+	
+	
+	private boolean isJsonArray(String viewName) {
+		try {
+			new JSONArray(viewName);
+			return true;
+		} catch (JSONException e) {
+			return false;
+		}
+	}
 
 	
-	@Around("@within(requireLogin) || @annotation(requireLogin)")
+	@Around("(@within(requireLogin) || @annotation(requireLogin)) && !@annotation(org.springframework.web.bind.annotation.ResponseBody)")
 	public Object tilesAspect(ProceedingJoinPoint joinPoint,  RequireLogin requireLogin) throws Throwable {
 		Object result = joinPoint.proceed();
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -39,11 +59,17 @@ public class TilesAspect {
 		} else if (loginuser instanceof Admin) {
 			tile = ".admin";
 		}
+		
+		
 
 		if (result instanceof ModelAndView) {
 
 			ModelAndView mav = (ModelAndView) result;
 			String viewName = mav.getViewName();
+			
+			if(viewName.contains("redirect:")) {
+				return mav;
+			}
 
 			mav.setViewName(viewName + tile);
 
@@ -54,13 +80,21 @@ public class TilesAspect {
 		else if (result instanceof String) {
 			String viewName = (String) result;
 			
-			try {
-				new JSONObject(viewName);
+			if(viewName.contains("redirect:")) {
 				return viewName;
 			}
-			catch (JSONException e) {
-				return viewName + tile;
+			
+			
+			if(isJsonObject(viewName)) {
+				return viewName;
 			}
+			
+			else if(isJsonArray(viewName)) {
+				return viewName;
+			}
+			
+			
+			return viewName + tile;
 		}
 		
 		
