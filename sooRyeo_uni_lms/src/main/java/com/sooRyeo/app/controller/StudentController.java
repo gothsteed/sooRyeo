@@ -274,5 +274,13 @@ public class StudentController {
 		
 		return jsonobj.toString();
 	}
+
+	
+	// 수업 - 내 강의 - 동영상 플레이
+	@RequestMapping(value = "/student/classPlay.lms", method = RequestMethod.GET)
+	public String classPlay() {
+		
+		return "classPlay";
+	} // end of public String class_play()-------
 	
 }
