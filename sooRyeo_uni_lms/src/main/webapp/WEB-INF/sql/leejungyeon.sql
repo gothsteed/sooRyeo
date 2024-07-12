@@ -1233,7 +1233,10 @@ desc tbl_exam
 
 
 select * 
-from tbl_registered_course;
+from tbl_registered_course
+where fk_student_id = 202400005;
+
+desc tbl_consult;
 
 delete  tbl_registered_course where registered_course_Seq = 6;
 commit;
@@ -1244,5 +1247,98 @@ commit;
         
         
 commit;
+SELECT 
+    s.schedule_seq,
+    s.title,
+    s.schedule_type,
+    s.start_date,
+    s.end_date,
+    s.confirm,
+    c.fk_student_id,
+    c.fk_prof_id,
+    c.content,
+    st.student_id,
+    st.fk_department_seq,
+    st.pwd,
+    st.name ,
+    st.jubun ,
+    st.tel ,
+    st.grade,
+    st.address,
+    st.email,
+    st.register_year,
+    st.status
+FROM
+    tbl_schedule s
+JOIN
+    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+JOIN
+    tbl_student st ON c.fk_student_id = st.student_id
+WHERE
+    s.schedule_type = 4 AND s.confirm = 0
+    AND c.fk_prof_id = #{professor_id};
 
 
+desc tbl_consult;
+
+
+select *
+from
+(
+select rownum as rno, 
+			schedule_seq,
+			title,
+			schedule_type, 
+			start_date,
+		    end_date,
+		    confirm,
+		    fk_student_id,
+		    fk_prof_id,
+		    content,
+		    student_id,
+		    fk_department_seq,
+		    pwd,
+		    name ,
+		    jubun ,
+		    tel ,
+		    grade,
+		    address,
+		    email,
+		    register_year,
+		    status
+		from
+		(
+		SELECT 
+		    s.schedule_seq,
+		    s.title,
+		    s.schedule_type,
+		    s.start_date,
+		    s.end_date,
+		    s.confirm,
+		    c.fk_student_id,
+		    c.fk_prof_id,
+		    c.content,
+		    st.student_id,
+		    st.fk_department_seq,
+		    st.pwd,
+		    st.name ,
+		    st.jubun ,
+		    st.tel ,
+		    st.grade,
+		    st.address,
+		    st.email,
+		    st.register_year,
+		    st.status
+		FROM
+		    tbl_schedule s
+		JOIN
+		    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+		JOIN
+		    tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+		    s.schedule_type = 4 AND s.confirm = 0
+--		    AND c.fk_prof_id = #{professor_id};
+		order by  schedule_seq
+		
+		)
+)

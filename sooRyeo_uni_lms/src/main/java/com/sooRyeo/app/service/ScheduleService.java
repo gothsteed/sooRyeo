@@ -3,6 +3,10 @@ package com.sooRyeo.app.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.servlet.ModelAndView;
+
 import com.sooRyeo.app.domain.Schedule;
 
 
@@ -28,6 +32,8 @@ public interface ScheduleService {
 	
 	// 내 개인일정 삭제 - 스케줄 테이블 delete
 	int delete_tbl_schedule(String schedule_seq);
+
+	ModelAndView makeApproveConsultPage(HttpServletRequest request, ModelAndView mav);
 
 
 	

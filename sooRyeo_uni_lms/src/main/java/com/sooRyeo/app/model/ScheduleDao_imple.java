@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Schedule;
+import com.sooRyeo.app.dto.ScheduleDto;
 
 @Repository
 public class ScheduleDao_imple implements ScheduleDao {
@@ -101,6 +102,28 @@ public class ScheduleDao_imple implements ScheduleDao {
 	public int delete_tbl_schedule(String schedule_seq) {
 		int n2 = sqlSession.delete("schedule.delete_tbl_schedule", schedule_seq);
 		return n2;
+	}
+
+
+	@Override
+	public List<ScheduleDto> getUnconfirmedConsultList(int currentPage, int sizePerPage, int professor_id) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("professor_id", professor_id);
+		
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		map.put("startRno", startRno);
+		map.put("endRno", endRno);
+		
+		return sqlSession.selectList("schedule.getUnconfirmedConsultList", map);
+	}
+
+
+	@Override
+	public int getUnconfirmedConsultCount(int professor_id) {
+		
+		return sqlSession.selectOne("schedule.getUnconfirmedConsultCount", professor_id);
 	}
 
 

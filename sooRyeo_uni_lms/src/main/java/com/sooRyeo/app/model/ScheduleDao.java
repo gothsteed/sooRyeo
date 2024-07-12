@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Schedule;
+import com.sooRyeo.app.dto.ScheduleDto;
 
 public interface ScheduleDao {
 	
@@ -27,6 +28,10 @@ public interface ScheduleDao {
 	
 	// 내 개인일정 삭제 - 스케줄 테이블 delete
 	int delete_tbl_schedule(String schedule_seq);
+
+	List<ScheduleDto> getUnconfirmedConsultList(int currentPage, int sizePerPage, int professor_id);
+
+	int getUnconfirmedConsultCount( int professor_id);
 
 
 

@@ -145,5 +145,10 @@ public class ScheduleController {
 	}
 
 
+	@GetMapping("/professor/approveConsult.lms")
+	public ModelAndView approveConsultPage(ModelAndView mav, HttpServletRequest request) {
+		return service.makeApproveConsultPage(request, mav);
+	}
+	
 	
 }

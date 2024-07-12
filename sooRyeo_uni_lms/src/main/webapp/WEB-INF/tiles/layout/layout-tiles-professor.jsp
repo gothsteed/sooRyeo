@@ -227,6 +227,7 @@
                     <a class="dropdown-item" href="#">시간표</a>
                     <a class="dropdown-item" href="#">과제</a>
                     <a class="dropdown-item" href="#">시험</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/schedule/approveMeeting.lms">상담 승인</a>
                     <a class="dropdown-item" href="#">오늘 할 일</a>
                 </div>
             </li>

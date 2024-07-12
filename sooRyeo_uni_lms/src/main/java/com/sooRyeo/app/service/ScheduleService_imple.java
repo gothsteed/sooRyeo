@@ -3,11 +3,19 @@ package com.sooRyeo.app.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Schedule;
+import com.sooRyeo.app.dto.ScheduleDto;
 import com.sooRyeo.app.model.ScheduleDao;
+
 
 @Service
 public class ScheduleService_imple implements ScheduleService {
@@ -71,6 +79,29 @@ public class ScheduleService_imple implements ScheduleService {
 	public int delete_tbl_schedule(String schedule_seq) {
 		int n2 = dao.delete_tbl_schedule(schedule_seq);
 		return n2;
+	}
+
+
+	@Override
+	public ModelAndView makeApproveConsultPage(HttpServletRequest request, ModelAndView mav) {
+		
+		int currentPage = Integer.parseInt(request.getParameter("page"));
+		int sizePerPage = 10;
+		HttpSession session = request.getSession();
+		int professor_id = ((Professor) session.getAttribute("loginuser")).getProf_id();
+		
+		List<ScheduleDto> unconfirmedConsultList = dao.getUnconfirmedConsultList(currentPage, sizePerPage, professor_id);
+		
+		int totalElementCount = dao.getUnconfirmedConsultCount(professor_id);
+		
+		Pager<ScheduleDto> schedulePager = new Pager<ScheduleDto>(unconfirmedConsultList, currentPage, sizePerPage, totalElementCount);
+		
+		mav.addObject("scheduleList", schedulePager.getObjectList());
+		mav.addObject("pageBar", schedulePager.makePageBar(request.getContextPath() + "/professor/approveConsult.lms"));
+		mav.setViewName("consultApprove");
+		
+		
+		return mav;
 	}
 
 

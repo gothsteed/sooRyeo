@@ -8,7 +8,7 @@ public class Schedule {
 	private Integer schedule_type;
 	private String start_date;
 	private String end_date;
-	
+	private int confirm;
 	
 	
 	public Integer getSchedule_seq() {
@@ -26,6 +26,10 @@ public class Schedule {
 	public String getEnd_date() {
 		return end_date;
 	}
+	public int getConfirm() {
+		return confirm;
+	}
+	
 	
 	
 	
