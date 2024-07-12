@@ -5,28 +5,33 @@
 
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="professor">
-
-	<select id="selectProfessor" resultType="com.sooRyeo.app.domain.Professor" parameterType="com.sooRyeo.app.dto.LoginDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		SELECT * 
-		FROM tbl_professor 
-		WHERE prof_id = #{id} AND pwd = #{password}				
-	</select>
 	
-	
-    <resultMap id="professorResultMap" type="com.sooRyeo.app.domain.Professor">
+	<resultMap id="professorResultMap" type="com.sooRyeo.app.domain.Professor">
         <id property="prof_id" column="prof_id"/>
         <result property="pwd" column="pwd"/>
         <result property="name" column="name"/>
         <result property="tel" column="tel"/>
         <result property="email" column="email"/>
         <result property="office_address" column="office_address"/>
+        <result property="img_name" column="img_name"/>
         <association property="department" javaType="com.sooRyeo.app.domain.Department">
             <id property="departmentSeq" column="department_seq"/>
             <result property="department_name" column="department_name"/>
         </association>
     </resultMap>
-    
-    
+	<select id="selectProfessor" resultMap="professorResultMap" parameterType="com.sooRyeo.app.dto.LoginDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS, P.IMG_NAME
+		FROM 
+    	(SELECT prof_id, pwd, name, tel, department_seq, email, office_address, img_name
+     	FROM tbl_professor) P
+		JOIN 
+    	(SELECT department_seq, department_name
+     	FROM tbl_department) D
+		ON P.department_seq = D.department_seq
+		WHERE P.prof_id = #{id} AND P.pwd = #{password}				
+	</select>
+	
+	
 	<select id="selectInfo" resultMap="professorResultMap" parameterType="com.sooRyeo.app.domain.Professor">
 		SELECT P.PROF_ID, P.PWD, P.NAME, P.TEL, D.DEPARTMENT_NAME, P.EMAIL, P.OFFICE_ADDRESS
 		FROM 
@@ -40,10 +45,10 @@
 	</select>
 	
 	
-	<select id="pwdDuplicateCheck" resultType="int" parameterType="String">
+	<select id="pwdDuplicateCheck" resultType="int" parameterType="HashMap">
 		select count(*)
 		from tbl_professor
-		where pwd = #{pwd}
+		where prof_id = to_number(#{prof_id}) and pwd = #{pwd}
 	</select>
 	
 	
@@ -83,6 +88,207 @@
 		update tbl_professor set img_name = NULL
 		where prof_id = to_number(#{prof_id})
 	</update>
+	
+	
+<!-- 해시맵으로 불러와본 것	
+	<resultMap type="HashMap" id="professorCourseMap">
+		<result property="prof_id" 				column="prof_id" 	 	 	javaType="int" />
+		<result property="prof_name" 	 		column="prof_name" 		 	javaType="String" />
+		<result property="course_seq" 			column="course_seq"  		javaType="int" />
+		<result property="fk_curriculum_seq" 	column="fk_curriculum_seq" 	javaType="int" />
+		<result property="semester_date" 		column="semester_date"      javaType="date" />
+		<result property="fk_department_seq" 	column="fk_department_seq"  javaType="int" />
+		<result property="capacity" 			column="capacity"      		javaType="int" />
+		<result property="grade" 				column="grade"      		javaType="int" />
+		<result property="name" 				column="name"      			javaType="String" />
+		<result property="credit" 				column="credit"      		javaType="int" />
+		<result property="required" 			column="required"      		javaType="int" />
+		<result property="exist" 				column="exist"      		javaType="int" />
+	</resultMap>
+	<select id="professor_course" resultMap="professorCourseMap" parameterType="String">
+		SELECT P.prof_id AS prof_id,
+       		P.name AS prof_name,
+       		C.COURSE_SEQ AS course_seq, 
+       		C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       		C.CAPACITY AS capacity, 
+       		C.SEMESTER_DATE AS semester_date,
+       		CU.fk_department_seq AS fk_department_seq, 
+       		CU.grade AS grade, 
+       		CU.name AS name, 
+       		CU.credit AS credit, 
+       		CU.required AS required, 
+       		CU.exist AS exist
+		FROM tbl_professor P
+		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
+		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+		where P.prof_id = to_number(#{prof_id}) and C.exist = 1 
+	</select> -->
+	
+	
+	<!-- ================================ 타임테이블 도메인 사용해본 것 ================================  -->	
+	
+	<resultMap id="CourseJoinCurriculum" type="com.sooRyeo.app.domain.Course">
+		<id property="course_seq" column="course_seq" />
+		<result property="fk_professor_id" column="fk_professor_id" />
+		<result property="fk_curriculum_seq" column="fk_curriculum_seq" />
+		<result property="fk_time_seq" column="fk_time_seq" />
+		<result property="capacity" column="capacity" />
+		<result property="semester_date" column="semester_date" />
+		<association property="curriculum" javaType="com.sooRyeo.app.domain.Curriculum">
+			<id property="curriculum_seq" column="curriculum_seq" />
+			<result property="fk_department_seq" column="fk_department_seq" />
+			<result property="grade" column="grade" />
+			<result property="name" column="name" />
+			<result property="credit" column="credit" />
+			<result property="required" column="required" />
+		</association>
+	</resultMap>
+	<select id="getProfCourseList" parameterType="int" resultMap="CourseJoinCurriculum">
+		SELECT
+			C.COURSE_SEQ AS course_seq,
+			C.FK_PROFESSOR_ID AS fk_professor_id, 
+       		C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       		C.CAPACITY AS capacity, 
+       		C.SEMESTER_DATE AS semester_date,
+       		CU.curriculum_seq AS curriculum_seq,
+       		CU.fk_department_seq AS fk_department_seq, 
+       		CU.grade AS grade, 
+       		CU.name AS name, 
+       		CU.credit AS credit, 
+       		CU.required AS required
+		FROM 
+		tbl_course C
+		join tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		where C.FK_PROFESSOR_ID= ${prof_id} and C.exist = 1
+	</select>
+	
+	
+	<select id="getCourseTimeList" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
+		select time_seq, day_of_week, fk_course_seq, start_period, end_period
+		from tbl_time
+		where fk_course_seq = ${course_seq}
+	</select>
+	
+	
+	<resultMap type="HashMap" id="studentListMap">
+		<result property="course_seq" 				column="course_seq" 	 	 		javaType="int" />
+		<result property="fk_professor_id" 	 		column="fk_professor_id" 		 	javaType="int" />
+		<result property="fk_curriculum_seq" 		column="fk_curriculum_seq"  		javaType="int" />
+		<result property="name" 					column="name" 						javaType="String" />
+		<result property="grade" 					column="grade"      				javaType="int" />
+		<result property="fk_department_seq" 		column="fk_department_seq"  		javaType="int" />
+		<result property="department_name" 			column="department_name"      		javaType="String" />
+	</resultMap>
+	<select id="studentList" parameterType="String" resultMap="studentListMap">
+		select ROW_NUMBER() OVER(ORDER BY S.name ASC) row_num, 
+		C.course_seq AS course_seq,
+		C.fk_professor_id AS fk_professor_id,
+		C.fk_curriculum_seq AS fk_curriculum_seq, 
+		S.name AS name, 
+		S.grade AS grade, 
+		S.fk_department_seq AS fk_department_seq, 
+		D.department_name AS department_name
+		from tbl_course C
+		JOIN tbl_registered_course R ON R.fk_course_seq = C.course_seq
+		JOIN tbl_student S ON S.student_id = R.fk_student_id
+		JOIN tbl_department D ON D.department_seq = S.fk_department_seq
+		where C.course_seq = to_number(#{fk_course_seq})
+	</select>
+	
+	
+	<resultMap type="HashMap" id="AssignmentMap">
+		<result property="row_num" 					column="row_num" 	 	 			javaType="int" />
+		<result property="fk_course_seq" 			column="fk_course_seq" 	 	 		javaType="int" />
+		<result property="content" 					column="content" 	 	 			javaType="String" />
+		<result property="attatched_file" 			column="attatched_file" 	 	 	javaType="String" />
+		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment" 	javaType="int" />
+		<result property="schedule_seq" 			column="schedule_seq" 	 	 		javaType="int" />
+		<result property="title" 					column="title" 	 	 				javaType="String" />
+		<result property="start_date" 				column="start_date" 	 	 		javaType="DATE" />
+		<result property="end_date" 				column="end_date" 	 	 			javaType="DATE" />
+	</resultMap>
+	<select id="paperAssignment" parameterType="String" resultMap="AssignmentMap">
+	    select
+        ROW_NUMBER() OVER(ORDER BY S.start_date desc) row_num,
+        A.fk_course_seq as fk_course_seq,
+        A.content as content,
+        NVL(A.attatched_file, '없음') as attatched_file,
+        A.schedule_seq_assignment as schedule_seq_assignment,
+        S.schedule_seq as schedule_seq,
+        S.title as title,
+        S.start_date as start_date,
+        S.end_date as end_date 
+        from
+        tbl_assignment A
+        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+        where A.fk_course_seq = to_number(#{fk_course_seq})
+	</select>
+	
+	
+	<resultMap id="assignJoinScheduleMap" type="com.sooRyeo.app.domain.AssignJoinSchedule">
+      <association property="assignment" javaType="com.sooRyeo.app.domain.Assignment">
+         <id property="schedule_seq_assignment" column="schedule_seq_assignment" />
+         <result property="fk_course_seq" column="fk_course_seq" />
+         <result property="content" column="content" />
+         <result property="attatched_file" column="attatched_file" />
+      </association>
+      <association property="schedule" javaType="com.sooRyeo.app.domain.Schedule">
+         <id property="schedule_seq" column="schedule_seq" />
+         <result property="title" column="title" />
+         <result property="start_date" column="start_date" />
+         <result property="end_date" column="end_date" />
+      </association>
+   </resultMap>
+	<select id="assign_view" parameterType="HashMap" resultMap="assignJoinScheduleMap">
+		select
+		A.fk_course_seq as fk_course_seq,
+		A.schedule_seq_assignment as schedule_seq_assignment,
+        A.content as content,
+        NVL(A.attatched_file, '없음') as attatched_file,
+        S.schedule_seq as schedule_seq,
+        S.title as title,
+        S.start_date as start_date,
+        S.end_date as end_date 
+        from
+        tbl_assignment A
+        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+        where A.schedule_seq_assignment = to_number(#{schedule_seq_assignment}) and A.fk_course_seq = to_number(#{fk_course_seq})
+	</select>
+	
+	
+	<insert id="insert_tbl_schedule" parameterType="HashMap">
+		<selectKey keyProperty="schedule_seq" resultType="int" order="BEFORE">
+			SELECT schedule_seq.nextval FROM dual
+		</selectKey>
+		insert into tbl_schedule(schedule_seq, title, start_date, end_date, schedule_type) 
+		values(#{schedule_seq}, #{title}, to_date(#{startDate}, 'yyyymmddhh24miss'), to_date(#{endDate}, 'yyyymmddhh24miss'), 1)
+	</insert>
+	
+	
+	<insert id="insert_tbl_assignment" parameterType="HashMap">
+				<!-- 첨부파일이 없는 경우 -->
+		<if test="attatched_file == null">
+			insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content) 
+			values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content})
+		</if>
+		<!-- === #195. 첨부파일이 있는 경우 -->
+		<if test="attatched_file != null">
+			insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file) 
+			values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content}, #{attatched_file} )
+		</if>
+	</insert>
+	
+	
+	<select id="select_attached_name" parameterType="String" resultType="com.sooRyeo.app.domain.Assignment">
+		select attatched_file
+		from tbl_assignment
+		where schedule_seq_assignment = to_number(#{schedule_seq_assignment})
+	</select>
+	
+	<delete id="assignmentDelete" parameterType="String">
+		delete from tbl_assignment
+		where schedule_seq_assignment = to_number(#{schedule_seq_assignment})	
+	</delete>
 	
 
 	
