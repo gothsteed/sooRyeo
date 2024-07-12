@@ -21,7 +21,23 @@
 </style>
 
 <script type="text/javascript">
-
+	
+	function goEdit(schedule_seq_assignment){
+		
+		const goBackURL = "${requestScope.goBackURL}";
+		
+		const frm = document.reviseFrm;
+		
+		frm.schedule_seq_assignment.value = schedule_seq_assignment;
+		frm.goBackURL.value = goBackURL;
+		frm.method = "get";
+		frm.enctype = "multipart/form-data";
+		frm.action = "<%= ctxPath%>/professor/assignmentEdit.lms";
+		frm.submit();
+		
+		
+	}// end of function goEdit(schedule_seq_assignment)
+	
 	function goDelete(schedule_seq_assignment){
 		
 		const goBackURL = "${requestScope.goBackURL}";
@@ -33,8 +49,7 @@
 		frm.method = "post";
 		frm.enctype = "multipart/form-data";
 		frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
-		frm.submit();
-		
+		frm.submit();	
 		
 		
 	}// end of function goDelete(schedule_seq_assignment) 
@@ -98,7 +113,7 @@
 			<div style="padding: 20px 0; font-size: 16pt; color: red;" >존재하지 않습니다</div> 
 		</c:if>
 		<button type="button" class="btn btn-secondary mr-2" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">목록으로 돌아가기</button>
-		<button type="button" class="btn btn-secondary mr-2" onclick="">과제 수정</button>
+		<button type="button" class="btn btn-secondary mr-2" onclick="goEdit('${requestScope.assign_view.assignment.schedule_seq_assignment}')">과제 수정</button>
 		<button type="button" class="btn btn-secondary mr-2" onclick="goDelete('${requestScope.assign_view.assignment.schedule_seq_assignment}')">과제 삭제</button>
 	</div>
 </div>

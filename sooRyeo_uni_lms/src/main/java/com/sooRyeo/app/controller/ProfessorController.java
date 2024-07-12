@@ -37,6 +37,8 @@ import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.service.ProfessorService;
 import com.sooRyeo.app.service.StudentService;
+import com.spring.app.board.domain.BoardVO;
+import com.spring.app.board.domain.MemberVO;
 
 
 @Controller
@@ -385,13 +387,13 @@ public class ProfessorController {
 	
 	
 	@PostMapping("/professor/assignmentDelete.lms")
-	public ModelAndView professor_assignmentDelete(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 스케쥴, 과제 테이블 인풋 후 목록리다이렉트
+	public ModelAndView professor_assignmentDelete(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 스케쥴, 과제 테이블 인풋 후 과제목록리다이렉트
 		
 		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");			 
 		String goBackURL = mrequest.getParameter("goBackURL");
 		
-		System.out.println("확인용 schedule_seq_assignment :" + schedule_seq_assignment);
-		System.out.println("확인용 goBackURL :" + goBackURL);
+		//System.out.println("확인용 schedule_seq_assignment :" + schedule_seq_assignment);
+		//System.out.println("확인용 goBackURL :" + goBackURL);
 		
 	    int n = service.assignmentDelete(schedule_seq_assignment, mrequest);
 		
@@ -406,6 +408,45 @@ public class ProfessorController {
 	    }
 
 	    return mav;
+	}
+	
+	@GetMapping("/professor/assignmentEdit.lms")
+	public ModelAndView professor_assignmentEdit(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 과제 수정
+		
+		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");			 
+		
+		String message = "";
+		
+		try {
+			Integer.parseInt(schedule_seq_assignment);
+			
+			// 수정해야 할 글 1개 내용 가져오기
+			
+			AssignJoinSchedule assign_view = service.assignmentEdit(schedule_seq_assignment);
+			// 글 조회수 증가는 없고 단순히 글 1개만 조회해 오는 것
+			
+			
+			if(assign_view == null) {
+				message= "글 수정이 불가합니다.";
+			}
+			else {
+				mav.addObject("assign_view", assign_view);
+				mav.setViewName("assignmentEdit");
+					
+				return mav;					
+	
+			}
+			
+		} catch (NumberFormatException e) {	
+			message="글 수정이 불가합니다.";
+		}
+		
+		String loc = "javascript:history.back()";
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		mav.setViewName("msg");
+		
+		return mav;
 	}
 	
 }
