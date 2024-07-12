@@ -8,17 +8,17 @@
 
 
     <resultMap id="ScheduleResultMap" type="com.sooRyeo.app.domain.Schedule">
-        <id property="schedule_eq" column="schedule_seq"/>
+        <id property="schedule_seq" column="schedule_seq"/>
         <result property="title" column="title"/>
-        <result property="scheduleType" column="schedule_type"/>
-        <result property="startDate" column="start_date"/>
-        <result property="endDate" column="end_date"/>
+        <result property="schedule_type" column="schedule_type"/>
+        <result property="start_date" column="start_date"/>
+        <result property="end_date" column="end_date"/>
         <result property="confirm" column="confirm"/>
     </resultMap>
 
     <!-- ResultMap for Student -->
     <resultMap id="StudentResultMap" type="com.sooRyeo.app.domain.Student">
-        <id property="studentId" column="student_id"/>
+        <id property="student_id" column="student_id"/>
         <result property="fk_department_seq" column="fk_department_seq"/>
         <result property="pwd" column="pwd"/>
         <result property="name" column="name"/>
@@ -198,7 +198,7 @@ where rno between #{startRno} and #{endRno}
 
 	</select>
 	
-	<select id="getUnconfirmedConsultCount" >
+	<select id="getUnconfirmedConsultCount" resultType="int">
 		SELECT 
 		    count(*)
 		FROM

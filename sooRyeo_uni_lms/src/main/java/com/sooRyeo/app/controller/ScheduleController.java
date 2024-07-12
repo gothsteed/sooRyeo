@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.ScheduleService;
@@ -144,7 +145,7 @@ public class ScheduleController {
 		return jsonobj.toString();
 	}
 
-
+	@RequireLogin(type = {Professor.class})
 	@GetMapping("/professor/approveConsult.lms")
 	public ModelAndView approveConsultPage(ModelAndView mav, HttpServletRequest request) {
 		return service.makeApproveConsultPage(request, mav);

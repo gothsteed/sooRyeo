@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.dto.ScheduleDto;
 
@@ -106,7 +107,7 @@ public class ScheduleDao_imple implements ScheduleDao {
 
 
 	@Override
-	public List<ScheduleDto> getUnconfirmedConsultList(int currentPage, int sizePerPage, int professor_id) {
+	public List<Consult> getUnconfirmedConsultList(int currentPage, int sizePerPage, int professor_id) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("professor_id", professor_id);

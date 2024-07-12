@@ -25,7 +25,7 @@ public class Student {
     private String detailAddress;
     private String extraAddress;
     private String email; 			// (AES-256 암호화/복호화 대상)
-    private Date register_date;
+    private int register_year;
     private Short status;
     private Integer fk_department_seq;
     private String department_name;
@@ -73,8 +73,8 @@ public class Student {
 		return extraAddress;
 	}
 	
-	public Date getRegister_date() {
-		return register_date;
+	public int getRegister_year() {
+		return register_year;
 	}
 	public Short getStatus() {
 		return status;

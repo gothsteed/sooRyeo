@@ -1,5 +1,6 @@
 package com.sooRyeo.app.service;
 
+import java.io.Console;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Schedule;
@@ -85,16 +87,21 @@ public class ScheduleService_imple implements ScheduleService {
 	@Override
 	public ModelAndView makeApproveConsultPage(HttpServletRequest request, ModelAndView mav) {
 		
-		int currentPage = Integer.parseInt(request.getParameter("page"));
+		int currentPage = Integer.parseInt(request.getParameter("page")==null? "1" : request.getParameter("page"));
 		int sizePerPage = 10;
 		HttpSession session = request.getSession();
 		int professor_id = ((Professor) session.getAttribute("loginuser")).getProf_id();
 		
-		List<ScheduleDto> unconfirmedConsultList = dao.getUnconfirmedConsultList(currentPage, sizePerPage, professor_id);
+		List<Consult> unconfirmedConsultList = dao.getUnconfirmedConsultList(currentPage, sizePerPage, professor_id);
+		
+		for(Consult consult : unconfirmedConsultList) {
+			System.out.println("name : " + consult.getContent());
+		}
+		
 		
 		int totalElementCount = dao.getUnconfirmedConsultCount(professor_id);
 		
-		Pager<ScheduleDto> schedulePager = new Pager<ScheduleDto>(unconfirmedConsultList, currentPage, sizePerPage, totalElementCount);
+		Pager<Consult> schedulePager = new Pager<Consult>(unconfirmedConsultList, currentPage, sizePerPage, totalElementCount);
 		
 		mav.addObject("scheduleList", schedulePager.getObjectList());
 		mav.addObject("pageBar", schedulePager.makePageBar(request.getContextPath() + "/professor/approveConsult.lms"));
