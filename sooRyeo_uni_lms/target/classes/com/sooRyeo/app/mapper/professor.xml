@@ -266,10 +266,24 @@
 	
 	
 	<insert id="insert_tbl_assignment" parameterType="HashMap">
-		insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file) 
-		values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content}, #{attatched_file} )
+				<!-- 첨부파일이 없는 경우 -->
+		<if test="attatched_file == null">
+			insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content) 
+			values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content})
+		</if>
+		<!-- === #195. 첨부파일이 있는 경우 -->
+		<if test="attatched_file != null">
+			insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file) 
+			values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content}, #{attatched_file} )
+		</if>
 	</insert>
 	
+	
+	<select id="select_attached_name" parameterType="String" resultType="com.sooRyeo.app.domain.Assignment">
+		select attatched_file
+		from tbl_assignment
+		where schedule_seq_assignment = to_number(#{schedule_seq_assignment})
+	</select>
 	
 	<delete id="assignmentDelete" parameterType="String">
 		delete from tbl_assignment

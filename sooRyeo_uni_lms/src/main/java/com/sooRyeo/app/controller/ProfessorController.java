@@ -288,7 +288,7 @@ public class ProfessorController {
 	            
 	            dto.setAttatched_file(newFileName); // 업로드된 파일 이름 설정
 	        } catch (Exception e) {
-	            e.printStackTrace();
+	        	dto.setAttatched_file(newFileName); // 첨부파일이 없을 경우 ""	        	
 	        }
 	    }
 
@@ -387,20 +387,23 @@ public class ProfessorController {
 	
 	
 	@PostMapping("/professor/assignmentDelete.lms")
-public ModelAndView professor_assignmentDelete(ModelAndView mav, HttpServletRequest request) {// 스케쥴, 과제 테이블 인풋 후 목록리다이렉트
+	public ModelAndView professor_assignmentDelete(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 스케쥴, 과제 테이블 인풋 후 목록리다이렉트
 		
-		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");			 
-		String goBackURL = request.getParameter("goBackURL");
+		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");			 
+		String goBackURL = mrequest.getParameter("goBackURL");
 		
-	    int n = service.assignmentDelete(schedule_seq_assignment);
-
+		System.out.println("확인용 schedule_seq_assignment :" + schedule_seq_assignment);
+		System.out.println("확인용 goBackURL :" + goBackURL);
+		
+	    int n = service.assignmentDelete(schedule_seq_assignment, mrequest);
+		
 	    if (n != 1) {
 	        mav.addObject("message", "과제를 삭제할 수 없습니다.");
 	        mav.addObject("loc", "javascript:history.back()");
 	        mav.setViewName("msg");
 	    } else {
 	        mav.addObject("message", "과제가 삭제되었습니다.");
-	        mav.addObject("loc", request.getContextPath() + goBackURL);
+	        mav.addObject("loc", mrequest.getContextPath() + goBackURL);
 	        mav.setViewName("msg");
 	    }
 

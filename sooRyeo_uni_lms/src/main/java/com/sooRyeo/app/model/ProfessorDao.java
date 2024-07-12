@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.AssignJoinSchedule;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.TimeTable;
@@ -51,8 +52,13 @@ public interface ProfessorDao {
 	// 스케쥴 테이블 인풋
 	int insert_tbl_schedule(AssignScheInsertDTO dto, String fk_course_seq);
 	
+	// 과제첨부 파일이 있는지 확인
+	Assignment select_attached_name(String schedule_seq_assignment);
+	
 	// // 과제 삭제
 	int assignmentDelete(String schedule_seq_assignment);
+
+	
 	
 	
 

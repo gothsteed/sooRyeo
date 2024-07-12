@@ -48,7 +48,7 @@ public interface ProfessorService {
 	int insert_tbl_schedule(AssignScheInsertDTO dto, String fk_course_seq);
 	
 	// 과제 삭제
-	int assignmentDelete(String schedule_seq_assignment);
+	int assignmentDelete(String schedule_seq_assignment, MultipartHttpServletRequest mrequest);
 	
 	
 

@@ -213,7 +213,13 @@ SELECT
         select *
         from
         tbl_schedule
-    
+        order by schedule_seq desc;
+        
+        
+        select attatched_file
+        from
+        tbl_assignment
+        where schedule_seq_assignment = 47
         
         --- 과제 테이블 셀렉트용 --
         select
@@ -240,7 +246,7 @@ insert into tbl_schedule(schedule_seq, title, start_date, end_date) values(sched
 
 
 DELETE FROM tbl_schedule
-     WHERE schedule_seq = 30; 
+     WHERE schedule_seq = 47; 
 
 commit;
 

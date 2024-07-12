@@ -31,6 +31,7 @@
 		frm.schedule_seq_assignment.value = schedule_seq_assignment;
 		frm.goBackURL.value = goBackURL;
 		frm.method = "post";
+		frm.enctype = "multipart/form-data";
 		frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
 		frm.submit();
 		
@@ -98,7 +99,7 @@
 		</c:if>
 		<button type="button" class="btn btn-secondary mr-2" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">목록으로 돌아가기</button>
 		<button type="button" class="btn btn-secondary mr-2" onclick="">과제 수정</button>
-		<button type="button" class="btn btn-secondary mr-2" onclick="goDelete(\${requestScope.assign_view.assignment.schedule_seq_assignment})">과제 삭제</button>
+		<button type="button" class="btn btn-secondary mr-2" onclick="goDelete('${requestScope.assign_view.assignment.schedule_seq_assignment}')">과제 삭제</button>
 	</div>
 </div>
 

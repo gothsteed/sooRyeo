@@ -21,6 +21,7 @@ import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Professor;
@@ -399,10 +400,71 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public int assignmentDelete(String schedule_seq_assignment) {
+	public int assignmentDelete(String schedule_seq_assignment, MultipartHttpServletRequest mrequest) {
+		
 		int n = 0;
 		
-		n = dao.assignmentDelete(schedule_seq_assignment);
+		HttpSession session = mrequest.getSession();
+		
+		Map<String, String> editMap = new HashMap<>();
+		
+		Assignment img_name_check = dao.select_attached_name(schedule_seq_assignment);
+		
+		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 시작 === //
+		if (img_name_check != null) {// 첨부파일이 있을 경우
+	        String fileName = img_name_check.getAttatched_file();
+	        //System.out.println("확인용 fileName : " + fileName);
+	        
+	        if (fileName != null && !"".equals(fileName)) {
+	            
+	            // 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+	            // 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다. 
+	            // WAS 의 webapp 의 절대경로를 알아와야 한다.  
+	            String root = session.getServletContext().getRealPath("/");
+	            
+	            // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+	            // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+	            
+	            String path = root+"resources"+File.separator+"files";
+	            /* 	File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+                	운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+                	운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+	            */
+	            // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+	            // System.out.println("~~~ 확인용 path => " + path);
+	            // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+	            
+	            editMap.put("path", path); // 삭제해야할 파일이 저장된 경로
+	            editMap.put("fileName", fileName); // 삭제해야할 파일이 저장된 경로
+	            
+	            n = dao.assignmentDelete(schedule_seq_assignment);
+	            System.out.println("확인용 있을때 n" + n);
+	            //System.out.println("n: " + n);
+	            
+	            if (n == 1) {
+	                path = editMap.get("path");
+	                fileName = editMap.get("fileName");
+	                
+	                if (fileName != null && !"".equals(fileName)) {
+	                    try {
+	                        fileManager.doFileDelete(fileName, path);
+	                    } catch (Exception e) {
+	                        e.printStackTrace();
+	                    }
+	                }
+	                
+	            } // end of if(n == 1)
+	            
+	        } // end of if(fileName != null && !"".equals(fileName))
+	    } // end of if (professor != null) 
+		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
+		
+		/////////////////////////////////////////////////////////////////////////////////
+		
+		else { // 첨부파일이 없을 경우
+			n = dao.assignmentDelete(schedule_seq_assignment);
+			System.out.println("확인용 없을때 n" + n);
+		}
 		
 		return n;
 	}

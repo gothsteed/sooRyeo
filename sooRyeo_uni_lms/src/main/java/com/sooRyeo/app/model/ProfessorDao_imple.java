@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.AssignJoinSchedule;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -180,15 +181,26 @@ public class ProfessorDao_imple implements ProfessorDao {
 
 
 	@Override
+	public Assignment select_attached_name(String schedule_seq_assignment) {
+		
+		Assignment select_attached_name = sqlSession.selectOne("professor.select_attached_name", schedule_seq_assignment);
+		
+		return select_attached_name;
+	}
+	
+	
+	@Override
 	public int assignmentDelete(String schedule_seq_assignment) {
 		
 		int n = 0;		
 		
-		System.out.println("확인용 schedule_seq_assignment : " + schedule_seq_assignment);
-		//n = sqlSession.delete("professor.assignmentDelete", schedule_seq_assignment);
+		n = sqlSession.delete("professor.assignmentDelete", schedule_seq_assignment);
 		
 		return n;
 	}
+
+
+
 
 
 
