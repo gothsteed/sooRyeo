@@ -31,7 +31,7 @@ public class ScheduleController {
 	@GetMapping("/student/scheduleManagement.lms")
 	public ModelAndView showSchedule(ModelAndView mav, HttpServletRequest request) {
 		
-		mav.setViewName("schedule/scheduleManagement.student");
+		mav.setViewName("schedule/scheduleManagement");
 		return mav;
 	}
 	
