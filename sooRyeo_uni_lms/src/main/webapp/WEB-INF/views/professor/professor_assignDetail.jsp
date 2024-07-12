@@ -30,7 +30,7 @@
 		
 		frm.schedule_seq_assignment.value = schedule_seq_assignment;
 		frm.goBackURL.value = goBackURL;
-		frm.method = "get";
+		frm.method = "post";
 		frm.enctype = "multipart/form-data";
 		frm.action = "<%= ctxPath%>/professor/assignmentEdit.lms";
 		frm.submit();

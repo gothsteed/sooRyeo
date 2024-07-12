@@ -470,6 +470,15 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public AssignJoinSchedule assignmentEdit(String schedule_seq_assignment) {
+		
+		AssignJoinSchedule assign_edit = dao.assignmentEdit(schedule_seq_assignment);
+		
+		return assign_edit;
+	}
+
+
 
 	
 

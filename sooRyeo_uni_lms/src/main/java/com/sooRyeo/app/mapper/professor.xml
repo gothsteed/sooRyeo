@@ -290,6 +290,37 @@
 		where schedule_seq = to_number(#{schedule_seq_assignment})	
 	</delete>
 	
+	
+	<resultMap id="assignJoinScheduleMap2" type="com.sooRyeo.app.domain.AssignJoinSchedule">
+      <association property="assignment" javaType="com.sooRyeo.app.domain.Assignment">
+         <id property="schedule_seq_assignment" column="schedule_seq_assignment" />
+         <result property="fk_course_seq" column="fk_course_seq" />
+         <result property="content" column="content" />
+         <result property="attatched_file" column="attatched_file" />
+      </association>
+      <association property="schedule" javaType="com.sooRyeo.app.domain.Schedule">
+         <id property="schedule_seq" column="schedule_seq" />
+         <result property="title" column="title" />
+         <result property="start_date" column="start_date" />
+         <result property="end_date" column="end_date" />
+      </association>
+   	</resultMap>
+	<select id="assignmentEdit" parameterType="String" resultMap="assignJoinScheduleMap2">
+		select
+		A.fk_course_seq as fk_course_seq,
+		A.schedule_seq_assignment as schedule_seq_assignment,
+        A.content as content,
+        NVL(A.attatched_file, '없음') as attatched_file,
+        S.schedule_seq as schedule_seq,
+        S.title as title,
+        S.start_date as start_date,
+        S.end_date as end_date 
+        from
+        tbl_assignment A
+        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+        where A.schedule_seq_assignment = to_number(#{schedule_seq_assignment})
+	</select>
+	
 
 	
 

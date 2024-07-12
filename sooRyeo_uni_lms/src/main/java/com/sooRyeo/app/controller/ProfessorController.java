@@ -37,8 +37,6 @@ import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.service.ProfessorService;
 import com.sooRyeo.app.service.StudentService;
-import com.spring.app.board.domain.BoardVO;
-import com.spring.app.board.domain.MemberVO;
 
 
 @Controller
@@ -410,34 +408,34 @@ public class ProfessorController {
 	    return mav;
 	}
 	
-	@GetMapping("/professor/assignmentEdit.lms")
+	@PostMapping("/professor/assignmentEdit.lms")
 	public ModelAndView professor_assignmentEdit(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 과제 수정
 		
 		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");			 
+		String goBackURL = mrequest.getParameter("goBackURL"); 
 		
 		String message = "";
 		
-		try {
-			Integer.parseInt(schedule_seq_assignment);
-			
-			// 수정해야 할 글 1개 내용 가져오기
-			
-			AssignJoinSchedule assign_view = service.assignmentEdit(schedule_seq_assignment);
+		try {		
+			// 수정해야 할 글 1개 내용 가져오기		
+			AssignJoinSchedule assign_edit = service.assignmentEdit(schedule_seq_assignment);
 			// 글 조회수 증가는 없고 단순히 글 1개만 조회해 오는 것
-			
-			
-			if(assign_view == null) {
+						
+			if(assign_edit == null) {
 				message= "글 수정이 불가합니다.";
 			}
 			else {
-				mav.addObject("assign_view", assign_view);
-				mav.setViewName("assignmentEdit");
+				
+				
+				mav.addObject("assign_edit", assign_edit);
+				mav.addObject("goBackURL", goBackURL);
+				mav.setViewName("professor_assignmentEdit");
 					
 				return mav;					
 	
 			}
 			
-		} catch (NumberFormatException e) {	
+		} catch (Exception e) {	
 			message="글 수정이 불가합니다.";
 		}
 		
@@ -448,5 +446,14 @@ public class ProfessorController {
 		
 		return mav;
 	}
+	
+	
+	@PostMapping("/professor/assignmentEdit_end.lms")
+	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+		
+		
+		return mav;
+	}
+	
 	
 }

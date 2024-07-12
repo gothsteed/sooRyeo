@@ -296,3 +296,18 @@ FROM
 tbl_student S
 join tbl_registered_course R ON S.student_id = R.fk_student_id
 left join tbl_assignment_submit A ON S.student_id = A.fk_student_id
+
+
+		select
+		A.fk_course_seq as fk_course_seq,
+		A.schedule_seq_assignment as schedule_seq_assignment,
+        A.content as content,
+        NVL(A.attatched_file, '없음') as attatched_file,
+        S.schedule_seq as schedule_seq,
+        S.title as title,
+        S.start_date as start_date,
+        S.end_date as end_date 
+        from
+        tbl_assignment A
+        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
+        where A.schedule_seq_assignment = 46
