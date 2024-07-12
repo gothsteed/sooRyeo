@@ -151,141 +151,96 @@ const colors = [
 
 let colorIndex = 0;
 
-function addSchedule() {
-    const selectedCourse = document.querySelector('input[name="curriculum_seq"]:checked');
-    if (!selectedCourse) {
-        alert("강의를 선택해주세요.");
-        return;
-    }
-
-    const curriculum_seq = selectedCourse.value;
-    const prof_id = document.getElementById('professor-search').value; // Assuming this is the professor's ID input field
-    const capacity = parseInt(document.getElementById("capacity").value);
-    
-    
-    console.log("curriculum_seq: " + curriculum_seq)
-	console.log("prof_id: " + prof_id);
-    console.log("capacity: " + capacity);
-    
-    const forms = document.querySelectorAll('#form-container .schedule-form');
-    
-    console.log(forms)
-    
-    const timeData = [];
-  
-    forms.forEach(form => {
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-        
-        const formId = form.id.split('-').pop();
-        const dayOfWeek = document.getElementById(`day-of-week-\${formId}`).value;
-        const startPeriod = parseInt(document.getElementById(`start-period-\${formId}`).value);
-        const endPeriod = parseInt(document.getElementById(`end-period-\${formId}`).value);
-
-        console.log(formId)
-        console.log(dayOfWeek)
-        console.log(startPeriod)
-        console.log(endPeriod)
-        
-        if (startPeriod > endPeriod) {
-            alert("끝나는 교시는 시작교시와 같거나 커야합니다");
-            return;
-        }
-
-        // Prepare the data to be sent
-        const data = {
-            day_of_week: dayOfWeek,
-            start_period: startPeriod,
-            end_period: endPeriod,
-        };
-        
-        timeData.push(data);
-
-    });
-    
-    
-    const formData  = {
-        fk_curriculum_seq: curriculum_seq,
-        prof_id: prof_id,
-        capacity:capacity,
-        
-        timeList:timeData
-    }
-    
-    console.log(formData);
-    
-    
-    // Send the data to the server
-    fetch('<%=ctxPath%>/admin/courseInsertJSON.lms', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    })
-    .then(result => {
-        if (result.ok) {
-            // If the insertion was successful, update the timetable
-			fetchProfTimeTable(prof_id);
-            alert("강의가 성공적으로 추가되었습니다.");
-        } else {
-            alert("강의 추가에 실패했습니다: " + result.body);
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert("강의 추가 중 오류가 발생했습니다.");
-    });
-
-    // Reset all forms
-    forms.forEach(form => form.reset());
-}
 
 function fetchData(pageNum) {
     console.log(pageNum);
-
-    const url = '<%=ctxPath%>' + '/admin/curriculumJSON.lms?fk_department_seq=' + selectedDepartment + '&grade=' + selectedGrade + '&currentPage=' + pageNum;
-
+    const url = '<%=ctxPath%>' + '/student/courseJSON.lms?fk_department_seq=' + selectedDepartment + '&grade=' + selectedGrade + '&currentPage=' + pageNum;
     console.log(url);
-
     fetch(url)
         .then(response => response.json())
         .then(data => {
             const tableBody = document.querySelector("table tbody");
             tableBody.innerHTML = "";
             console.log(data);
-
-            data.curriculumList.forEach(function(curriculum) {
+            data.forEach(function(data) {
                 var row = document.createElement("tr");
-                console.log("curriculum.curriculum_seq : " + curriculum.curriculum_seq);
+                console.log(data.register_count )
+                console.log(data.capacity)
                 
-                row.innerHTML = "<td> <input type='radio' name='curriculum_seq' value='" + curriculum.curriculum_seq + "'> </td>" +
-                                "<td>" + curriculum.name + "</td>" +
-                                "<td>" + (curriculum.department_name === '' ? '교양' : curriculum.department_name) + "</td>" +
-                                "<td>" + (typeof curriculum.grade === 'undefined' ? '' : curriculum.grade) + "</td>" +
-                                "<td>" + curriculum.credit + "</td>" +
-                                "<td>" + (curriculum.required === 1 ? 'Yes' : 'No') + "</td>";
+                row.innerHTML = "<td><button type='button' class='btn sign-up-btn btn-primary' data-course-seq='" + data.course_seq + "'>신청</button></td>" +
+                                "<td>" + data.curriculum.name + "</td>" +
+                                "<td>" + data.professor.name + "</td>" +
+                                "<td>" + (data.curriculum.grade == null ? '' : data.curriculum.grade) + "</td>" +
+                                "<td>" + data.curriculum.credit + "</td>" +
+                                "<td>" + (data.curriculum.required === 1 ? 'Yes' : 'No') + "</td>" + 
+                                "<td>" + data.register_count  + "/" +  data.capacity + "</td>";
                 tableBody.appendChild(row);
             });
 
-            
-            document.querySelectorAll('input[name="curriculum_seq"]').forEach(radio => {
-                radio.addEventListener('change', clearScheduleForms);
+            // Add event listeners to the sign-up buttons
+            document.querySelectorAll('.sign-up-btn').forEach(button => {
+                button.addEventListener('click', handleSignUp);
             });
-
-            const pagination = document.querySelector(".pagination");
-            pagination.innerHTML = data.pageBar;
         })
         .catch(error => console.error("Error fetching data:", error));
 }
 
 
+function handleSignUp(event) {
+    const courseSeq = event.target.getAttribute('data-course-seq');
+    console.log("Signing up for course:", courseSeq);
+	
+    
+    const url = '<%=ctxPath%>' + '/student/registerCourseREST.lms'
+    console.log(url);
+    
+    
+    // Create the data to be sent
+    const data = new URLSearchParams();
+    data.append('course_seq', courseSeq);
 
-function fetchProfTimeTable(prof_id) {
+    // Send POST request
+    fetch(url, {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    })
+    .then(response => {
+        return response.text().then(text => {
+            return { status: response.status, body: text };
+        });
+    })
+    .then(result => {
+        console.log('Success:', result);
+        // Handle the response here (e.g., show a success message)
+        
+    	if(result.status == 200) {
+    		alert(result.body)
+    		fetchTimeTable();
+    		fetchData(1);
+    	}
+    	else {
+    		alert(result.body)
+    		fetchData(1);
+    	}
+    })
+    .catch(error => {
+    	console.error("error: ");
+        console.error(error);
+        fetchData(1);
+        // Handle any errors here (e.g., show an error message)
+        alert(error)
+    });
+    
+}
 
-    const url = '<%=ctxPath%>' + '/admin/profTimetableJSON.lms?prof_id=' + prof_id;
+
+
+function fetchTimeTable() {
+
+    const url = '<%=ctxPath%>' + '/student/timetableJSON.lms'
 
     console.log(url);
 
@@ -333,17 +288,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Fetch initial data
     fetchData(1);
     handleDepartmentChange();
+    fetchTimeTable();
     
     
     
-    const profSearchButton = document.getElementById("profSearchButton");
-    profSearchButton.addEventListener('click', function() {
-
-    	let profId = document.getElementById("professor-search").value;
-    	console.log(profId)
-    	fetchProfTimeTable(profId)
-
-    });
 
 
     
@@ -365,6 +313,8 @@ function isTimeslotAvailable(day, start_period, end_period) {
 function fillTimetable(data) {
     const courseListContainer = document.getElementById('course-list-container');
     courseListContainer.innerHTML = ''; // Clear previous course list
+    
+    console.log(data);
 
     // Create table
     const table = document.createElement('table');
@@ -375,8 +325,8 @@ function fillTimetable(data) {
     thead.innerHTML = `
         <tr>
             <th>강의명</th>
+            <th>교수</th>
             <th>삭제</th>
-            <th>수정</th>
         </tr>
     `;
     
@@ -392,8 +342,8 @@ function fillTimetable(data) {
         
         row.innerHTML = `
             <td>\${course.curriculum.name}</td>
+            <td>\${course.professor.name}</td>
             <td><button class="btn btn-danger btn-sm delete-course" data-course-id="\${course.course_seq}">삭제</button></td>
-            <td><button class="btn btn-success btn-sm edit-course" data-course-id="\${course.course_seq}">수정</button></td>
         `;
 
         tbody.appendChild(row);
@@ -436,13 +386,7 @@ function fillTimetable(data) {
         });
     });
     
-    
-    document.querySelectorAll('.edit-course').forEach(button => {
-        button.addEventListener('click', function() {
-            const courseId = this.getAttribute('data-course-id');
-            openEditModal(courseId);
-        });
-    });
+   
 }
 
 
@@ -613,31 +557,36 @@ function deleteCourse(courseId) {
     console.log(`Deleting course with ID: \${courseId}`);
     
     
-    if(!confirm("패강하시겠습니다?")) {
+    if(!confirm("수강 취소 하시겠습니다?")) {
     	return false;
     }
+   
 	
     
-    fetch('<%=ctxPath%>/admin/courseDeleteREST.lms', {
+    fetch('<%=ctxPath%>/student/dropCourseREST.lms', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({"course_seq" : courseId})
     })
+    .then(response => {
+        return response.text().then(text => {
+            return { status: response.status, body: text };
+        });
+    })
     .then(result => {
-        if (result.ok) {
-            // If the insertion was successful, update the timetable
-			let profId = document.getElementById("professor-search").value;
-            fetchProfTimeTable(profId);
-            alert("강의가 성공적으로 패강되었습니다.");
+        if (result.status == 200) {
+    		fetchTimeTable();
+    		fetchData(1);
+            alert(result.body);
         } else {
             alert("잠시후 다시 시도해 주세요: " + result.body);
         }
     })
     .catch((error) => {
         console.error('Error:', error);
-        alert("패강 중 오류가 발생했습니다.");
+        alert("수강취소 중 오류가 발생했습니다.");
     });
 
 
@@ -658,7 +607,7 @@ function resetTimetable() {
     }
 }
 
-let formCounter = 0;
+/* let formCounter = 0;
 
 function addForm() {
     formCounter++;
@@ -674,7 +623,7 @@ function addForm() {
                     <option value="5">금</option>
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <label for="start-period-\${formCounter}">시작 교시</label> 
                 <select class="form-control" id="start-period-\${formCounter}" required>
                     <option value="1">1교시</option>
@@ -687,7 +636,7 @@ function addForm() {
                     <option value="8">8교시</option>
                 </select>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <label for="end-period-\${formCounter}">끝 교시</label> 
                 <select class="form-control" id="end-period-\${formCounter}" required>
                     <option value="1">1교시</option>
@@ -721,7 +670,7 @@ function clearScheduleForms() {
     // Add one empty form
     addForm();
 }
-
+ */
 
 </script>
 
@@ -729,7 +678,7 @@ function clearScheduleForms() {
 	<div class="row justify-content-center" id="top_container">
 		<div class="card col-md-6 pl-0 pr-0" id="left_top_card">
 			<div class="card-header">
-				<h3>커리큘럼 검색</h3>
+				<h3>강의 검색</h3>
 			</div>
 			<div class="card-body">
 				<form class="mb-4">
@@ -762,10 +711,11 @@ function clearScheduleForms() {
 						<tr>
 							<th>선택</th>
 							<th>강의 이름</th>
-							<th>학과</th>
+							<th>교수</th>
 							<th>학년</th>
 							<th>이수 학점</th>
 							<th>필수 여부</th>
+							<th>정원</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -776,22 +726,14 @@ function clearScheduleForms() {
 				<!-- Pagination -->
 				<nav>
 					<ul class="pagination">
-						<%-- <c:if test="${pageNum != 1}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/curriculumList?department=${selectedDepartment}&grade=${selectedGrade}&page=${pageNum-1}">Previous</a></li>
-                    </c:if>
-                    <c:forEach begin="1" end="${totalPages}" var="i">
-                        <li class="page-item ${i == pageNum ? 'active' : ''}"><a class="page-link" href="${pageContext.request.contextPath}/curriculumList?department=${selectedDepartment}&grade=${selectedGrade}&page=${i}">${i}</a></li>
-                    </c:forEach>
-                    <c:if test="${pageNum != totalPages}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/curriculumList?department=${selectedDepartment}&grade=${selectedGrade}&page=${pageNum+1}">Next</a></li>
-                    </c:if> --%>
+
 					</ul>
 				</nav>
 			</div>
 
 
 
-			<div class="card-header d-flex justify-content-between align-items-center">
+			<!-- <div class="card-header d-flex justify-content-between align-items-center">
 				<button type="button" class="btn btn-success" onclick="addSchedule()">시간표에 추가</button>
 			</div>
 
@@ -811,7 +753,7 @@ function clearScheduleForms() {
 								<option value="5">금</option>
 							</select>
 						</div>
-						<div class="form-group col-md-3">
+						<div class="form-group col-md-2">
 							<label for="start-period-0">시작 교시</label> <select class="form-control" id="start-period-0" required>
 								<option value="1">1교시</option>
 								<option value="2">2교시</option>
@@ -823,7 +765,7 @@ function clearScheduleForms() {
 								<option value="8">8교시</option>
 							</select>
 						</div>
-						<div class="form-group col-md-3">
+						<div class="form-group col-md-2">
 							<label for="end-period-0">끝 교시</label> <select class="form-control" id="end-period-0" required>
 								<option value="1">1교시</option>
 								<option value="2">2교시</option>
@@ -842,20 +784,14 @@ function clearScheduleForms() {
 				</div>
 
 				<button type="button" class="btn btn-primary mt-3" onclick="addForm()">시간 추가</button>
-			</div>
-		</div>
+			</div>-->
+		</div> 
 
 
 
 		<div class="card col-md-5 ml-2" id="right_top_card">
 			<div class="card-header row">
-				<div class="col-md-5 h3 pl-0 pr-0">교수 검색</div>
-				<div class="col-md-5 ml-auto">
-					<input id="professor-search" class="form-control" placeholder="교번을 입력하시오">
-				</div>
-				<div class="col-md-2 ml-auto">
-					<button type="button" class="btn btn-primary" id="profSearchButton">검색</button>
-				</div>
+				<div class="col-md-5 h3 pl-0 pr-0">시간표</div>
 
 			</div>
 			<div class="card-body">
@@ -950,36 +886,6 @@ function clearScheduleForms() {
 	</div>
 
 	<br>
-
-
-
-	<!-- Add this modal structure to your HTML file -->
-	<div class="modal fade" id="editCourseModal" tabindex="-1" role="dialog" aria-labelledby="editCourseModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="editCourseModalLabel">강의 수정</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form id="editCourseForm">
-						<input type="hidden" id="editCourseId">
-						<div class="form-group">
-							<label for="editCapacity">수강 정원</label> <input type="number" class="form-control" id="editCapacity" required min="1">
-						</div>
-						<div id="editTimeSlots"></div>
-						<button type="button" class="btn btn-secondary mt-2" onclick="addEditTimeSlot()">시간 추가</button>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-					<button type="button" class="btn btn-primary" onclick="saveEditCourse()">저장</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 
 </div>

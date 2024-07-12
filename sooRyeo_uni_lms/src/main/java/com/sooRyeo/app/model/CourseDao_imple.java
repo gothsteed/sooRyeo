@@ -1,6 +1,5 @@
 package com.sooRyeo.app.model;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,17 +7,17 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.CourseJoinProfessor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
+import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.Time;
 import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 import com.sooRyeo.app.dto.TimeDto;
 
-import oracle.sql.ROWID;
 
 @Repository
 public class CourseDao_imple implements CourseDao {
@@ -126,6 +125,56 @@ public class CourseDao_imple implements CourseDao {
 		}
 		
 		return 1;
+	}
+
+	@Override
+	public List<Course> getCourseList(Integer department_seq, Integer grade) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("department_seq", department_seq);
+		map.put("grade", grade);
+		
+		return sqlsession.selectList("course.getCourseList", map);
+	}
+
+	@Override
+	public StudentTimeTable getRegisteredCourseList(Integer student_id) {
+		
+		List<Course> list =  sqlsession.selectList("course.getRegisteredCourseList", student_id);
+		for (Course course : list) {
+			int course_seq = course.getCourse_seq();
+			List<Time> times = sqlsession.selectList("course.getCourseTimes", course_seq);
+			course.setTimeList(times);
+		}
+		
+		return new StudentTimeTable(student_id, list);
+		
+	}
+
+	@Override
+	public int insertRegisterCourse(int course_seq, int student_id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("course_seq", course_seq);
+		map.put("student_id", student_id);
+		
+		return  sqlsession.insert("course.registerCourse", map);
+	}
+
+	@Override
+	public int editRegisterCount(int course_seq, int increment) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("course_seq", course_seq);
+		map.put("increment", increment);
+		
+		return sqlsession.update("course.editRegisterCount", map);
+	}
+
+	@Override
+	public int deleteRegisteredCourse(int course_seq, int student_id) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("course_seq", course_seq);
+		map.put("student_id", student_id);
+		
+		return sqlsession.delete("course.deleteRegisteredCourse", map);
 	}
 
 }

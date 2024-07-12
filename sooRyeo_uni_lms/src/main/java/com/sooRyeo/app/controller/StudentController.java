@@ -6,28 +6,32 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
-import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
 
 @Controller
-@RequireLogin(type = Student.class)
+@RequireLogin(type = {Student.class})
 public class StudentController {
 	
 	@Autowired
@@ -39,18 +43,21 @@ public class StudentController {
 	@Autowired
 	private FileManager fileManager;
 	
+	@Autowired
+	private CourseService courseService;
+	
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
 	public String student() {
 
-		return "student_Main.student";
+		return "student_Main";
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
 	@RequestMapping(value = "/student/lectureList.lms", method = RequestMethod.GET)
 	public String lectureList() {
 		
-		return "lectureList.student";
+		return "lectureList";
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
@@ -69,7 +76,7 @@ public class StudentController {
 		
 		request.setAttribute("mapList", mapList);
 
-		return "classList.student";
+		return "classList";
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
@@ -85,7 +92,7 @@ public class StudentController {
 		// System.out.println(member_student.getStatus());
 		
 		mav.addObject("member_student", member_student);
-		mav.setViewName("myInfo.student");
+		mav.setViewName("myInfo");
 		// /WEB-INF/views/student/{1}.jsp
 		
 		return mav;
@@ -158,8 +165,12 @@ public class StudentController {
 		
 		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
 		
+		List<Professor> professor_info = service.select_prof_info(fk_course_seq);
+		
 		// 수업 - 이번주 강의보기
 		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
+		
+		mav.addObject("professor_info", professor_info);
 		
 		mav.addObject("lectureList", lectureList);
 		
@@ -167,7 +178,7 @@ public class StudentController {
 		
 		mav.addObject("lectureList_week", lectureList_week);
 		
-		mav.setViewName("myLecture.student");
+		mav.setViewName("myLecture");
 
 		return mav;
 		
@@ -182,14 +193,46 @@ public class StudentController {
 		String fk_course_seq = request.getParameter("course_seq");		
 		
 		List<Map<String, String>> assignment_List = service.getassignment_List(fk_course_seq);
-		
 		mav.addObject("assignment_List", assignment_List);
 		
-		mav.setViewName("assignment_List.student");
+		mav.setViewName("assignment_List");
 		
 		return mav;
 		
 	} // end of public ModelAndView assignment_List
+		
+
+	
+	
+	@GetMapping("/student/courseRegister.lms")
+	public ModelAndView cousrseRegister(HttpServletRequest request, ModelAndView mav) {
+	
+		return studentservice.getCourseRegisterPage(request, mav);
+		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	@GetMapping(value = "/student/courseJSON.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> cousrseREST(HttpServletRequest request) {
+		return courseService.getCourseList(request);
+	}
+	
+	@GetMapping(value = "/student/timetableJSON.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> timeTableREST(HttpServletRequest request) {
+		return courseService.getLoginStudentTimeTable(request);
+	}
+	
+	
+	@PostMapping(value = "/student/registerCourseREST.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> registerCourseREST(HttpServletRequest request) {
+		return courseService.registerCourse(request);
+	}
+	
+	
+	@PostMapping(value = "/student/dropCourseREST.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> dropCourseREST(HttpServletRequest request) {
+		return courseService.dropStudentCourse(request);
+	}
+
 
 	
 	
@@ -203,24 +246,33 @@ public class StudentController {
 		
 		mav.addObject("assignment_detail_List", assignment_detail_List);
 		
-		mav.setViewName("assignment_detail_List.student");
+		mav.setViewName("assignment_detail_List");
 		
 		return mav;
 		
 	} // end of public ModelAndView assignment_detail_List
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@ResponseBody
+	@PostMapping("/student/insert_schedule_consult.lms")
+	public String insert_schedule_consult(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
+		String prof_id = request.getParameter("prof_id");
+		String title =  request.getParameter("title");
+		String content = request.getParameter("content");
+		String start_date = request.getParameter("start_date");
+		String end_date = request.getParameter("end_date");
+		
+		int n = service.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
+		
+		JSONObject jsonobj  = new JSONObject();
+		jsonobj.put("result", n);
+		
+		return jsonobj.toString();
+	}
 	
 }

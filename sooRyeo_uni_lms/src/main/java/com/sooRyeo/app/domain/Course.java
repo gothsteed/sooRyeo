@@ -4,17 +4,27 @@ import java.util.Date;
 import java.util.List;
 
 
-public class Course {	
+//TODO: time과 조인한 객채 따로 분리하기 !!!!
+public class Course {
+	
 
     private Integer course_seq;
     private Integer fk_professor_id;
     private Integer fk_curriculum_seq;
     private Integer capacity;
     private Date semester_date;
+    private Short exist;
+    private Integer register_count;
     
     private List<Time> timeList;
     
+    //private List<RegisteredCourse> 
+    
     private Curriculum curriculum;
+    
+    
+    private Professor professor;
+   
     
     public Course() {}
     
@@ -43,13 +53,26 @@ public class Course {
 	public Date getSemester_date() {
 		return semester_date;
 	}
+
 	public List<Time> getTimeList() {
 		return timeList;
 	}
+	public Integer getCurriculum_seq() {
+
+		return curriculum.getCurriculum_seq();
+	}
 	
 	
+	
+	
+	
+	public Professor getProfessor() {
+		return professor;
+	}
+
+
 	public boolean isSameCurriculum(Course newCourse) {
-		if(this.fk_curriculum_seq.equals(newCourse.fk_curriculum_seq)) {
+		if(this.fk_curriculum_seq.equals(newCourse.getCurriculum_seq())) {
 			return true;
 		}
 		return false;
@@ -62,7 +85,7 @@ public class Course {
 	public boolean isTimeConflict(Course newCourse) {
 
 		for(Time t : timeList) {
-			for(Time newT : newCourse.timeList) {
+			for(Time newT : newCourse.getTimeList()) {
 				if(t.isConflict(newT)) return true;
 			}
 		}
@@ -74,8 +97,25 @@ public class Course {
 		this.timeList = times;
 		
 	}
-    
-    
+
+
+	public Short getExist() {
+		return exist;
+	}
+
+
+	public Integer getRegister_count() {
+		return register_count;
+	}
+
+
+	public boolean isVacancy() {
+		if(capacity > register_count) {
+			return true;
+		}
+		
+		return false;
+	}
     
 
 }

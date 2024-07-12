@@ -53,4 +53,10 @@ public interface StudentDao {
 	// 수업 - 내 강의 - 과제 - 상세내용
 	List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment);
 
+	// 교수 이름, 교수 번호 select
+	List<Professor> select_prof_info(String fk_course_seq);
+
+	// 스케줄, 상담 테이블에 insert
+	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
+
 }

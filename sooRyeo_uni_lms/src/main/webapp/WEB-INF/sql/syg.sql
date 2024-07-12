@@ -114,4 +114,45 @@ commit;
 delete from tbl_announcement
 where 1=1;
 
-ALTER TABLE tbl_announcement MODIFY orgfilename nvarchar2(200);
+
+select *
+from tbl_lecture_notice;
+
+CREATE TABLE tbl_lecture_notice 
+( 
+    lecture_notice_seq       NUMBER	NOT NULL primary key,
+    fk_course_seq       NUMBER not null,
+    l_title         VARCHAR2(200),
+    l_content         VARCHAR2(600)
+);
+
+ALTER TABLE tbl_lecture_notice
+	ADD
+		CONSTRAINT fk_course_s
+		FOREIGN KEY (
+			fk_course_seq
+		)
+		REFERENCES tbl_course (
+			course_seq
+		);
+
+create sequence lecture_notice_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+ALTER TABLE tbl_lecture_notice ADD writeday date DEFAULT sysdate NOT NULL;
+ALTER TABLE tbl_lecture_notice ADD viewcount number DEFAULT 0 NOT NULL;
+ALTER TABLE tbl_lecture_notice ADD status number DEFAULT 0 NOT NULL;
+
+select *
+from tbl_course;
+
+insert into tbl_lecture_notice (lecture_notice_seq, fk_course_seq, l_title, l_content)
+values (lecture_notice_seq.nextval, 4 ,'게임 필수입니다.', '게임 컴퓨터 꼭 수강하세요');
+
+commit;
+

@@ -52,7 +52,7 @@ import com.sooRyeo.app.service.DepartmentService;
 import com.sooRyeo.app.common.MyUtil;
 
 @Controller
-@RequireLogin(type = Admin.class)
+@RequireLogin(type = {Admin.class})
 public class AdminController {
 	
 	@Autowired
@@ -69,13 +69,13 @@ public class AdminController {
 	@RequestMapping(value = "/admin/dashboard.lms", method = RequestMethod.GET)
 	public String admin_Main() {
 
-		return "admin_Main.admin";
+		return "admin_Main";
 	}
 	
 	@RequestMapping(value = "/admin/MemberCheck.lms", method = RequestMethod.GET)
 	public String MemberCheck() {
 		
-		return "MemberCheck.admin";
+		return "MemberCheck";
 	}
 	
 	@RequestMapping(value = "/admin/MemberRegister.lms", method = RequestMethod.GET)
@@ -86,7 +86,7 @@ public class AdminController {
 		
 		request.setAttribute("departmentList", departmentList);
 		
-		return "MemberRegister.admin";
+		return "MemberRegister";
 	}
 	
 	@RequestMapping(value = "/admin/ProfessorRegister.lms", method = RequestMethod.GET)
@@ -97,7 +97,7 @@ public class AdminController {
 		
 		request.setAttribute("departmentList", departmentList);
 		
-		return "ProfessorRegister.admin";
+		return "ProfessorRegister";
 	}
 
 	@PostMapping(value = "/admin/memberRegister_end.lms")
@@ -223,7 +223,7 @@ public class AdminController {
 
 		
 		mav.addObject("departments", departments);
-		mav.setViewName("add_curriculum.admin");
+		mav.setViewName("add_curriculum");
 		
 		return mav;
 	}
@@ -277,7 +277,7 @@ public class AdminController {
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
 		mav.addObject("pageBar", announcementList.makePageBar(request.getContextPath() +  "/admin/announcement.lms", "searchWord="+searchWord));
-		mav.setViewName("announcement.admin");
+		mav.setViewName("announcement");
 		
 		mav.addObject("goBackURL",goBackURL);
 		
@@ -296,22 +296,18 @@ public class AdminController {
 				
 		if(inputFlashMap != null) { // redirect 되어서 넘어온 데이터가 있다면 이라는 의미
 			
-			@SuppressWarnings("unchecked") // 경고 표시를 하지 말라는 뜻이다.
+			@SuppressWarnings("unchecked")
 			Map<String,String> redirect_map = (Map<String,String>) inputFlashMap.get("redirect_map"); // 리턴타입이 오브젝트라 캐스팅한 것.
 			// "redirect_map" 값은  /view_2.action 에서  redirectAttr.addFlashAttribute("키", 밸류값); 을 할때 준 "키" 이다. 
-	        // "키" 값을 주어서 redirect 되어서 넘어온 데이터를 꺼내어 온다. 
-	        // "키" 값을 주어서 redirect 되어서 넘어온 데이터의 값은 Map<String, String> 이므로 Map<String, String> 으로 casting 해준다.
 
-			// === #143. 이전글제목, 다음글제목 보기 시작 === //
+			// 이전글제목, 다음글제목 보기 시작 
 	           seq = redirect_map.get("seq");
 	           goBackURL = redirect_map.get("goBackURL");
 	           searchWord = redirect_map.get("searchWord");
 	           
-	           // System.out.println("~~~ 확인용 searchWord : " + redirect_map.get("searchWord"));
-	           
 	           try {
 	               searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8"); // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다. 
-	               goBackURL = URLDecoder.decode(redirect_map.get("goBackURL"), "UTF-8");   // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다.
+	               goBackURL = URLDecoder.decode(redirect_map.get("goBackURL"), "UTF-8");
 	          } catch (UnsupportedEncodingException e) {
 	              e.printStackTrace();
 	          }
@@ -322,14 +318,13 @@ public class AdminController {
 
 			goBackURL = request.getParameter("goBackURL");
 
-			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 시작  <<< //
+			// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것.
 			searchWord = request.getParameter("searchWord");
 			
 			if(searchWord == null) {
 				searchWord = "";
 			}
 		}
-		
 		mav.addObject("goBackURL", goBackURL);
 		
 		try {
@@ -337,7 +332,7 @@ public class AdminController {
 			/* 
 	            "이전글제목" 또는 "다음글제목" 을 클릭하여 특정글을 조회한 후 새로고침(F5)을 한 경우는   
 			            원본이 /view_2.action 을 통해서 redirect 되어진 경우이므로 form 을 사용한 것이 아니라서   
-			        "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 
+			    "양식 다시 제출 확인" 이라는 alert 대화상자가 뜨지 않는다. 
 			            그래서  request.getParameter("seq"); 은 null 이 된다. 
 			            즉, 글번호인 seq 가 null 이 되므로 DB 에서 데이터를 조회할 수 없게 된다.     
 			            또한 seq 는 null 이므로 Integer.parseInt(seq); 을 하면  NumberFormatException 이 발생하게 된다. 
@@ -346,11 +341,10 @@ public class AdminController {
 			paraMap.put("seq", seq);
 			HttpSession session =  request.getSession();
 			
-			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 시작  <<< //
+			// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.
 			paraMap.put("searchWord",searchWord);
-			// >>> 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다. 끝  <<< //
 			
-			// === #68. !!! 중요 !!! 
+			//     !!! 중요 !!! 
             //     글1개를 보여주는 페이지 요청은 select 와 함께 
             //     DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
             //     이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
@@ -359,7 +353,7 @@ public class AdminController {
             //     단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은 
             //     실행하지 않도록 해주어야 한다. !!! === //
 			
-			// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
+			// 위의 글목록보기에서 session.setAttribute("readCountPermission", "yes"); 지정해줌
 			Announcement an = null;
 			
 			if("yes".equals( (String)session.getAttribute("readCountPermission") )) {
@@ -367,24 +361,18 @@ public class AdminController {
 				
 				an = adminService.getView(paraMap);
 				// 글 조회수 증가와 함께 글 1개를 조회를 해오는 것
-				// System.out.println("~~ 확인용 글내용 : " + boardvo.getContent());
 				
 				session.removeAttribute("readCountPermission"); // 용도 폐기 
-		    	// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+		    	// 중요 => session 에 저장된 readCountPermission 을 삭제한다.
 			}
 			else { // 위에 if 까지 갔다가 readCountPermission 이것을 폐기한 후 새로고침을 통해 바로 /view.action 으로 간 경우이다.
-				// 글목록에서 특정 글제목을 클릭하여 본 상태에서
-                // 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
-                // System.out.println("글목록에서 특정 글제목을 클릭하여 본 상태에서 웹브라우저에서 새로고침(F5)을 클릭한 경우");
+				   // 글목록에서 특정 글제목을 클릭하여 본 상태에서
+                   // 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
 				
 				an = adminService.getView_no_increase_readCount(paraMap);
-				// 글 조회수 증가는 없고 단순히 글 1개만 조회를 해오는 것
+				// 글 조회수 증가는 없이 글 1개만 조회를 해오는 것
 				
 				// 또는 redirect 해주기 (예 : 버거킹 www.burgerking.co.kr 메뉴소개)
-				/*
-					mav.setViewName("redirect:/list.action");
-					return mav;
-				*/
 				
 				if(an == null) {
 					mav.setViewName("redirect:/admin/announcement.lms");
@@ -396,7 +384,7 @@ public class AdminController {
 			// 이전글제목, 다음글제목 보기를 위해 넣어준 것
 			mav.addObject("paraMap", paraMap);
 			
-			mav.setViewName("announcementView.admin");
+			mav.setViewName("announcementView");
 			
 		} catch (NumberFormatException e) {
 			mav.setViewName("redirect:/admin/announcement.lms");
@@ -412,7 +400,7 @@ public class AdminController {
 		// 조회하고자 하는 글번호 받아오기
 		String seq = request.getParameter("seq");
 		
-		// === #141. 이전글제목, 다음글제목 보기 시작  === //
+		// 이전글제목, 다음글제목 보기
 		String goBackURL = request.getParameter("goBackURL");
 		String searchWord = request.getParameter("searchWord");
 		
@@ -428,30 +416,26 @@ public class AdminController {
 	      } catch (UnsupportedEncodingException e) {
 	         e.printStackTrace();
 	      }
-		// === #141. 이전글제목, 다음글제목 보기 끝  === //
+		// 이전글제목, 다음글제목 보기 끝
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
 		
-		// ==== redirect(GET방식임) 시 데이터를 넘길때 GET 방식이 아닌 POST 방식처럼 데이터를 넘기려면 RedirectAttributes 를 사용하면 된다. 시작 ==== //
-    	/////////////////////////////////////////////////////////////////////////////////
+		// ==== redirect(GET방식) 시 데이터를 넘길때 GET 방식이 아닌 POST 방식처럼 데이터를 넘기려면 RedirectAttributes 를 사용하면 된다. 시작 ==== //
 		Map<String, String> redirect_map = new HashMap<>();
 		redirect_map.put("seq",seq); // 여기서 redirect_map 이것 안에 seq를 담아주고, 밑에서  addFlashAttribute를 사용하여 redirectAttr 이곳에 넣어준다.
-		// === #142. 이전글제목, 다음글제목 보기 시작  === //
+		// 이전글제목, 다음글제목 보기
 		redirect_map.put("goBackURL",goBackURL);
 		redirect_map.put("searchWord",searchWord);
-		// === #142. 이전글제목, 다음글제목 보기 끝  === //
 		
-		redirectAttr.addFlashAttribute("redirect_map", redirect_map); // 밑에  mav.setViewName("redirect:/view.action") 이것을 할때 redirect_map 이것을 같이 담아서 보내버린다. 그래서 POST'처럼' 이라고 하는 듯.
+		redirectAttr.addFlashAttribute("redirect_map", redirect_map);
 		// redirectAttr.addFlashAttribute("키", 밸류값); 으로 사용하는데 오로지 1개의 데이터만 담을 수 있으므로 여러개의 데이터를 담으려면 Map 을 사용해야 한다.
 		
 		mav.setViewName("redirect:/admin/announcementView.lms"); // 실제로 redirect:/view.action은 POST 방식이 아닌 GET 방식이다. 
-		/////////////////////////////////////////////////////////////////////////////////
 		// ==== redirect(GET방식임) 시 데이터를 넘길때 GET 방식이 아닌 POST 방식처럼 데이터를 넘기려면 RedirectAttributes 를 사용하면 된다. 끝 ==== //
 		
 		return mav;
 	}
-	
 	
 	@GetMapping("/admin/download.lms")
 	public void download(HttpServletRequest request, HttpServletResponse response) {
@@ -517,13 +501,11 @@ public class AdminController {
 		}
 	} // end of public void download(HttpServletRequest request, HttpServletResponse response) {}------------------
 	
-	
-	
 	// 게시판 글쓰기 폼페이지 요청
 	@GetMapping("/admin/addList.lms")
 	public ModelAndView addList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
-		mav.setViewName("addList.admin");
+		mav.setViewName("addList");
 		return mav;
 	}
 	
@@ -658,7 +640,7 @@ public class AdminController {
 			}
 			else {
 				mav.addObject("an", an);
-				mav.setViewName("editList.admin");
+				mav.setViewName("editList");
 				
 				return mav;
 			}
@@ -674,15 +656,14 @@ public class AdminController {
 		return mav;
 	}
 	
-	
-	@PostMapping("/admin/aditListEnd.lms")
+	@PostMapping("/admin/editListEnd.lms")
 	public ModelAndView editEnd(ModelAndView mav, BoardDTO bdto ,HttpServletRequest request) { // 원래는 request를 통해 getparameter 를 했지만, 이제는 spring이라  boardvo로 불러온다.
-		
+
 		int n = adminService.edit(bdto);
 		
 		if(n==1) {
-			mav.addObject("message", "글수정 성공!!");
-			mav.addObject("loc", request.getContextPath()+"/announcementView.lms?seq="+bdto.getSeq());
+			mav.addObject("message", "글이 수정되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/announcementView.lms?seq="+bdto.getSeq());
 			mav.setViewName("msg");
 		}
 		
@@ -727,6 +708,7 @@ public class AdminController {
 	@RequestMapping(value = "/admin/courseDeleteREST.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> courseDeleteREST(HttpServletRequest request) {
 		
+		System.out.println("deleteing course");
 		
 		return courseService.deleteCourse(request);
 	}

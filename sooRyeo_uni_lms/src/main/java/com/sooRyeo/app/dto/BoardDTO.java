@@ -4,21 +4,59 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class BoardDTO {
 
+	private Integer seq;
 	private String title;
 	private String content;
+	private String writeday;
+	private Integer viewcount;
 	private String attatched_file;
 	private String orgfilename;
 	private int Listtype;
-	private int seq;
 	
+	private Integer previousseq;
+	private String previoussubject;
+	private Integer nextseq;
+	private String nextsubject;
+	
+	public Integer getPreviousseq() {
+		return previousseq;
+	}
+
+	public String getPrevioussubject() {
+		return previoussubject;
+	}
+
+	public Integer getNextseq() {
+		return nextseq;
+	}
+
+	public String getNextsubject() {
+		return nextsubject;
+	}
+
 	private MultipartFile attach;
 
-	
-	public int getSeq() {
+	public String getWriteday() {
+		return writeday;
+	}
+
+	public void setWriteday(String writeday) {
+		this.writeday = writeday;
+	}
+
+	public Integer getViewcount() {
+		return viewcount;
+	}
+
+	public void setViewcount(Integer viewcount) {
+		this.viewcount = viewcount;
+	}
+
+	public Integer getSeq() {
 		return seq;
 	}
 
-	public void setSeq(int seq) {
+	public void setSeq(Integer seq) {
 		this.seq = seq;
 	}
 

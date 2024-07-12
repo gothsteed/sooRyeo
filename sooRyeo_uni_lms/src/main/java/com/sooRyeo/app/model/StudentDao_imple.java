@@ -1,5 +1,6 @@
 package com.sooRyeo.app.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -172,5 +173,41 @@ public class StudentDao_imple implements StudentDao {
 		
 	} // end of public List<Map<String, String>> getassignment_detail_List
 
+	
+	// 교수번호, 교수 이름  가져오기
+	@Override
+	public List<Professor> select_prof_info(String fk_course_seq) {
+		List<Professor> prof_info = sqlSession.selectList("student.select_prof_info", fk_course_seq);
+		return prof_info;
+	}
+	
+
+	// 스케줄, 상담 테이블에 insert
+	@Override
+	public int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("title", title);
+		paraMap.put("start_date", start_date);
+		paraMap.put("end_date", end_date);
+		
+		sqlSession.insert("student.insert_tbl_schedule", paraMap);
+		
+		System.out.println(paraMap.get("schedule_seq"));
+		String schedule_seq = (String) paraMap.get("schedule_seq");
+		
+		paraMap.put("content", content);
+		paraMap.put("prof_id", prof_id);
+		paraMap.put("userid",  String.valueOf(userid));
+		
+		int n = sqlSession.insert("student.insert_tbl_consult", paraMap);
+		
+		return n;
+	}
+
+	
+	
+	
+	
 	
 }

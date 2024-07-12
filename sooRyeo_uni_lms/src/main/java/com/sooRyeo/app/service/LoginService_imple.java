@@ -38,6 +38,7 @@ public class LoginService_imple implements LoginService {
 		
 		Student loginStudent = studentDao.selectStudent(loginDTO);
 		
+		
 		// System.out.println("~~~ 확인용 : " + img_name);
 		// ~~~ 확인용 : 202407051559321925805007091400.jpg
 		

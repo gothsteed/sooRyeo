@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="board">
+
+
+	<select id="getLectureList" parameterType="HashMap"
+		resultType="com.sooRyeo.app.dto.BoardDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		select *
+		from
+		(
+		SELECT rownum as rno, lecture_notice_seq AS seq, l_title AS title, writeday, viewcount
+		FROM tbl_lecture_notice
+		WHERE fk_course_seq = #{fk_course_seq}
+		<if test="searchWord != null">
+			and lower(l_title) like '%'||lower(#{searchWord})||'%'
+		</if>
+		)V
+		where V.rno BETWEEN #{startRno} AND #{endRno}
+		order by writeday desc
+	</select>
+
+	<select id="getTotalElementCount" resultType="Integer" parameterType="HashMap">
+		SELECT count(*)
+		FROM tbl_lecture_notice
+		<if test="searchWord != null">
+			where lower(l_title) like '%'||lower(#{searchWord})||'%'
+		</if>
+	</select>
+	
+	<update id="increase_readCount" parameterType="String">
+		update tbl_lecture_notice set viewCount = viewCount + 1
+		where lecture_notice_seq = #{seq}
+	</update>
+	
+	<select id="getView" parameterType="HashMap" resultType="com.sooRyeo.app.dto.BoardDTO">
+		SELECT previousseq, previoussubject, lecture_notice_seq as seq, l_title as title, l_content as content
+		, viewcount, writeday
+		, nextseq, nextsubject
+		from
+		(
+			select lag (lecture_notice_seq) over(order by lecture_notice_seq desc) AS previousseq
+			, lag (l_title,1) over(order by lecture_notice_seq desc) AS previoussubject
+			, lecture_notice_seq
+			, lead (lecture_notice_seq) over(order by lecture_notice_seq desc) AS nextseq
+			, lead (l_title, 1) over(order by lecture_notice_seq desc) AS Nextsubject
+			, writeday, viewcount, l_title, l_content
+			from tbl_lecture_notice
+			<if test='searchWord != ""'>
+				where lower(l_title) like '%' || lower(#{searchWord}) || '%'
+			</if>
+		) V
+		WHERE V.lecture_notice_seq = #{seq}
+	</select>
+	
+	
+</mapper>
