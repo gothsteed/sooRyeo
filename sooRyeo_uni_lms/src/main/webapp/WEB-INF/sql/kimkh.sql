@@ -269,6 +269,12 @@ REFERENCES tbl_schedule (schedule_seq)
 ON DELETE CASCADE;
 
 
+ALTER TABLE tbl_assignment
+ADD CONSTRAINT fk_schedule
+FOREIGN KEY (schedule_seq_assignment)
+REFERENCES tbl_schedule (schedule_seq)
+ON DELETE CASCADE;
+
 
 select
 A.fk_course_seq as fk_course_seq,

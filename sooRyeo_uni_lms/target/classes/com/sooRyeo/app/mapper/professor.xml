@@ -286,8 +286,8 @@
 	</select>
 	
 	<delete id="assignmentDelete" parameterType="String">
-		delete from tbl_assignment
-		where schedule_seq_assignment = to_number(#{schedule_seq_assignment})	
+		delete from tbl_schedule
+		where schedule_seq = to_number(#{schedule_seq_assignment})	
 	</delete>
 	
 

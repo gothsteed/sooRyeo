@@ -55,7 +55,7 @@ public interface ProfessorDao {
 	// 과제첨부 파일이 있는지 확인
 	Assignment select_attached_name(String schedule_seq_assignment);
 	
-	// // 과제 삭제
+	// 과제 삭제
 	int assignmentDelete(String schedule_seq_assignment);
 
 	
