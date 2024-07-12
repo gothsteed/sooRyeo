@@ -8,7 +8,7 @@ import com.sooRyeo.app.domain.Schedule;
 public interface ScheduleDao {
 	
 	// 스케줄테이블 select
-	List<Schedule> showAssignment(int userid);
+	List<Map<String, String>> showAssignment(int userid);
 	
 	// 내 일정 테이블 select
 	List<Map<String, String>> showTodo(int userid);

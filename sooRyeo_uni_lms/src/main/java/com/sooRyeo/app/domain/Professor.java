@@ -3,6 +3,7 @@ package com.sooRyeo.app.domain;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ public class Professor {
     private Department department;
     
     private MultipartFile attach;
+    
     
 	public Integer getProf_id() {
 		return prof_id;
@@ -61,13 +63,16 @@ public class Professor {
 		return img_name;
 	}
 	
+	
+	
 	public Department getDepartment() {
 		return department;
 	}
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-		
+
+	
 	
 	public MultipartFile getAttach() {
 		return attach;
@@ -94,6 +99,18 @@ public class Professor {
 	
 	}
 	
+	
+	public void updateinfo(Map<String, String> paraMap) {
+		
+		prof_id = Integer.parseInt(paraMap.get("prof_id"));
+		pwd = paraMap.get("pwd");
+		office_address = paraMap.get("address");
+		email = paraMap.get("email");
+		tel	= paraMap.get("tel");
+		img_name = paraMap.get("img_name");
+		
+		
+	}
     
     
     

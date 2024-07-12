@@ -18,8 +18,8 @@ public class ScheduleService_imple implements ScheduleService {
 	
 	// 스케줄테이블 select
 	@Override
-	public List<Schedule> showAssignment(int userid) {
-		List<Schedule> schedule = dao.showAssignment(userid);
+	public List<Map<String, String>> showAssignment(int userid) {
+		List<Map<String, String>> schedule = dao.showAssignment(userid);
 		return schedule;
 	}
 

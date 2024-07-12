@@ -48,7 +48,7 @@ span.error {
                   <div class="col-sm-6 m-b30"> 
                      <label class="form-label">비밀번호</label>
                      <span class="error">숫자/문자/특수문자 포함 형태의 8~15자리로 입력해주세요.</span> 
-                     <input type="password" id="profPwd" name="pwd" class="form-control" />
+                     <input type="password" id="profPwd" name="pwd" class="form-control"/>
                    	         <%-- 비밀번호중복체크 --%>
                              <span id="pwdcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">비밀번호 중복확인</button></span><br>
                              <span id="pwdCheckResult"></span>
@@ -131,6 +131,7 @@ $(document).ready(function() {
            // 암호가 정규표현식에 위배된 경우 
            $("input#profPwd").val("");
            $("input#profPwd").parent().find("span.error").show();
+           $("span#pwdCheckResult").html("");
            return;
        }
        else {
@@ -156,11 +157,17 @@ $(document).ready(function() {
            success:function(json){
         	   console.log(JSON.stringify(json));
                
-               if(json.n != 0){
-                   // 입력한 userid 가 이미 데이터베이스에 저장되어 있다면
-                   $("span#pwdCheckResult").html("해당 비밀번호는 이미 사용중 이므로<br>다른 비밀번호를 입력하세요").css({"color":"red"});
-                   $("input#profPwd").val("");
-                   b_pwdcheck_click = false;
+               if(json.n != 0){                
+                   // 입력한 pwd 가 이미 데이터베이스에 저장되어 있다면
+         		  if (confirm("기존 비밀번호를 유지하시겠습니까?")){    //확인
+         			  $("span#pwdCheckResult").html("해당 비밀번호는 사용가능합니다.").css({"color":"navy"});
+         		  }
+         		  else{   //취소
+         			 $("input#profPwd").val("");
+         			  b_telcheck_click = false;
+         		      return;
+         		  }                            
+                   
                }
                else{
 
@@ -205,6 +212,7 @@ $(document).ready(function() {
            // 연락처가 정규표현식에 위배된 경우 
            $("input#profTel").val("");
            $("input#profTel").parent().find("span.error").show();
+           $("span#telCheckResult").html("");
            return;
        }
        else {
@@ -286,6 +294,7 @@ $(document).ready(function() {
            // 이메일 정규표현식에 위배된 경우 
            $("input#profEmail").val("");
            $("input#profEmail").parent().find("span.error").show();
+           $("span#emailCheckResult").html("");
            return;
        }
        else {

@@ -1,12 +1,18 @@
 package com.sooRyeo.app.service;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.ProfessorTimeTable;
+import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
 public interface ProfessorService {
@@ -25,6 +31,25 @@ public interface ProfessorService {
 	
 	// 교수 정보 수정
 	int professor_info_edit(Professor professor, MultipartHttpServletRequest mrequest);
+	
+	// 교수 진행 강의 목록 
+	ProfessorTimeTable courseList(int prof_id);
+	
+	// 강의 수강생 목록
+	List<Map<String, String>> studentList(String fk_course_seq);
+	
+	// 교수 시험, 과제관리
+	List<Map<String, String>> paperAssignment(String fk_course_seq);
+	
+	// 과제 상세보기
+	AssignJoinSchedule assign_view(Map<String, String> paraMap);
+	
+	// 스케쥴 테이블 인풋
+	int insert_tbl_schedule(AssignScheInsertDTO dto, String fk_course_seq);
+	
+	// 과제 삭제
+	int assignmentDelete(String schedule_seq_assignment, MultipartHttpServletRequest mrequest);
+	
 	
 
 }

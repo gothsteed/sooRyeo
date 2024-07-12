@@ -202,9 +202,14 @@
 	
     <div class="sidebar">
         <div class="profile">
-            <img src="https://via.placeholder.com/100" alt="Profile Picture">
-            <h3>${requesetScope.loginuser.name }</h3>
-            <p>${requesetScope.loginuser.department_name}</p>
+        	<c:if test="${empty sessionScope.loginuser.img_name}"> <%-- 이미지가 없을 경우 --%>
+            	<img src="<%=ctxPath%>/resources/images/teacher.png" alt="Profile Picture">
+            </c:if>
+            <c:if test="${not empty sessionScope.loginuser.img_name}"> <%-- 이미지가 있을 경우 --%>
+            	<img src="<%=ctxPath%>/resources/files/${sessionScope.loginuser.img_name}" alt="Profile Picture">
+            </c:if>
+            <h3>${sessionScope.loginuser.name}</h3>
+            <p>${sessionScope.loginuser.department.department_name}</p>
         </div>
         <ul class="nav flex-column">
             <li class="nav-item"><a href="<%=ctxPath%>/professor/dashboard.lms" class="nav-link active"><span class="icon">🏠</span>대쉬보드</a></li>
@@ -212,9 +217,7 @@
             <li class="nav-item dropdown">
                 <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
-                    <a class="dropdown-item" href="#">내 수업</a>
-                    <a class="dropdown-item" href="#">수강신청</a>
-                    <a class="dropdown-item" href="#">수강취소</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/professor/courseList.lms">내 수업</a>
                     <a class="dropdown-item" href="#">출석현황</a>
                 </div>
             </li>
