@@ -33,8 +33,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
@@ -186,7 +184,7 @@ public class AdminController {
 	
 	@ResponseBody
 	@PostMapping(value="/admin/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
-	public String addComment(String email) {
+	public String emailDuplicateCheck(String email) {
 		
 		String emailDuplicateCheck = adminService.emailDuplicateCheck(email);
 		// 회원등록시 입력한 이메일이 이미 있는 이메일인지 검사하는 메소드

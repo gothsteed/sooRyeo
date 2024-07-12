@@ -40,12 +40,21 @@
 		frm.submit();
 	}// end of function goSearch(){}--------------------------------------------
 	
+	function goLectureNoticeWrite(){
+		
+		location.href = "<%=ctxPath%>/board/lectureNoticeWrite.lms?fk_course_seq="+${requestScope.fk_course_seq};
+		
+	}
+	
 </script>
 
 <div class="container">
     <div class="card">
         <div class="card-header" style="text-align: center; background-color: #d1e0e0">
             <h2>수업 공지사항</h2>
+            <button type="button" class="btn btn-outline-light" style="width:20%; height:150px;" onclick="goLectureNoticeWrite()">
+			<span id="annoucement" style="color:black; font-weight: bold;">공지사항 쓰기</span>
+		</button> 	
         </div>
         <div class="card-body">
 			<div class="input-group input-group-sm mb-3" style="width: 35%;">
