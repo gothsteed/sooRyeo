@@ -7,6 +7,7 @@ import org.apache.tiles.evaluator.AbstractAttributeEvaluator;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ import com.sooRyeo.app.domain.Student;
 public class TilesAspect {
 
 	
-	@Around("@within(requireLogin) || @annotation(requireLogin)")
+	@Around("@within(requireLogin) || @annotation(requireLogin) && !@annotation(org.springframework.web.bind.annotation.ResponseBody)")
 	public Object tilesAspect(ProceedingJoinPoint joinPoint,  RequireLogin requireLogin) throws Throwable {
 		Object result = joinPoint.proceed();
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -62,6 +63,7 @@ public class TilesAspect {
 				return viewName + tile;
 			}
 		}
+
 		
 		
 		return result;
