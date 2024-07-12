@@ -58,6 +58,10 @@
 			  </thead>
 			  <tbody class="table-group-divider">
 			    <tr>
+			      <th scope="row">번호</th>
+			      <td>${requestScope.bdto.seq}</td>
+			    </tr>
+			    <tr>
 			      <th scope="row">날짜</th>
 			      <td>${requestScope.bdto.writeday}</td>
 			    </tr>
@@ -72,15 +76,15 @@
 			  </tbody>
 			</table>
 			<div style="display: flex; justify-content: space-between; width: 100%;">
-				<c:if test="${requestScope.bdto.nextseq != null}">
-	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.bdto.nextseq}')">다음글</button>
-				</c:if>
-                <div>
-	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/board/lecture_notice.lms?fk_course_seq='+${requestScope.fk_course_seq}">전체목록보기</button>
-	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">검색목록보기</button>
-                </div>
 				<c:if test="${requestScope.bdto.previousseq != null}">
 	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.bdto.previousseq}')">이전글</button>
+				</c:if>
+                <div>
+	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/board/lecture_notice.lms?fk_course_seq=${requestScope.fk_course_seq}'">전체목록보기</button>
+	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">검색목록보기</button>
+                </div>
+				<c:if test="${requestScope.bdto.nextseq != null}">
+	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.bdto.nextseq}')">다음글</button>
 				</c:if>
             </div>
 		</div>

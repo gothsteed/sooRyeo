@@ -115,7 +115,7 @@ delete from tbl_announcement
 where 1=1;
 
 
-select *
+select rownum, lecture_notice_seq, fk_course_seq, l_title, l_content, writeday
 from tbl_lecture_notice;
 
 CREATE TABLE tbl_lecture_notice 
@@ -149,10 +149,24 @@ ALTER TABLE tbl_lecture_notice ADD viewcount number DEFAULT 0 NOT NULL;
 ALTER TABLE tbl_lecture_notice ADD status number DEFAULT 0 NOT NULL;
 
 select *
-from tbl_course;
+from tbl_student;
 
 insert into tbl_lecture_notice (lecture_notice_seq, fk_course_seq, l_title, l_content)
 values (lecture_notice_seq.nextval, 4 ,'게임 필수입니다.', '게임 컴퓨터 꼭 수강하세요');
+
+commit;
+
+select *
+from
+(
+SELECT rownum as rno, lecture_notice_seq AS seq, l_title AS title, writeday, viewcount
+FROM tbl_lecture_notice
+WHERE fk_course_seq = 4
+)V
+order by writeday desc
+
+update tbl_student set pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382'
+where name = '강민정';
 
 commit;
 

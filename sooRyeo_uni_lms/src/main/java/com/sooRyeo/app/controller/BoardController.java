@@ -37,7 +37,7 @@ public class BoardController {
 	private LectureNoticeService LecService;
 	
 	@GetMapping(value="/board/lecture_notice.lms")
-	public ModelAndView classList(ModelAndView mav, HttpServletRequest request, Model model) {
+	public ModelAndView lecture_notice(ModelAndView mav, HttpServletRequest request, Model model) {
     /*
 		HttpSession session = request.getSession();
 		
@@ -123,7 +123,7 @@ public class BoardController {
 	           seq = redirect_map.get("seq");
 	           goBackURL = redirect_map.get("goBackURL");
 	           searchWord = redirect_map.get("searchWord");
-	           fk_course_seq = request.getParameter("fk_course_seq");
+	           fk_course_seq = redirect_map.get("fk_course_seq");
 	           
 	           try {
 	               searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8"); // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다. 
@@ -159,6 +159,7 @@ public class BoardController {
 		    */
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("seq", seq);
+			paraMap.put("fk_course_seq", fk_course_seq);
 			HttpSession session =  request.getSession();
 			
 			// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.
