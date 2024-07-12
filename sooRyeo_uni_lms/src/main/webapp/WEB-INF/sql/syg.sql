@@ -169,4 +169,21 @@ update tbl_student set pwd = '9695b88a59a1610320897fa84cb7e144cc51f2984520efb771
 where name = '강민정';
 
 commit;
+		
+		select announcement_seq, a_title, writeday, viewcount
+		from
+        (
+        select rownum rn, announcement_seq, a_title, a_content, attatched_file, writeday, viewcount, status, orgfilename
+        from
+		(
+            SELECT *
+            FROM tbl_announcement
+            order by writeday desc
+        )V
+        )T
+        where rn BETWEEN 11 AND 12;
+    
+select *
+from tbl_professor;
+
 

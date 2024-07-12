@@ -50,7 +50,7 @@ function goAssignment_List(){
 	
 }
 
-function goLectureNotice(seq){
+function goLectureNotice(){
 	
 	location.href = "<%=ctxPath%>/board/lecture_notice.lms?fk_course_seq="+${requestScope.fk_course_seq};
 	

@@ -51,7 +51,11 @@ $(document).ready(function(){
 	
 });// end of $(document).ready(function() 
 
-
+function goLectureNotice(){
+	
+	location.href = "<%=ctxPath%>/board/lecture_notice.lms?fk_course_seq="+${requestScope.fk_course_seq};
+	
+}
 
 
 function scrollToTarget_up() {
@@ -92,6 +96,12 @@ function scrollToTarget_down() {
 <input type="hidden" name="course_seq" value=""/>
 <hr>
 	<div class="card-body" style="">
+		<button type="button" class="btn btn-outline-light" style="width:20%; height:150px;" onclick="goLectureNotice()">
+			<img src="<%=ctxPath%>/resources/images/annoucement.png" class="img-fluid" style="width:30%;">
+			<br><br>
+			<span id="annoucement" style="color:black; font-weight: bold;">공지사항</span>
+			<br>
+		</button> 	
 		<button type="button" class="btn btn-outline-light" id="announcement" style="width:20%; height:150px;" onclick="goTest()">
 			<img src="<%=ctxPath%>/resources/images/test.png" class="img-fluid" style="width:30%;">
 			<br><br>
@@ -133,29 +143,6 @@ function scrollToTarget_down() {
 		</div>
 	</div>
 </div>
-
-
-<div class="container" style="margin-top:5%;">
-	<h3>공지사항</h3>
-	<hr>
-	<table class="table table-border">
-		 <thead>
-			<tr class="table-success">
-				<th>글번호</th>
-				<th>제목</th>
-				<th>작성일</th>
-				<th>조회수</th>
-			</tr>
-		 </thead>
-		 <tbody class="table-group-divider">
-			<tr>
-				<td colspan="4">작성된 글이 없습니다.</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-
-
 
 <div class="btns" style="display:inline;">
   	<div class="moveTopBtn" onclick="scrollToTarget_up()"><img src="<%=ctxPath%>/resources/images/btn_up_light.png"></div>

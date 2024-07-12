@@ -11,16 +11,20 @@
 		resultType="com.sooRyeo.app.dto.BoardDTO">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
 		select *
 		from
+        (
+        select rownum rn, lecture_notice_seq AS seq, l_title AS title, writeday, viewcount
+        from
 		(
-		SELECT rownum as rno, lecture_notice_seq AS seq, l_title AS title, writeday, viewcount
-		FROM tbl_lecture_notice
-		WHERE fk_course_seq = #{fk_course_seq}
+            SELECT *
+            FROM tbl_lecture_notice
+            WHERE fk_course_seq = #{fk_course_seq}
 		<if test="searchWord != null">
 			and lower(l_title) like '%'||lower(#{searchWord})||'%'
 		</if>
-		)V
-		where V.rno BETWEEN #{startRno} AND #{endRno}
-		order by seq desc
+			order by writeday desc
+        )V
+        )T
+		where rn BETWEEN #{startRno} AND #{endRno}
 	</select>
 
 	<select id="getTotalElementCount" resultType="Integer" parameterType="HashMap">
