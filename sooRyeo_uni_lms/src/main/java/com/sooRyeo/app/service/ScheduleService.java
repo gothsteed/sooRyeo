@@ -3,7 +3,11 @@ package com.sooRyeo.app.service;
 import java.util.List;
 import java.util.Map;
 
-import com.sooRyeo.app.domain.Schedule;
+import javax.servlet.http.HttpServletRequest;
+
+import com.sooRyeo.app.dto.ConsultApprovalDto;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.ModelAndView;
 
 
 public interface ScheduleService {
@@ -32,14 +36,10 @@ public interface ScheduleService {
 	// 내 개인일정 삭제 - 스케줄 테이블 delete
 	int delete_tbl_schedule(String schedule_seq);
 
-	
+	ModelAndView makeApproveConsultPage(HttpServletRequest request, ModelAndView mav);
 
 
-	
+    ResponseEntity<String> getConsultDetail(HttpServletRequest request);
 
-	
-
-	
-	
-
+	ResponseEntity<String>  updateConsultApproveStatus(HttpServletRequest request, ConsultApprovalDto consultApprovalDto);
 }

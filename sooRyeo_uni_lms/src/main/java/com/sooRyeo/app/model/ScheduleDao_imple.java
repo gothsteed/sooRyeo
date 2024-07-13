@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.dto.ConsultApprovalDto;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Schedule;
+import com.sooRyeo.app.dto.ScheduleDto;
 
 @Repository
 public class ScheduleDao_imple implements ScheduleDao {
@@ -112,14 +115,46 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 
+	@Override
+	public List<Consult> getUnconfirmedConsultList(int currentPage, int sizePerPage, int professor_id) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("professor_id", professor_id);
+		
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		map.put("startRno", startRno);
+		map.put("endRno", endRno);
+		
+		return sqlSession.selectList("schedule.getUnconfirmedConsultList", map);
+	}
 
 
+	@Override
+	public int getUnconfirmedConsultCount(int professor_id) {
+		
+		return sqlSession.selectOne("schedule.getUnconfirmedConsultCount", professor_id);
+	}
 
+	@Override
+	public Consult getConsult(int schedule_seq) {
+		return  sqlSession.selectOne("schedule.getConsult", schedule_seq);
+	}
 
+	@Override
+	public int updateConsultApproveStatus(ConsultApprovalDto consultApprovalDto) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("schedule_seq", consultApprovalDto.getSchedule_seq());
+		map.put("approved", consultApprovalDto.getIsApproved()?1:0);
 
+		return sqlSession.update("schedule.updateConsultApproveStatus", map);
+	}
 
-
-
+	@Override
+	public int deleteUnapprovedConsult(ConsultApprovalDto consultApprovalDto) {
+		int schedule_seq = consultApprovalDto.getSchedule_seq();
+		return sqlSession.delete("schedule.deleteUnapprovedConsult", schedule_seq);
+	}
 
 
 }

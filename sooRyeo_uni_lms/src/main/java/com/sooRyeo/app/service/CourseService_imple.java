@@ -83,7 +83,7 @@ public class CourseService_imple implements CourseService {
 			return ResponseEntity.internalServerError().body("오류 발생");
 		}
 		
-		return ResponseEntity.ok("패강 성공");
+		return ResponseEntity.ok("폐강 성공");
 	}
 
 	@Override
@@ -173,6 +173,7 @@ public class CourseService_imple implements CourseService {
 		int registerResult = courseDao.insertRegisterCourse(course_seq, student_id);
 		int registerCountResult = courseDao.editRegisterCount(course_seq, 1);
 		
+		System.out.println("register result : " + (registerCountResult * registerResult));
 		if(registerCountResult * registerResult != 1) {
 			throw new CourseRegistrationException("트랜젝션 오류발생 다시 시도해 주세요");
 		}
@@ -190,7 +191,8 @@ public class CourseService_imple implements CourseService {
 		int dropResult = courseDao.deleteRegisteredCourse(course_seq, student_id);
 		int registerCountResult = courseDao.editRegisterCount(course_seq, -1);
 		
-		if(registerCountResult * dropResult != 1) {
+		System.out.println("drop result : " + (registerCountResult * dropResult));
+		if(registerCountResult * dropResult < 1) {
 			throw new CourseRegistrationException("트랜젝션 오류발생 다시 시도해 주세요");
 		}
 		

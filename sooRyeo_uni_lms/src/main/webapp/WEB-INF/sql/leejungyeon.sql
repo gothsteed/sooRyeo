@@ -35,7 +35,7 @@ CREATE TABLE tbl_student (
    grade             SMALLINT      NOT NULL, --  г 
    address           NVARCHAR2(200) NOT NULL, --  ּ 
    email             NVARCHAR2(200) NOT NULL, --  ̸   
-   register_date     DATE          NOT NULL, --    г�?
+   register_date     DATE          NOT NULL, --    г�??
    status            SMALLINT      NOT NULL, --         
    fk_department_seq Number        NOT NULL  --  а  ڵ 
 
@@ -339,7 +339,7 @@ CREATE TABLE tbl_course (
    fk_curriculum_seq Number NOT NULL, --           
    fk_time_seq       Number NOT NULL, --  ð       
    capacity          Number NOT NULL, --     
-   semester_date     DATE   NOT NULL  --      �? б 
+   semester_date     DATE   NOT NULL  --      �?? б 
 );
 
 drop table tbl_course;
@@ -424,11 +424,11 @@ ALTER TABLE tbl_lecture
       );
 
 CREATE TABLE tbl_attendance (
-   attendance_seq Number NOT NULL, --  �?      
+   attendance_seq Number NOT NULL, --  �??      
    fk_course_seq  Number             NOT NULL, --               
    fk_student_id  Number             NOT NULL, --  й 
-   isAttended     CHAR(1)             NOT NULL, --  �?    
-   attended_date  DATE               NOT NULL  --  �?  ¥
+   isAttended     CHAR(1)             NOT NULL, --  �??    
+   attended_date  DATE               NOT NULL  --  �??  ¥
 );
 
 CREATE SEQUENCE attendance_seq
@@ -439,14 +439,14 @@ CREATE SEQUENCE attendance_seq
 
 ALTER TABLE tbl_attendance
    ADD
-      CONSTRAINT PK_tbl_attendance --  �?  ⺻�?
+      CONSTRAINT PK_tbl_attendance --  �??  ⺻�?
       PRIMARY KEY (
-         attendance_seq --  �?      
+         attendance_seq --  �??      
       );
 
 ALTER TABLE tbl_attendance
    ADD
-      CONSTRAINT FK_tbl_cours_tbl_atten --          ->  �?
+      CONSTRAINT FK_tbl_cours_tbl_atten --          ->  �??
       FOREIGN KEY (
          fk_course_seq --               
       )
@@ -456,7 +456,7 @@ ALTER TABLE tbl_attendance
         
 ALTER TABLE tbl_attendance
    ADD
-      CONSTRAINT FK_tbl_stud_tbl_attend --  л  ->  �?
+      CONSTRAINT FK_tbl_stud_tbl_attend --  л  ->  �??
       FOREIGN KEY (
          fk_student_id --  й 
       )
@@ -748,7 +748,7 @@ DROP COLUMN fk_curriculum_type_seq;
 -- Inserting data into tbl_curriculum for ȸ���а�
 BEGIN
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 7, 1, 'ȸ�����', 3, 1);
+    VALUES (curriculum_seq.nextval, 7, 1, 'ȸ�����?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 7, 1, '�繫ȸ��', 3, 1);
@@ -784,7 +784,7 @@ END;
 select * from tbl_curriculum
 where fk_department_seq = 6;
 
--- Inserting data into tbl_curriculum for �۰��
+-- Inserting data into tbl_curriculum for �۰��?
 BEGIN
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 6, 1, '�۰��', 3, 1);
@@ -796,7 +796,7 @@ BEGIN
     VALUES (curriculum_seq.nextval, 6, 2, '������', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 6, 2, '�Ǳ��', 3, 1);
+    VALUES (curriculum_seq.nextval, 6, 2, '�Ǳ��?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 6, 3, '����', 3, 1);
@@ -839,23 +839,23 @@ BEGIN
     VALUES (curriculum_seq.nextval, 5, 3, '��������', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 5, 4, '����ڰ���', 3, 1);
+    VALUES (curriculum_seq.nextval, 5, 4, '����ڰ���?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 5, 4, '�������', 3, 1);
+    VALUES (curriculum_seq.nextval, 5, 4, '�������?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 5, 4, '����������', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 5, 4, 'ȯ�����', 3, 1);
+    VALUES (curriculum_seq.nextval, 5, 4, 'ȯ�����?', 3, 1);
 END;
 
 
--- Inserting data into tbl_curriculum for ��������а�
+-- Inserting data into tbl_curriculum for ��������а�?
 BEGIN
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 4, 1, '������󰳷�', 3, 1);
+    VALUES (curriculum_seq.nextval, 4, 1, '������󰳷�?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 4, 1, '�����ǹ�', 3, 1);
@@ -870,13 +870,13 @@ BEGIN
     VALUES (curriculum_seq.nextval, 4, 3, '����������', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 4, 3, '�����å', 3, 1);
+    VALUES (curriculum_seq.nextval, 4, 3, '������?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 4, 4, '��������', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 4, 4, '������󼼹̳�', 3, 1);
+    VALUES (curriculum_seq.nextval, 4, 4, '������󼼹̳�?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 4, 4, '��������', 3, 1);
@@ -904,7 +904,7 @@ BEGIN
     VALUES (curriculum_seq.nextval, 3, 3, '�����', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 3, 3, '���������', 3, 1);
+    VALUES (curriculum_seq.nextval, 3, 3, '���������?', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
     VALUES (curriculum_seq.nextval, 3, 4, '�����ǹ̷�', 3, 1);
@@ -950,7 +950,7 @@ BEGIN
     VALUES (curriculum_seq.nextval, 2, 4, '������', 3, 1);
     
     INSERT INTO tbl_curriculum (curriculum_seq, fk_department_seq, grade, name, credit, required)
-    VALUES (curriculum_seq.nextval, 2, 4, '����Ʈ�������', 3, 1);
+    VALUES (curriculum_seq.nextval, 2, 4, '����Ʈ�������?', 3, 1);
 END;
 
 
@@ -1056,13 +1056,13 @@ ALTER TABLE tbl_assignment
 desc tbl_assignment;
 
 CREATE TABLE tbl_assignment_submit (
-    assignment_submit_seq      Number          NOT NULL, -- ���������
+    assignment_submit_seq      Number          NOT NULL, -- ���������?
     fk_schedule_seq_assignment Number          NULL,     -- �� �÷�
     fk_student_id              Number          NOT NULL, -- �й�
     title                      NVARCHAR2(200)  NOT NULL, -- ����
     content                    NVARCHAR2(1000) NOT NULL, -- ����
     score                      Number          NULL,     -- ����
-    submit_datetime            DATE            DEFAULT SYSDATE NOT NULL, -- ����ð�
+    submit_datetime            DATE            DEFAULT SYSDATE NOT NULL, -- ����ð�?
     attatched_file             NVARCHAR2(200)  NULL      -- ÷������
 );
 
@@ -1070,7 +1070,7 @@ ALTER TABLE tbl_assignment_submit
 	ADD
 		CONSTRAINT PK_tbl_assignment_submit -- �������� �⺻Ű
 		PRIMARY KEY (
-			assignment_submit_seq -- ���������
+			assignment_submit_seq -- ���������?
 		);
 
 ALTER TABLE tbl_assignment_submit
@@ -1233,7 +1233,10 @@ desc tbl_exam
 
 
 select * 
-from tbl_registered_course;
+from tbl_registered_course
+where fk_student_id = 202400005;
+
+desc tbl_consult;
 
 delete  tbl_registered_course where registered_course_Seq = 6;
 commit;
@@ -1244,5 +1247,113 @@ commit;
         
         
 commit;
+SELECT 
+    s.schedule_seq,
+    s.title,
+    s.schedule_type,
+    s.start_date,
+    s.end_date,
+    s.confirm,
+    c.fk_student_id,
+    c.fk_prof_id,
+    c.content,
+    st.student_id,
+    st.fk_department_seq,
+    st.pwd,
+    st.name ,
+    st.jubun ,
+    st.tel ,
+    st.grade,
+    st.address,
+    st.email,
+    st.register_year,
+    st.status
+FROM
+    tbl_schedule s
+JOIN
+    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+JOIN
+    tbl_student st ON c.fk_student_id = st.student_id
+WHERE
+    s.schedule_type = 4 AND s.confirm = 0
+    AND c.fk_prof_id = #{professor_id};
 
 
+desc tbl_consult;
+
+
+select *
+from
+(
+select rownum as rno, 
+			schedule_seq,
+			title,
+			schedule_type, 
+			start_date,
+		    end_date,
+		    confirm,
+		    fk_student_id,
+		    fk_prof_id,
+		    content,
+		    student_id,
+		    fk_department_seq,
+		    pwd,
+		    name ,
+		    jubun ,
+		    tel ,
+		    grade,
+		    address,
+		    email,
+		    register_year,
+		    status
+		from
+		(
+		SELECT 
+		    s.schedule_seq,
+		    s.title,
+		    s.schedule_type,
+		    s.start_date,
+		    s.end_date,
+		    s.confirm,
+		    c.fk_student_id,
+		    c.fk_prof_id,
+		    c.content,
+		    st.student_id,
+		    st.fk_department_seq,
+		    st.pwd,
+		    st.name ,
+		    st.jubun ,
+		    st.tel ,
+		    st.grade,
+		    st.address,
+		    st.email,
+		    st.register_year,
+		    st.status
+		FROM
+		    tbl_schedule s
+		JOIN
+		    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+		JOIN
+		    tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+		    s.schedule_type = 4 AND s.confirm = 0
+--		    AND c.fk_prof_id = #{professor_id};
+		order by  schedule_seq
+		
+		)
+)
+
+desc tbl_student;
+
+
+		SELECT 
+		    count(*)
+		FROM
+		    tbl_schedule s
+		JOIN
+		    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+		JOIN
+		    tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+		    s.schedule_type = 4 AND s.confirm = 0
+		    AND c.fk_prof_id = 202400002

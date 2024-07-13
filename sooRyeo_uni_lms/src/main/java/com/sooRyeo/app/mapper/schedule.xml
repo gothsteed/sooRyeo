@@ -7,6 +7,48 @@
 <mapper namespace="schedule">
 
 
+    <resultMap id="ScheduleResultMap" type="com.sooRyeo.app.domain.Schedule">
+        <id property="schedule_seq" column="schedule_seq"/>
+        <result property="title" column="title"/>
+        <result property="schedule_type" column="schedule_type"/>
+        <result property="start_date" column="start_date"/>
+        <result property="end_date" column="end_date"/>
+        <result property="confirm" column="confirm"/>
+    </resultMap>
+
+	<resultMap id="departmentMap" type="com.sooRyeo.app.domain.Department">
+		<id property="department_seq" column="DEPARTMENT_SEQ"/>
+		<result property="department_name" column="DEPARTMENT_NAME"/>
+	</resultMap>
+
+
+	<!-- ResultMap for Student -->
+    <resultMap id="StudentResultMap" type="com.sooRyeo.app.domain.Student">
+        <id property="student_id" column="student_id"/>
+        <result property="fk_department_seq" column="fk_department_seq"/>
+        <result property="pwd" column="pwd"/>
+        <result property="name" column="name"/>
+        <result property="jubun" column="jubun"/>
+        <result property="tel" column="tel"/>
+        <result property="grade" column="grade"/>
+        <result property="address" column="address"/>
+        <result property="email" column="email"/>
+        <result property="register_year" column="register_year"/>
+        <result property="status" column="status"/>
+		<association property="department" javaType="com.sooRyeo.app.domain.Department" resultMap="departmentMap"/>
+    </resultMap>
+
+    <!-- ResultMap for Consult -->
+    <resultMap id="ConsultResultMap" type="com.sooRyeo.app.domain.Consult">
+        <id property="fk_schedule_seq" column="fk_schedule_seq"/>
+        <result property="fk_student_id" column="fk_student_id"/>
+        <result property="fk_prof_id" column="fk_prof_id"/>
+        <result property="content" column="content"/>
+        <association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
+        <association property="student" javaType="com.sooRyeo.app.domain.Student" resultMap="StudentResultMap"/>
+    </resultMap>
+
+
 	<!--  과제 읽어오기  -->
 	<resultMap type="HashMap" id="assignmentMap">
 		<result column="fk_student_id" property="fk_student_id" javaType="String" />
@@ -39,6 +81,8 @@
 		<result column="start_date" property="start_date" javaType="String" />
 		<result column="end_date" property="end_date" javaType="String" />
 	</resultMap>
+	
+	
 	
 	
 	<select id="showTodo" parameterType="Int" resultMap="todoMap">
@@ -111,6 +155,106 @@
 	<!-- 내 개인일정 삭제  - 스케줄 테이블에 delete -->
 	<delete id="delete_tbl_schedule" parameterType="String">
 		delete from tbl_schedule where schedule_seq = #{schedule_seq}
+	</delete>
+	
+	<select id="getUnconfirmedConsultList" parameterType="HashMap" resultMap="ConsultResultMap">
+		
+select *
+from
+(
+select rownum as rno,
+	   		schedule_seq,
+			fk_schedule_seq,
+			title,
+			schedule_type, 
+			start_date,
+		    end_date,
+		    confirm,
+ 		    name ,
+		    email
+		from
+		(
+		SELECT 
+		    s.schedule_seq,
+		    s.title,
+		    s.schedule_type,
+		    s.start_date,
+		    s.end_date,
+		    s.confirm,
+		    c.fk_schedule_seq,
+		    c.fk_student_id,
+		    c.fk_prof_id,
+		    c.content,
+		    st.student_id,
+		    st.fk_department_seq,
+		    st.pwd,
+		    st.name ,
+		    st.jubun ,
+		    st.tel ,
+		    st.grade,
+		    st.address,
+		    st.email,
+		    st.register_year,
+		    st.status
+		FROM
+		    tbl_schedule s
+		JOIN
+		    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+		JOIN
+		    tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+		    s.schedule_type = 4 AND s.confirm = 0
+		    AND c.fk_prof_id = #{professor_id}
+		order by  schedule_seq
+		
+		)
+)
+where rno between #{startRno} and #{endRno}
+
+	</select>
+	
+	<select id="getUnconfirmedConsultCount" resultType="int">
+		SELECT 
+		    count(*)
+		FROM
+		    tbl_schedule s
+		JOIN
+		    tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+		JOIN
+		    tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+		    s.schedule_type = 4 AND s.confirm = 0
+		    AND c.fk_prof_id = #{professor_id}
+	
+	</select>
+
+
+	<select id="getConsult" resultMap="ConsultResultMap" parameterType="int">
+		SELECT
+			*
+		FROM
+			tbl_schedule s
+				JOIN
+			tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+				JOIN
+			tbl_student st ON c.fk_student_id = st.student_id
+				join
+			tbl_department d on st.fk_department_seq = d.department_seq
+		WHERE
+			s.schedule_type = 4 AND s.confirm = 0
+		  AND c.fk_schedule_seq = #{schedule_seq}
+
+	</select>
+
+	<update id="updateConsultApproveStatus"  parameterType="HashMap">
+		UPDATE TBL_SCHEDULE
+		SET CONFIRM = #{approved}
+		WHERE SCHEDULE_SEQ = #{schedule_seq}
+	</update>
+
+	<delete id="deleteUnapprovedConsult" parameterType="int">
+		DELETE FROM tbl_schedule
+		WHERE schedule_seq = #{schedule_seq}
 	</delete>
 
 
