@@ -22,28 +22,30 @@
 		return `\${month}/\${day} \${hours}:\${minutes}`;
 	}
 
-	function showDetails(name, startDate, endDate, email) {
-		const formattedStartDate = formatDateTime(startDate);
-		const formattedEndDate = formatDateTime(endDate).split(' ')[1]; // only take time part for end date
-		document.getElementById('studentName').innerText = name;
-		document.getElementById('scheduleTime').innerText = `\${formattedStartDate} ~ \${formattedEndDate}`;
-		document.getElementById('studentEmail').innerText = email;
-		$('#detailsModal').modal('show');
-	}
-
 
 	function showDetails(consultId) {
 		// Make AJAX call to fetch consult details
 		$.ajax({
 			url: '<%= ctxPath %>/schedule/detailREST.lms',
-			method: 'GET',
+			method: 'POST',
 			data: { schedule_seq: consultId },
-			dataType:"json",
+			dataType: "json",
 			success: function(response) {
-
 				console.log(response);
 
+				// Populate modal fields
+				document.getElementById('studentName').innerText = response.studentName;
+				const formattedStartDate = formatDateTime(response.start_date);
+				const formattedEndDate = formatDateTime(response.end_date).split(' ')[1]; // only take time part for end date
+				document.getElementById('scheduleTime').innerText = `\${formattedStartDate} ~ \${formattedEndDate}`;
+				document.getElementById('studentEmail').innerText = response.email; // Decrypt this if necessary
+				document.getElementById('content').innerText = response.content;
+				document.getElementById('departmentName').innerText = response.departmentName;
 
+				document.querySelector('#detailsModal .btn-primary').setAttribute('data-schedule-seq', consultId);
+				document.querySelector('#detailsModal .btn-danger').setAttribute('data-schedule-seq', consultId);
+
+				// Show the modal
 				$('#detailsModal').modal('show');
 			},
 			error: function(error) {
@@ -52,17 +54,82 @@
 		});
 	}
 
+	function approveConsult(button) {
+		// Get the current consult ID from a data attribute
+		const consultId = button.getAttribute('data-schedule-seq');
 
-	function approveConsult() {
-		// Your approval logic here
-		alert('Consultation approved!');
-		$('#detailsModal').modal('hide');
+		// Prepare the request data
+		const requestData = {
+			isApproved: true,
+			schedule_seq: consultId
+		};
+
+		// Make Fetch call to approve consult
+		fetch('<%= ctxPath %>/schedule/approveREST.lms', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(requestData)
+		})
+				.then(response => {
+					console.log(response);
+
+					if (!response.ok) {
+						response.text().then(errorMsg => {
+							throw new Error('오류가 발생했습니다: ' + errorMsg);
+						});
+					}
+					alert('상담이 승인되었습니다.');
+					refreshConsultationList();
+
+				})
+				.catch(error => {
+					console.error('승인도중 오류가 발생했습니다.:', error);
+					alert('승인도중 오류가 발생했습니다.: ' + error);
+				});
 	}
 
-	function cancelConsult() {
-		// Your cancellation logic here
-		alert('Consultation canceled!');
-		$('#detailsModal').modal('hide');
+	function cancelConsult(button) {
+// Get the current consult ID from a data attribute
+		const consultId = button.getAttribute('data-schedule-seq');
+
+		// Prepare the request data
+		const requestData = {
+			isApproved: false,
+			schedule_seq: consultId
+		};
+
+		// Make Fetch call to approve consult
+		fetch('<%= ctxPath %>/schedule/approveREST.lms', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(requestData)
+		})
+				.then(response => {
+					console.log(response);
+
+					if (!response.ok) {
+						response.text().then(errorMsg => {
+							throw new Error('오류가 발생했습니다: ' + errorMsg);
+						});
+					}
+					alert('상담이 거절되었습니다');
+					refreshConsultationList();
+
+				})
+				.catch(error => {
+					console.error('거절 중 오류가 발생했습니다.:', error);
+					alert('거절 중 오류가 발생했습니다.: ' + error);
+				});
+	}
+
+
+	function refreshConsultationList() {
+		// Implement this function to reload the table data
+		location.reload(); // Simple page reload as a placeholder
 	}
 </script>
 
@@ -86,7 +153,7 @@
 					<tr onclick="showDetails(${consult.fk_schedule_seq})">
 						<th scope="row">${((requestScope.currentPage - 1) * requestScope.perPageSize) + status.count}</th>
 						<td>${consult.student.name}</td>
-						<td>${consult.schedule.start_date} ~ ${consult.schedule.end_date}</td>
+						<td><script>document.write(formatDateTime('${consult.schedule.start_date}') + ' ~ ' + formatDateTime('${consult.schedule.end_date}').split(' ')[1]);</script></td>
 						<td>${consult.student.email}</td>
 					</tr>
 				</c:forEach>
@@ -112,11 +179,14 @@
 				<p><strong>학생 이름:</strong> <span id="studentName"></span></p>
 				<p><strong>날짜 / 시간:</strong> <span id="scheduleTime"></span></p>
 				<p><strong>이메일:</strong> <span id="studentEmail"></span></p>
+				<p><strong>내용:</strong> <span id="content"></span></p>
+				<p><strong>학과:</strong> <span id="departmentName"></span></p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" onclick="approveConsult()">승인</button>
-				<button type="button" class="btn btn-danger" onclick="cancelConsult()">취소</button>
+				<button type="button" class="btn btn-primary" onclick="approveConsult(this)" data-schedule-seq="">승인</button>
+				<button type="button" class="btn btn-danger" onclick="cancelConsult(this)" data-schedule-seq="">거절</button>
 			</div>
 		</div>
 	</div>
 </div>
+

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Schedule;
+import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ScheduleDto;
 
 public interface ScheduleDao {
@@ -35,5 +36,9 @@ public interface ScheduleDao {
 	int getUnconfirmedConsultCount( int professor_id);
 
 
-    Consult getConsult(int scheduleSeq);
+    Consult getConsult(int schedule_seq);
+
+	int updateConsultApproveStatus(ConsultApprovalDto consultApprovalDto);
+
+	int deleteUnapprovedConsult(ConsultApprovalDto consultApprovalDto);
 }

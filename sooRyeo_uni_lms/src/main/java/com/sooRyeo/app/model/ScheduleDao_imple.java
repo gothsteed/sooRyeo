@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.dto.ConsultApprovalDto;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -128,8 +129,23 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 	@Override
-	public Consult getConsult(int scheduleSeq) {
-		return  sqlSession.selectOne("schedule.getConsult", scheduleSeq);
+	public Consult getConsult(int schedule_seq) {
+		return  sqlSession.selectOne("schedule.getConsult", schedule_seq);
+	}
+
+	@Override
+	public int updateConsultApproveStatus(ConsultApprovalDto consultApprovalDto) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("schedule_seq", consultApprovalDto.getSchedule_seq());
+		map.put("approved", consultApprovalDto.getIsApproved()?1:0);
+
+		return sqlSession.update("schedule.updateConsultApproveStatus", map);
+	}
+
+	@Override
+	public int deleteUnapprovedConsult(ConsultApprovalDto consultApprovalDto) {
+		int schedule_seq = consultApprovalDto.getSchedule_seq();
+		return sqlSession.delete("schedule.deleteUnapprovedConsult", schedule_seq);
 	}
 
 

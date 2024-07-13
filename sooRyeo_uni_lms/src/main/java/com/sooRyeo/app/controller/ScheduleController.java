@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.sooRyeo.app.dto.ConsultApprovalDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -152,10 +154,17 @@ public class ScheduleController {
 	}
 
 	@RequireLogin(type = {Professor.class})
-	@GetMapping("/schedule/detailREST.lms")
+	@PostMapping("/schedule/detailREST.lms")
 	public ResponseEntity<String> getScheduleDetail(HttpServletRequest request) {
 
 		return  service.getConsultDetail(request);
+	}
+
+
+	@RequireLogin(type = {Professor.class})
+	@PostMapping(value="/schedule/approveREST.lms", produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> updateConsultApproveStatus(HttpServletRequest request, @RequestBody ConsultApprovalDto consultApprovalDto) {
+		return service.updateConsultApproveStatus(request, consultApprovalDto);
 	}
 	
 	

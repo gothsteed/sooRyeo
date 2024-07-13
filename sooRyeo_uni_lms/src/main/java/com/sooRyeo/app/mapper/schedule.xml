@@ -163,6 +163,7 @@ select rownum as rno,
 		    s.start_date,
 		    s.end_date,
 		    s.confirm,
+		    c.fk_schedule_seq,
 		    c.fk_student_id,
 		    c.fk_prof_id,
 		    c.content,
@@ -210,9 +211,9 @@ where rno between #{startRno} and #{endRno}
 	</select>
 
 
-	<select id="getConsult" resultMap="ConsultResultMap">
+	<select id="getConsult" resultMap="ConsultResultMap" parameterType="int">
 		SELECT
-			count(*)
+			*
 		FROM
 			tbl_schedule s
 				JOIN
@@ -223,10 +224,20 @@ where rno between #{startRno} and #{endRno}
 			tbl_department d on st.fk_department_seq = d.department_seq
 		WHERE
 			s.schedule_type = 4 AND s.confirm = 0
-		  AND c.fk_prof_id = #{professor_id}
+		  AND c.fk_schedule_seq = #{schedule_seq}
 
 	</select>
-	
+
+	<update id="updateConsultApproveStatus"  parameterType="HashMap">
+		UPDATE TBL_SCHEDULE
+		SET CONFIRM = #{approved}
+		WHERE SCHEDULE_SEQ = #{schedule_seq}
+	</update>
+
+	<delete id="deleteUnapprovedConsult" parameterType="int">
+		DELETE FROM tbl_schedule
+		WHERE schedule_seq = #{schedule_seq}
+	</delete>
 
 
 </mapper>

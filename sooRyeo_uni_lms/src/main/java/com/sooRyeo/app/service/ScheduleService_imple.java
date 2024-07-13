@@ -1,8 +1,5 @@
 package com.sooRyeo.app.service;
 
-import java.io.Console;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ConsultDetailDTO;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.Schedule;
-import com.sooRyeo.app.dto.ScheduleDto;
 import com.sooRyeo.app.model.ScheduleDao;
 
 
@@ -131,10 +127,30 @@ public class ScheduleService_imple implements ScheduleService {
 	public ResponseEntity<String> getConsultDetail(HttpServletRequest request) {
 		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq"));
 		Consult consult = dao.getConsult(schedule_seq);
+		consult.getStudent().setDecodedEmail(aES256);
 
 		ConsultDetailDTO dto = ConsultDetailDTO.toDTO(consult);
 
 		return ResponseEntity.ok(jsonBuilder.toJson(dto));
+
+	}
+
+	@Override
+	public ResponseEntity<String> updateConsultApproveStatus(HttpServletRequest request, ConsultApprovalDto consultApprovalDto) {
+		int result = -1;
+		if(consultApprovalDto.getIsApproved()) {
+			result = dao.updateConsultApproveStatus(consultApprovalDto);
+		}
+		else {
+			result = dao.deleteUnapprovedConsult(consultApprovalDto);
+		}
+
+
+		if(result != 1) {
+			return ResponseEntity.badRequest().body("요청한 상담이 존재하지 않습니다");
+		}
+
+		return ResponseEntity.ok("수정 성공");
 	}
 
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sooRyeo.app.dto.ConsultApprovalDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,4 +37,6 @@ public interface ScheduleService {
 
 
     ResponseEntity<String> getConsultDetail(HttpServletRequest request);
+
+	ResponseEntity<String>  updateConsultApproveStatus(HttpServletRequest request, ConsultApprovalDto consultApprovalDto);
 }
