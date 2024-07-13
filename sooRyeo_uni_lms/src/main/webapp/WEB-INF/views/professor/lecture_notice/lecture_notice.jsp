@@ -63,12 +63,14 @@
 					&nbsp;&nbsp;&nbsp;
 					<button type="button" class="btn btn-primary btn-sm"  onclick="goSearch()">검색하기</button>
 				</div>
-				&nbsp;&nbsp;&nbsp;
-				<div>
-			        <button type="button" class="btn btn-primary btn-sm" onclick="goLectureNoticeWrite()">
-						<span id="annoucement" style="color:white; font-weight: bold;">공지사항 쓰기</span>
-					</button> 	
-				</div>
+				<c:if test="${requestScope.memeberType == 'professor'}">
+					&nbsp;&nbsp;&nbsp;
+					<div>
+				        <button type="button" class="btn btn-primary btn-sm" onclick="goLectureNoticeWrite()">
+							<span id="annoucement" style="color:white; font-weight: bold;">공지사항 쓰기</span>
+						</button> 	
+					</div>
+				</c:if>
 			</div>
 			<table class="table">
 			  <thead>
