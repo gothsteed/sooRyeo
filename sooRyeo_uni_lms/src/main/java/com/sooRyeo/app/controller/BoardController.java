@@ -46,7 +46,9 @@ public class BoardController {
 	private FileManager fileManager;
 	
 	@GetMapping(value="/board/lecture_notice.lms")
-	public ModelAndView lecture_notice(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView lecture_notice(ModelAndView mav, HttpServletRequest request, Model model) {
+		
+		HttpSession session = request.getSession();
 		
 		if(session.getAttribute("loginuser") instanceof Professor ) {
 			model.addAttribute("memeberType", "professor");
@@ -55,7 +57,7 @@ public class BoardController {
 			model.addAttribute("memeberType", "student");
 		}
 		
-		HttpSession session = request.getSession();
+		session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
 		
 		String searchWord = request.getParameter("searchWord");
