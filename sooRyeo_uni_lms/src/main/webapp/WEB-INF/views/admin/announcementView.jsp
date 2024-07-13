@@ -81,15 +81,15 @@
 			  </tbody>
 			</table>
 			<div style="display: flex; justify-content: space-between; width: 100%;">
-				<c:if test="${requestScope.an.nextseq != null}">
-	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.nextseq}')">다음글</button>
+				<c:if test="${requestScope.an.previousseq != null}">
+	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.previousseq}')">이전글</button>
 				</c:if>
                 <div>
 	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/admin/announcement.lms'">전체목록보기</button>
 	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">검색목록보기</button>
                 </div>
-				<c:if test="${requestScope.an.previousseq != null}">
-	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.previousseq}')">이전글</button>
+				<c:if test="${requestScope.an.nextseq != null}">
+	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.nextseq}')">다음글</button>
 				</c:if>
             </div>
 		</div>

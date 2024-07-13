@@ -1,13 +1,14 @@
 package com.sooRyeo.app.controller;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.MyUtil;
-import com.sooRyeo.app.domain.Announcement;
+import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -31,23 +34,14 @@ import com.sooRyeo.app.service.LectureNoticeService;
 
 
 @Controller
+@RequireLogin(type = {Admin.class, Student.class, Professor.class})
 public class BoardController {
 
 	@Autowired
 	private LectureNoticeService LecService;
 	
 	@GetMapping(value="/board/lecture_notice.lms")
-	public ModelAndView classList(ModelAndView mav, HttpServletRequest request, Model model) {
-    /*
-		HttpSession session = request.getSession();
-		
-		if(session.getAttribute("loginuser") instanceof Professor ) {
-			model.addAttribute("memeberType", "professor");
-		}
-		else if(session.getAttribute("loginuser") instanceof Student ) {
-			model.addAttribute("memeberType", "student");
-		}
-	*/
+	public ModelAndView lecture_notice(ModelAndView mav, HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
@@ -95,7 +89,7 @@ public class BoardController {
 		mav.addObject("currentPage", lec_List.getPageNumber());
 		mav.addObject("perPageSize", lec_List.getPerPageSize());
 		mav.addObject("pageBar", lec_List.makePageBar(request.getContextPath() + "/board/lecture_notice.lms", "searchWord="+searchWord, "fk_course_seq="+fk_course_seq));
-		mav.setViewName("lecture_notice/lecture_notice.student");
+		mav.setViewName("lecture_notice/lecture_notice");
 		
 		mav.addObject("goBackURL",goBackURL);
 		
@@ -103,8 +97,17 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/board/lecture_notice_view.lms")
-	public ModelAndView view(ModelAndView mav, HttpServletRequest request) {
-		// 여기까지 컨제
+	public ModelAndView view(ModelAndView mav, HttpServletRequest request, Model model) {
+		
+		HttpSession session = request.getSession();
+		
+		if(session.getAttribute("loginuser") instanceof Professor ) {
+			model.addAttribute("memeberType", "professor");
+		}
+		else if(session.getAttribute("loginuser") instanceof Student ) {
+			model.addAttribute("memeberType", "student");
+		}
+		
 		String seq = "";
 		String goBackURL = "";
 		String searchWord = "";
@@ -123,7 +126,7 @@ public class BoardController {
 	           seq = redirect_map.get("seq");
 	           goBackURL = redirect_map.get("goBackURL");
 	           searchWord = redirect_map.get("searchWord");
-	           fk_course_seq = request.getParameter("fk_course_seq");
+	           fk_course_seq = redirect_map.get("fk_course_seq");
 	           
 	           try {
 	               searchWord = URLDecoder.decode(redirect_map.get("searchWord"), "UTF-8"); // 한글데이터가 포함되어 있으면 반드시 한글로 복구주어야 한다. 
@@ -159,7 +162,8 @@ public class BoardController {
 		    */
 			Map<String, String> paraMap = new HashMap<>();
 			paraMap.put("seq", seq);
-			HttpSession session =  request.getSession();
+			paraMap.put("fk_course_seq", fk_course_seq);
+			session =  request.getSession();
 			
 			// 글목록에서 검색되어진 글내용일 경우 이전글제목, 다음글제목은 검색되어진 결과물내의 이전글과 다음글이 나오도록 하기 위한 것이다.
 			paraMap.put("searchWord",searchWord);
@@ -205,7 +209,7 @@ public class BoardController {
 			// 이전글제목, 다음글제목 보기를 위해 넣어준 것
 			mav.addObject("paraMap", paraMap);
 			
-			mav.setViewName("lecture_notice/lecture_notice_view.student");
+			mav.setViewName("lecture_notice/lecture_notice_view");
 			
 		} catch (NumberFormatException e) {
 			mav.setViewName("redirect:/board/lecture_notice.lms");
@@ -258,5 +262,18 @@ public class BoardController {
 		
 		return mav;
 	}
+	
+	// 게시판 글쓰기 폼페이지 요청
+	@GetMapping("/board/lectureNoticeWrite.lms")
+	public ModelAndView lectureNoticeWrite(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String fk_course_seq = request.getParameter("fk_course_seq");
+		
+		// mav.addObject("fk_course_seq", fk_course_seq);
+		mav.setViewName("lecture_notice/lectureNoticeWrite");
+		return mav;
+	}
+	
+		
 	
 }

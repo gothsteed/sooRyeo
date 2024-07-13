@@ -267,6 +267,8 @@ public class StudentController {
 		String start_date = request.getParameter("start_date");
 		String end_date = request.getParameter("end_date");
 		
+		System.out.println("아 제발" + start_date);
+		
 		int n = service.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
 		
 		JSONObject jsonobj  = new JSONObject();
@@ -274,5 +276,15 @@ public class StudentController {
 		
 		return jsonobj.toString();
 	}
+
+	
+	// 수업 - 내 강의 - 동영상 플레이
+	@RequestMapping(value = "/student/classPlay.lms", method = RequestMethod.GET)
+	public String classPlay() {
+		
+		
+		
+		return "classPlay";
+	} // end of public String class_play()-------
 	
 }

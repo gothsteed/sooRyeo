@@ -117,19 +117,39 @@ where V.fk_student_id = '202400005';
 
 
 create table tbl_consult
-(schedule_seq    number
+(fk_schedule_seq    number
 ,fk_student_id   number         not null
 ,fk_prof_id      number         not null
 ,content         Nvarchar2(30)  not null
 
-,CONSTRAINT PK_tbl_consult PRIMARY KEY (schedule_seq)
+,CONSTRAINT PK_tbl_consult PRIMARY KEY (fk_schedule_seq)
+,CONSTRAINT FK_tbl_consult_tbl_schedule FOREIGN KEY (fk_schedule_seq) REFERENCES tbl_schedule (schedule_seq)
 ,CONSTRAINT FK_tbl_student_tbl_consult FOREIGN KEY (fk_student_id) REFERENCES tbl_student (student_id)
 ,CONSTRAINT FK_tbl_professor_tbl_consult FOREIGN KEY (fk_prof_id) REFERENCES tbl_professor (prof_id)
-
 );
+
+
+
+drop table tbl_consult;
+
+
+select *
+from tbl_schedule
+where schedule_type = '4'
+
 
 select *
 from tbl_consult;
+
+delete
+from tbl_schedule
+where schedule_seq = '58'
+
+select *
+from tbl_schedule
+
+commit;
+
 
 B.name as professorName, A.title, C.name as className, A.end_datetime, A.assignment_submit_seq
 
@@ -389,4 +409,40 @@ FROM TBL_CONSULT;
 
 select *
 from tbl_schedule
-where Schedule_type = '4';
+where schedule_seq = '42';
+
+del
+
+
+select assignment_submit_seq
+from tbl_assignment_submit
+where fk_schedule_seq_assignment = '5';
+
+
+select *
+from tbl_lecture
+where fk_course_seq = '4'
+
+
+select *
+from tbl_consult
+where fk_schedule_seq = '58'
+
+select *
+from tbl_schedule
+where schedule_type = '4' and confirm = '1'
+
+
+update tbl_schedule set confirm = '0'
+where schedule_seq = '59';
+
+commit;
+
+			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+			from tbl_consult A join tbl_schedule B
+			on A.fk_schedule_seq = B.schedule_seq
+			where fk_student_id = '202400005' and confirm = '1'
+            
+            
+            
+            

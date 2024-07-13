@@ -50,7 +50,6 @@
 
 
 	<!--  과제 읽어오기  -->
-	
 	<resultMap type="HashMap" id="assignmentMap">
 		<result column="fk_student_id" property="fk_student_id" javaType="String" />
 		<result column="course_seq" property="course_seq" javaType="String" />
@@ -91,6 +90,25 @@
 			from tbl_todo A join tbl_schedule B
 			on A.schedule_seq = B.schedule_seq
 			where fk_student_id = #{userid}
+	</select>
+	
+	
+	
+	<!--  상담테이블 읽어오기  -->
+	<resultMap type="HashMap"  id="consultMap">
+		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+		<result column="content" property="content" javaType="String" />
+		<result column="title" property="title" javaType="String" />
+		<result column="schedule_type" property="schedule_type" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+	</resultMap>
+	
+	<select id="showConsult" parameterType="Int" resultMap="consultMap">
+			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+			from tbl_consult A join tbl_schedule B
+			on A.fk_schedule_seq = B.schedule_seq
+			where fk_student_id = #{userid} and confirm = '1'
 	</select>
 	
 	

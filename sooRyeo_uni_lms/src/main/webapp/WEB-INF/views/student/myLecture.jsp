@@ -50,7 +50,7 @@ function goAssignment_List(){
 	
 }
 
-function goLectureNotice(seq){
+function goLectureNotice(){
 	
 	location.href = "<%=ctxPath%>/board/lecture_notice.lms?fk_course_seq="+${requestScope.fk_course_seq};
 	
@@ -99,7 +99,8 @@ $(document).ready(function(){
 		
 		
 		// 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
-		var startDate = $("input#calendar_start_time").val();	
+		var startDate = $("input#calendar_start_time").val();
+		
     	var sArr = startDate.split("-");
     	startDate= "";	
     	for(var i=0; i<sArr.length; i++){
@@ -123,6 +124,8 @@ $(document).ready(function(){
      	var startMinute= $("select#startMinute").val();
      	var endHour = syshour;
      	var endMinute= sysminutes;
+     	
+     	console.log("되라" ,startHour);
      	
      	// 조회기간 시작일자가 종료일자 보다 크면 경고
         if (Number(startDate) - Number(sysdate) < 0) {
@@ -166,8 +169,10 @@ $(document).ready(function(){
         
      	// 오라클에 들어갈 date 형식(년월일시분초)으로 만들기
         var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
-        var hour = parseInt($("select#startHour").val()) + 2; 
+        var hour = String(parseInt($("select#startHour").val())).padStart(2, '0');
         var edate = startDate+hour+$("select#startMinute").val()+"00";
+        
+        console.log("hour", hour);
         
         const prof_id = $("input[name='prof_id']").val();
      	
@@ -291,7 +296,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 		<div class="card-body">
 			<h5 class="card-title">${lecture_week.lecture_content}</h5>
 			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
+			<a class="card-link" href="<%= ctxPath%>/student/classPlay.lms"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
 		</div>
@@ -306,7 +311,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 		<div class="card-body">
 			<h5 class="card-title">${lecture.lecture_content}</h5>
 			<hr>
-			<a href="#play" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
+			<a href="<%= ctxPath%>/student/classPlay.lms" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
 			<!-- 영상 보는 기간 -->
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
