@@ -127,12 +127,10 @@ public class ScheduleDao_imple implements ScheduleDao {
 		return sqlSession.selectOne("schedule.getUnconfirmedConsultCount", professor_id);
 	}
 
-
-
-
-
-
-
+	@Override
+	public Consult getConsult(int scheduleSeq) {
+		return  sqlSession.selectOne("schedule.getConsult", scheduleSeq);
+	}
 
 
 }

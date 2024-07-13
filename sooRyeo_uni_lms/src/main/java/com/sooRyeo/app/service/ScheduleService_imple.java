@@ -1,13 +1,19 @@
 package com.sooRyeo.app.service;
 
 import java.io.Console;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.dto.ConsultDetailDTO;
+import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,6 +31,12 @@ public class ScheduleService_imple implements ScheduleService {
 	
 	@Autowired
 	private ScheduleDao dao;
+
+	@Autowired
+	private AES256 aES256;
+
+	@Autowired
+	private JsonBuilder jsonBuilder;
 	
 	// 스케줄테이블 select
 	@Override
@@ -95,8 +107,10 @@ public class ScheduleService_imple implements ScheduleService {
 		List<Consult> unconfirmedConsultList = dao.getUnconfirmedConsultList(currentPage, sizePerPage, professor_id);
 		
 		for(Consult consult : unconfirmedConsultList) {
-			System.out.println("name : " + consult.getContent());
-		}
+
+			consult.getStudent().setDecodedEmail(aES256);
+
+        }
 		
 		
 		int totalElementCount = dao.getUnconfirmedConsultCount(professor_id);
@@ -113,16 +127,15 @@ public class ScheduleService_imple implements ScheduleService {
 		return mav;
 	}
 
+	@Override
+	public ResponseEntity<String> getConsultDetail(HttpServletRequest request) {
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq"));
+		Consult consult = dao.getConsult(schedule_seq);
 
+		ConsultDetailDTO dto = ConsultDetailDTO.toDTO(consult);
 
-
-
-
-
-	
-
-
-
+		return ResponseEntity.ok(jsonBuilder.toJson(dto));
+	}
 
 
 }

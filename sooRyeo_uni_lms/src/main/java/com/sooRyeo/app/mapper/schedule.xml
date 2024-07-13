@@ -16,7 +16,13 @@
         <result property="confirm" column="confirm"/>
     </resultMap>
 
-    <!-- ResultMap for Student -->
+	<resultMap id="departmentMap" type="com.sooRyeo.app.domain.Department">
+		<id property="department_seq" column="DEPARTMENT_SEQ"/>
+		<result property="department_name" column="DEPARTMENT_NAME"/>
+	</resultMap>
+
+
+	<!-- ResultMap for Student -->
     <resultMap id="StudentResultMap" type="com.sooRyeo.app.domain.Student">
         <id property="student_id" column="student_id"/>
         <result property="fk_department_seq" column="fk_department_seq"/>
@@ -29,6 +35,7 @@
         <result property="email" column="email"/>
         <result property="register_year" column="register_year"/>
         <result property="status" column="status"/>
+		<association property="department" javaType="com.sooRyeo.app.domain.Department" resultMap="departmentMap"/>
     </resultMap>
 
     <!-- ResultMap for Consult -->
@@ -137,27 +144,16 @@
 select *
 from
 (
-select rownum as rno, 
-			schedule_seq,
+select rownum as rno,
+	   		schedule_seq,
+			fk_schedule_seq,
 			title,
 			schedule_type, 
 			start_date,
 		    end_date,
 		    confirm,
-		    fk_student_id,
-		    fk_prof_id,
-		    content,
-		    student_id,
-		    fk_department_seq,
-		    pwd,
-		    name ,
-		    jubun ,
-		    tel ,
-		    grade,
-		    address,
-		    email,
-		    register_year,
-		    status
+ 		    name ,
+		    email
 		from
 		(
 		SELECT 
@@ -211,6 +207,24 @@ where rno between #{startRno} and #{endRno}
 		    s.schedule_type = 4 AND s.confirm = 0
 		    AND c.fk_prof_id = #{professor_id}
 	
+	</select>
+
+
+	<select id="getConsult" resultMap="ConsultResultMap">
+		SELECT
+			count(*)
+		FROM
+			tbl_schedule s
+				JOIN
+			tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+				JOIN
+			tbl_student st ON c.fk_student_id = st.student_id
+				join
+			tbl_department d on st.fk_department_seq = d.department_seq
+		WHERE
+			s.schedule_type = 4 AND s.confirm = 0
+		  AND c.fk_prof_id = #{professor_id}
+
 	</select>
 	
 

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.ScheduleService;
 
@@ -149,6 +149,13 @@ public class ScheduleController {
 	@GetMapping("/professor/approveConsult.lms")
 	public ModelAndView approveConsultPage(ModelAndView mav, HttpServletRequest request) {
 		return service.makeApproveConsultPage(request, mav);
+	}
+
+	@RequireLogin(type = {Professor.class})
+	@GetMapping("/schedule/detailREST.lms")
+	public ResponseEntity<String> getScheduleDetail(HttpServletRequest request) {
+
+		return  service.getConsultDetail(request);
 	}
 	
 	

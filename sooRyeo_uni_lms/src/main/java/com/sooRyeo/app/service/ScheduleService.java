@@ -5,9 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.sooRyeo.app.domain.Schedule;
 
 
 public interface ScheduleService {
@@ -36,11 +35,5 @@ public interface ScheduleService {
 	ModelAndView makeApproveConsultPage(HttpServletRequest request, ModelAndView mav);
 
 
-	
-
-	
-
-	
-	
-
+    ResponseEntity<String> getConsultDetail(HttpServletRequest request);
 }

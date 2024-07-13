@@ -33,8 +33,13 @@ public class Student {
 
     
     private String birthday; 		// 생년월일
-    
-    
+
+	private Department department;
+
+	public Department getDepartment() {
+		return department;
+	}
+
 	public String getImg_name() {
 		return img_name;
 	}
@@ -87,7 +92,7 @@ public class Student {
 		try {
 			email = aES256.decrypt(email);
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			e.printStackTrace();
+			email = "";
 		}
 	}
 	public String getEmail()  {

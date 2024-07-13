@@ -35,8 +35,5 @@ public interface ScheduleDao {
 	int getUnconfirmedConsultCount( int professor_id);
 
 
-
-
-	
-
+    Consult getConsult(int scheduleSeq);
 }
