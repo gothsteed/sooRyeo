@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.model.BoardDao;

@@ -55,6 +55,7 @@ public class AdminDao_imple implements AdminDao {
 		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
 		int endRno = startRno + sizePerPage - 1; // 끝 행번호
 		
+		
 		paraMap.put("startRno", startRno);
 		paraMap.put("endRno", endRno);
 		paraMap.put("currentShowPageNo", currentPage);
