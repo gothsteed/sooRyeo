@@ -1,5 +1,6 @@
 package com.sooRyeo.app.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Pager;
@@ -12,5 +13,10 @@ public interface LectureNoticeService {
 	BoardDTO getView(Map<String, String> paraMap);
 
 	BoardDTO getView_no_increase_readCount(Map<String, String> paraMap);
+
+	int lectureNoticeWriteEnd(BoardDTO bdto);
+
+	List<BoardDTO> getStaticList();
+
 
 }

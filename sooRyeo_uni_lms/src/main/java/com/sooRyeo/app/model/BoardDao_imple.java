@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.BoardDTO;
 
@@ -49,6 +48,18 @@ public class BoardDao_imple implements BoardDao {
 	public BoardDTO getView(Map<String, String> paraMap) {
 		BoardDTO bdto = sqlSession.selectOne("board.getView", paraMap);
 		return bdto;
+	}
+
+	@Override
+	public int lectureNoticeWriteEnd(BoardDTO bdto) {
+		int n = sqlSession.insert("board.lectureNoticeWriteEnd", bdto);
+		return n;
+	}
+
+	@Override
+	public List<BoardDTO> getStaticList() {
+		List<BoardDTO> getStaticList = sqlSession.selectList("board.getStaticList");
+		return getStaticList;
 	}
 
 }

@@ -82,7 +82,7 @@
     	 // 폼(form)을 전송(submit)
     	 const frm = document.addFrm;
     	 frm.method = "post";
-    	 frm.action = "<%= ctxPath%>/admin/addListEnd.lms";
+    	 frm.action = "<%= ctxPath%>/board/lectureNoticeWriteEnd.lms";
     	 frm.submit();
     	 
      });
@@ -99,7 +99,8 @@
           <option value="1">고정글</option>
       </select>
        <form name="addFrm" enctype="multipart/form-data">
-       <input type="hidden" id="Listtype" name="Listtype"/>
+        <input type="text" id="fk_course_seq" name="fk_course_seq" value="${requestScope.fk_course_seq}"/>
+        <input type="text" id="Listtype" name="Listtype"/>
         <table style="width: 1024px" class="table table-bordered">
          <tr>
             <th style="width: 15%; background-color: #DDDDDD;">제목</th>
@@ -111,13 +112,6 @@
             <th style="width: 15%; background-color: #DDDDDD;">내용</th> 
             <td>
                 <textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
-            </td>
-         </tr>
-          <%-- === #170. 파일첨부 타입 추가하기 --%>
-         <tr>
-            <th style="width: 15%; background-color: #DDDDDD;">파일첨부</th>  
-            <td>
-                <input type="file" name="attach" /> <!-- name이 attach이기에 제출되면 boardvo에 set 되어진다 -->
             </td>
          </tr>
         </table>

@@ -184,6 +184,6 @@ commit;
         where rn BETWEEN 11 AND 12;
     
 select *
-from tbl_professor;
+from tbl_lecture_notice;
 
 
