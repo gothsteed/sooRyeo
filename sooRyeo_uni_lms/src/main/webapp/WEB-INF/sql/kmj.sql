@@ -143,7 +143,7 @@ from tbl_consult;
 
 delete
 from tbl_schedule
-where schedule_seq = '51'
+where schedule_seq = '58'
 
 select *
 from tbl_schedule
@@ -424,3 +424,25 @@ from tbl_lecture
 where fk_course_seq = '4'
 
 
+select *
+from tbl_consult
+where fk_schedule_seq = '58'
+
+select *
+from tbl_schedule
+where schedule_type = '4' and confirm = '1'
+
+
+update tbl_schedule set confirm = '0'
+where schedule_seq = '59';
+
+commit;
+
+			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+			from tbl_consult A join tbl_schedule B
+			on A.fk_schedule_seq = B.schedule_seq
+			where fk_student_id = '202400005' and confirm = '1'
+            
+            
+            
+            

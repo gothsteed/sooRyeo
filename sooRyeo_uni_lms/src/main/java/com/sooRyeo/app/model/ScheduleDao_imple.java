@@ -36,6 +36,14 @@ public class ScheduleDao_imple implements ScheduleDao {
 		List<Map<String, String>> Schedule = sqlSession.selectList("schedule.showTodo", userid);
 		return Schedule;
 	}
+	
+	
+	// 상담 테이블 select
+	@Override
+	public List<Map<String, String>> showConsult(int userid) {
+		List<Map<String, String>> Schedule = sqlSession.selectList("schedule.showConsult", userid);
+		return Schedule;
+	}
 
 
 	// 내 개인일정 update - 스케줄테이블 update
@@ -102,6 +110,9 @@ public class ScheduleDao_imple implements ScheduleDao {
 		int n2 = sqlSession.delete("schedule.delete_tbl_schedule", schedule_seq);
 		return n2;
 	}
+
+
+
 
 
 

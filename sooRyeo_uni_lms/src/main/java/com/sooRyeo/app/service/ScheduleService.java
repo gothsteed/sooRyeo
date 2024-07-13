@@ -13,6 +13,9 @@ public interface ScheduleService {
 
 	// 일정테이블 select 
 	List<Map<String, String>> showTodo(int userid);
+	
+	// 상담테이블 select
+	List<Map<String, String>> showConsult(int userid);
 
 	// 내 개인일정 수정 - 스케줄테이블 update
 	int update_tbl_schedule(String schedule_seq, String title, String start_date, String end_date);
@@ -28,6 +31,8 @@ public interface ScheduleService {
 	
 	// 내 개인일정 삭제 - 스케줄 테이블 delete
 	int delete_tbl_schedule(String schedule_seq);
+
+	
 
 
 	

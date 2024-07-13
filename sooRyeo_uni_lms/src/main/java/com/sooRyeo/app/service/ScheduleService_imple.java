@@ -24,10 +24,17 @@ public class ScheduleService_imple implements ScheduleService {
 	}
 
 	
-	// 내개인일정테이블 select
+	// 내 일정 테이블 select
 	@Override
 	public List<Map<String, String>> showTodo(int userid) {
 		List<Map<String, String>> schedule = dao.showTodo(userid);
+		return schedule;
+	}
+	
+	// 상담 테이블 select
+	@Override
+	public List<Map<String, String>> showConsult(int userid) {
+		List<Map<String, String>> schedule = dao.showConsult(userid);
 		return schedule;
 	}
 
@@ -72,6 +79,9 @@ public class ScheduleService_imple implements ScheduleService {
 		int n2 = dao.delete_tbl_schedule(schedule_seq);
 		return n2;
 	}
+
+
+
 
 
 

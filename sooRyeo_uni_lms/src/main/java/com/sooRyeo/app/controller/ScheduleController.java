@@ -29,6 +29,7 @@ public class ScheduleController {
 	private ScheduleService service;
 	
 	
+	// 캘린더 띄우기
 	@RequireLogin(type = {Student.class})
 	@GetMapping("/student/scheduleManagement.lms")
 	public ModelAndView showSchedule(ModelAndView mav, HttpServletRequest request) {
@@ -49,6 +50,7 @@ public class ScheduleController {
 		
 		List<Map<String, String>> assignment_list = service.showAssignment(userid);
 		List<Map<String, String>> todo_list = service.showTodo(userid);
+		List<Map<String, String>> consult_list = service.showConsult(userid);
 		
 		JSONArray jsonArr = new JSONArray();
 		
@@ -68,6 +70,19 @@ public class ScheduleController {
 		
 		
 		for(Map<String, String> schedule : todo_list) {
+			JSONObject jsonobj  = new JSONObject();
+			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
+			jsonobj.put("schedule_type", schedule.get("schedule_type"));
+			jsonobj.put("title", schedule.get("title"));
+			jsonobj.put("content", schedule.get("content"));
+			jsonobj.put("start_date", schedule.get("start_date"));
+			jsonobj.put("end_date", schedule.get("end_date"));
+			
+			jsonArr.put(jsonobj);
+		}
+		
+		
+		for(Map<String, String> schedule : consult_list) {
 			JSONObject jsonobj  = new JSONObject();
 			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
 			jsonobj.put("schedule_type", schedule.get("schedule_type"));
@@ -143,6 +158,7 @@ public class ScheduleController {
 		
 		return jsonobj.toString();
 	}
+
 
 
 	
