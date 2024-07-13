@@ -12,12 +12,22 @@ public class BoardDTO {
 	private String attatched_file;
 	private String orgfilename;
 	private int Listtype;
+	private int fk_course_seq;
 	
 	private Integer previousseq;
 	private String previoussubject;
 	private Integer nextseq;
 	private String nextsubject;
 	
+	
+	public int getFk_course_seq() {
+		return fk_course_seq;
+	}
+
+	public void setFk_course_seq(int fk_course_seq) {
+		this.fk_course_seq = fk_course_seq;
+	}
+
 	public Integer getPreviousseq() {
 		return previousseq;
 	}

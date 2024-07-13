@@ -1,5 +1,6 @@
 package com.sooRyeo.app.model;
 
+import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Pager;
@@ -12,5 +13,9 @@ public interface BoardDao {
 	int increase_viewCount(String string);
 
 	BoardDTO getView(Map<String, String> paraMap);
+
+	int lectureNoticeWriteEnd(BoardDTO bdto);
+
+	List<BoardDTO> getStaticList();
 
 }

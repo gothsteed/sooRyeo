@@ -240,7 +240,7 @@ public class AdminService_imple implements AdminService {
 	@Override
 	public int addList(BoardDTO bdto) {
 
-		int n = admindao.addList(bdto); //
+		int n = admindao.addList(bdto);
 		return n;
 	}
 

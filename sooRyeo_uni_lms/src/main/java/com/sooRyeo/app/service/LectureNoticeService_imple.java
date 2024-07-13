@@ -1,5 +1,6 @@
 package com.sooRyeo.app.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,18 @@ public class LectureNoticeService_imple implements LectureNoticeService {
 		BoardDTO bdto = bdao.getView(paraMap);
 		return bdto;
 		
+	}
+
+	@Override
+	public int lectureNoticeWriteEnd(BoardDTO bdto) {
+		int n = bdao.lectureNoticeWriteEnd(bdto);
+		return n;
+	}
+
+	@Override
+	public List<BoardDTO> getStaticList() {
+		List<BoardDTO> getStaticList = bdao.getStaticList();
+		return getStaticList;
 	}
 
 }

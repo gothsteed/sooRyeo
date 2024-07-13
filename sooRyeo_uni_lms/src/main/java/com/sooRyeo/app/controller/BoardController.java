@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Pager;
@@ -40,8 +42,18 @@ public class BoardController {
 	@Autowired
 	private LectureNoticeService LecService;
 	
+	@Autowired
+	private FileManager fileManager;
+	
 	@GetMapping(value="/board/lecture_notice.lms")
 	public ModelAndView lecture_notice(ModelAndView mav, HttpServletRequest request) {
+		
+		if(session.getAttribute("loginuser") instanceof Professor ) {
+			model.addAttribute("memeberType", "professor");
+		}
+		else if(session.getAttribute("loginuser") instanceof Student ) {
+			model.addAttribute("memeberType", "student");
+		}
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
@@ -81,9 +93,9 @@ public class BoardController {
 		*/
 		
 		// 고정글을 불러오는 메소드
-		// List<BoardDTO> staticList = LecService.getStaticList();
+		List<BoardDTO> staticList = LecService.getStaticList();
 		
-		// mav.addObject("staticList", staticList);
+		mav.addObject("staticList", staticList);
 		mav.addObject("fk_course_seq", fk_course_seq);
 		mav.addObject("lec_List", lec_List.getObjectList());
 		mav.addObject("currentPage", lec_List.getPageNumber());
@@ -269,11 +281,32 @@ public class BoardController {
 		
 		String fk_course_seq = request.getParameter("fk_course_seq");
 		
-		// mav.addObject("fk_course_seq", fk_course_seq);
+		mav.addObject("fk_course_seq", fk_course_seq);
 		mav.setViewName("lecture_notice/lectureNoticeWrite");
 		return mav;
 	}
 	
+	@PostMapping("/board/lectureNoticeWriteEnd.lms")
+	public ModelAndView lectureNoticeWriteEnd(HttpServletRequest request, ModelAndView mav, BoardDTO bdto) {
 		
+		int n = 0;
+		n = LecService.lectureNoticeWriteEnd(bdto);
+		// 글쓰기 insert 메소드
+		
+		String fk_course_seq = request.getParameter("fk_course_seq");
+		
+		if(n == 1) {
+			mav.addObject("message", "글쓰기를 성공하였습니다.");
+			mav.addObject("loc", request.getContextPath()+"/board/lecture_notice.lms?fk_course_seq="+fk_course_seq);
+			mav.setViewName("msg");
+		}
+		else {
+			mav.addObject("message", "글쓰기를 실패하였습니다.");
+			mav.addObject("loc", request.getContextPath()+"/board/lectureNoticeWrite.lms");
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}	
 	
 }
