@@ -16,6 +16,8 @@ public interface BoardDao {
 
 	int lectureNoticeWriteEnd(BoardDTO bdto);
 
-	List<BoardDTO> getStaticList();
+	List<BoardDTO> getStaticList(String fk_course_seq);
+
+	int del(Map<String, String> paraMap);
 
 }

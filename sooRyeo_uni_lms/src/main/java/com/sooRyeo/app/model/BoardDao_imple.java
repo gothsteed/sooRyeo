@@ -57,9 +57,15 @@ public class BoardDao_imple implements BoardDao {
 	}
 
 	@Override
-	public List<BoardDTO> getStaticList() {
-		List<BoardDTO> getStaticList = sqlSession.selectList("board.getStaticList");
+	public List<BoardDTO> getStaticList(String fk_course_seq) {
+		List<BoardDTO> getStaticList = sqlSession.selectList("board.getStaticList", fk_course_seq);
 		return getStaticList;
+	}
+
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = sqlSession.delete("board.del", paraMap);
+		return n;
 	}
 
 }

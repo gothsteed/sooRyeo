@@ -66,16 +66,14 @@
 			    </tr>
 			  </thead>
 			  <tbody>
-			  <!-- 
-			  <c:forEach var="fix" items="${requestScope.staticList}" varStatus="status"  begin="0" end="4">    
+			   <c:forEach var="fix" items="${requestScope.staticList}" varStatus="status"  begin="0" end="4">    
 			    <tr style="background-color: #d1e0e0;">
 			      <th scope="row" style="font-weight: bold; color: red;">♬</th>
-			      <td><span type="button" class="a_title" onclick="goView('${fix.announcement_seq}')">${fix.a_title}</span></td>
+			      <td><span type="button" class="l_title" onclick="goView('${fix.seq}')">${fix.title}</span></td>
 			      <td>${fix.writeday}</td>
 			      <td>${fix.viewcount}</td>
 			    </tr>
 			  </c:forEach>  
-			   -->
 			  <c:forEach var="list" items="${requestScope.lec_List}" varStatus="status">    
 			    <tr>
 			      <th scope="row">${((requestScope.currentPage- 1) * requestScope.perPageSize) + status.count}</th>

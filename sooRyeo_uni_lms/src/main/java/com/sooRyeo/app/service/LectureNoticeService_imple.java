@@ -46,9 +46,15 @@ public class LectureNoticeService_imple implements LectureNoticeService {
 	}
 
 	@Override
-	public List<BoardDTO> getStaticList() {
-		List<BoardDTO> getStaticList = bdao.getStaticList();
+	public List<BoardDTO> getStaticList(String fk_course_seq) {
+		List<BoardDTO> getStaticList = bdao.getStaticList(fk_course_seq);
 		return getStaticList;
+	}
+
+	@Override
+	public int del(Map<String, String> paraMap) {
+		int n = bdao.del(paraMap);
+		return n;
 	}
 
 }

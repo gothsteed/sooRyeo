@@ -44,13 +44,6 @@
             <h2>학사 공지사항</h2>
         </div>
         <div class="card-body">
-        <c:if test="${requestScope.memeberType == 'professor'}">
-        	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="goDel()">글삭제하기</button>
-		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/admin/edit.lms?seq=${requestScope.an.announcement_seq}'">글수정하기</button>
-        </c:if>
-        	        <form name="Del">
-						<input type="hidden" name="announcement_seq" value="${requestScope.bdto.seq}"/>  
-					</form>
 			<table class="table">
 			  <thead>
 			    <tr>

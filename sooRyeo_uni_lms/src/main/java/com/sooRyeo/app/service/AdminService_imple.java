@@ -247,7 +247,7 @@ public class AdminService_imple implements AdminService {
 	// 공지사항을 삭제하는 메소드 
 	@Override
 	public int del(Map<String, String> paraMap) {
-		int n = admindao.del(paraMap); //
+		int n = admindao.del(paraMap);
 		return n;
 	}
 

@@ -28,6 +28,7 @@ import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -95,7 +96,7 @@ public class BoardController {
 		*/
 		
 		// 고정글을 불러오는 메소드
-		List<BoardDTO> staticList = LecService.getStaticList();
+		List<BoardDTO> staticList = LecService.getStaticList(fk_course_seq);
 		
 		mav.addObject("staticList", staticList);
 		mav.addObject("fk_course_seq", fk_course_seq);
@@ -310,5 +311,26 @@ public class BoardController {
 		
 		return mav;
 	}	
+	
+	@PostMapping("/board/del.lms")
+	public ModelAndView delEnd(ModelAndView mav,HttpServletRequest request) { // 여기서는 받아올것이 1개밖에 없어서 굳이 boardvo로 불러올 필요가 없어서 안적었다.
+		
+		String seq = request.getParameter("seq");
+		String fk_course_seq = request.getParameter("fk_course_seq");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchWord","");
+		paraMap.put("seq", seq);
+		
+		int n = LecService.del(paraMap);
+		
+		if(n==1) {
+			mav.addObject("message", "글이 삭제되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/board/lecture_notice.lms?fk_course_seq="+fk_course_seq);
+			mav.setViewName("msg");
+		}
+		return mav;
+	}	
+	
 	
 }

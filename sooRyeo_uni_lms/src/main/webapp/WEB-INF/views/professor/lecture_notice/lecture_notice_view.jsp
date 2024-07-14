@@ -27,7 +27,7 @@
 			const frm = document.Del
 	
 			frm.method = "post";
-			frm.action = "<%= ctxPath%>/admin/del.lms";
+			frm.action = "<%= ctxPath%>/board/del.lms";
 			frm.submit();
 		}
 		else{
@@ -44,13 +44,12 @@
             <h2>학사 공지사항</h2>
         </div>
         <div class="card-body">
-        <c:if test="${requestScope.memeberType == 'professor'}">
         	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="goDel()">글삭제하기</button>
 		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/admin/edit.lms?seq=${requestScope.an.announcement_seq}'">글수정하기</button>
-        </c:if>
-        	        <form name="Del">
-						<input type="hidden" name="announcement_seq" value="${requestScope.bdto.seq}"/>  
-					</form>
+  	        <form name="Del">
+				<input type="hidden" name="seq" value="${requestScope.bdto.seq}"/>
+				<input type="hidden" name="fk_course_seq" value="${requestScope.fk_course_seq}"/>
+			</form>
 			<table class="table">
 			  <thead>
 			    <tr>
