@@ -156,9 +156,13 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 수업 - 내 강의 - 과제
 	@Override
-	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
+	public List<Map<String, String>> getassignment_List(String fk_course_seq, int userid) {
 		
-		List<Map<String, String>> assignment_List = sqlSession.selectList("student.getassignment_List", fk_course_seq);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_course_seq", fk_course_seq);
+		paraMap.put("userid", String.valueOf(userid));
+		
+		List<Map<String, String>> assignment_List = sqlSession.selectList("student.getassignment_List", paraMap);
 		
 		return assignment_List;
 		
@@ -167,9 +171,13 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 수업 - 내 강의 - 과제 - 상세내용
 	@Override
-	public Map<String, String> getassignment_detail(String schedule_seq_assignment) {
+	public Map<String, String> getassignment_detail(String schedule_seq_assignment, int userid) {
 		
-		Map<String, String> assignment_detail = sqlSession.selectOne("student.getassignment_detail", schedule_seq_assignment);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("schedule_seq_assignment", schedule_seq_assignment);
+		paraMap.put("userid", String.valueOf(userid));
+		
+		Map<String, String> assignment_detail = sqlSession.selectOne("student.getassignment_detail", paraMap);
 		
 		return assignment_detail;
 		
@@ -231,9 +239,13 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 과제 제출 내용보기
 	@Override
-	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment) {
+	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment, int userid) {
 		
-		List<AssignmentSubmit> submitList = sqlSession.selectList("student.getreadComment", fk_schedule_seq_assignment);
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("fk_schedule_seq_assignment", fk_schedule_seq_assignment);
+		paraMap.put("userid", userid);
+		
+		List<AssignmentSubmit> submitList = sqlSession.selectList("student.getreadComment", paraMap);
 		
 		return submitList;
 	} // end of public List<AssignmentSubmit> getreadComment

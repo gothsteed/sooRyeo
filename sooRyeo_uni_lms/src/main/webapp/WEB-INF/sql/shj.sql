@@ -366,32 +366,34 @@ SELECT V.title as title
 
 
 
-SELECT V.title as title
-			 , V.content as content
-			 , V.start_date as start_date
-			 , V.end_date as end_date
-			 , B.submit_datetime as submit_datetime
-			 , V.schedule_seq_assignment as schedule_seq_assignment
-			 , V.fk_course_seq as fk_course_seq
-		FROM
-		(
-		    select *
-		    from tbl_assignment A join tbl_schedule S
-		    on A.schedule_seq_assignment = S.schedule_seq
-		    where schedule_type = 1
-		)V LEFT JOIN
-		(
-            SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment 
-            FROM tbl_assignment GUAJE LEFT JOIN 
-            (
-              select *
-              from tbl_assignment_submit
-              where fk_student_id = '202400009'
-            ) GUAJE_SUBMIT
-            ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
-		) B
-		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
-		where V.fk_course_seq = 4;
+SELECT  V.schedule_seq_assignment as schedule_seq_assignment,
+        V.title as title,
+        V.content as content,
+        V.start_date as start_date,
+        V.end_date as end_date,
+        B.score as score,
+        B.submit_datetime as submit_datetime,
+        V.attatched_file as attatched_file,
+        V.schedule_seq_assignment as schedule_seq_assignment
+FROM
+(
+    select *
+    from tbl_assignment A join tbl_schedule S
+    on A.schedule_seq_assignment = S.schedule_seq
+    where schedule_type = 1
+)V LEFT JOIN
+(
+    SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment, score
+    FROM tbl_assignment GUAJE LEFT JOIN 
+    (
+      select *
+      from tbl_assignment_submit
+      where fk_student_id = '202400009'
+    ) GUAJE_SUBMIT
+    ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
+) B
+on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+where V.schedule_seq_assignment = 78;
 
 ---------------------------------------------------------------------------------------
 

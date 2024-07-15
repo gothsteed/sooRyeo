@@ -414,9 +414,9 @@ public class StudentService_imple implements StudentService {
 	
 	// 수업 - 내 강의 - 과제
 	@Override
-	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
+	public List<Map<String, String>> getassignment_List(String fk_course_seq, int userid) {
 		
-		List<Map<String, String>> assignment_List = dao.getassignment_List(fk_course_seq);
+		List<Map<String, String>> assignment_List = dao.getassignment_List(fk_course_seq, userid);
 		
 		return assignment_List;
 		
@@ -426,9 +426,9 @@ public class StudentService_imple implements StudentService {
 
 	// 수업 - 내 강의 - 과제 - 상세내용
 	@Override
-	public Map<String, String> getassignment_detail(String schedule_seq_assignment) {
+	public Map<String, String> getassignment_detail(String schedule_seq_assignment, int userid) {
 		
-		Map<String, String> assignment_detail = dao.getassignment_detail(schedule_seq_assignment);
+		Map<String, String> assignment_detail = dao.getassignment_detail(schedule_seq_assignment, userid);
 		
 		return assignment_detail;
 		
@@ -490,9 +490,9 @@ public class StudentService_imple implements StudentService {
 
 	// 과제 제출 내용보기
 	@Override
-	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment) {
+	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment, int userid) {
 		
-		List<AssignmentSubmit> submitList = dao.getreadComment(fk_schedule_seq_assignment);
+		List<AssignmentSubmit> submitList = dao.getreadComment(fk_schedule_seq_assignment, userid);
 		
 		return submitList;
 	} // end of public List<AssignmentSubmit> getreadComment

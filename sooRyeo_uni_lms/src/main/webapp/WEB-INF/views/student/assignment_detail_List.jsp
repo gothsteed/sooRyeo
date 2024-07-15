@@ -104,7 +104,7 @@ function goAddWrite(){
 	
 	
 	
-//첨부파일이 없는 과제 제출인 경우
+// 첨부파일이 없는 과제 제출인 경우
 function goAddWrite_noAttach() {
 	
 	const queryString = $("form[name='addWriteFrm']").serialize();
@@ -120,11 +120,14 @@ function goAddWrite_noAttach() {
 			// console.log(JSON.stringify(json));
 			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
 			
+			/*
 			$("button:button[name='btnUpdateComment']").hide();
 			$("button:reset[name='btnDeleteComment']").hide();
+			*/
 			
-            // 과제 제출이 끝난 후 페이지 이동
-            history.go();
+			let schedule_seq_assignment = '${requestScope.assignment_detail.schedule_seq_assignment}';
+			
+			location.href='<%=ctxPath%>/student/assignment_detail_List.lms?schedule_seq_assignment='+schedule_seq_assignment;
 			
 			
 		},
@@ -138,7 +141,7 @@ function goAddWrite_noAttach() {
 
 
 
-//첨부파일이 있는 과제 제출인 경우
+// 첨부파일이 있는 과제 제출인 경우
 function goAddWrite_withAttach(){
 	
 	const queryString = $("form[name='addWriteFrm']");
@@ -157,12 +160,16 @@ function goAddWrite_withAttach(){
 			// console.log(JSON.stringify(json));
 			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
 			
+		/*	
 			$("button:button[name='btnUpdateComment']").hide();
 			$("button:reset[name='btnDeleteComment']").hide();
+		*/	
 			
-            // 과제 제출이 끝난 후 페이지 이동
-            history.go();
+			let schedule_seq_assignment = '${requestScope.assignment_detail.schedule_seq_assignment}';
 			
+			location.href='<%=ctxPath%>/student/assignment_detail_List.lms?schedule_seq_assignment='+schedule_seq_assignment;
+			
+
 		},
 		error: function(request, status, error){
 			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -275,12 +282,14 @@ function goReadComment(){
 	   	  
 	   	  <tr>
 	   		  <th>시작일자</th>
-	   	      	<td><fmt:formatDate value="${requestScope.assignment_detail.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+	   	       	<td><fmt:formatDate value="${requestScope.assignment_detail.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td> 
+	   	      <%--	<td>${requestScope.assignment_detail.start_date}</td> --%>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>마감일자</th>
-	   	      	<td style="color:red;"><fmt:formatDate value="${requestScope.assignment_detail.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+	   	       	<td style="color:red;"><fmt:formatDate value="${requestScope.assignment_detail.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td> 
+	   	      <%--	<td style="color:red;">${requestScope.assignment_detail.end_date}</td> --%>
 	   	  </tr>
 	   	  
 	   	  <tr>
@@ -301,7 +310,8 @@ function goReadComment(){
 				   		<p style="color:green;">아직 제출되지 않은 과제입니다.</p>
 				   	</c:if>
 				   		 <c:if test="${requestScope.assignment_detail.submit_datetime != null}">
-				   		  	<fmt:formatDate value="${requestScope.assignment_detail.submit_datetime}" pattern="yyyy-MM-dd hh:mm:ss"/>
+				   		   	<fmt:formatDate value="${requestScope.assignment_detail.submit_datetime}" pattern="yyyy-MM-dd hh:mm:ss"/> 
+				   		  <%--	${requestScope.assignment_detail.submit_datetime}--%>
 				   	</c:if>
 				  </td>
 	   	  </tr>
@@ -323,7 +333,12 @@ function goReadComment(){
 	 <div class="mt-5">
 	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="history.back()">과제 목록</button> 
 	 	
-		<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="goaddWriteFrm()">과제 제출</button>
+	 <%-- 	<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="goaddWriteFrm()">과제 제출</button> --%>
+		
+		<c:if test="${requestScope.assignment_detail.submit_yes == 0}">
+			<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="">과제 제출</button>
+			<%-- <span>제출일자 : ${requestScope.assignment_detail.submit_datetime}</span>--%>
+		</c:if>
 	 	
 	 	<%-- === #83. 과제제출 폼 추가 === --%>
 	 	<div id="form">

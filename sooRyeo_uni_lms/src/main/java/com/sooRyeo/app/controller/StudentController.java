@@ -189,9 +189,13 @@ public class StudentController {
 	@GetMapping(value="/student/assignment_List.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView assignment_List(ModelAndView mav, HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
 		String fk_course_seq = request.getParameter("fk_course_seq");		
 		
-		List<Map<String, String>> assignment_List = service.getassignment_List(fk_course_seq);
+		List<Map<String, String>> assignment_List = service.getassignment_List(fk_course_seq, userid);
 		mav.addObject("assignment_List", assignment_List);
 		
 		mav.setViewName("assignment_List");
@@ -239,9 +243,13 @@ public class StudentController {
 	@GetMapping(value="/student/assignment_detail_List.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView assignment_detail(ModelAndView mav, HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
 		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		
-		Map<String, String> assignment_detail = service.getassignment_detail(schedule_seq_assignment);
+		Map<String, String> assignment_detail = service.getassignment_detail(schedule_seq_assignment, userid);
 		
 		mav.addObject("assignment_detail", assignment_detail);
 		mav.addObject("schedule_seq_assignment",schedule_seq_assignment);
@@ -322,9 +330,13 @@ public class StudentController {
 	@PostMapping(value="/readComment.lms", produces="text/plain;charset=UTF-8")
 	public String readComment(HttpServletRequest request) {
 		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
 		String fk_schedule_seq_assignment = request.getParameter("fk_schedule_seq_assignment");
 		
-		List<AssignmentSubmit> submitList = service.getreadComment(fk_schedule_seq_assignment);
+		List<AssignmentSubmit> submitList = service.getreadComment(fk_schedule_seq_assignment, userid);
 		
 		JSONArray jsonArr = new JSONArray();
 		

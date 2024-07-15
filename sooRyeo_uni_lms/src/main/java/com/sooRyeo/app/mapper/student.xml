@@ -166,8 +166,14 @@
 		    where schedule_type = 1
 		)V LEFT JOIN
 		(
-		    select *
-		    from tbl_assignment_submit
+            SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment 
+            FROM tbl_assignment GUAJE LEFT JOIN 
+            (
+              select *
+              from tbl_assignment_submit
+              where fk_student_id = #{userid}
+            ) GUAJE_SUBMIT
+            ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
 		) B
 		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
 		where V.fk_course_seq = #{fk_course_seq}
@@ -177,34 +183,83 @@
 	
 	<!-- 수업 - 내 강의 - 상세내용 -->
 	<resultMap type="HashMap" id="assignment_detail_Map">
-		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment"	javaType="Integer" />
+		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment"	javaType="String" />
 		<result property="title" 					column="title"						javaType="String" />
 		<result property="content" 					column="content"					javaType="String" />
-		<result property="start_date" 				column="start_date"					javaType="Date" />
-		<result property="end_date" 				column="end_date"					javaType="Date" />
-		<result property="score" 					column="score"						javaType="Integer" />
-		<result property="submit_datetime" 			column="submit_datetime"			javaType="Date" />
+		<result property="start_date" 				column="start_date"					javaType="String" />
+		<result property="end_date" 				column="end_date"					javaType="String" />
+		<result property="score" 					column="score"						javaType="String" />
+		<result property="submit_datetime" 			column="submit_datetime"			javaType="String" />
 		<result property="attatched_file" 			column="attatched_file"				javaType="String" />
-		<result property="fk_course_seq" 			column="fk_course_seq"				javaType="Integer" />
+		<result property="fk_course_seq" 			column="fk_course_seq"				javaType="String" />
+		<result property="submit_yes" 				column="submit_yes"					javaType="String" />
 	</resultMap>
 	
 	<select id="getassignment_detail" parameterType="String" resultMap="assignment_detail_Map" >
-	    SELECT 
-	        A.schedule_seq_assignment as schedule_seq_assignment,
-	        S.title as title,
-	        A.content as content,
-	        S.start_date as start_date,
-	        S.end_date as end_date,
-	        B.score as score,
-	        B.submit_datetime as submit_datetime,
-	        A.attatched_file as attatched_file,
-	        A.fk_course_seq as fk_course_seq
-	    FROM tbl_assignment A
-	    JOIN tbl_schedule S 
-	    ON A.schedule_seq_assignment = S.schedule_seq
-	    LEFT JOIN tbl_assignment_submit B 
-	    ON A.schedule_seq_assignment = B.fk_schedule_seq_assignment
-	    WHERE A.schedule_seq_assignment = to_number(#{schedule_seq_assignment})
+		
+		SELECT  V.schedule_seq_assignment as schedule_seq_assignment,
+		        V.title as title,
+		        V.content as content,
+		        V.start_date as start_date,
+		        V.end_date as end_date,
+		        B.score as score,
+		        B.submit_datetime as submit_datetime,
+		        V.attatched_file as attatched_file,        
+		        V.fk_course_seq as fk_course_seq,
+        		V.schedule_seq_assignment as schedule_seq_assignment,
+        		case when B.submit_datetime is null then 0 else 1 end AS submit_yes
+		FROM
+		(
+		    select *
+		    from tbl_assignment A join tbl_schedule S
+		    on A.schedule_seq_assignment = S.schedule_seq
+		    where schedule_type = 1
+		)V LEFT JOIN
+		(
+		    SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment, score
+		    FROM tbl_assignment GUAJE LEFT JOIN 
+		    (
+		      select *
+		      from tbl_assignment_submit
+		      where fk_student_id = #{userid}
+		    ) GUAJE_SUBMIT
+		    ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
+		) B
+		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where V.schedule_seq_assignment = #{schedule_seq_assignment}
+		
+		
+		<!--  
+		SELECT  V.schedule_seq_assignment as schedule_seq_assignment,
+		        V.title as title,
+		        V.content as content,
+		        to_char(V.start_date, 'yyyy-mm-dd hh24:mi:ss') as start_date,
+		        to_char(V.end_date, 'yyyy-mm-dd hh24:mi:ss') as end_date,
+		        B.score as score,
+		        NVL( to_char(B.submit_datetime, 'yyyy-mm-dd hh24:mi:ss'), ' ') as submit_datetime,
+		        V.attatched_file as attatched_file,        
+		        V.fk_course_seq as fk_course_seq,
+        		V.schedule_seq_assignment as schedule_seq_assignment
+		FROM
+		(
+		    select *
+		    from tbl_assignment A join tbl_schedule S
+		    on A.schedule_seq_assignment = S.schedule_seq
+		    where schedule_type = 1
+		)V LEFT JOIN
+		(
+		    SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment, score
+		    FROM tbl_assignment GUAJE LEFT JOIN 
+		    (
+		      select *
+		      from tbl_assignment_submit
+		      where fk_student_id = #{userid}
+		    ) GUAJE_SUBMIT
+		    ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
+		) B
+		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where V.schedule_seq_assignment = #{schedule_seq_assignment}
+		-->
 	</select>
 
 
@@ -264,7 +319,7 @@
 		     , attatched_file
 		     , submit_datetime
 		from tbl_assignment_submit
-		where fk_schedule_seq_assignment = #{schedule_seq_assignment}
+		where fk_schedule_seq_assignment = #{fk_schedule_seq_assignment} AND fk_student_id = #{userid}
 	</select>
 
 
