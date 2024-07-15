@@ -267,8 +267,6 @@ public class StudentController {
 		String start_date = request.getParameter("start_date");
 		String end_date = request.getParameter("end_date");
 		
-		System.out.println("아 제발" + start_date);
-		
 		int n = service.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
 		
 		JSONObject jsonobj  = new JSONObject();
@@ -280,11 +278,17 @@ public class StudentController {
 	
 	// 수업 - 내 강의 - 동영상 플레이
 	@RequestMapping(value = "/student/classPlay.lms", method = RequestMethod.GET)
-	public String classPlay() {
+	public ModelAndView classPlay(HttpServletRequest request, ModelAndView mav) {
 		
+		String fk_course_seq = request.getParameter("course_seq");
 		
+		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
 		
-		return "classPlay";
+		mav.addObject("lectureList_week", lectureList_week);
+		
+		mav.setViewName("classPlay");
+		
+		return mav;
 	} // end of public String class_play()-------
 	
 }

@@ -93,6 +93,7 @@ public class ScheduleController {
 			jsonobj.put("content", schedule.get("content"));
 			jsonobj.put("start_date", schedule.get("start_date"));
 			jsonobj.put("end_date", schedule.get("end_date"));
+			jsonobj.put("professor_name", schedule.get("name"));
 			
 			jsonArr.put(jsonobj);
 		}

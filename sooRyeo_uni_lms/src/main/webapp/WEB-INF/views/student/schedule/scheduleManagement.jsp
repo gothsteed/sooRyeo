@@ -164,6 +164,43 @@ button.fc-customButton-button.fc-button.fc-button-primary {
         </div>
     </div>
     
+    
+    <!-- consult Modal -->
+    <div class="modal fade" id="consultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="consultModalLabel">상담 일정</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                    	<label for="taskId" class="col-form-label">상담 제목</label>
+                        <input type="text" class="form-control" id="con_title" name="con_title" readonly>
+                        <label for="taskId" class="col-form-label">상담 내용</label>
+                        <input type="text" class="form-control" id="con_content" name="con_content" readonly>
+						<label for="taskId" class="col-form-label">담당 교수</label>
+                        <input type="text" class="form-control" id="professor" name="professor" readonly/>
+
+						<label for="taskId" class="col-form-label">상담 일자</label>
+						<br>
+						<input type="date" id="con_end" name="con_end" readonly/>&nbsp;
+						<input id="startHour_3" class="schedule" style="width: 30px; text-align: center;" readonly/> 시
+						<input id="startMinute_3" class="schedule" style="width: 30px; text-align: center;" readonly/> 분&nbsp;ㅡ&nbsp;
+						<input id="endHour_3" class="schedule" style="width: 30px; text-align: center;" readonly/> 시
+						<input id="endMinute_3" class="schedule" style="width: 30px; text-align: center;" readonly/> 분
+						
+						<input type="hidden" name="startdate_3"/>
+						<input type="hidden" name="enddate_3"/>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
 
     <script>
     
@@ -332,7 +369,8 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 	                                        end: end_date,
 	                                        color: color,
 	                                        content: item.content,
-	                                        schedule_type : item.schedule_type
+	                                        schedule_type : item.schedule_type,
+	                                        professor_name : item.professor_name
 	                        				
 	                        			});
 	                        			
@@ -349,6 +387,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 	                },
 	                eventClick: function(info) {
 	                	
+	                	// schedule_type 이 3인 경우 calendarModal 모달 보여주기
 	                	if( info.event.extendedProps.schedule_type == '3') {
 				
 	                        $("input[name='calendar_title']").val(info.event.title);
@@ -379,6 +418,40 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 	                        $("#calendarModal").modal("show");
 		                	
 		                }
+	                	
+	                	// schedule_type 이 4인 경우 calendarModal 모달 보여주기
+	                	if( info.event.extendedProps.schedule_type == '4') {
+	                		
+	                        $("input[name='con_title']").val(info.event.title);
+	                        $("input[name='con_content']").val(info.event.extendedProps.content);
+	                        $("input[name='schedule_seq']").val(info.event.id);
+	     
+	                        var startD3 = moment(info.event.start).format('YYYY-MM-DD');
+	                        var startD4 = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
+	     
+	                        var endD3 = moment(info.event.end).format('YYYY-MM-DD');
+	                        var endD4 = moment(info.event.end).format('YYYY-MM-DD HH:mm:ss');
+	                        
+	                        
+	                        $("input[name='con_start']").val(startD3);
+	                        $("input[name='con_end']").val(endD3);
+	                        
+	                        var starthour = startD4.substring(11,13);
+	                        var startmin = startD4.substring(14,16);
+	                        var endhour = endD4.substring(11,13);
+	                        var endmin = endD4.substring(14,16);
+	                        
+	                        $("input#startHour_3").val(starthour);
+	                        $("input#startMinute_3").val(startmin);
+	                        $("input#endHour_3").val(endhour);
+	                        $("input#endMinute_3").val(endmin);
+	                        
+	                        $("input#professor").val(info.event.extendedProps.professor_name);
+	                        
+	                        $("#consultModal").modal("show");
+	                		
+	                		
+	                	}
 	                }
 	                
 	            });

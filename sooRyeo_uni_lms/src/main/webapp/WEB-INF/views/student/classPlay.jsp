@@ -31,14 +31,18 @@ li.list-group-item {
 </script>
 
 
-<div style="display: flex; width: 90%; height: 525pt; margin: 2% auto;">
-	<div class="shadow p-3 mb-5 bg-body rounded" style="width : 80%; height: 520pt;">
-		<div style="height: 50px; margin-left: 5%; margin-top: 3%; font-size: 25pt;">수업제목</div>
-		<div class="shadow-none bg-light rounded" style="width : 90%; height: 400pt; margin: 2% auto;">
-			동영상	
-		</div>
-	</div>
-	<div class="shadow ml-5 mb-5 bg-body rounded" style="width : 20%; height: 520pt;">
-		수업내용
-	</div>
-</div>
+<c:forEach var="lectureList_week" items="${requestScope.lectureList_week}">
+      <div style="display: flex; width: 90%; height: 525pt; margin: 2% auto;">
+         <div class="shadow p-3 mb-5 bg-body rounded" style="width : 80%; height: 520pt;">
+         
+            <div style="height: 50px; margin-left: 5%; margin-top: 3%; font-size: 25pt;">${lectureList_week.lecture_title}</div>
+            <div class="shadow-none bg-light rounded" style="width : 90%; height: 400pt; margin: 2% auto;">
+              	 동영상   
+            </div>
+         </div>
+         <div class="shadow ml-5 mb-5 bg-body rounded" style="width : 20%; height: 520pt;">
+            ${lectureList_week.lecture_content}
+         </div>
+         
+      </div>
+</c:forEach>
