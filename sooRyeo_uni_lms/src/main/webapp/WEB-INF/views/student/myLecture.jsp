@@ -208,6 +208,17 @@ $(document).ready(function(){
      	
 	});
 	
+	
+	
+	$('a#classPlay').click(function(){
+		
+		const courseSeq = $("input:hidden[name='fk_course_seq']").val();
+		
+	 	location.href = "<%= ctxPath%>/student/classPlay.lms?course_seq=" + courseSeq;
+		
+		
+	});
+	
 });// end of $(document).ready(function(){});
 
 
@@ -296,7 +307,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 		<div class="card-body">
 			<h5 class="card-title">${lecture_week.lecture_content}</h5>
 			<hr>
-			<a class="card-link" href="<%= ctxPath%>/student/classPlay.lms"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
+			<a class="card-link" id="classPlay"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
 		</div>

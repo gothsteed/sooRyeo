@@ -94,6 +94,7 @@
 	
 	
 	
+	
 	<!--  상담테이블 읽어오기  -->
 	<resultMap type="HashMap"  id="consultMap">
 		<result column="schedule_seq" property="schedule_seq" javaType="String" />
@@ -102,13 +103,31 @@
 		<result column="schedule_type" property="schedule_type" javaType="String" />
 		<result column="start_date" property="start_date" javaType="String" />
 		<result column="end_date" property="end_date" javaType="String" />
+		<result column="name" property="name" javaType="String" />
 	</resultMap>
 	
 	<select id="showConsult" parameterType="Int" resultMap="consultMap">
-			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
-			from tbl_consult A join tbl_schedule B
-			on A.fk_schedule_seq = B.schedule_seq
-			where fk_student_id = #{userid} and confirm = '1'
+		with
+		S AS (
+		    select schedule_seq, title, schedule_type, start_date, end_date, confirm
+		    from tbl_schedule
+		),
+		C AS (
+		    select content, fk_schedule_seq, fk_prof_id, fk_student_id
+		    from tbl_consult
+		),                
+		P AS (
+		    select name, prof_id
+		    from tbl_professor
+		)
+		
+		select S.schedule_seq, S.title, S.schedule_type, S.start_date, S.end_date, C.content, P.name
+		
+		from S JOIN C
+		on C.fk_schedule_seq = S.schedule_seq
+		JOIN P
+		on P.PROF_ID = C.FK_PROF_ID
+		where  C.FK_STUDENT_ID = #{userid} and S.confirm = '1'
 	</select>
 	
 	
