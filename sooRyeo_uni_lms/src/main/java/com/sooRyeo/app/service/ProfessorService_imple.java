@@ -539,6 +539,15 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment) {
+		
+		List<Map<String, String>> assignmentCheckJSON = dao.assignmentCheckJSON(schedule_seq_assignment);
+		
+		return assignmentCheckJSON;
+	}
+
+
 
 	
 
