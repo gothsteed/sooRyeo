@@ -78,4 +78,9 @@
 		where lecture_notice_seq = #{seq}
 	</delete>
 	
+	<update id="edit" parameterType="com.sooRyeo.app.dto.BoardDTO">
+		update tbl_lecture_notice set l_content = #{content}, l_title = #{title}
+		where lecture_notice_seq = #{seq}
+	</update>
+	
 </mapper>

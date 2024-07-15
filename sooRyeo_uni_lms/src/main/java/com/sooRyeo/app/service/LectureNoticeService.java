@@ -20,5 +20,7 @@ public interface LectureNoticeService {
 
 	int del(Map<String, String> paraMap);
 
+	int edit(BoardDTO bdto);
+
 
 }

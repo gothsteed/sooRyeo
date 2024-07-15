@@ -224,6 +224,7 @@
                 <div class="dropdown-menu" aria-labelledby="groupsMenu">
                     <a class="dropdown-item" href="#">내 친구</a>
                     <a class="dropdown-item" href="#">커뮤니티</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/admin/announcement.lms">학사공지사항</a>
                 </div>
             </li>
             <li class="nav-item"><a href="<%=ctxPath%>/student/myInfo.lms" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
