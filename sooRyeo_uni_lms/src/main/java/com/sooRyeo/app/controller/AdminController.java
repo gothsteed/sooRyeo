@@ -564,7 +564,7 @@ public class AdminController {
 	@PostMapping("/admin/del.lms")
 	public ModelAndView delEnd(ModelAndView mav,HttpServletRequest request) { // 여기서는 받아올것이 1개밖에 없어서 굳이 boardvo로 불러올 필요가 없어서 안적었다.
 		
-		String seq = request.getParameter("seq");
+		String seq = request.getParameter("announcement_seq");
 		
 		/////////////////////////////////////////////////////////////////
 		// #184. 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 시작

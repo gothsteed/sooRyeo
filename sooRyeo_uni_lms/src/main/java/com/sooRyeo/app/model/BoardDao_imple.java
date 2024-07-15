@@ -68,4 +68,10 @@ public class BoardDao_imple implements BoardDao {
 		return n;
 	}
 
+	@Override
+	public int edit(BoardDTO bdto) {
+		int n = sqlSession.update("board.edit", bdto);
+		return n;
+	}
+
 }

@@ -57,4 +57,10 @@ public class LectureNoticeService_imple implements LectureNoticeService {
 		return n;
 	}
 
+	@Override
+	public int edit(BoardDTO bdto) {
+		int n = bdao.edit(bdto);
+		return n;
+	}
+
 }
