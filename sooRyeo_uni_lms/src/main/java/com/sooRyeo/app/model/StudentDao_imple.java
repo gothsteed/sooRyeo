@@ -241,9 +241,9 @@ public class StudentDao_imple implements StudentDao {
 	@Override
 	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment, int userid) {
 		
-		Map<String, Object> paraMap = new HashMap<>();
+		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("fk_schedule_seq_assignment", fk_schedule_seq_assignment);
-		paraMap.put("userid", userid);
+		paraMap.put("userid", String.valueOf(userid));
 		
 		List<AssignmentSubmit> submitList = sqlSession.selectList("student.getreadComment", paraMap);
 		

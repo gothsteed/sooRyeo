@@ -62,9 +62,9 @@ function goview(schedule_seq_assignment){
 			    <c:if test="${assignment_List.assignment_submit_seq == null}">
 				      <th scope="row" class="col-2">&nbsp;&nbsp;&nbsp;${status.count}</th>
 					  <td class="col-4" id="title" onclick="goview('${assignment_List.schedule_seq_assignment}')">${assignment_List.title}</td>
-				      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-				      <td class="col-2" style="text-align: center; color: red;"><fmt:formatDate value="${assignment_List.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-				      <td class="col-2" style="text-align: center; color: blue;"><fmt:formatDate value="${assignment_List.submit_datetime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+				      <td class="col-2" style="text-align: center"><fmt:formatDate value="${assignment_List.start_date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				      <td class="col-2" style="text-align: center; color: red;"><fmt:formatDate value="${assignment_List.end_date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				      <td class="col-2" style="text-align: center; color: blue;"><fmt:formatDate value="${assignment_List.submit_datetime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 					  <input type="hidden" name="schedule_seq_assignment"  style="margin-left:5%;" value="${assignment_List.schedule_seq_assignment}"/>
 					  <input type="hidden" name="course_seq" style="margin-left:5%;" value="${assignment_List.fk_course_seq}"/>
 				</c:if>

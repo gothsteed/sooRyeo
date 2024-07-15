@@ -44,7 +44,7 @@ $(document).ready(function(){
 	
 	const schedule_seq_assignment = $("td#schedule_seq_assignment").text();
 	// console.log(schedule_seq_assignment);
-	
+
 	$.ajax({
 		
 		url:"<%=ctxPath%>/selectSeq.lms",
@@ -55,19 +55,14 @@ $(document).ready(function(){
 			
 			let v_html = "";
 			
-			if( json.result == 1 ){
-				
-				$("button:button[name='submit']").hide();
-				
-			}
-
 		},
 		error: function(request, status, error){
 			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 		}
 		
 	}); // end of $.ajax
- 
+
+	
 }); // end of $(document).ready(function(){})
 
 
@@ -120,10 +115,6 @@ function goAddWrite_noAttach() {
 			// console.log(JSON.stringify(json));
 			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
 			
-			/*
-			$("button:button[name='btnUpdateComment']").hide();
-			$("button:reset[name='btnDeleteComment']").hide();
-			*/
 			
 			let schedule_seq_assignment = '${requestScope.assignment_detail.schedule_seq_assignment}';
 			
@@ -160,11 +151,6 @@ function goAddWrite_withAttach(){
 			// console.log(JSON.stringify(json));
 			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
 			
-		/*	
-			$("button:button[name='btnUpdateComment']").hide();
-			$("button:reset[name='btnDeleteComment']").hide();
-		*/	
-			
 			let schedule_seq_assignment = '${requestScope.assignment_detail.schedule_seq_assignment}';
 			
 			location.href='<%=ctxPath%>/student/assignment_detail_List.lms?schedule_seq_assignment='+schedule_seq_assignment;
@@ -183,25 +169,8 @@ function goAddWrite_withAttach(){
 
 
 
-function formatDate(dateString) {
-    // 'Sun Jul 14 20:49:53 KST 2024' 형식의 문자열을 Date 객체로 변환
-    const date = new Date(dateString);
-    
-    // YYYY-MM-DD HH:mm:ss 형식으로 변환
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-    const hours = ('0' + date.getHours()).slice(-2);
-    const minutes = ('0' + date.getMinutes()).slice(-2);
-    const seconds = ('0' + date.getSeconds()).slice(-2);
 
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
-
-
-
-//과제 읽어오기
+// 제출한 과제 읽어오기
 function goReadComment(){
 	
 	$.ajax({
@@ -229,8 +198,7 @@ function goReadComment(){
                     else {
                         v_html += "<td class='comment'>파일 없음</td>";
                     }
-		    		
-		    		v_html += 	"<td class='comment'>"+formatDate(item.submit_datetime)+"</td>";
+		    		v_html += 	"<td class='comment'>"+item.submit_datetime+"</td>";
 		    		v_html += "</tr>";
 		    		
 		    	});
@@ -282,14 +250,18 @@ function goReadComment(){
 	   	  
 	   	  <tr>
 	   		  <th>시작일자</th>
-	   	       	<td><fmt:formatDate value="${requestScope.assignment_detail.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td> 
-	   	      <%--	<td>${requestScope.assignment_detail.start_date}</td> --%>
+		   	    <td>
+		   	       	<fmt:parseDate value='${requestScope.assignment_detail.start_date}' pattern="yyyy-MM-dd HH:mm:ss" var='start_date'/>
+					<fmt:formatDate value="${start_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td> 
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>마감일자</th>
-	   	       	<td style="color:red;"><fmt:formatDate value="${requestScope.assignment_detail.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td> 
-	   	      <%--	<td style="color:red;">${requestScope.assignment_detail.end_date}</td> --%>
+		   	      <td style="color:red;"> 
+		   	       	<fmt:parseDate value='${requestScope.assignment_detail.end_date}' pattern="yyyy-MM-dd HH:mm:ss" var='end_date'/>
+				   	<fmt:formatDate value="${end_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				  </td>
 	   	  </tr>
 	   	  
 	   	  <tr>
@@ -309,9 +281,9 @@ function goReadComment(){
 		   	      	<c:if test="${requestScope.assignment_detail.submit_datetime == null}">
 				   		<p style="color:green;">아직 제출되지 않은 과제입니다.</p>
 				   	</c:if>
-				   		 <c:if test="${requestScope.assignment_detail.submit_datetime != null}">
-				   		   	<fmt:formatDate value="${requestScope.assignment_detail.submit_datetime}" pattern="yyyy-MM-dd hh:mm:ss"/> 
-				   		  <%--	${requestScope.assignment_detail.submit_datetime}--%>
+				   	<c:if test="${requestScope.assignment_detail.submit_datetime != null}">
+			   		    <fmt:parseDate value='${requestScope.assignment_detail.submit_datetime}' pattern="yyyy-MM-dd HH:mm:ss" var='submit_datetime'/>
+		   				<fmt:formatDate value="${submit_datetime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				   	</c:if>
 				  </td>
 	   	  </tr>
@@ -332,12 +304,8 @@ function goReadComment(){
 	 
 	 <div class="mt-5">
 	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="history.back()">과제 목록</button> 
-	 	
-	 <%-- 	<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="goaddWriteFrm()">과제 제출</button> --%>
-		
 		<c:if test="${requestScope.assignment_detail.submit_yes == 0}">
-			<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="">과제 제출</button>
-			<%-- <span>제출일자 : ${requestScope.assignment_detail.submit_datetime}</span>--%>
+			<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="goaddWriteFrm()">과제 제출</button>
 		</c:if>
 	 	
 	 	<%-- === #83. 과제제출 폼 추가 === --%>

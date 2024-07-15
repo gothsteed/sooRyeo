@@ -374,7 +374,9 @@ SELECT  V.schedule_seq_assignment as schedule_seq_assignment,
         B.score as score,
         B.submit_datetime as submit_datetime,
         V.attatched_file as attatched_file,
-        V.schedule_seq_assignment as schedule_seq_assignment
+        V.schedule_seq_assignment as schedule_seq_assignment,
+        B.fk_student_id as fk_student_id,
+        case when B.submit_datetime is null then 0 else 1 end AS submit_yes
 FROM
 (
     select *
@@ -383,17 +385,30 @@ FROM
     where schedule_type = 1
 )V LEFT JOIN
 (
-    SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment, score
+    SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment, score, fk_student_id
     FROM tbl_assignment GUAJE LEFT JOIN 
     (
       select *
       from tbl_assignment_submit
-      where fk_student_id = '202400009'
+      where fk_student_id = '202400005'
     ) GUAJE_SUBMIT
     ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
 ) B
 on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
-where V.schedule_seq_assignment = 78;
+where V.schedule_seq_assignment = 5;
 
 ---------------------------------------------------------------------------------------
+
+
+select *
+from 
+
+
+
+
+
+
+
+
+
 
