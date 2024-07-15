@@ -449,6 +449,14 @@ public class StudentService_imple implements StudentService {
 		return n;
 	}
 
+	
+	// 수업 - 강의 한개 제목, 내용 select
+	@Override
+	public List<Lecture> classPlay_One(String lecture_seq) {
+		List<Lecture> classOne = dao.classPlay_One(lecture_seq);
+		return classOne;
+	}
+
 
 
 	

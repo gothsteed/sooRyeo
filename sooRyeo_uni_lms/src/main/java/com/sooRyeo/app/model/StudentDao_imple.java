@@ -192,10 +192,10 @@ public class StudentDao_imple implements StudentDao {
 		paraMap.put("end_date", end_date);
 		
 		sqlSession.insert("student.insert_tbl_schedule", paraMap);
-		
-		System.out.println(paraMap.get("schedule_seq"));
-		String schedule_seq = (String) paraMap.get("schedule_seq");
-		
+		/*
+			System.out.println(paraMap.get("schedule_seq"));
+			String schedule_seq = (String) paraMap.get("schedule_seq");
+		*/
 		paraMap.put("content", content);
 		paraMap.put("prof_id", prof_id);
 		paraMap.put("userid",  String.valueOf(userid));
@@ -203,6 +203,14 @@ public class StudentDao_imple implements StudentDao {
 		int n = sqlSession.insert("student.insert_tbl_consult", paraMap);
 		
 		return n;
+	}
+
+	
+	// 수업 - 강의 한개 제목, 내용 select
+	@Override
+	public List<Lecture> classPlay_One(String lecture_seq) {
+		List<Lecture> classOne = sqlSession.selectList("student.classPlay_One", lecture_seq);
+		return classOne;
 	}
 
 	

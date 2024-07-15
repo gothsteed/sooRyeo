@@ -51,6 +51,9 @@ public interface StudentService {
 	// 스케줄, 상담 테이블에 insert
 	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
 
+	// 수업 - 강의 한개 제목, 내용 select
+	List<Lecture> classPlay_One(String lecture_seq);
+
 
 
 	

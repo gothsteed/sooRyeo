@@ -291,4 +291,22 @@ public class StudentController {
 		return mav;
 	} // end of public String class_play()-------
 	
+	
+	
+	@GetMapping("/student/classPlay_One.lms")
+	public ModelAndView classPlay_One(HttpServletRequest request, ModelAndView mav) {
+		
+		String lecture_seq = request.getParameter("lecture_seq");
+		
+		System.out.println("lecture_seq : " + lecture_seq);
+		
+		List<Lecture> classOne = service.classPlay_One(lecture_seq);
+		
+		mav.addObject("classOne", classOne);
+		
+		mav.setViewName("classPlay_One");
+		
+		return mav;
+	}
+	
 }

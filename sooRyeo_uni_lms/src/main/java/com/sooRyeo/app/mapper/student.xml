@@ -231,6 +231,15 @@
 	</insert>
 	
 	
+	<!-- 수업 - 강의 한개 제목, 내용 select -->
+	<select id="classPlay_One" parameterType="String" resultType="com.sooRyeo.app.domain.Lecture">
+		select lecture_title, lecture_content     
+		from tbl_lecture
+		where lecture_seq = #{lecture_seq}
+	</select>
+	
+	
+	
 	
 	
 	

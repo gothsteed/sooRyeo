@@ -211,12 +211,14 @@ $(document).ready(function(){
 	
 	
 	$('a#classPlay').click(function(){
-		
 		const courseSeq = $("input:hidden[name='fk_course_seq']").val();
-		
 	 	location.href = "<%= ctxPath%>/student/classPlay.lms?course_seq=" + courseSeq;
-		
-		
+	});
+	
+	
+	$('a#classPlay_list').click(function() {
+		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq"]').val();
+		location.href = "<%= ctxPath%>/student/classPlay_One.lms?lecture_seq=" + lecture_seq;
 	});
 	
 });// end of $(document).ready(function(){});
@@ -316,19 +318,24 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 
 <h3 style="margin-top:10%;">강의 목록</h3>
 <hr>
+<c:forEach var="lecture" items="${requestScope.lectureList}">
+
 	<div class="card mb-5">
-		<c:forEach var="lecture" items="${requestScope.lectureList}">
+		
+		<input type="text" name="lecture_seq" value="${lecture.lecture_seq}" />
 		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title}</h5>
 		<div class="card-body">
 			<h5 class="card-title">${lecture.lecture_content}</h5>
 			<hr>
-			<a href="<%= ctxPath%>/student/classPlay.lms" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
+			<a id="classPlay_list" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
 			<!-- 영상 보는 기간 -->
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
 		</div>
-		</c:forEach>
+
 	</div>
+	
+</c:forEach>
 </div>
 <div id="target2"></div>
 
