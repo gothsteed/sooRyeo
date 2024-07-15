@@ -347,6 +347,36 @@
 		from tbl_assignment
 		where schedule_seq_assignment = to_number(#{schedule_seq_assignment}) 
 	</select>
+	
+	
+	<resultMap type="HashMap" id="assignmentCheckMap">
+		<result property="row_num" 						column="row_num" 	 	 			javaType="int" />
+		<result property="fk_schedule_seq_assignment" 	column="fk_schedule_seq_assignment" javaType="int" />
+		<result property="name" 						column="name" 						javaType="String" />
+		<result property="attatched_file" 				column="attatched_file"      		javaType="String" />
+		<result property="end_date" 					column="end_date"  					javaType="String" />
+		<result property="submit_datetime" 				column="submit_datetime"      		javaType="String" />
+		<result property="score" 						column="score"      				javaType="String" />
+	</resultMap>
+	<select id="assignmentCheckJSON" parameterType="String" resultMap="assignmentCheckMap" >
+		SELECT ROW_NUMBER() OVER(order by V.end_date asc) row_num,
+		SA.fk_schedule_seq_assignment AS fk_schedule_seq_assignment,
+		S.name AS name,
+		NVL(SA.attatched_file, '없음')AS attatched_file,
+		to_char(V.end_date, 'yyyy-mm-dd')AS end_date,
+		NVL(to_char(SA.submit_datetime, 'yyyy-mm-dd'), '미제출')AS submit_datetime,
+		NVL(to_char(SA.score), '미채점') AS score
+		FROM
+		tbl_student S
+		join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+		left join
+		(select *
+		from tbl_assignment A join tbl_schedule S
+		on A.schedule_seq_assignment = S.schedule_seq
+		where schedule_type = 1)V
+		ON SA.fk_schedule_seq_assignment = V.schedule_seq_assignment
+		WHERE SA.fk_schedule_seq_assignment = 45
+	</select>
 
 
 </mapper>

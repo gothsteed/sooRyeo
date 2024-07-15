@@ -21,7 +21,65 @@
 </style>
 
 <script type="text/javascript">
-	
+
+	$(document).ready(function(){
+		
+		<%-- ============== ajax로 테이블 내용물 가져오기 시작 ============== --%>
+
+		$.ajax({
+			url:"<%= ctxPath%>/professor/assignment_checkJSON.lms",
+			method: "POST",
+			data:{"schedule_seq_assignment":"${requestScope.assign_view.assignment.schedule_seq_assignment}"},
+			enctype:"multipart/form-data",
+			dataType:"json",
+			
+			success:function(json){
+				// console.log(JSON.stringify(json));
+				
+				let v_html = ``;
+				
+				json.forEach(function(item, index, array){
+					
+					v_html += `<tr>
+			      				<td style="text-align: center;">\${item.row_num}</td> 
+			      				<td style="text-align: center;">\${item.fk_schedule_seq_assignment}</td> 
+			      				<td style="text-align: center;">\${item.name}</td>
+			      				<td style="text-align: center;">\${item.attatched_file}</td>
+				            	<td style="text-align: center;">\${item.end_date}</td>
+				            	<td style="text-align: center;">\${item.submit_datetime}</td>
+				            	<c:if test='\${item.score == "미채점"}'>
+				                <td style='text-align: center;'><input type='text' name='score'/>
+				                <button type='button' class='btn btn-secondary mr-2' 'goEdit("\${item.fk_schedule_seq_assignment}")'>점수입력</button>
+				                </td>
+				            	</c:if>
+				            	<c:if test='\${item.score != "미채점"}'>
+				                <td style="text-align: center;">${item.score}</td>
+				            	</c:if>
+		      				   </tr>`;
+					
+				});
+				
+				$("table#assignCheck tbody").html(v_html);
+				
+					
+			},
+		    error: function(request, status, error){
+		        alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		   	}
+				
+		});		
+		
+		<%-- ============== ajax로 테이블 내용물 가져오기 끝 ============== --%>
+		
+		
+		
+		
+		
+	});// end of $(document).ready(function() 
+
+	////////////////////////////////////////////////
+	// Function Declaration
+			
 	function goEdit(schedule_seq_assignment){
 		
 		const goBackURL = "${requestScope.goBackURL}";
@@ -41,16 +99,23 @@
 	
 	function goDelete(schedule_seq_assignment){
 		
-		const goBackURL = "${requestScope.goBackURL}";
+		if (confirm("과제를 삭제하시겠습니까?")){
+			const goBackURL = "${requestScope.goBackURL}";
+			
+			const frm = document.reviseFrm;
+			
+			frm.schedule_seq_assignment.value = schedule_seq_assignment;
+			frm.goBackURL.value = goBackURL;
+			frm.method = "post";
+			frm.enctype = "multipart/form-data";
+			frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
+			frm.submit();
 		
-		const frm = document.reviseFrm;
-		
-		frm.schedule_seq_assignment.value = schedule_seq_assignment;
-		frm.goBackURL.value = goBackURL;
-		frm.method = "post";
-		frm.enctype = "multipart/form-data";
-		frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
-		frm.submit();
+		} else {
+           alert("취소를 누르셨습니다.");
+           return;
+						
+        }// end of if~else
 		
 		
 		
@@ -60,7 +125,7 @@
 </script>
 
 <div style="display: flex;">
-	<div style="margin: auto; padding-left: 3%;">
+	<div style="margin: auto;">
 		<h2 style="margin-bottom: 30px;">글내용보기</h2>
 		
 		<c:if test="${not empty requestScope.assign_view}">
@@ -120,7 +185,28 @@
 	</div>
 </div>
 
+<br>
 
+<div style="display: flex;">
+	<div class="table-container mt-3" style="margin: auto;">
+		<table class="table table-bordered" id="assignCheck" style="width: 1080px; word-wrap: break-word; table-layout: fixed;">
+			<thead>
+				<tr>
+					<th style="text-align: center;">글번호</th>
+					<th style="text-align: center;">과제번호</th>
+					<th style="text-align: center;">이름</th>
+					<th style="text-align: center;">제출과제</th>
+					<th style="text-align: center;">마감일자</th>
+					<th style="text-align: center;">제출일자</th>
+					<th style="text-align: center;">점수</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<%-- 페이징처리 할 부분 --%>
+</div>
 
 
 <form name="reviseFrm">

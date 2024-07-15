@@ -62,6 +62,9 @@ public interface ProfessorService {
 	// 첨부파일 유무 확인
 	AssignScheInsertDTO file_check(String schedule_seq_assignment);
 	
+	// 과제제출확인제이슨
+	List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment);
+	
 	
 	
 

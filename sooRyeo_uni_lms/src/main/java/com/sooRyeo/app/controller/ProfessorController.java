@@ -580,5 +580,39 @@ public class ProfessorController {
 	}
 	
 	
+	@ResponseBody
+	@PostMapping("/professor/assignment_checkJSON.lms")
+	public String professor_assignment_checkJSON(HttpServletRequest request) {
+		
+		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
+		
+		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		
+		List<Map<String,String>> assignmentCheckJSON = service.assignmentCheckJSON(schedule_seq_assignment);
+		// 과제 제출된 것 리스트로 받아오기
+		
+        JSONArray jsonArr = new JSONArray();
+        
+        for(Map<String, String> map : assignmentCheckJSON) {
+           
+           JSONObject jsonObj = new JSONObject();
+           jsonObj.put("row_num", map.get("row_num"));
+           jsonObj.put("fk_schedule_seq_assignment", map.get("fk_schedule_seq_assignment"));
+           jsonObj.put("name", map.get("name"));
+           jsonObj.put("attatched_file", map.get("attatched_file"));
+           jsonObj.put("end_date", map.get("end_date"));
+           jsonObj.put("submit_datetime", map.get("submit_datetime"));
+           jsonObj.put("score", map.get("score"));
+           jsonArr.put(jsonObj);
+           
+        }// end of for--------------------------------
+        
+        System.out.println(jsonArr.toString());
+        
+        return jsonArr.toString();
+		
+	}
+	
+	
 	
 }

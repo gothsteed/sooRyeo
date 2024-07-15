@@ -260,6 +260,15 @@ public class ProfessorDao_imple implements ProfessorDao {
 	}
 
 
+	@Override
+	public List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment) {
+		
+		List<Map<String, String>> assignmentCheckJSON = sqlSession.selectList("professor.assignmentCheckJSON", schedule_seq_assignment);
+		
+		return assignmentCheckJSON;
+	}
+
+
 
 
 
