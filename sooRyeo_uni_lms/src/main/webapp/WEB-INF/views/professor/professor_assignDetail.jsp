@@ -38,6 +38,7 @@
 		
 	}// end of function goEdit(schedule_seq_assignment)
 	
+	
 	function goDelete(schedule_seq_assignment){
 		
 		const goBackURL = "${requestScope.goBackURL}";
@@ -49,7 +50,8 @@
 		frm.method = "post";
 		frm.enctype = "multipart/form-data";
 		frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
-		frm.submit();	
+		frm.submit();
+		
 		
 		
 	}// end of function goDelete(schedule_seq_assignment) 
@@ -117,6 +119,9 @@
 		<button type="button" class="btn btn-secondary mr-2" onclick="goDelete('${requestScope.assign_view.assignment.schedule_seq_assignment}')">과제 삭제</button>
 	</div>
 </div>
+
+
+
 
 <form name="reviseFrm">
 	<input type="hidden" name="schedule_seq_assignment"/>

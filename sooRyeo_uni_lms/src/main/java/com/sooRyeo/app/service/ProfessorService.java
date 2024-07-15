@@ -53,6 +53,16 @@ public interface ProfessorService {
 	// 과제 수정
 	AssignJoinSchedule assignmentEdit(String schedule_seq_assignment);
 	
+	// 첨부파일 삭제
+	int fileDelete(MultipartHttpServletRequest mrequest, String attatched_file, String schedule_seq_assignment);
+	
+	// 과제 수정
+	int assignmentEdit_End(AssignScheInsertDTO dto);
+	
+	// 첨부파일 유무 확인
+	AssignScheInsertDTO file_check(String schedule_seq_assignment);
+	
+	
 	
 
 }

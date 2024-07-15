@@ -321,8 +321,32 @@
         where A.schedule_seq_assignment = to_number(#{schedule_seq_assignment})
 	</select>
 	
-
 	
+	<update id="delAttatched_file" parameterType="String">
+		update tbl_assignment set attatched_file = NULL
+		where schedule_seq_assignment = to_number(#{schedule_seq_assignment})
+	</update>
+	
+	
+	<update id="update_tbl_schedule" parameterType="HashMap">
+		update tbl_schedule set title = #{title},
+		start_date = to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss'), end_date = TO_DATE(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+		where schedule_seq = to_number(#{schedule_seq_assignment})
+	</update>
+	
+	
+	<update id="update_tbl_assignment" parameterType="HashMap">
+		update tbl_assignment set content = #{content},
+		attatched_file = #{attatched_file}
+		where schedule_seq_assignment = to_number(#{schedule_seq_assignment})
+	</update>
+	
+	
+	<select id="file_check" parameterType="String" resultType="com.sooRyeo.app.dto.AssignScheInsertDTO">
+		select attatched_file
+		from tbl_assignment
+		where schedule_seq_assignment = to_number(#{schedule_seq_assignment}) 
+	</select>
 
 
 </mapper>

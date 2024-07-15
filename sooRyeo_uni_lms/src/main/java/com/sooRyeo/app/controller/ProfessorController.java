@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.aop.RequireLogin;
@@ -31,7 +30,6 @@ import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Course;
-import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
@@ -385,13 +383,13 @@ public class ProfessorController {
 	
 	
 	@PostMapping("/professor/assignmentDelete.lms")
-	public ModelAndView professor_assignmentDelete(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 스케쥴, 과제 테이블 인풋 후 과제목록리다이렉트
+	public ModelAndView professor_assignmentDelete(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 스케쥴, 과제 테이블 인풋 후 목록리다이렉트
 		
 		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");			 
 		String goBackURL = mrequest.getParameter("goBackURL");
 		
-		//System.out.println("확인용 schedule_seq_assignment :" + schedule_seq_assignment);
-		//System.out.println("확인용 goBackURL :" + goBackURL);
+		System.out.println("확인용 schedule_seq_assignment :" + schedule_seq_assignment);
+		System.out.println("확인용 goBackURL :" + goBackURL);
 		
 	    int n = service.assignmentDelete(schedule_seq_assignment, mrequest);
 		
@@ -448,12 +446,139 @@ public class ProfessorController {
 	}
 	
 	
-	@PostMapping("/professor/assignmentEdit_end.lms")
-	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+	@PostMapping("/professor/fileDelete_end.lms")
+	public ModelAndView professor_fileDelete_end(ModelAndView mav, MultipartHttpServletRequest mrequest) {
 		
+		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");
+		String attatched_file = mrequest.getParameter("attatched_file");
+		String goBackURL = mrequest.getParameter("goBackURL");
+		
+		// System.out.println("확인용 attatched_file : " + attatched_file);
+		
+		int n = service.fileDelete(mrequest, attatched_file, schedule_seq_assignment);
+		
+		if(n != 1) {
+	        mav.addObject("message", "파일을 삭제할 수 없습니다.");
+	        mav.addObject("loc", "javascript:history.back()");
+	        mav.setViewName("msg");
+			
+		} else {
+	        mav.addObject("message", "파일이 삭제되었습니다.");
+	        mav.addObject("loc", mrequest.getContextPath() + goBackURL);
+	        mav.setViewName("msg");
+	    }
 		
 		return mav;
 	}
+	
+	
+	@PostMapping("/professor/assignmentEdit_end.lms")
+	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+		
+		int n = 0;
+		
+		HttpSession session = mrequest.getSession();
+		
+		AssignScheInsertDTO file_check = new AssignScheInsertDTO(); 
+		
+		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");
+		
+		//System.out.println("확인용 schedule_seq_assignment 11 : " + schedule_seq_assignment);
+		
+		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 시작 === //
+		file_check = service.file_check(schedule_seq_assignment);
+		
+		
+		
+		if (file_check != null) {
+			String attatched_file = file_check.getAttatched_file();
+			System.out.println("확인용 attatched_file11 : " + attatched_file);
+	        	            
+            // 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+            // 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다. 
+            // WAS 의 webapp 의 절대경로를 알아와야 한다.  
+            String root = session.getServletContext().getRealPath("/");
+            
+            // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+            // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+            
+            String path = root+"resources"+File.separator+"files";
+            /* 	File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+            	운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+            	운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+            */
+            // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+            // System.out.println("~~~ 확인용 path => " + path);
+            // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+            
+            
+            System.out.println("삭제하려는 파일 경로: " + path);
+            System.out.println("삭제하려는 파일 이름: " + attatched_file);
+            
+            
+            if (attatched_file != null && !"".equals(attatched_file)) {
+                try {
+                    fileManager.doFileDelete(attatched_file, path);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+	                   
+	    } // end of if (professor != null) 
+		
+		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
+		
+		String goBackURL = mrequest.getParameter("goBackURL");	
+	    
+		AssignScheInsertDTO dto = new AssignScheInsertDTO();
+		
+		dto.setTitle(mrequest.getParameter("title"));    
+	    //System.out.println("확인용 제목 : " + dto.getTitle());
+	    
+	    dto.setStartDate(mrequest.getParameter("startdate"));
+	    dto.setEndDate(mrequest.getParameter("enddate"));
+	    dto.setContent(mrequest.getParameter("content"));
+	    dto.setSchedule_seq_assignment(Integer.parseInt(schedule_seq_assignment));
+	    
+	    MultipartFile attach = mrequest.getFile("attach");
+	    dto.setAttach(attach);
+	    
+	    if (attach != null && !attach.isEmpty()) {
+	        String root = session.getServletContext().getRealPath("/");
+	        String path = root + "resources" + File.separator + "files";
+
+	        String newFileName = "";
+	        byte[] bytes = null;
+		     // 첨부 파일의 내용물을 담은 것
+	        try {
+	            bytes = attach.getBytes();
+	            String originalFilename = attach.getOriginalFilename();
+	            newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+	            
+	            //System.out.println("확인용 newFileName " + newFileName);
+	            
+	            dto.setAttatched_file(newFileName); // 업로드된 파일 이름 설정
+	        } catch (Exception e) {
+	        	dto.setAttatched_file(newFileName); // 첨부파일이 없을 경우 ""	        	
+	        }
+	    }
+
+	    n = service.assignmentEdit_End(dto);
+		
+		if(n != 1) {
+	        mav.addObject("message", "과제를 수정할 수 없습니다.");
+	        mav.addObject("loc", "javascript:history.back()");
+	        mav.setViewName("msg");
+			
+		} else {
+	        mav.addObject("message", "과제가 수정되었습니다.");
+	        mav.addObject("loc", mrequest.getContextPath() + goBackURL);
+	        mav.setViewName("msg");
+	    }		
+		
+		return mav;
+	}
+	
 	
 	
 }

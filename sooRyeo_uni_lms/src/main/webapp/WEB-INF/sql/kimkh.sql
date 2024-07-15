@@ -216,10 +216,10 @@ SELECT
         order by schedule_seq desc;
         
         
-        select attatched_file
+        select *
         from
         tbl_assignment
-        where schedule_seq_assignment = 47
+        where schedule_seq_assignment = 81
         
         --- 과제 테이블 셀렉트용 --
         select
@@ -298,16 +298,25 @@ join tbl_registered_course R ON S.student_id = R.fk_student_id
 left join tbl_assignment_submit A ON S.student_id = A.fk_student_id
 
 
-		select
-		A.fk_course_seq as fk_course_seq,
-		A.schedule_seq_assignment as schedule_seq_assignment,
-        A.content as content,
-        NVL(A.attatched_file, '없음') as attatched_file,
-        S.schedule_seq as schedule_seq,
-        S.title as title,
-        S.start_date as start_date,
-        S.end_date as end_date 
-        from
-        tbl_assignment A
-        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
-        where A.schedule_seq_assignment = 46
+-- 과제번호, 제목, 내용, 시작일자, 마감일자, 점수, 제출시간, 첨부파일
+SELECT V.schedule_seq_assignment as schedule_seq_assignment
+     , V.title as title
+     , V.content as content
+     , V.start_date as start_date
+     , V.end_date as end_date
+     , B.score as score
+     , B.submit_datetime as submit_datetime
+     , B.attatched_file as attatched_file
+FROM
+(
+    select *
+    from tbl_assignment A join tbl_schedule S
+    on A.schedule_seq_assignment = S.schedule_seq
+    where schedule_type = 1
+)V LEFT JOIN
+(
+    select *
+    from tbl_assignment_submit
+) B
+on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+where schedule_seq_assignment = 81 

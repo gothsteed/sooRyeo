@@ -102,7 +102,7 @@ function scrollToTarget_down() {
 			<span id="annoucement" style="color:black; font-weight: bold;">공지사항</span>
 			<br>
 		</button> 	
-		<button type="button" class="btn btn-outline-light" id="announcement" style="width:20%; height:150px;" onclick="goTest()">
+		<button type="button" class="btn btn-outline-light ml-5" id="announcement" style="width:20%; height:150px;" onclick="goTest()">
 			<img src="<%=ctxPath%>/resources/images/test.png" class="img-fluid" style="width:30%;">
 			<br><br>
 			<span id="annoucement" style="color:black; font-weight: bold;">시험</span>
