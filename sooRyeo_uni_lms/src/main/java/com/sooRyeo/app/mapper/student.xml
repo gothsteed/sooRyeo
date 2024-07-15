@@ -150,7 +150,7 @@
 		<result property="fk_course_seq" 			column="fk_course_seq"				javaType="String" />
 	</resultMap>
 	
-	<select id="getassignment_List" parameterType="int" resultMap="assignmentMap">
+	<select id="getassignment_List" parameterType="String" resultMap="assignmentMap">
 		SELECT V.title as title
 			 , V.content as content
 			 , V.start_date as start_date
@@ -170,6 +170,7 @@
 		    from tbl_assignment_submit
 		) B
 		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where V.fk_course_seq = #{fk_course_seq}
 	</select>
 	
 	
@@ -184,9 +185,10 @@
 		<result property="score" 					column="score"						javaType="Integer" />
 		<result property="submit_datetime" 			column="submit_datetime"			javaType="Date" />
 		<result property="attatched_file" 			column="attatched_file"				javaType="String" />
+		<result property="fk_course_seq" 			column="fk_course_seq"				javaType="Integer" />
 	</resultMap>
 	
-	<select id="getassignment_detail_List" parameterType="String" resultMap="assignment_detail_Map" >
+	<select id="getassignment_detail" parameterType="String" resultMap="assignment_detail_Map" >
 	    SELECT 
 	        A.schedule_seq_assignment as schedule_seq_assignment,
 	        S.title as title,
@@ -195,16 +197,14 @@
 	        S.end_date as end_date,
 	        B.score as score,
 	        B.submit_datetime as submit_datetime,
-	        B.attatched_file as attatched_file,
+	        A.attatched_file as attatched_file,
 	        A.fk_course_seq as fk_course_seq
-	    FROM
-	        tbl_assignment A
-	    JOIN
-	        tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
-	    LEFT JOIN
-	        tbl_assignment_submit B ON A.schedule_seq_assignment = B.fk_schedule_seq_assignment
-	    WHERE
-	        S.schedule_type = 1
+	    FROM tbl_assignment A
+	    JOIN tbl_schedule S 
+	    ON A.schedule_seq_assignment = S.schedule_seq
+	    LEFT JOIN tbl_assignment_submit B 
+	    ON A.schedule_seq_assignment = B.fk_schedule_seq_assignment
+	    WHERE A.schedule_seq_assignment = to_number(#{schedule_seq_assignment})
 	</select>
 
 
@@ -232,8 +232,49 @@
 	
 	
 	
+	<!-- 과제제출 -->
+	<insert id="addComment" parameterType="HashMap">
+		<!-- 첨부파일 없는 경우 -->
+		<if test="attatched_file == null">
+			insert into tbl_assignment_submit(assignment_submit_seq, fk_schedule_seq_assignment, fk_student_id, title, content) 
+			values(assignment_submit_seq.nextval, #{fk_schedule_seq_assignment}, #{fk_student_id}, #{title}, #{content})
+		</if>
+
+		<!-- 첨부파일 있는 경우  -->
+		<if test="attatched_file != null">
+			insert into tbl_assignment_submit(assignment_submit_seq, fk_schedule_seq_assignment, fk_student_id, title, content, attatched_file) 
+			values(assignment_submit_seq.nextval, #{fk_schedule_seq_assignment}, #{fk_student_id}, #{title}, #{content}, #{attatched_file})
+		</if>
+	</insert>
 	
 	
+	
+	<!-- schedule_seq 가져오기 -->
+	<select id="selectSeq" parameterType="String" resultType="String">
+		select assignment_submit_seq
+		from tbl_assignment_submit
+		where fk_schedule_seq_assignment = #{schedule_seq_assignment}
+	</select>
+
+
+
+	<!-- 과제 제출 내용 보기 -->
+	<select id="getreadComment" parameterType="String" resultType="com.sooRyeo.app.domain.AssignmentSubmit">
+		select assignment_submit_seq, fk_student_id, title, content
+		     , attatched_file
+		     , submit_datetime
+		from tbl_assignment_submit
+		where fk_schedule_seq_assignment = #{schedule_seq_assignment}
+	</select>
+
+
+
+	<!-- 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회 -->
+	<select id="getCommentOne" resultType="com.sooRyeo.app.dto.AssignmentSubmitDTO" parameterType="String">
+		select attatched_file
+		from tbl_assignment_submit
+		where fk_schedule_seq_assignment = #{fk_schedule_seq_assignment}
+	</select>
 
 
 </mapper>

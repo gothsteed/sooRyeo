@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -165,14 +167,24 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 수업 - 내 강의 - 과제 - 상세내용
 	@Override
-	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
+	public Map<String, String> getassignment_detail(String schedule_seq_assignment) {
 		
-		List<Map<String, String>> assignment_detail_List = sqlSession.selectList("student.getassignment_detail_List", schedule_seq_assignment);
+		Map<String, String> assignment_detail = sqlSession.selectOne("student.getassignment_detail", schedule_seq_assignment);
 		
-		return assignment_detail_List;
+		return assignment_detail;
 		
 	} // end of public List<Map<String, String>> getassignment_detail_List
 
+	
+	// 과제제출
+	@Override
+	public int addComment(Map<String, String> paraMap) {
+		
+		int n = sqlSession.insert("student.addComment", paraMap);
+		
+		return n;
+	} // end of public int addComment
+	
 	
 	// 교수번호, 교수 이름  가져오기
 	@Override
@@ -206,7 +218,36 @@ public class StudentDao_imple implements StudentDao {
 	}
 
 	
+	// schedule_seq_assignment 받아오기
+	@Override
+	public String selectSeq(String schedule_seq_assignment) {
+		
+		String schedule_seq = sqlSession.selectOne("student.selectSeq", schedule_seq_assignment);
+
+		return schedule_seq;
+		
+	} // end of public String selectSeq
+
 	
+	// 과제 제출 내용보기
+	@Override
+	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment) {
+		
+		List<AssignmentSubmit> submitList = sqlSession.selectList("student.getreadComment", fk_schedule_seq_assignment);
+		
+		return submitList;
+	} // end of public List<AssignmentSubmit> getreadComment
+
+	
+	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
+	@Override
+	public AssignmentSubmitDTO getCommentOne(String fk_schedule_seq_assignment) {
+		
+		AssignmentSubmitDTO asdto = sqlSession.selectOne("student.getCommentOne", fk_schedule_seq_assignment);
+		
+		return asdto;
+		
+	} // end of public AssignmentSubmitDTO getCommentOne
 	
 	
 	

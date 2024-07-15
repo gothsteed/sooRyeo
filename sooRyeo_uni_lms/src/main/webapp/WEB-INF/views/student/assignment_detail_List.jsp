@@ -21,20 +21,232 @@ td.comment {text-align: center;}
 
 a {text-decoration: none !important;}
 
+th {
+	text-align : center;
+
+	align-content: center;
+}
+
 </style>
 
+
+<!-- jQuery Form Plugin 로드 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
 
 <script type="text/javascript">
 
 
 $(document).ready(function(){
 	
- 
+	$("div#form").hide();
 	
+	goReadComment();
+	
+	const schedule_seq_assignment = $("td#schedule_seq_assignment").text();
+	// console.log(schedule_seq_assignment);
+	
+	$.ajax({
+		
+		url:"<%=ctxPath%>/selectSeq.lms",
+		data:{"schedule_seq_assignment" : schedule_seq_assignment},
+		type:"post",
+		dataType:"json",
+		success:function(json){
+			
+			let v_html = "";
+			
+			if( json.result == 1 ){
+				
+				$("button:button[name='submit']").hide();
+				
+			}
+
+		},
+		error: function(request, status, error){
+			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		}
+		
+	}); // end of $.ajax
+ 
 }); // end of $(document).ready(function(){})
 
 
+
+//function declaration
+
+function goaddWriteFrm(){
+	
+	$("div#form").show();
+		
+} // end of function goaddWriteFrm
+	
+	
+// 과제제출하기
+function goAddWrite(){
+	
+	const comment_content = $("input:text[name='content']").val().trim();
+	if(comment_content == "") {
+		alert("과제 내용을 입력하세요.");
+		return;	// 종료
+	}
+	
+	<%-- 과제 첨부파일 여부 --%>
+	if($("input:file[name='attach']").val() == "") {
+		// 첨부파일이 없는 과제 제출인 경우
+		goAddWrite_noAttach();
+	}
+	else {
+		// 첨부파일이 있는 과제 제출인 경우
+		goAddWrite_withAttach();
+	}
+	
+} // end of function goAddWrite	
+	
+	
+	
+//첨부파일이 없는 과제 제출인 경우
+function goAddWrite_noAttach() {
+	
+	const queryString = $("form[name='addWriteFrm']").serialize();
+	
+	$.ajax({
+		
+		url:"<%=ctxPath%>/addComment.lms",
+		data:queryString,
+		type:"post",
+		dataType:"json",
+		success:function(json){
+			
+			// console.log(JSON.stringify(json));
+			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
+			
+			$("button:button[name='btnUpdateComment']").hide();
+			$("button:reset[name='btnDeleteComment']").hide();
+			
+            // 과제 제출이 끝난 후 페이지 이동
+            history.go();
+			
+			
+		},
+		error: function(request, status, error){
+			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		}
+		
+	}); // end of $.ajax
+	
+} // end of function goAddWrite_noAttach
+
+
+
+//첨부파일이 있는 과제 제출인 경우
+function goAddWrite_withAttach(){
+	
+	const queryString = $("form[name='addWriteFrm']");
+	
+	// console.log(queryString);
+	
+	$("form[name='addWriteFrm']").ajaxForm({
+		
+		url:"<%=ctxPath%>/addComment_withAttach.lms",
+		data:queryString,
+		type:"post",
+		enctype:"multipart/form-data",
+		dataType:"json",
+		success:function(json){
+			
+			// console.log(JSON.stringify(json));
+			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
+			
+			$("button:button[name='btnUpdateComment']").hide();
+			$("button:reset[name='btnDeleteComment']").hide();
+			
+            // 과제 제출이 끝난 후 페이지 이동
+            history.go();
+			
+		},
+		error: function(request, status, error){
+			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		}
+		
+	}); // end of $("form[name='addWriteFrm']").ajaxForm
+	
+	$("form[name='addWriteFrm']").submit();
+	
+} // end of function goAddWrite_withAttach
+
+
+
+function formatDate(dateString) {
+    // 'Sun Jul 14 20:49:53 KST 2024' 형식의 문자열을 Date 객체로 변환
+    const date = new Date(dateString);
+    
+    // YYYY-MM-DD HH:mm:ss 형식으로 변환
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+
+
+
+//과제 읽어오기
+function goReadComment(){
+	
+	$.ajax({
+		url:"<%= ctxPath%>/readComment.lms",
+		data:{"fk_schedule_seq_assignment" : "${requestScope.assignment_detail.schedule_seq_assignment}"},
+		type:"post",
+		dataType:"json",
+		success:function(json){
+			
+			// console.log(JSON.stringify(json));
+		 
+		    let v_html = "";
+		    if(json.length > 0){
+		    	
+		    	$.each(json, function(index, item){
+		    		
+		    		v_html += "<tr>";
+		    		v_html += 	"<td class='comment'>"+item.assignment_submit_seq+"</td>";
+		    		v_html +=   "<td class='comment'>"+item.fk_student_id+"</td>";
+		    		v_html +=   "<td class='comment'>"+item.title+"</td>";
+		    		v_html +=   "<td class='comment'>"+item.content+"</td>";
+                    if (item.attached_file) {
+                        v_html += "<td class='comment'><a href='<%=ctxPath%>/downloadComment.action?fileName=" + item.attached_file + "'>" + item.attached_file + "</a></td>";
+                    } 
+                    else {
+                        v_html += "<td class='comment'>파일 없음</td>";
+                    }
+		    		
+		    		v_html += 	"<td class='comment'>"+formatDate(item.submit_datetime)+"</td>";
+		    		v_html += "</tr>";
+		    		
+		    	});
+		    }
+		    
+		    else {
+		    	v_html += "<tr>";
+		    	v_html += "<td colspan='6'>제출한 과제가 없습니다</td>";
+		    	v_html += "</tr>";
+		    }
+			
+			$("tbody#commentDisplay").html(v_html);
+			
+		},
+		error: function(request, status, error){
+		   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		}
+	});
+	
+}// end of function goReadComment()
+
 </script>  
+
 
 
 <div style="display: flex;">
@@ -42,55 +254,54 @@ $(document).ready(function(){
 
  	<h3 style="margin-bottom: 2%; margin-top:3%; font-weight:bold;">과제 내용보기</h3>
 	<hr style="margin-bottom: 3%;">
-	 <c:forEach var="item" items="${requestScope.assignment_detail_List}">
 		<table class="table table-bordered table table-striped" style="width: 1024px; word-wrap: break-word; table-layout: fixed;"> 
 	   	 
 	   	  <tr>
-	   		<th style="width: 15%">과제번호</th>
-   				<td style="font-weight:bold;">${item.schedule_seq_assignment}</td>
+	   		<th style="width: 10%;">과제번호</th>
+   				<td id="schedule_seq_assignment" style="font-weight:bold;">${requestScope.assignment_detail.schedule_seq_assignment}</td>
 	   	  </tr>	
 	   	
 	   	  <tr>
    		  	<th>제목</th>
-   	      		<td style="font-weight:bold;">${item.title}</td>
+   	      		<td style="font-weight:bold;">${requestScope.assignment_detail.title}</td>
 	   	  </tr> 
 	   	
 	   	  <tr>
 	   		  <th>내용</th>
 	   	      	<td>
-	   	      	<p style="word-break: break-all;">${item.content}</p>
+	   	      	<p style="word-break: break-all;">${requestScope.assignment_detail.content}</p>
 	   	      	</td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>시작일자</th>
-	   	      	<td><fmt:formatDate value="${item.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+	   	      	<td><fmt:formatDate value="${requestScope.assignment_detail.start_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>마감일자</th>
-	   	      	<td style="color:red;"><fmt:formatDate value="${item.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+	   	      	<td style="color:red;"><fmt:formatDate value="${requestScope.assignment_detail.end_date}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>점수</th>
 		   		 <td>  
-			   		 <c:if test="${item.score == null}">
+			   		 <c:if test="${requestScope.assignment_detail.score == null}">
 			   		  	<p style="color:green;">아직 채점되지 않은 과제입니다.</p>
 			   		 </c:if>
-			   		 <c:if test="${item.score != null}">
-			   		  	${item.score}
+			   		 <c:if test="${requestScope.assignment_detail.score != null}">
+			   		  	${requestScope.assignment_detail.score}
 			   		 </c:if>
 	   	     	</td>
 	   	  </tr>
 	   	  <tr>
 	   		  <th>제출시간</th>
 		   	      <td>			   		 
-		   	      	<c:if test="${item.submit_datetime == null}">
+		   	      	<c:if test="${requestScope.assignment_detail.submit_datetime == null}">
 				   		<p style="color:green;">아직 제출되지 않은 과제입니다.</p>
 				   	</c:if>
-				   		 <c:if test="${item.submit_datetime != null}">
-				   		  	${item.submit_datetime}
+				   		 <c:if test="${requestScope.assignment_detail.submit_datetime != null}">
+				   		  	<fmt:formatDate value="${requestScope.assignment_detail.submit_datetime}" pattern="yyyy-MM-dd hh:mm:ss"/>
 				   	</c:if>
 				  </td>
 	   	  </tr>
@@ -99,99 +310,90 @@ $(document).ready(function(){
 	   	  <tr>
 	   		  <th>첨부파일</th>
 		   		  <td>			   		 
-		   	      	<c:if test="${item.attatched_file == null}">
+		   	      	<c:if test="${requestScope.assignment_detail.attatched_file == null}">
 				   		<p style="color:green;">첨부파일이 없습니다.</p>
 				   	</c:if>
-				   		 <c:if test="${item.attatched_file != null}">
-				   		  	${item.attatched_file}
+				   		 <c:if test="${requestScope.assignment_detail.attatched_file != null}">
+				   		  	<a href="<%=ctxPath%>/download.action?schedule_seq_assignment=${requestScope.schedule_seq_assignment}">${requestScope.assignment_detail.attatched_file}</a>
 				   	</c:if>
 				  </td>
 	   	  </tr>
 	   	</table>
-	 </c:forEach>
-	 
 	 
 	 <div class="mt-5">
-	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/student/assignment_List.lms'">목록보기</button> 
-
-	 
-	 	<%-- === #83. 댓글쓰기 폼 추가 === --%>
- 	    <h3 style="margin-top: 50px;">댓글쓰기</h3>
- 	    
- 	    <form name="addWriteFrm" id="addWriteFrm" style="margin-top: 20px;">
-   	      <table class="table" style="width: 1024px">
-			   <tr style="height: 30px;">
-			      <th width="10%">학번</th>
-			      <td>
-			         <input type="text" name="student_id" value="" readonly />
-			      </td>
-			   </tr>
-			   
-			   <tr style="height: 30px;">
-			      <th>댓글내용</th>
-			      <td>
-			         <input type="text" name="content" size="100" maxlength="1000" /> 
-			         
-			         <%-- 댓글에 달리는 원게시물 글번호(즉, 댓글의 부모글 글번호) --%>
-			         <input type="text" name="parentSeq" value="" readonly /> 
-			      </td>
-			   </tr>
+	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="history.back()">과제 목록</button> 
+	 	
+		<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="goaddWriteFrm()">과제 제출</button>
+	 	
+	 	<%-- === #83. 과제제출 폼 추가 === --%>
+	 	<div id="form">
+	 	<c:if test="${not empty sessionScope.loginuser.student_id}">
+	 	    <h3 style="margin-top: 100px;">과제 제출</h3>
+	 	    
+	 	    <form name="addWriteFrm" id="addWriteFrm" style="margin-top: 20px; margin-bottom: 5%;" method="post" enctype="multipart/form-data">
+	   	      <table class="table table-bordered" style="width: 1024px">
+				   <tr style="height: 30px;">
+				      <th width="10%">학번</th>
+				      <td>
+				         <input type="text" name="fk_student_id" value="${sessionScope.loginuser.student_id}" readonly/>
+				      </td>
+				   </tr>
 				   
-			   <%-- === #189. 댓글쓰기에 파일첨부하기 === --%>
-			   <tr style="height: 30px;">
-			      <th>파일첨부</th>
-			      <td>
-			         <input type="file" name="attach" /> 
-			      </td>
-			   </tr>  
-			   
-			   <tr>
-			      <th colspan="2">
-			      	<button type="button" class="btn btn-success btn-sm mr-3" onclick="">댓글쓰기 확인</button>
-			      	<button type="reset" class="btn btn-success btn-sm">댓글쓰기 취소</button>
-			      </th>
-			   </tr>
-		  </table>	      
-   	   </form>     
-	 	 
-	 	 
-	 	<%-- === #94. 댓글 내용 보여주기 === --%>
-    	<h3 style="margin-top: 50px;">댓글내용</h3>
+				   <tr style="height: 30px;">
+				   	   <th width="10%">제목</th>
+				   	   <td>
+				   	   	   <input type="text" name="title" style="width:50%;" value="${requestScope.assignment_detail.title}" readonly/>
+				   	   </td>
+				   </tr>
+				   
+				   <tr style="height: 30px;">
+				      <th>내용</th>
+				      <td>
+				      
+				         <input type="text" name="content" size="100" maxlength="1000"/> 
+				         
+				         <%-- 과제제출에 달리는 원게시물 글번호(즉, 과제제출의 부모글 글번호) --%>
+				         <input type="hidden" name="fk_schedule_seq_assignment" value="${requestScope.assignment_detail.schedule_seq_assignment}" readonly /> 
+				      </td>
+				   </tr>
+					   
+				   <%-- === #189. 과제제출에 파일첨부하기 === --%>
+				   <tr style="height: 30px;">
+				      <th>파일첨부</th>
+				      <td>
+				         <input type="file" name="attach" />  	
+				      </td>
+				   </tr>  
+			   </table> 
+			  </form>   	
+				  
+		   <button type="button" name="btnUpdateComment" class="btn btn-success btn-sm" style="margin-left:80%;" onclick="goAddWrite()">제출하기</button>
+		   <button type="reset" name="btnDeleteComment" class="btn btn-danger btn-sm ml-4">취소</button>
+		</c:if>
+		
+	   	</div>
+	   	
+	    <%-- === 과제 내용 보여주기 === --%>
+    	<h3 style="margin-top: 50px;">제출내용</h3>
 		<table class="table" style="width: 1024px; margin-top: 2%; margin-bottom: 3%;">
 			<thead>
 			   <tr>
 				  <th style="width: 6%">순번</th>
+				  <th style="width: 8%; text-align: center;">학번</th>
+				  <th style="text-align: center;">제목</th>
 				  <th style="text-align: center;">내용</th>
-				  
-				  <%-- === 댓글쓰기에 첨부파일이 있는 경우 시작 === --%>
 				  <th style="width:10%;">첨부파일</th>
-				  <th style="width:8%;">bytes</th>
-				  <%-- === 댓글쓰기에 첨부파일이 있는 경우 끝 === --%>
-				  
-				  <th style="width: 8%; text-align: center;">작성자</th>
-				  <th style="width: 12%; text-align: center;">작성일자</th>
-				  <th style="width: 12%; text-align: center;">수정/삭제</th>
+				  <th style="width: 12%; text-align: center;">제출시간</th>
 			   </tr>
 			</thead>
 			<tbody id="commentDisplay"></tbody>
 		</table> 
-	 	
-	 	<%-- === #155. 댓글페이지바가 보여지는 곳 === --%> 
-	 	<div style="display: flex; margin-bottom: 50px;">
-    	   <div id="pageBar" style="margin: auto; text-align: center;"></div>
-    	</div>
-	 	 
-	 </div>
 	 
+	 </div>
+	 	 
   </div>
+
 </div>	
-
-<%-- === #138. 이전글제목, 다음글제목 보기 === --%>
-<form name="goViewFrm">
-   <input type="text" name="seq" />
-   <input type="text" name="goBackURL" />
-</form>
-
 
 
 

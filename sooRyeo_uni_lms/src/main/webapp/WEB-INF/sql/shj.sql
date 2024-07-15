@@ -240,27 +240,158 @@ on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
 
 
 
+SELECT 
+    A.schedule_seq_assignment as schedule_seq_assignment,
+    S.title as title,
+    A.content as content,
+    S.start_date as start_date,
+    S.end_date as end_date,
+    B.score as score,
+    B.submit_datetime as submit_datetime,
+    A.attatched_file as attatched_file,
+    A.fk_course_seq as fk_course_seq
+FROM tbl_assignment A
+JOIN tbl_schedule S 
+ON A.schedule_seq_assignment = S.schedule_seq
+LEFT JOIN tbl_assignment_submit B 
+ON A.schedule_seq_assignment = B.fk_schedule_seq_assignment
+WHERE A.schedule_seq_assignment = 31
+
+
+-- 첨부파일 없는것
+insert into tbl_assignment_submit(assignment_submit_seq, fk_schedule_seq_assignment, fk_student_id, title, content, submit_datetime) 
+values(schedule_seq_assignment.nextval, #{schedule_seq_assignment}, #{student_id}, #{title}, #{content}, sysdate)
+
+
+select *
+from tbl_assignment_submit
+
+
+delete from tbl_assignment_submit
+where assignment_submit_seq between 14 and 17
+
+commit;
+
+
+select assignment_submit_seq, fk_student_id, title, content, attatched_file, submit_datetime
+from tbl_assignment_submit
+where fk_schedule_seq_assignment = '4'
+
+
+select attatched_file
+from tbl_assignment_submit
+where fk_schedule_seq_assignment = '16'
+
+
+/* --------------------------------------------------------------------- */
 SELECT V.title as title
-     , V.content as content
-     , V.start_date as start_date
-     , V.end_date as end_date
-     , B.submit_datetime as submit_datetime
-     , V.schedule_seq_assignment as schedule_seq_assignment
-     , V.fk_course_seq as fk_course_seq
-FROM
+			 , V.content as content
+			 , V.start_date as start_date
+			 , V.end_date as end_date
+			 , B.submit_datetime as submit_datetime
+			 , V.schedule_seq_assignment as schedule_seq_assignment
+			 , V.fk_course_seq as fk_course_seq
+		FROM
+		(
+		    select *
+		    from tbl_assignment A join tbl_schedule S
+		    on A.schedule_seq_assignment = S.schedule_seq
+		    where schedule_type = 1
+		)V LEFT JOIN
+		(
+		    select *
+		    from tbl_assignment_submit
+		) B
+		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where V.fk_course_seq = 4
+
+
+-- B.fk_schedule_seq_assignment(과제번호),  B.submit_datetime(제출시간)   
+select *
+from tbl_assignment_submit  -- 제출
+
+select schedule_seq_assignment  -- schedule_seq_assignment(과제번호)
+from tbl_assignment -- 과제
+
+
+SELECT A.schedule_seq_assignment, B.submit_datetime
+FROM tbl_assignment A LEFT JOIN 
 (
-    select *
-    from tbl_assignment A join tbl_schedule S
-    on A.schedule_seq_assignment = S.schedule_seq
-    where schedule_type = 1
-)V LEFT JOIN
-(
-    select *
-    from tbl_assignment_submit
+  select *
+  from tbl_assignment_submit
+  where fk_student_id = '202400009'
 ) B
-on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
-where V.fk_course_seq = '4';
+ON A.schedule_seq_assignment = B.fk_schedule_seq_assignment;
 
 
 
+
+SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime
+FROM tbl_assignment GUAJE LEFT JOIN 
+(
+  select *
+  from tbl_assignment_submit
+  where fk_student_id = '202400005'
+) GUAJE_SUBMIT
+ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment;
+
+
+
+SELECT V.title as title
+			 , V.content as content
+			 , V.start_date as start_date
+			 , V.end_date as end_date
+			 , B.submit_datetime as submit_datetime
+			 , V.schedule_seq_assignment as schedule_seq_assignment
+			 , V.fk_course_seq as fk_course_seq
+		FROM
+		(
+		    select *
+		    from tbl_assignment A join tbl_schedule S
+		    on A.schedule_seq_assignment = S.schedule_seq
+		    where schedule_type = 1
+		)V LEFT JOIN
+		(
+            SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment 
+            FROM tbl_assignment GUAJE LEFT JOIN 
+            (
+              select *
+              from tbl_assignment_submit
+              where fk_student_id = '202400005'
+            ) GUAJE_SUBMIT
+            ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
+		) B
+		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where V.fk_course_seq = 4;
+
+
+
+SELECT V.title as title
+			 , V.content as content
+			 , V.start_date as start_date
+			 , V.end_date as end_date
+			 , B.submit_datetime as submit_datetime
+			 , V.schedule_seq_assignment as schedule_seq_assignment
+			 , V.fk_course_seq as fk_course_seq
+		FROM
+		(
+		    select *
+		    from tbl_assignment A join tbl_schedule S
+		    on A.schedule_seq_assignment = S.schedule_seq
+		    where schedule_type = 1
+		)V LEFT JOIN
+		(
+            SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment 
+            FROM tbl_assignment GUAJE LEFT JOIN 
+            (
+              select *
+              from tbl_assignment_submit
+              where fk_student_id = '202400009'
+            ) GUAJE_SUBMIT
+            ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
+		) B
+		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where V.fk_course_seq = 4;
+
+---------------------------------------------------------------------------------------
 

@@ -28,9 +28,11 @@ import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
 
@@ -408,6 +410,8 @@ public class StudentService_imple implements StudentService {
 		mav.setViewName("studentCourseRegister");
 		return mav;
 	}
+	
+	
 	// 수업 - 내 강의 - 과제
 	@Override
 	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
@@ -422,15 +426,36 @@ public class StudentService_imple implements StudentService {
 
 	// 수업 - 내 강의 - 과제 - 상세내용
 	@Override
-	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
+	public Map<String, String> getassignment_detail(String schedule_seq_assignment) {
 		
-		List<Map<String, String>> assignment_detail_List = dao.getassignment_detail_List(schedule_seq_assignment);
+		Map<String, String> assignment_detail = dao.getassignment_detail(schedule_seq_assignment);
 		
-		return assignment_detail_List;
+		return assignment_detail;
 		
 	} // end of public List<Map<String, String>> getassignment_detail_List
 
 
+	
+	
+	// 과제제출
+	@Override
+	public int addComment(String fk_schedule_seq_assignment, String fk_student_id, String title, String content) {
+		
+		int n = 0;
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("fk_schedule_seq_assignment", fk_schedule_seq_assignment);
+		paraMap.put("fk_student_id", fk_student_id);
+		paraMap.put("title", title);
+		paraMap.put("content", content);
+		
+		n = dao.addComment(paraMap);
+
+		return n;
+		
+	} // end of public int addComment
+	
 
 	// 교수 이름, 교수 번호 select
 	@Override
@@ -452,6 +477,37 @@ public class StudentService_imple implements StudentService {
 
 
 	
+	// schedule_seq_assignment 받아오기
+	@Override
+	public String selectSeq(String schedule_seq_assignment) {
+		
+		String schedule_seq  = dao.selectSeq(schedule_seq_assignment); 
+		
+		return schedule_seq;
+	} // end of public String selectSeq
+
+
+
+	// 과제 제출 내용보기
+	@Override
+	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment) {
+		
+		List<AssignmentSubmit> submitList = dao.getreadComment(fk_schedule_seq_assignment);
+		
+		return submitList;
+	} // end of public List<AssignmentSubmit> getreadComment
+
+
+
+	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
+	@Override
+	public AssignmentSubmitDTO getCommentOne(String fk_schedule_seq_assignment) {
+		
+		AssignmentSubmitDTO asdto = dao.getCommentOne(fk_schedule_seq_assignment);
+		
+		return asdto;
+		
+	} // end of public AssignmentSubmitDTO getCommentOne
 
 	
 	

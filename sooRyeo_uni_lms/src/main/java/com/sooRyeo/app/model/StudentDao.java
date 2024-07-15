@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -51,12 +53,24 @@ public interface StudentDao {
 	List<Map<String, String>> getassignment_List(String fk_course_seq);
 
 	// 수업 - 내 강의 - 과제 - 상세내용
-	List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment);
+	Map<String, String> getassignment_detail(String schedule_seq_assignment);
 
+	// 과제제출
+	int addComment(Map<String, String> paraMap);
+	
 	// 교수 이름, 교수 번호 select
 	List<Professor> select_prof_info(String fk_course_seq);
 
 	// 스케줄, 상담 테이블에 insert
 	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
 
+	// schedule_seq_assignment 받아오기
+	String selectSeq(String schedule_seq_assignment);
+
+	// 과제 제출 내용보기
+	List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment);
+
+	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
+	AssignmentSubmitDTO getCommentOne(String fk_schedule_seq_assignment);
+	
 }
