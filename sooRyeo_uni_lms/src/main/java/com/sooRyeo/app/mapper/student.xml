@@ -232,8 +232,15 @@
 	
 	
 	<!-- 수업 - 강의 한개 제목, 내용 select -->
-	<select id="classPlay_One" parameterType="String" resultType="com.sooRyeo.app.domain.Lecture">
-		select lecture_title, lecture_content     
+	
+	<resultMap type="HashMap" id="classPlay_one">
+		<result property="lecture_title" 	column="lecture_title"	    javaType="String" />
+		<result property="lecture_content" 	column="lecture_content"	javaType="String" />
+		<result property="video_file_name" 	column="video_file_name"	javaType="String" />
+	</resultMap>
+	
+	<select id="classPlay_One" parameterType="String" resultMap="classPlay_one">
+		select lecture_title, lecture_content, video_file_name   
 		from tbl_lecture
 		where lecture_seq = #{lecture_seq}
 	</select>

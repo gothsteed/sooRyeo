@@ -277,7 +277,7 @@ public class StudentController {
 
 	
 	// 수업 - 내 강의 - 동영상 플레이
-	@RequestMapping(value = "/student/classPlay.lms", method = RequestMethod.GET)
+	@GetMapping("/student/classPlay.lms")
 	public ModelAndView classPlay(HttpServletRequest request, ModelAndView mav) {
 		
 		String fk_course_seq = request.getParameter("course_seq");
@@ -298,7 +298,7 @@ public class StudentController {
 		
 		String lecture_seq = request.getParameter("lecture_seq");
 		
-		List<Lecture> classOne = service.classPlay_One(lecture_seq);
+		Map<String, String> classOne = service.classPlay_One(lecture_seq);
 		
 		mav.addObject("classOne", classOne);
 		

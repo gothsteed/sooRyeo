@@ -79,11 +79,18 @@ from tbl_department;
 commit;
 
 
+select *
+from tbl_lecture
+
+
 
 alter table tbl_schedule add confirm smallint default '1' not null;
 
 
+		where lecture_seq = '28';
 
+select*
+from 
 
 select *
 from tbl_schedule;

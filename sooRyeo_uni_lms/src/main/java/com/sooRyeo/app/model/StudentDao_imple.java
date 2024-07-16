@@ -208,8 +208,8 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 수업 - 강의 한개 제목, 내용 select
 	@Override
-	public List<Lecture> classPlay_One(String lecture_seq) {
-		List<Lecture> classOne = sqlSession.selectList("student.classPlay_One", lecture_seq);
+	public Map<String, String> classPlay_One(String lecture_seq) {
+		Map<String, String> classOne = sqlSession.selectOne("student.classPlay_One", lecture_seq);
 		return classOne;
 	}
 

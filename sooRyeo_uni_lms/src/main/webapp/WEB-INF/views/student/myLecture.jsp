@@ -211,8 +211,8 @@ $(document).ready(function(){
 	
 	
 	$('a#classPlay').click(function(){
-		const courseSeq = $("input:hidden[name='fk_course_seq']").val();
-	 	location.href = "<%= ctxPath%>/student/classPlay.lms?course_seq=" + courseSeq;
+		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq_2"]').val();
+		location.href = "<%= ctxPath%>/student/classPlay_One.lms?lecture_seq=" + lecture_seq;
 	});
 	
 	
@@ -301,10 +301,10 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 <div class="container" style="margin-top:5%;">
 <h3>이번주 강의</h3>
 <hr>
+<c:forEach var="lecture_week" items="${requestScope.lectureList_week}">
 	<div class="card mb-5">
-		<c:forEach var="lecture_week" items="${requestScope.lectureList_week}">
 		
-
+		<input type="hidden" name="lecture_seq_2" value="${lecture_week.lecture_seq}" />
 		<h5 class="card-header" style="font-weight:bold;">${lecture_week.lecture_title}</h5>
 		<div class="card-body">
 			<h5 class="card-title">${lecture_week.lecture_content}</h5>
@@ -313,8 +313,9 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
 		</div>
-		</c:forEach>
+		
 	</div>
+</c:forEach>
 
 <h3 style="margin-top:10%;">강의 목록</h3>
 <hr>
