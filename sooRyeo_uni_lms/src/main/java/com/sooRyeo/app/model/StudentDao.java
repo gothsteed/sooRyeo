@@ -52,8 +52,11 @@ public interface StudentDao {
 	// 수업 - 내 강의 - 과제
 	List<Map<String, String>> getassignment_List(String fk_course_seq, int userid);
 
-	// 수업 - 내 강의 - 과제 - 상세내용
-	List<String> getassignment_detail(String schedule_seq_assignment, int userid);
+	// 수업 - 내 강의 - 과제 - 상세내용1
+	Map<String, Object> getassignment_detail_1(String schedule_seq_assignment);
+	
+	// 수업 - 내 강의 - 과제 - 상세내용2
+	Map<String, Object> getassignment_detail_2(String schedule_seq_assignment, int userid);
 
 	// 과제제출
 	int addComment(Map<String, String> paraMap);
@@ -64,13 +67,14 @@ public interface StudentDao {
 	// 스케줄, 상담 테이블에 insert
 	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
 
-	// schedule_seq_assignment 받아오기
+	// 과제제출  - schedule_seq_assignment 받아오기
 	String selectSeq(String schedule_seq_assignment);
 
 	// 과제 제출 내용보기
-	List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment, int userid);
+	Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid);
 
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	AssignmentSubmitDTO getCommentOne(String fk_schedule_seq_assignment);
+
 	
 }

@@ -249,10 +249,18 @@ public class StudentController {
 		
 		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		
-		List<String> assignment_detail = service.getassignment_detail(schedule_seq_assignment, userid);
+		// 스케쥴, 과제 join
+		// 수업 - 내 강의 - 과제 - 상세내용1
+		Map<String, Object> assignment_detail_1 = service.getassignment_detail_1(schedule_seq_assignment);
 		
-		mav.addObject("assignment_detail", assignment_detail);
-		mav.addObject("schedule_seq_assignment",schedule_seq_assignment);
+		// 과제, 과제제출 join
+		// 수업 - 내 강의 - 과제 - 상세내용2
+		Map<String, Object> assignment_detail_2 = service.getassignment_detail_2(schedule_seq_assignment, userid);
+		
+		
+		mav.addObject("assignment_detail_1", assignment_detail_1);
+		mav.addObject("assignment_detail_2", assignment_detail_2);
+		mav.addObject("schedule_seq_assignment", schedule_seq_assignment);
 		
 		mav.setViewName("assignment_detail_List");
 		
@@ -336,29 +344,30 @@ public class StudentController {
 		
 		String fk_schedule_seq_assignment = request.getParameter("fk_schedule_seq_assignment");
 		
-		List<AssignmentSubmit> submitList = service.getreadComment(fk_schedule_seq_assignment, userid);
 		
-		JSONArray jsonArr = new JSONArray();
+		Map<String, Object> assignment_show = service.getreadComment(fk_schedule_seq_assignment, userid);
 		
-		if(submitList != null) {
+
+		JSONObject jsonObj = new JSONObject();       
+		
+		if(assignment_show != null) {
+		
+			// System.out.println(assignment_show.get("assignment_submit_seq"));
 			
-			for(AssignmentSubmit adto : submitList) {
-				
-				JSONObject jsonObj = new JSONObject();       
-				
-				jsonObj.put("assignment_submit_seq", adto.getAssignment_submit_seq());            
-				jsonObj.put("fk_student_id", adto.getFk_student_id()); 
-				jsonObj.put("title", adto.getTitle());          
-				jsonObj.put("content", adto.getContent());     
-				jsonObj.put("attached_file", adto.getAttatched_file()); 
-				jsonObj.put("submit_datetime", adto.getSubmit_datetime());
-				
-				jsonArr.put(jsonObj);
-				
-			}// end of for-----------------------
+			jsonObj.put("assignment_submit_seq", assignment_show.get("assignment_submit_seq"));  
+			
+			jsonObj.put("fk_student_id", assignment_show.get("fk_student_id")); 
+			jsonObj.put("title", assignment_show.get("title"));          
+			jsonObj.put("content", assignment_show.get("content"));     
+			jsonObj.put("attached_file", assignment_show.get("attatched_file")); 
+			jsonObj.put("submit_datetime", assignment_show.get("submit_datetime"));
+		
+		}
+		else {
+			jsonObj.put("assignment_submit_seq", "");
 		}
 		
-		return jsonArr.toString();
+		return jsonObj.toString();
 		
 	} // end of public String readComment
 	

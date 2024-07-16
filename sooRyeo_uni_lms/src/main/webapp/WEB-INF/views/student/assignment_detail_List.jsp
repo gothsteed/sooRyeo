@@ -40,8 +40,10 @@ $(document).ready(function(){
 	
 	$("div#form").hide();
 	
-	goReadComment();
+	goReadComment();	// 과제제출내역 읽어오기
 	
+	
+	// 과제제출 - schedule_seq_assignment 가져오기
 	const schedule_seq_assignment = $("td#schedule_seq_assignment").text();
 	// console.log(schedule_seq_assignment);
 
@@ -115,11 +117,10 @@ function goAddWrite_noAttach() {
 			// console.log(JSON.stringify(json));
 			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
 			
-			
-			let schedule_seq_assignment = '${requestScope.assignment_detail.schedule_seq_assignment}';
+			let schedule_seq_assignment = '${requestScope.assignment_detail_1.schedule_seq_assignment}';
 			
 			location.href='<%=ctxPath%>/student/assignment_detail_List.lms?schedule_seq_assignment='+schedule_seq_assignment;
-			
+			 
 			
 		},
 		error: function(request, status, error){
@@ -151,7 +152,7 @@ function goAddWrite_withAttach(){
 			// console.log(JSON.stringify(json));
 			alert("한번 제출한 과제는 수정 및 삭제가 불가합니다. 신중하게 제출해주세요.");
 			
-			let schedule_seq_assignment = '${requestScope.assignment_detail.schedule_seq_assignment}';
+			let schedule_seq_assignment = '${requestScope.assignment_detail_1.schedule_seq_assignment}';
 			
 			location.href='<%=ctxPath%>/student/assignment_detail_List.lms?schedule_seq_assignment='+schedule_seq_assignment;
 			
@@ -169,53 +170,63 @@ function goAddWrite_withAttach(){
 
 
 
-
 // 제출한 과제 읽어오기
 function goReadComment(){
+
 	
 	$.ajax({
-		url:"<%= ctxPath%>/readComment.lms",
-		data:{"fk_schedule_seq_assignment" : "${requestScope.assignment_detail.schedule_seq_assignment}"},
-		type:"post",
-		dataType:"json",
-		success:function(json){
-			
-			// console.log(JSON.stringify(json));
-		 
-		    let v_html = "";
-		    if(json.length > 0){
-		    	
-		    	$.each(json, function(index, item){
-		    		
-		    		v_html += "<tr>";
-		    		v_html += 	"<td class='comment'>"+item.assignment_submit_seq+"</td>";
-		    		v_html +=   "<td class='comment'>"+item.fk_student_id+"</td>";
-		    		v_html +=   "<td class='comment'>"+item.title+"</td>";
-		    		v_html +=   "<td class='comment'>"+item.content+"</td>";
-                    if (item.attached_file != null) {
-                        v_html += "<td class='comment'><a href='<%=ctxPath%>/downloadComment.action?fileName=" + item.attached_file + "'>" + item.attached_file + "</a></td>";
-                    } 
-                    else {
-                        v_html += "<td class='comment'>파일 없음</td>";
-                    }
-		    		v_html += 	"<td class='comment'>"+item.submit_datetime+"</td>";
-		    		v_html += "</tr>";
-		    		
-		    	});
-		    }
-		    
-		    else {
-		    	v_html += "<tr>";
-		    	v_html += "<td colspan='6'>제출한 과제가 없습니다</td>";
-		    	v_html += "</tr>";
-		    }
-			
-			$("tbody#commentDisplay").html(v_html);
-			
-		},
-		error: function(request, status, error){
-		   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		}
+	    url: "<%= ctxPath%>/readComment.lms",
+	    data: {"fk_schedule_seq_assignment": ${requestScope.assignment_detail_1.schedule_seq_assignment} },
+	    type: "post",
+	    dataType: "json",
+	    success: function (json) {
+	    	
+	    	// console.log(JSON.stringify(json));
+	    	
+	        let v_html = "";
+	        
+	        if (json.assignment_submit_seq != "") {
+	        	
+	            v_html += "<tr>";
+	            v_html += "<td class='comment'>" + json.assignment_submit_seq + "</td>";
+	            v_html += "<td class='comment'>" + json.fk_student_id + "</td>";
+	            v_html += "<td class='comment'>" + json.title + "</td>";
+	            v_html += "<td class='comment'>" + json.content + "</td>";
+	            
+	            if (${requestScope.assignment_detail_2.attatched_file != null} ) {
+	                v_html += "<td class='comment'><a href='<%=ctxPath%>/downloadComment.action?attatched_file=" + json.attatched_file + "'>" + json.attatched_file + "</a></td>";
+	            } 
+	            else {
+	                v_html += "<td class='comment'>파일 없음</td>";
+	            }
+	            
+	            // 날짜 형식 변환
+	            let originalDatetime = json.submit_datetime;
+	            let date = new Date(originalDatetime);
+	            let year = date.getFullYear();
+	            let month = ('0' + (date.getMonth() + 1)).slice(-2);
+	            let day = ('0' + date.getDate()).slice(-2);
+	            let hours = ('0' + date.getHours()).slice(-2);
+	            let minutes = ('0' + date.getMinutes()).slice(-2);
+	            let seconds = ('0' + date.getSeconds()).slice(-2);
+	            let formattedDatetime = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+
+	            v_html += "<td class='comment'>" + formattedDatetime + "</td>";
+	            
+	            v_html += "</tr>";
+	            
+	        } 
+	        else {
+	            v_html += "<tr>";
+	            v_html += "<td colspan='6'>제출한 과제가 없습니다</td>";
+	            v_html += "</tr>";
+	        }
+	
+	        $("tbody#commentDisplay").html(v_html);
+	    },
+	    error: function (request, status, error) {
+	        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	    }
 	});
 	
 }// end of function goReadComment()
@@ -230,60 +241,56 @@ function goReadComment(){
  	<h3 style="margin-bottom: 2%; margin-top:3%; font-weight:bold;">과제 내용보기</h3>
 	<hr style="margin-bottom: 3%;">
 		<table class="table table-bordered table table-striped" style="width: 1024px; word-wrap: break-word; table-layout: fixed;"> 
-	   	 
 	   	  <tr>
 	   		<th style="width: 10%;">과제번호</th>
-   				<td id="schedule_seq_assignment" style="font-weight:bold;">${requestScope.assignment_detail.schedule_seq_assignment}</td>
+   				<td id="schedule_seq_assignment" style="font-weight:bold;">${requestScope.assignment_detail_1.schedule_seq_assignment}</td>
 	   	  </tr>	
 	   	
 	   	  <tr>
    		  	<th>제목</th>
-   	      		<td style="font-weight:bold;">${requestScope.assignment_detail.title}</td>
+   	      		<td style="font-weight:bold;">${requestScope.assignment_detail_1.title}</td>
 	   	  </tr> 
 	   	
 	   	  <tr>
 	   		  <th>내용</th>
 	   	      	<td>
-	   	      	<p style="word-break: break-all;">${requestScope.assignment_detail.content}</p>
+	   	      	<p style="word-break: break-all;">${requestScope.assignment_detail_1.content}</p>
 	   	      	</td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>시작일자</th>
 		   	    <td>
-		   	       	<fmt:parseDate value='${requestScope.assignment_detail.start_date}' pattern="yyyy-MM-dd HH:mm:ss" var='start_date'/>
-					<fmt:formatDate value="${start_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${requestScope.assignment_detail_1.start_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td> 
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>마감일자</th>
 		   	      <td style="color:red;"> 
-		   	       	<fmt:parseDate value='${requestScope.assignment_detail.end_date}' pattern="yyyy-MM-dd HH:mm:ss" var='end_date'/>
-				   	<fmt:formatDate value="${end_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				   	<fmt:formatDate value="${requestScope.assignment_detail_1.end_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				  </td>
 	   	  </tr>
 	   	  
 	   	  <tr>
 	   		  <th>점수</th>
 		   		 <td>  
-			   		 <c:if test="${requestScope.assignment_detail.score == null}">
+			   		 <c:if test="${requestScope.assignment_detail_2.score == null}">
 			   		  	<p style="color:green;">아직 채점되지 않은 과제입니다.</p>
 			   		 </c:if>
-			   		 <c:if test="${requestScope.assignment_detail.score != null}">
-			   		  	${requestScope.assignment_detail.score}
+			   		 <c:if test="${requestScope.assignment_detail_2.score != null}">
+			   		  	${requestScope.assignment_detail_2.score}
 			   		 </c:if>
 	   	     	</td>
 	   	  </tr>
 	   	  <tr>
 	   		  <th>제출시간</th>
 		   	      <td>			   		 
-		   	      	<c:if test="${requestScope.assignment_detail.submit_datetime == null}">
+		   	      	<c:if test="${requestScope.assignment_detail_2.submit_datetime == null}">
 				   		<p style="color:green;">아직 제출되지 않은 과제입니다.</p>
 				   	</c:if>
-				   	<c:if test="${requestScope.assignment_detail.submit_datetime != null}">
-			   		    <fmt:parseDate value='${requestScope.assignment_detail.submit_datetime}' pattern="yyyy-MM-dd HH:mm:ss" var='submit_datetime'/>
-		   				<fmt:formatDate value="${submit_datetime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				   	<c:if test="${requestScope.assignment_detail_2.submit_datetime != null}">
+		   				<fmt:formatDate value="${requestScope.assignment_detail_2.submit_datetime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				   	</c:if>
 				  </td>
 	   	  </tr>
@@ -292,19 +299,18 @@ function goReadComment(){
 	   	  <tr>
 	   		  <th>첨부파일</th>
 		   		  <td>			   		 
-		   	      	<c:if test="${requestScope.assignment_detail.attatched_file == null}">
+		   	      	<c:if test="${requestScope.assignment_detail_1.attatched_file == null}">
 				   		<p style="color:green;">첨부파일이 없습니다.</p>
 				   	</c:if>
-				   		 <c:if test="${requestScope.assignment_detail.attatched_file != null}">
-				   		  	<a href="<%=ctxPath%>/download.action?schedule_seq_assignment=${requestScope.schedule_seq_assignment}">${requestScope.assignment_detail.attatched_file}</a>
+				   		 <c:if test="${requestScope.assignment_detail_1.attatched_file != null}">
+				   		  	<a href="<%=ctxPath%>/download.action?schedule_seq_assignment=${requestScope.assignment_detail_1.schedule_seq_assignment}">${requestScope.assignment_detail_1.attatched_file}</a>
 				   	</c:if>
 				  </td>
 	   	  </tr>
 	   	</table>
-	 
 	 <div class="mt-5">
 	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="history.back()">과제 목록</button> 
-		<c:if test="${requestScope.assignment_detail.submit_yes == 0}">
+		<c:if test="${requestScope.assignment_detail_2.submit_datetime == null}">
 			<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="goaddWriteFrm()">과제 제출</button>
 		</c:if>
 	 	
@@ -325,7 +331,7 @@ function goReadComment(){
 				   <tr style="height: 30px;">
 				   	   <th width="10%">제목</th>
 				   	   <td>
-				   	   	   <input type="text" name="title" style="width:50%;" value="${requestScope.assignment_detail.title}" readonly/>
+				   	   	   <input type="text" name="title" style="width:50%;" value="${requestScope.assignment_detail_1.title}" readonly/>
 				   	   </td>
 				   </tr>
 				   
@@ -336,7 +342,7 @@ function goReadComment(){
 				         <input type="text" name="content" size="100" maxlength="1000"/> 
 				         
 				         <%-- 과제제출에 달리는 원게시물 글번호(즉, 과제제출의 부모글 글번호) --%>
-				         <input type="hidden" name="fk_schedule_seq_assignment" value="${requestScope.assignment_detail.schedule_seq_assignment}" readonly /> 
+				         <input type="hidden" name="fk_schedule_seq_assignment" value="${requestScope.assignment_detail_1.schedule_seq_assignment}" readonly /> 
 				      </td>
 				   </tr>
 					   

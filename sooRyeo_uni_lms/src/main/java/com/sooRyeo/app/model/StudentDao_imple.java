@@ -169,19 +169,33 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public List<Map<String, String>> getassignment_List
 
 	
-	// 수업 - 내 강의 - 과제 - 상세내용
+	
+	// 수업 - 내 강의 - 과제 - 상세내용1
 	@Override
-	public List<String> getassignment_detail(String schedule_seq_assignment, int userid) {
+	public Map<String, Object> getassignment_detail_1(String schedule_seq_assignment) {
+		
+		Map<String, Object> assignment_detail_1 = sqlSession.selectOne("student.getassignment_detail_1", schedule_seq_assignment);
+		
+		return assignment_detail_1;
+		
+	} // end of public Map<String, Object> getassignment_detail_1
+	
+	
+	
+	
+	// 수업 - 내 강의 - 과제 - 상세내용2
+	@Override
+	public Map<String, Object> getassignment_detail_2(String schedule_seq_assignment, int userid) {
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("schedule_seq_assignment", schedule_seq_assignment);
 		paraMap.put("userid", String.valueOf(userid));
 		
-		List<String> assignment_detail = sqlSession.selectList("student.getassignment_detail", paraMap);
+		Map<String, Object> assignment_detail_2 = sqlSession.selectOne("student.getassignment_detail_2", paraMap);
 		
-		return assignment_detail;
+		return assignment_detail_2;
 		
-	} // end of public List<Map<String, String>> getassignment_detail_List
+	} // end of public Map<String, Object> getassignment_detail_2
 
 	
 	// 과제제출
@@ -226,7 +240,7 @@ public class StudentDao_imple implements StudentDao {
 	}
 
 	
-	// schedule_seq_assignment 받아오기
+	// 과제제출  - schedule_seq_assignment 받아오기
 	@Override
 	public String selectSeq(String schedule_seq_assignment) {
 		
@@ -239,15 +253,16 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 과제 제출 내용보기
 	@Override
-	public List<AssignmentSubmit> getreadComment(String fk_schedule_seq_assignment, int userid) {
+	public Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid) {
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("fk_schedule_seq_assignment", fk_schedule_seq_assignment);
 		paraMap.put("userid", String.valueOf(userid));
 		
-		List<AssignmentSubmit> submitList = sqlSession.selectList("student.getreadComment", paraMap);
+		Map<String, Object> asdto = sqlSession.selectOne("student.getreadComment", paraMap);
 		
-		return submitList;
+		return asdto;
+		
 	} // end of public List<AssignmentSubmit> getreadComment
 
 	
@@ -260,7 +275,10 @@ public class StudentDao_imple implements StudentDao {
 		return asdto;
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
-	
+
+
+
+
 	
 	
 }

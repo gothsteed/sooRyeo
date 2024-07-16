@@ -305,8 +305,9 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 
 <h3 style="margin-top:10%;">강의 목록</h3>
 <hr>
+	<c:forEach var="lecture" items="${requestScope.lectureList}">
 	<div class="card mb-5">
-		<c:forEach var="lecture" items="${requestScope.lectureList}">
+		
 		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title}</h5>
 		<div class="card-body">
 			<h5 class="card-title">${lecture.lecture_content}</h5>
@@ -316,8 +317,8 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
 		</div>
-		</c:forEach>
 	</div>
+	</c:forEach>
 </div>
 <div id="target2"></div>
 
