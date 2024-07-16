@@ -141,7 +141,6 @@ public class ProfessorDao_imple implements ProfessorDao {
 		List<Map<String, String>> studentList = sqlSession.selectList("professor.studentList", paraMap);
 		
 		int totalElementCount = sqlSession.selectOne("professor.getTotalElementCount", fk_course_seq);
-		System.out.println("totalElementCount : " + totalElementCount);
 		
 		return new Pager(studentList, currentPage, sizePerPage, totalElementCount);
 	}

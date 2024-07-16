@@ -562,6 +562,9 @@ public class ProfessorService_imple implements ProfessorService {
 		Assignment assignment = dao.searchFile(schedule_seq_assignment);
 		
 		return assignment;
+	}
+	
+	@Override
 	public int getTotalElementCount(String fk_course_seq) {
 		int A_totalElementCount = dao.getTotalElementCount(fk_course_seq);
 		return A_totalElementCount;	
