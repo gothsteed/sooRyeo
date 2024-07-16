@@ -41,21 +41,23 @@
 				json.forEach(function(item, index, array){
 					
 					v_html += `<tr>
-			      				<td style="text-align: center;">\${item.row_num}</td> 
-			      				<td style="text-align: center;">\${item.fk_schedule_seq_assignment}</td> 
-			      				<td style="text-align: center;">\${item.name}</td>
-			      				<td style="text-align: center;">\${item.attatched_file}</td>
-				            	<td style="text-align: center;">\${item.end_date}</td>
-				            	<td style="text-align: center;">\${item.submit_datetime}</td>
-				            	<c:if test='\${item.score == "미채점"}'>
-				                <td style='text-align: center;'><input type='text' name='score'/>
-				                <button type='button' class='btn btn-secondary mr-2' 'goEdit("\${item.fk_schedule_seq_assignment}")'>점수입력</button>
-				                </td>
-				            	</c:if>
-				            	<c:if test='\${item.score != "미채점"}'>
-				                <td style="text-align: center;">${item.score}</td>
-				            	</c:if>
-		      				   </tr>`;
+			      				<td style="text-align: center; vertical-align: middle;">\${item.row_num}</td> 
+			      				<td style="text-align: center; vertical-align: middle;">\${item.fk_schedule_seq_assignment}</td> 
+			      				<td style="text-align: center; vertical-align: middle;">\${item.name}</td>
+			      				<td style="text-align: center; vertical-align: middle;">\${item.attatched_file}</td>
+				            	<td style="text-align: center; vertical-align: middle;">\${item.end_date}</td>
+				            	<td style="text-align: center; vertical-align: middle;">\${item.submit_datetime}</td>`;
+				            	
+					if (item.score === "미채점") {
+				        v_html += `<td style='text-align: center; vertical-align: middle;'>
+				            <input type='text' style="width: 50%" name='score'/>
+				            <button type='button' class='btn btn-secondary mt-1' onclick='goEdit("${item.fk_schedule_seq_assignment}")'>점수입력</button>
+				        </td>`;
+				    } else {
+				        v_html += `<td style="text-align: center;">${item.score}</td>`;
+				    }
+
+				    v_html += `</tr>`;
 					
 				});
 				
