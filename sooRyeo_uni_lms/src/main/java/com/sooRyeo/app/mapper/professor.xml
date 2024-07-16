@@ -171,6 +171,7 @@
 	
 	
 	<resultMap type="HashMap" id="studentListMap">
+		<result property="student_id" 				column="student_id" 	 	 		javaType="int" />
 		<result property="course_seq" 				column="course_seq" 	 	 		javaType="int" />
 		<result property="fk_professor_id" 	 		column="fk_professor_id" 		 	javaType="int" />
 		<result property="fk_curriculum_seq" 		column="fk_curriculum_seq"  		javaType="int" />
@@ -179,20 +180,25 @@
 		<result property="fk_department_seq" 		column="fk_department_seq"  		javaType="int" />
 		<result property="department_name" 			column="department_name"      		javaType="String" />
 	</resultMap>
-	<select id="studentList" parameterType="String" resultMap="studentListMap">
-		select ROW_NUMBER() OVER(ORDER BY S.name ASC) row_num, 
-		C.course_seq AS course_seq,
-		C.fk_professor_id AS fk_professor_id,
-		C.fk_curriculum_seq AS fk_curriculum_seq, 
-		S.name AS name, 
-		S.grade AS grade, 
-		S.fk_department_seq AS fk_department_seq, 
+	<select id="studentList" parameterType="HashMap" resultMap="studentListMap">
+		select name, grade, department_name, student_id
+		from
+		(
+		select rownum rn, name, grade, department_name, student_id
+		from
+		(
+		select S.name AS name, S.student_id as student_id,
+		S.grade AS grade,
 		D.department_name AS department_name
 		from tbl_course C
 		JOIN tbl_registered_course R ON R.fk_course_seq = C.course_seq
 		JOIN tbl_student S ON S.student_id = R.fk_student_id
 		JOIN tbl_department D ON D.department_seq = S.fk_department_seq
-		where C.course_seq = to_number(#{fk_course_seq})
+		where C.course_seq = #{fk_course_seq}
+		) V
+		) T
+		where rn BETWEEN #{startRno} AND #{endRno}
+		order by grade asc, name asc
 	</select>
 	
 	
@@ -378,5 +384,12 @@
 		WHERE SA.fk_schedule_seq_assignment = 45
 	</select>
 
+	<select id="getTotalElementCount" resultType="Integer" parameterType="String">
+		select count(*)
+		from tbl_student S
+		join tbl_registered_course R on S.student_id = R.fk_student_id
+		join tbl_course C on R.fk_course_seq = C.course_seq
+		where course_seq = #{fk_course_seq}
+	</select>
 
 </mapper>

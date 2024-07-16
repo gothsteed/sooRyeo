@@ -186,4 +186,29 @@ commit;
 select *
 from tbl_lecture_notice;
 
+select count(*)
+from tbl_student S
+join tbl_registered_course R on S.student_id = R.fk_student_id
+join tbl_course C on R.fk_course_seq = C.course_seq
+where course_seq = 4;
+
+
+select fk_professor_id, name, grade, department_name
+from
+(
+select rownum rn, fk_professor_id, name, grade, department_name
+from
+(
+select  C.fk_professor_id AS fk_professor_id,
+S.name AS name, 
+S.grade AS grade,
+D.department_name AS department_name
+from tbl_course C
+JOIN tbl_registered_course R ON R.fk_course_seq = C.course_seq
+JOIN tbl_student S ON S.student_id = R.fk_student_id
+JOIN tbl_department D ON D.department_seq = S.fk_department_seq
+where C.course_seq = 4
+) V
+) T
+where rn BETWEEN 1 AND 2
 

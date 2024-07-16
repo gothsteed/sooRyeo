@@ -141,6 +141,7 @@ function goUpload() {
 			<table class="table table-hover">
 				<thead>
 					<tr class="table-success">
+						<th>학번</th>
 						<th>이름</th>
 						<th>학년</th>
 						<th>학과</th>
@@ -150,6 +151,7 @@ function goUpload() {
 					<c:if test="${not empty requestScope.studentList}">
 					<c:forEach var="student" items="${requestScope.studentList}" varStatus="status">
 					<tr>
+						<td>${student.student_id}</td>
 						<td>${student.name}</td>
 						<td>${student.grade}</td>
 						<td>${student.department_name}</td>
@@ -163,6 +165,7 @@ function goUpload() {
 					</c:if>
 				</tbody>
 			</table>
+			<div class="pagination justify-content-center">${requestScope.pageBar}</div>
 		</div>
 	</div>
 </div>

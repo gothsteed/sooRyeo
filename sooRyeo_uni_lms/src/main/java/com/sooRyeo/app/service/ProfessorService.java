@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.AssignJoinSchedule;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
@@ -36,7 +37,10 @@ public interface ProfessorService {
 	ProfessorTimeTable courseList(int prof_id);
 	
 	// 강의 수강생 목록
-	List<Map<String, String>> studentList(String fk_course_seq);
+	Pager<Map<String, String>> studentList(String fk_course_seq, int currentPage);
+	
+	// 학사공지사항 글의 개수를 알아오는 메소드
+	int getTotalElementCount(String fk_course_seq);
 	
 	// 교수 시험, 과제관리
 	List<Map<String, String>> paperAssignment(String fk_course_seq);
@@ -64,6 +68,7 @@ public interface ProfessorService {
 	
 	// 과제제출확인제이슨
 	List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment);
+
 	
 	
 	
