@@ -42,4 +42,33 @@
 		)
 	</insert>
 
+	<select id="getLectureInfo" parameterType="int" resultType="com.sooRyeo.app.domain.Lecture">
+
+		select *
+		from tbl_lecture
+		where lecture_seq = ${lecture_seq}
+
+	</select>
+
+	<update id="updateLecture" parameterType="com.sooRyeo.app.dto.LectureUpdateDto">
+		UPDATE TBL_LECTURE
+		<set>
+			LECTURE_TITLE = #{title},
+			LECTURE_CONTENT = #{content},
+			START_DATE = #{startDateTime},
+			END_DATE = #{endDateTime}
+			<if test="originalVideoTitle != null">
+				, VIDEO_FILE_NAME = #{originalVideoTitle}
+		    	, UPLOAD_VIDEO_FILE_NAME = #{uploadVideoTitle}
+			</if>
+			<if test="originalAttachName != null">
+				, LECTURE_FILE_NAME = #{originalAttachName}
+				,UPLOAD_LECTURE_FILE_NAME = #{uploadAttachName}
+			</if>
+		</set>
+		WHERE LECTURE_SEQ = #{lecture_seq}
+	</update>
+
+
+
 </mapper>

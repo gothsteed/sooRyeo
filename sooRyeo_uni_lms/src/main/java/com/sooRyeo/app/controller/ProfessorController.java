@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.controller.binder.LocalDateTimeBinder;
+import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.LectureUploadDto;
 import com.sooRyeo.app.service.LectureService;
 import org.apache.commons.fileupload.FileUpload;
@@ -55,7 +56,7 @@ public class ProfessorController {
 	private ProfessorService service;
 	
 	@Autowired
-	private StudentService Studentservice;
+	private StudentService studentService;
 
 	@Autowired
 	private LectureService lectureService;
@@ -514,6 +515,14 @@ public class ProfessorController {
 		return lectureService.uploadLecturePage(request, lectureUploadDto);
 	}
 
+	@GetMapping("/professor/editLecture.lms")
+	public ModelAndView lectureEditPage(ModelAndView mav, HttpServletRequest request) {
+		return lectureService.getLectureEditPage(mav, request);
+	}
+	@PostMapping("/professor/updateLectureREST.lms")
+	public ResponseEntity<String> editLecturePage(HttpServletRequest request, @ModelAttribute LectureUploadDto lectureUploadDto) throws Exception {
+		return  lectureService.editLecture(request, lectureUploadDto);
+	}
 
 	
 	@PostMapping("/professor/assignmentEdit_end.lms")

@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class LectureInsertDto {
+public class LectureUpdateDto {
 
-    private Integer course_seq;
+    private Integer lecture_seq;
     private String title;
     private String content;
     private LocalDateTime startDateTime;
@@ -20,12 +20,14 @@ public class LectureInsertDto {
     private String uploadAttachName;
 
 
-    public Integer getCourse_seq() {
-        return course_seq;
+
+
+    public Integer getLecture_seq() {
+        return lecture_seq;
     }
 
-    public void setCourse_seq(Integer course_seq) {
-        this.course_seq = course_seq;
+    public void setLecture_seq(Integer lecture_seq) {
+        this.lecture_seq = lecture_seq;
     }
 
     public String getTitle() {

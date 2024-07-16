@@ -156,24 +156,25 @@
 </style>
 
 <div class="container">
-    <h1>강의 업로드</h1>
-    <form id="uploadForm">
-        <input type="hidden" id="course_seq" name="course_seq" value="${requestScope.course_seq}">
-        <input type="text" id="titleInput" name="title" placeholder="강의 제목" required>
-        <textarea id="contentInput" name="content" placeholder="강의 내용" required></textarea>
+    <h1>강의 수정</h1>
+    <form id="editForm">
+        <input type="hidden" id="lecture_seq" name="lecture_seq" value="${lecture.lecture_seq}">
+        <input type="hidden" id="course_seq" name="course_seq" value="${lecture.fk_course_seq}">
+        <input type="text" id="titleInput" name="title" placeholder="강의 제목" value="${lecture.lecture_title}" required>
+        <textarea id="contentInput" name="content" placeholder="강의 내용" required>${lecture.lecture_content}</textarea>
         <div class="datetime-inputs">
             <div>
                 <label for="startDateInput">시작 날짜 및 시간:</label>
                 <div class="datetime-group">
-                    <input type="date" id="startDateInput" name="startDate" required>
-                    <input type="time" id="startTimeInput" name="startTime" required>
+                    <input type="date" id="startDateInput" name="startDate" value="<fmt:formatDate value='${lecture.start_date}' pattern='yyyy-MM-dd' />" required>
+                    <input type="time" id="startTimeInput" name="startTime" value="<fmt:formatDate value='${lecture.start_date}' pattern='HH:mm' />" required>
                 </div>
             </div>
             <div>
                 <label for="endDateInput">종료 날짜 및 시간:</label>
                 <div class="datetime-group">
-                    <input type="date" id="endDateInput" name="endDate" required>
-                    <input type="time" id="endTimeInput" name="endTime" required>
+                    <input type="date" id="endDateInput" name="endDate" value="<fmt:formatDate value='${lecture.end_date}' pattern='yyyy-MM-dd' />" required>
+                    <input type="time" id="endTimeInput" name="endTime" value="<fmt:formatDate value='${lecture.end_date}' pattern='HH:mm' />" required>
                 </div>
             </div>
         </div>
@@ -182,18 +183,18 @@
                 <label for="videoInput" class="custom-file-upload">
                     강의선택
                 </label>
-                <input type="file" id="videoInput" name="video" accept="video/*" required onchange="updateFileName(this, 'videoFileName')">
-                <div id="videoFileName" class="file-name">선택된 파일 없음</div>
+                <input type="file" id="videoInput" name="video" accept="video/*" onchange="updateFileName(this, 'videoFileName')">
+                <div id="videoFileName" class="file-name">${lecture.video_file_name}</div>
             </div>
             <div class="file-info">
                 <label for="attachmentInput" class="custom-file-upload">
                     첨부파일
                 </label>
                 <input type="file" id="attachmentInput" name="attachment" onchange="updateFileName(this, 'attachmentFileName')">
-                <div id="attachmentFileName" class="file-name">선택된 파일 없음</div>
+                <div id="attachmentFileName" class="file-name">${lecture.lecture_file_name}</div>
             </div>
         </div>
-        <button type="button" onclick="uploadLecture()">업로드</button>
+        <button type="button" onclick="updateLecture()">업데이트</button>
     </form>
     <div class="progress-container">
         <progress id="progressBar" value="0" max="100"></progress>
@@ -208,31 +209,30 @@
         document.getElementById(outputId).textContent = fileName;
     }
 
-    function uploadLecture() {
+    function updateLecture() {
         var formData = new FormData();
-        var course_seq = document.getElementById('course_seq');
-        var titleInput = document.getElementById('titleInput');
-        var contentInput = document.getElementById('contentInput');
-        var startDateInput = document.getElementById('startDateInput');
-        var startTimeInput = document.getElementById('startTimeInput');
-        var endDateInput = document.getElementById('endDateInput');
-        var endTimeInput = document.getElementById('endTimeInput');
+        var course_seq = document.getElementById('course_seq').value;
+        var lecture_seq = document.getElementById('lecture_seq').value;
+        var titleInput = document.getElementById('titleInput').value;
+        var contentInput = document.getElementById('contentInput').value;
+        var startDateInput = document.getElementById('startDateInput').value;
+        var startTimeInput = document.getElementById('startTimeInput').value;
+        var endDateInput = document.getElementById('endDateInput').value;
+        var endTimeInput = document.getElementById('endTimeInput').value;
         var videoInput = document.getElementById('videoInput');
         var attachmentInput = document.getElementById('attachmentInput');
 
-        formData.append('course_seq', course_seq.value);
-        formData.append('title', titleInput.value);
-        formData.append('content', contentInput.value);
-        formData.append('startDateTime', startDateInput.value + 'T' + startTimeInput.value);
-        formData.append('endDateTime', endDateInput.value + 'T' + endTimeInput.value);
+        formData.append('course_seq', course_seq);
+        formData.append('lecture_seq', lecture_seq);
+        formData.append('title', titleInput);
+        formData.append('content', contentInput);
+        formData.append('startDateTime', startDateInput + 'T' + startTimeInput);
+        formData.append('endDateTime', endDateInput + 'T' + endTimeInput);
 
-        if (!videoInput.files[0]) {
-            alert("강의를 선택하시오");
-            return;
+
+        if (videoInput.files[0]) {
+            formData.append('video', videoInput.files[0]);
         }
-
-        formData.append('video', videoInput.files[0]);
-
 
 
         if (attachmentInput.files[0]) {
@@ -240,7 +240,7 @@
         }
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '<%=ctxPath%>/professor/courseUploadREST.lms', true);
+        xhr.open('POST', '<%=ctxPath%>/professor/updateLectureREST.lms', true);
 
         xhr.upload.onprogress = function(event) {
             if (event.lengthComputable) {
@@ -252,18 +252,18 @@
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                document.getElementById('message').innerText = '강의가 성공적으로 업로드되었습니다';
-                alert("강의가 업로드 되었습니다.")
-                location.href="<%=ctxPath%>/professor/courseDetail.lms?course_seq="+${requestScope.course_seq}
+                document.getElementById('message').innerText = '강의가 성공적으로 업데이트되었습니다';
+                alert("강의가 업데이트 되었습니다.");
+                location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq=" + ${lecture.fk_course_seq};
             } else {
-                document.getElementById('message').innerText = '강의 업로드에 실패했습니다';
+                document.getElementById('message').innerText = '강의 업데이트에 실패했습니다';
             }
             document.getElementById('progressBar').value = 0;  // Reset progress bar
             document.getElementById('progressText').innerText = '0%';
         };
 
         xhr.onerror = function() {
-            document.getElementById('message').innerText = '강의 업로드에 실패했습니다';
+            document.getElementById('message').innerText = '강의 업데이트에 실패했습니다';
             document.getElementById('progressBar').value = 0;  // Reset progress bar
             document.getElementById('progressText').innerText = '0%';
         };
