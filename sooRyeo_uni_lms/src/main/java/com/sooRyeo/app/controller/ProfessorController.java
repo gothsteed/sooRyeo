@@ -3,6 +3,8 @@ package com.sooRyeo.app.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.controller.binder.LocalDateTimeBinder;
@@ -33,6 +36,7 @@ import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -290,6 +294,8 @@ public class ProfessorController {
 	            System.out.println("확인용 newFileName " + newFileName);
 	            
 	            dto.setAttatched_file(newFileName); // 업로드된 파일 이름 설정
+	            dto.setOrgfilename(originalFilename); // 원래 파일 이름 설정
+	            
 	        } catch (Exception e) {
 	        	dto.setAttatched_file(newFileName); // 첨부파일이 없을 경우 ""	        	
 	        }
@@ -313,7 +319,7 @@ public class ProfessorController {
 	
 	@PostMapping("/professor/assignmentDetail.lms")
 	public ModelAndView professor_assign_view(ModelAndView mav, HttpServletRequest request) {// 교수 과제상세 페이지
-
+		
 		String fk_course_seq = "";
 		String goBackURL = "";
 		String schedule_seq_assignment = "";
@@ -352,7 +358,7 @@ public class ProfessorController {
 			schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		}
 		
-		mav.addObject("goBackURL", goBackURL);
+		mav.addObject("goBackURL", goBackURL); // 과제 관리목록쪽 url
 		
 		try {
 			
@@ -454,7 +460,7 @@ public class ProfessorController {
 	
 	
 	@PostMapping("/professor/fileDelete_end.lms")
-	public ModelAndView professor_fileDelete_end(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+	public ModelAndView professor_fileDelete_end(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 파일 삭제 끝
 		
 		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");
 		String attatched_file = mrequest.getParameter("attatched_file");
@@ -494,7 +500,7 @@ public class ProfessorController {
 
 	
 	@PostMapping("/professor/assignmentEdit_end.lms")
-	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 과제 수정 끝
 		
 		int n = 0;
 		
@@ -603,7 +609,7 @@ public class ProfessorController {
 	
 	@ResponseBody
 	@PostMapping("/professor/assignment_checkJSON.lms")
-	public String professor_assignment_checkJSON(HttpServletRequest request) {
+	public String professor_assignment_checkJSON(HttpServletRequest request) {// 제출과제 확인 제이슨
 		
 		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		
@@ -619,6 +625,7 @@ public class ProfessorController {
            JSONObject jsonObj = new JSONObject();
            jsonObj.put("row_num", map.get("row_num"));
            jsonObj.put("fk_schedule_seq_assignment", map.get("fk_schedule_seq_assignment"));
+           jsonObj.put("assignment_submit_seq", map.get("assignment_submit_seq"));
            jsonObj.put("name", map.get("name"));
            jsonObj.put("attatched_file", map.get("attatched_file"));
            jsonObj.put("end_date", map.get("end_date"));
@@ -628,11 +635,147 @@ public class ProfessorController {
            
         }// end of for--------------------------------
         
-        System.out.println(jsonArr.toString());
+        // System.out.println(jsonArr.toString());
         
         return jsonArr.toString();
 		
 	}
+	
+	
+	@PostMapping("/professor/scoreUpdate.lms")
+	public ModelAndView professor_scoreUpdate(ModelAndView mav, HttpServletRequest request) {// 과제 점수 등록
+		
+		String goBackURL = request.getParameter("goBackURL");
+		String score = request.getParameter("score");
+		String assignment_submit_seq = request.getParameter("assignment_submit_seq");
+		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		System.out.println("확인용 goBackURL : " + goBackURL);
+		System.out.println("확인용 score : " + score);
+		System.out.println("확인용 assignment_submit_seq : " + assignment_submit_seq);
+		
+		paraMap.put("assignment_submit_seq", assignment_submit_seq);
+		paraMap.put("score", score);
+		
+		int n = service.scoreUpdate(paraMap);
+		
+		
+		if(n != 1) {
+	        mav.addObject("message", "점수를 입력할 수 없습니다.");
+	        mav.addObject("loc", "javascript:history.back()");
+	        mav.setViewName("msg");
+			
+		} else {
+			mav.addObject("message", "점수가 입력되었습니다.");
+	        mav.addObject("loc", request.getContextPath() + goBackURL);
+	        mav.setViewName("msg");
+	    }
+		
+		return mav;
+	}
+	
+	
+	@GetMapping("/download.lms")
+	public void professor_download(HttpServletRequest request, HttpServletResponse response) {// 첨부파일 다운로드
+			
+		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
+		// 첨부파일이 있는 과제번호
+		
+		/*
+    		첨부파일이 있는 글번호에서
+       		2024062809210487735185511000.jpg 처럼
+        	이러한 fileName 값을 DB에서 가져와야 한다.
+        	또한 orgFilename 값도 DB에서 가져와야 한다.
+		*/
+		
+		// **** 웹브라우저에 출력하기 시작 **** //	
+		// HttpServletResponse response 객체는 전송되어져온 데이터를 조작해서 결과물을 나타내고자 할때 쓰인다.
+		
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null;
+		// out 은 웹브라우저에 기술하는 대상체로 가정
+		
+		try {
+	
+			Assignment assignment = service.searchFile(schedule_seq_assignment);
+			
+			if(assignment == null || assignment != null && assignment.getAttatched_file() == null) {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체로 가정
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+	             return;
+			}
+			
+			else {// 정상적으로 다운로드를 할 경우
+				String fileName = assignment.getAttatched_file();
+				// 2024062809210487735185511000.jpg -- WAS(톰캣)에 저장된 파일명
+				
+				String orgFilename = assignment.getOrgfilename();
+				
+				// 쉐보레전면.jpg -- 다운로드시 보여줄 파일명
+				
+				// 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+				// 이 경로는 우리가 파일첨부를 위해서 /addEnd.action 에서 설정해두었던 경로와 똑같아야 한다. 
+				// WAS 의 webapp 의 절대경로를 알아와야 한다. 
+				HttpSession session = request.getSession(); 
+				String root = session.getServletContext().getRealPath("/");
+				
+				// System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+				// ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+				
+				String path = root+"resources"+File.separator+"files";
+				/* 	File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+	        		운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+	            	운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+				*/
+				// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+				// System.out.println("~~~ 확인용 path => " + path);
+				// ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+				
+				// ***** file 다운로드 하기 ***** //
+	            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
+	            // flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+	            flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+	            // file 다운로드 성공시 flag 는 true,
+	            // file 다운로드 실패시 flag 는 false 를 가진다.
+	            
+	            if(!flag) {
+	               // 다운로드가 실패한 경우 메시지를 띄워준다. 
+	               out = response.getWriter();
+	                // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+	                
+	                out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+	            }
+				
+				
+				
+			}
+
+			
+		} catch (NumberFormatException | IOException e) {
+			
+			try {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체로 가정
+				
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+				
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			
+		}	
+		
+	}// end of public void professor_download(HttpServletRequest request, HttpServletResponse response) 
+		
+
+	
+	
+	
+	
 	
 	
 	

@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.AssignJoinSchedule;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
@@ -64,6 +65,12 @@ public interface ProfessorService {
 	
 	// 과제제출확인제이슨
 	List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment);
+	
+	// 점수 입력
+	int scoreUpdate(Map<String, String> paraMap);
+	
+	// 다운로드를 위해 파일 찾기
+	Assignment searchFile(String schedule_seq_assignment);
 	
 	
 	

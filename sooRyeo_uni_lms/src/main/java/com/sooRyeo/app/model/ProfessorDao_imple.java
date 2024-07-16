@@ -7,6 +7,7 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.AssignJoinSchedule;
@@ -167,9 +168,13 @@ public class ProfessorDao_imple implements ProfessorDao {
 			paraMap.put("content", dto.getContent());
 			paraMap.put("schedule_seq_assignment", schedule_seq);
 			paraMap.put("attatched_file", dto.getAttatched_file());
+			paraMap.put("orgfilename", dto.getOrgfilename());
 			
+			String orgfilename = dto.getOrgfilename();
 			String attatched_file = paraMap.get("attatched_file");
+			
 			System.out.println("확인용 attatched_file : " + attatched_file);
+			System.out.println("확인용 orgfilename : " + orgfilename);
 			
 			n = sqlSession.insert("professor.insert_tbl_assignment", paraMap);
 				
@@ -266,6 +271,29 @@ public class ProfessorDao_imple implements ProfessorDao {
 		List<Map<String, String>> assignmentCheckJSON = sqlSession.selectList("professor.assignmentCheckJSON", schedule_seq_assignment);
 		
 		return assignmentCheckJSON;
+	}
+
+
+	@Override
+	public int scoreUpdate(Map<String, String> paraMap) {
+		
+		int n = 0;
+		
+		try {
+			n = sqlSession.update("professor.scoreUpdate", paraMap);
+		} catch (DataIntegrityViolationException e) {
+			
+		}
+		return n;
+	}
+
+	
+	@Override
+	public Assignment searchFile(String schedule_seq_assignment) {
+		
+		Assignment assignment = sqlSession.selectOne("professor.searchFile", schedule_seq_assignment);
+		
+		return assignment;
 	}
 
 

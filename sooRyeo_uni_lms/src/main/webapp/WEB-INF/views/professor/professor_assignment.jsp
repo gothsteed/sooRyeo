@@ -46,7 +46,6 @@
 			data:{"course_seq":"${requestScope.fk_course_seq}"},  
 			dataType:"json",
 			success:function(json){
-				console.log(JSON.stringify(json));
 				
 				let v_html = ``;
 				

@@ -11,6 +11,7 @@ public class AssignScheInsertDTO {
 	private String title;
 	private String content;
 	private String attatched_file;
+	private String orgfilename;
 	
 	private MultipartFile attach;
 	
@@ -56,7 +57,13 @@ public class AssignScheInsertDTO {
 	public void setAttatched_file(String attatched_file) {
 		this.attatched_file = attatched_file;
 	}
-
+	public String getOrgfilename() {
+		return orgfilename;
+	}
+	public void setOrgfilename(String orgfilename) {
+		this.orgfilename = orgfilename;
+	}
+	
 	
 	public MultipartFile getAttach() {
 		return attach;
