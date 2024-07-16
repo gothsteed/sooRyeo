@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.controller.binder.LocalDateTimeBinder;
+import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.LectureUploadDto;
 import com.sooRyeo.app.service.LectureService;
 import org.apache.commons.fileupload.FileUpload;
@@ -32,10 +33,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
-import com.sooRyeo.app.domain.AssignJoinSchedule;
-import com.sooRyeo.app.domain.Course;
-import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.service.ProfessorService;
 import com.sooRyeo.app.service.StudentService;
@@ -50,7 +47,7 @@ public class ProfessorController {
 	private ProfessorService service;
 	
 	@Autowired
-	private StudentService Studentservice;
+	private StudentService studentService;
 
 	@Autowired
 	private LectureService lectureService;
@@ -179,9 +176,18 @@ public class ProfessorController {
 		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);	
 		
 		List<Map<String, String>> studentList = service.studentList(fk_course_seq);
-		
+		List<Lecture> lectureList = studentService.getlectureList(fk_course_seq);
+
+		for (Lecture lecture : lectureList) {
+			System.out.println(lecture.getStart_date());
+			System.out.println(lecture.getEnd_date());
+
+		}
+
+
 		mav.addObject("studentList", studentList);
 		mav.addObject("fk_course_seq", fk_course_seq);
+		mav.addObject("lectureList", lectureList);
 		mav.setViewName("professor_courseDetail");
 		
 		return mav;
@@ -491,6 +497,14 @@ public class ProfessorController {
 		return lectureService.uploadLecturePage(request, lectureUploadDto);
 	}
 
+	@GetMapping("/professor/editLecture.lms")
+	public ModelAndView lectureEditPage(ModelAndView mav, HttpServletRequest request) {
+		return lectureService.getLectureEditPage(mav, request);
+	}
+	@PostMapping("/professor/updateLectureREST.lms")
+	public ResponseEntity<String> editLecturePage(HttpServletRequest request, @ModelAttribute LectureUploadDto lectureUploadDto) throws Exception {
+		return  lectureService.editLecture(request, lectureUploadDto);
+	}
 
 	
 	@PostMapping("/professor/assignmentEdit_end.lms")

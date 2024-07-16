@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 public class LectureUploadDto {
+    private Integer lecture_seq;
     private Integer course_seq;
     private String title;
     private String content;
@@ -16,6 +17,13 @@ public class LectureUploadDto {
     private MultipartFile video;
     private MultipartFile attachment;
 
+    public int getLecture_seq() {
+        return lecture_seq;
+    }
+
+    public void setLecture_seq(int lecture_seq) {
+        this.lecture_seq = lecture_seq;
+    }
 
     public String getTitle() {
         return title;

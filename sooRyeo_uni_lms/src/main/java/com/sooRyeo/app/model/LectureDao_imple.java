@@ -1,6 +1,8 @@
 package com.sooRyeo.app.model;
 
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.dto.LectureInsertDto;
+import com.sooRyeo.app.dto.LectureUpdateDto;
 import com.sooRyeo.app.dto.LectureUploadDto;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +19,15 @@ public class LectureDao_imple implements LectureDao {
     @Override
     public int insertLecture(LectureInsertDto lectureUploadDto) {
         return  sqlSession.insert("lecture.insertLecture", lectureUploadDto);
+    }
+
+    @Override
+    public Lecture getLectureInfo(int lectureSeq) {
+        return  sqlSession.selectOne("lecture.getLectureInfo", lectureSeq);
+    }
+
+    @Override
+    public int updateLecture(LectureUpdateDto lectureDto) {
+        return sqlSession.update("lecture.updateLecture", lectureDto);
     }
 }

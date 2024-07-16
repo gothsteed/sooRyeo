@@ -12,4 +12,8 @@ public interface LectureService {
     ModelAndView getUploadLecturePage(HttpServletRequest request, ModelAndView mav);
 
     ResponseEntity<String> uploadLecturePage(MultipartHttpServletRequest request, LectureUploadDto lectureUploadDto) throws Exception;
+
+    ModelAndView getLectureEditPage(ModelAndView mav, HttpServletRequest request);
+
+    ResponseEntity<String> editLecture(HttpServletRequest request, LectureUploadDto lectureUploadDto) throws Exception;
 }

@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>   
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>   
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
  
@@ -35,6 +36,38 @@
     background-color: #f5f5f5; 
 }
 
+
+.btn-modern {
+	border: none;
+	padding: 8px 16px;
+	border-radius: 4px;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-edit {
+	background-color: #3498db;
+	color: white;
+}
+
+.btn-edit:hover {
+	background-color: #2980b9;
+}
+
+.btn-delete {
+	background-color: #e74c3c;
+	color: white;
+}
+
+.btn-delete:hover {
+	background-color: #c0392b;
+}
+
+.btn-modern:active {
+	transform: translateY(1px);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
 
 
 
@@ -102,7 +135,30 @@ function goUpload() {
 	document.body.appendChild(form);
 	form.submit();
 }
+function editLecture(lectureSeq) {
+	window.location.href = '<%=ctxPath%>/professor/editLecture.lms?lecture_seq=' + lectureSeq;
+}
 
+function deleteLecture(lectureSeq) {
+	if (confirm('Are you sure you want to delete this lecture?')) {
+		$.ajax({
+			url: '<%=ctxPath%>/professor/deleteLecture.lms',
+			type: 'POST',
+			data: { lectureSeq: lectureSeq },
+			success: function(response) {
+				if (response.success) {
+					alert('Lecture deleted successfully.');
+					location.reload();
+				} else {
+					alert('Failed to delete lecture.');
+				}
+			},
+			error: function(xhr, status, error) {
+				alert('Error deleting lecture: ' + error);
+			}
+		});
+	}
+}
 
 
 </script>
@@ -164,6 +220,42 @@ function goUpload() {
 				</tbody>
 			</table>
 		</div>
+
+
+		<c:forEach var="lecture" items="${requestScope.lectureList}">
+			<div class="card mb-5">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<h5 class="mb-0" style="font-weight:bold;">${lecture.lecture_title}</h5>
+					<div>
+						<button type="button" class="btn btn-modern btn-edit mr-2" onclick="editLecture(${lecture.lecture_seq})">수정</button>
+						<button type="button" class="btn btn-modern btn-delete" onclick="deleteLecture(${lecture.lecture_seq})">삭제</button>
+					</div>
+				</div>
+
+				<div class="card-body">
+					<h5 class="card-title">${lecture.lecture_content}</h5>
+					<hr>
+					<a href="<%= ctxPath%>/student/classPlay.lms" class="card-link">
+						<img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}
+					</a>
+					<!-- 영상 보는 기간 -->
+					<span class="card-text" style="color:orange;">
+						<fmt:formatDate value="${lecture.start_date}" pattern="yyyy-MM-dd"/> ~
+						<fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/>
+            		</span>
+					<c:if test="${empty lecture.lecture_file_name}">
+						<a class="card-link mt-3 ml-5">
+							<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;첨부파일이 없습니다.
+						</a>
+					</c:if>
+					<c:if test="${not empty lecture.lecture_file_name}">
+						<a href="#pdf" class="card-link mt-3 ml-5">
+							<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}
+						</a>
+					</c:if>
+				</div>
+			</div>
+		</c:forEach>
 	</div>
 </div>
 
