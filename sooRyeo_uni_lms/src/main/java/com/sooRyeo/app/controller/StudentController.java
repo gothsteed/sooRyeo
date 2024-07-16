@@ -249,7 +249,7 @@ public class StudentController {
 		
 		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		
-		Map<String, String> assignment_detail = service.getassignment_detail(schedule_seq_assignment, userid);
+		List<String> assignment_detail = service.getassignment_detail(schedule_seq_assignment, userid);
 		
 		mav.addObject("assignment_detail", assignment_detail);
 		mav.addObject("schedule_seq_assignment",schedule_seq_assignment);

@@ -171,13 +171,13 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 수업 - 내 강의 - 과제 - 상세내용
 	@Override
-	public Map<String, String> getassignment_detail(String schedule_seq_assignment, int userid) {
+	public List<String> getassignment_detail(String schedule_seq_assignment, int userid) {
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("schedule_seq_assignment", schedule_seq_assignment);
 		paraMap.put("userid", String.valueOf(userid));
 		
-		Map<String, String> assignment_detail = sqlSession.selectOne("student.getassignment_detail", paraMap);
+		List<String> assignment_detail = sqlSession.selectList("student.getassignment_detail", paraMap);
 		
 		return assignment_detail;
 		

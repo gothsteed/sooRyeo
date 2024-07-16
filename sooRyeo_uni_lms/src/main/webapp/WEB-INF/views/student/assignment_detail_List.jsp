@@ -192,7 +192,7 @@ function goReadComment(){
 		    		v_html +=   "<td class='comment'>"+item.fk_student_id+"</td>";
 		    		v_html +=   "<td class='comment'>"+item.title+"</td>";
 		    		v_html +=   "<td class='comment'>"+item.content+"</td>";
-                    if (item.attached_file) {
+                    if (item.attached_file != null) {
                         v_html += "<td class='comment'><a href='<%=ctxPath%>/downloadComment.action?fileName=" + item.attached_file + "'>" + item.attached_file + "</a></td>";
                     } 
                     else {
