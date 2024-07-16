@@ -85,7 +85,23 @@ function scrollToTarget_down() {
 		
 		location.href = "<%=ctxPath%>/professor/assignment.lms?course_seq="+${fk_course_seq}; // 페이지 이동
 		
-	}// end of function goAssignment() 
+	}// end of function goAssignment()
+
+
+function goUpload() {
+	var form = document.createElement('form');
+	form.method = 'POST';
+	form.action = "<%=ctxPath%>/professor/courseUpload.lms";
+
+	var input = document.createElement('input');
+	input.type = 'hidden';
+	input.name = 'course_seq';
+	input.value = "${fk_course_seq}";  // Ensure this is properly set with the server-side variable
+
+	form.appendChild(input);
+	document.body.appendChild(form);
+	form.submit();
+}
 
 
 
@@ -112,6 +128,13 @@ function scrollToTarget_down() {
 			<img src="<%=ctxPath%>/resources/images/tasks.png" class="img-fluid" style="width:30%;">
 			<br><br>
 			<span id="tasks" style="color:black; font-weight: bold;">과제</span>
+			<br>
+		</button>
+
+		<button type="button" class="btn btn-outline-light ml-5" id="assignment" style="width:20%; height:150px;" onclick="goUpload()">
+			<img src="<%=ctxPath%>/resources/images/lecture_upload_icon.png" class="img-fluid" style="width:30%;">
+			<br><br>
+			<span id="tasks" style="color:black; font-weight: bold;">수업 업로드</span>
 			<br>
 		</button>
 		<div class="table-container mt-3">
