@@ -548,6 +548,24 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public int scoreUpdate(Map<String, String> paraMap) {
+		
+		int n = dao.scoreUpdate(paraMap);
+		
+		return n;
+	}
+
+
+	@Override
+	public Assignment searchFile(String schedule_seq_assignment) {
+		
+		Assignment assignment = dao.searchFile(schedule_seq_assignment);
+		
+		return assignment;
+	}
+
+
 
 	
 

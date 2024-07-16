@@ -72,6 +72,12 @@ public interface ProfessorDao {
 	
 	// 과제제출확인제이슨
 	List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment);
+	
+	// 점수 입력
+	int scoreUpdate(Map<String, String> paraMap);
+	
+	// 다운로드를 위해 파일 찾기
+	Assignment searchFile(String schedule_seq_assignment);
 
 	
 	

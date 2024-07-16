@@ -346,6 +346,7 @@ tbl_assignment
 
 SELECT ROW_NUMBER() OVER(order by V.end_date asc) row_num,
 SA.fk_schedule_seq_assignment AS fk_schedule_seq_assignment,
+SA.assignment_submit_seq AS assignment_submit_seq,
 S.name AS name,
 NVL(SA.attatched_file, '없음')AS attached_file,
 to_char(V.end_date, 'yyyy-mm-dd')AS end_date,
@@ -361,3 +362,12 @@ on A.schedule_seq_assignment = S.schedule_seq
 where schedule_type = 1)V
 ON SA.fk_schedule_seq_assignment = V.schedule_seq_assignment
 WHERE SA.fk_schedule_seq_assignment = 45
+
+
+select *
+from
+tbl_assignment
+
+ALTER TABLE tbl_assignment ADD orgfilename NVARCHAR2(200);
+
+commit;

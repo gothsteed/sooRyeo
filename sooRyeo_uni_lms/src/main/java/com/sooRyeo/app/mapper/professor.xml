@@ -273,8 +273,8 @@
 		</if>
 		<!-- === #195. 첨부파일이 있는 경우 -->
 		<if test="attatched_file != null">
-			insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file) 
-			values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content}, #{attatched_file} )
+			insert into tbl_assignment(schedule_seq_assignment, fk_course_seq, content, attatched_file, orgfilename ) 
+			values(to_number(#{schedule_seq_assignment}), to_number(#{fk_course_seq}), #{content}, #{attatched_file}, #{orgfilename} )
 		</if>
 	</insert>
 	
@@ -352,6 +352,7 @@
 	<resultMap type="HashMap" id="assignmentCheckMap">
 		<result property="row_num" 						column="row_num" 	 	 			javaType="int" />
 		<result property="fk_schedule_seq_assignment" 	column="fk_schedule_seq_assignment" javaType="int" />
+		<result property="assignment_submit_seq" 		column="assignment_submit_seq" 			javaType="int" />
 		<result property="name" 						column="name" 						javaType="String" />
 		<result property="attatched_file" 				column="attatched_file"      		javaType="String" />
 		<result property="end_date" 					column="end_date"  					javaType="String" />
@@ -361,6 +362,7 @@
 	<select id="assignmentCheckJSON" parameterType="String" resultMap="assignmentCheckMap" >
 		SELECT ROW_NUMBER() OVER(order by V.end_date asc) row_num,
 		SA.fk_schedule_seq_assignment AS fk_schedule_seq_assignment,
+		SA.assignment_submit_seq AS assignment_submit_seq,
 		S.name AS name,
 		NVL(SA.attatched_file, '없음')AS attatched_file,
 		to_char(V.end_date, 'yyyy-mm-dd')AS end_date,
@@ -375,8 +377,21 @@
 		on A.schedule_seq_assignment = S.schedule_seq
 		where schedule_type = 1)V
 		ON SA.fk_schedule_seq_assignment = V.schedule_seq_assignment
-		WHERE SA.fk_schedule_seq_assignment = 45
+		WHERE SA.fk_schedule_seq_assignment = to_number(#{schedule_seq_assignment})
 	</select>
-
+	
+	
+	<update id="scoreUpdate" parameterType="HashMap">
+		update tbl_assignment_submit set score = #{score}
+		where assignment_submit_seq = to_number(#{assignment_submit_seq})
+	</update>
+	
+	
+	<select id="searchFile" parameterType="String" resultType="com.sooRyeo.app.domain.Assignment">
+		select attatched_file, orgfilename
+		from tbl_assignment
+		where schedule_seq_assignment = #{schedule_seq_assignment}
+	</select>
+	
 
 </mapper>
