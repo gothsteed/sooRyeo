@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
@@ -118,13 +119,31 @@ public class ProfessorDao_imple implements ProfessorDao {
 		return new ProfessorTimeTable(prof_id, profCourseList);
 	}
 	
+	@Override
+	public int getTotalElementCount(String fk_course_seq) {
+		int n = sqlSession.selectOne("professor.getTotalElementCount", fk_course_seq);
+		return n;
+	}
 	
 	@Override
-	public List<Map<String, String>> studentList(String fk_course_seq) {
+	public Pager<Map<String, String>> studentList(String fk_course_seq, int currentPage) {
 		
-		List<Map<String, String>> studentList = sqlSession.selectList("professor.studentList", fk_course_seq);
+		int sizePerPage = 5;
 		
-		return studentList;
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("startRno", startRno);
+		paraMap.put("endRno", endRno);
+		paraMap.put("currentShowPageNo", currentPage);
+		paraMap.put("fk_course_seq", fk_course_seq);
+		List<Map<String, String>> studentList = sqlSession.selectList("professor.studentList", paraMap);
+		
+		int totalElementCount = sqlSession.selectOne("professor.getTotalElementCount", fk_course_seq);
+		System.out.println("totalElementCount : " + totalElementCount);
+		
+		return new Pager(studentList, currentPage, sizePerPage, totalElementCount);
 	}
 
 
@@ -295,6 +314,9 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		return assignment;
 	}
+
+
+
 
 
 

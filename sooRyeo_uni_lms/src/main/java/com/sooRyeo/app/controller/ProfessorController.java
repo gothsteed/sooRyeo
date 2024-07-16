@@ -38,6 +38,7 @@ import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
@@ -182,10 +183,26 @@ public class ProfessorController {
 		
 		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);	
 		
-		List<Map<String, String>> studentList = service.studentList(fk_course_seq);
+		// List<Map<String, String>> studentList = service.studentList(fk_course_seq);
 		
-		mav.addObject("studentList", studentList);
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		
+		int getTotalElementCount = service.getTotalElementCount(fk_course_seq);
+		
+		Pager<Map<String, String>> studentList = service.studentList(fk_course_seq, currentPage);
+		
 		mav.addObject("fk_course_seq", fk_course_seq);
+		
+		mav.addObject("studentList", studentList.getObjectList());
+		mav.addObject("currentPage", studentList.getPageNumber());
+		mav.addObject("perPageSize", studentList.getPerPageSize());
+		mav.addObject("pageBar", studentList.makePageBar(request.getContextPath() + "/professor/courseDetail.lms", "course_seq="+fk_course_seq));
+		
 		mav.setViewName("professor_courseDetail");
 		
 		return mav;

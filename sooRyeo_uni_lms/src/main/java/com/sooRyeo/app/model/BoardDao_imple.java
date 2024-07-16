@@ -95,7 +95,6 @@ public class BoardDao_imple implements BoardDao {
 		List<Announcement> announcementList = sqlSession.selectList("board.getAnnouncement", paraMap);
 		
 		int A_totalElementCount = sqlSession.selectOne("board.getA_TotalElementCount", paraMap);
-		
 		return new Pager(announcementList, currentPage, sizePerPage, A_totalElementCount);
 	}
 

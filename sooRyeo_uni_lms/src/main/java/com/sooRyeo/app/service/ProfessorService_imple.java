@@ -24,6 +24,7 @@ import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
@@ -362,10 +363,8 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public List<Map<String, String>> studentList(String fk_course_seq) {
-		
-		List<Map<String, String>> studentList = dao.studentList(fk_course_seq);
-		
+	public Pager<Map<String, String>> studentList(String fk_course_seq, int currentPage) {
+		Pager<Map<String, String>> studentList = dao.studentList(fk_course_seq, currentPage);
 		return studentList;
 	}
 
@@ -563,6 +562,9 @@ public class ProfessorService_imple implements ProfessorService {
 		Assignment assignment = dao.searchFile(schedule_seq_assignment);
 		
 		return assignment;
+	public int getTotalElementCount(String fk_course_seq) {
+		int A_totalElementCount = dao.getTotalElementCount(fk_course_seq);
+		return A_totalElementCount;	
 	}
 
 
