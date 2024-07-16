@@ -82,7 +82,7 @@
     	 // 폼(form)을 전송(submit)
     	 const frm = document.addFrm;
     	 frm.method = "post";
-    	 frm.action = "<%= ctxPath%>/admin/addListEnd.lms";
+    	 frm.action = "<%= ctxPath%>/board/addListEnd.lms";
     	 frm.submit();
     	 
      });
