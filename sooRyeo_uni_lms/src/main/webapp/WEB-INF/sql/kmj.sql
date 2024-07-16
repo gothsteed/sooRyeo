@@ -405,13 +405,14 @@ drop table tbl_consult;
 ALTER TABLE tbl_consult CHANGE COLUMN COTENT CONTENT Nvarchar2(30);
 
 SELECT *
-FROM TBL_CONSULT;
+FROM TBL_CONSULT
+where fk_student_id = '202400009'
 
 select *
 from tbl_schedule
 where schedule_seq = '42';
 
-del
+
 
 
 select assignment_submit_seq
@@ -438,10 +439,17 @@ where schedule_seq = '59';
 
 commit;
 
-			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
-			from tbl_consult A join tbl_schedule B
-			on A.fk_schedule_seq = B.schedule_seq
-			where fk_student_id = '202400005' and confirm = '1'
+select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+from tbl_consult A join tbl_schedule B
+on A.fk_schedule_seq = B.schedule_seq
+where fk_student_id = '202400005' and confirm = '1'
+      
+      
+select lecture_title, lecture_content     
+from tbl_lecture
+where lecture_seq = '14'
+            
+            
             
             
             

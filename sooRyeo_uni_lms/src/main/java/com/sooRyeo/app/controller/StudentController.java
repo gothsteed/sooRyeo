@@ -298,8 +298,6 @@ public class StudentController {
 		
 		String lecture_seq = request.getParameter("lecture_seq");
 		
-		System.out.println("lecture_seq : " + lecture_seq);
-		
 		List<Lecture> classOne = service.classPlay_One(lecture_seq);
 		
 		mav.addObject("classOne", classOne);

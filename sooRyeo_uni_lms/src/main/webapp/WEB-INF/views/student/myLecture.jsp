@@ -322,7 +322,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 
 	<div class="card mb-5">
 		
-		<input type="text" name="lecture_seq" value="${lecture.lecture_seq}" />
+		<input type="hidden" name="lecture_seq" value="${lecture.lecture_seq}" />
 		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title}</h5>
 		<div class="card-body">
 			<h5 class="card-title">${lecture.lecture_content}</h5>
