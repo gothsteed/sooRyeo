@@ -479,6 +479,75 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public int fileDelete(MultipartHttpServletRequest mrequest, String attatched_file, String schedule_seq_assignment) {
+		
+		int n = 0;
+			
+		HttpSession session = mrequest.getSession();
+
+        String root = session.getServletContext().getRealPath("/");
+        
+        // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+        // ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+        
+        String path = root+"resources"+File.separator+"files";
+        /* 	File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+        	운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+        	운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+        */
+        // path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+        // System.out.println("~~~ 확인용 path => " + path);
+        // ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+        
+        n = dao.delAttatched_file(schedule_seq_assignment);
+        //System.out.println("n1: " + n1);
+        
+        if (n == 1) {
+          
+            if (attatched_file != null && !"".equals(attatched_file)) {
+                try {
+                    fileManager.doFileDelete(attatched_file, path);
+                } catch (Exception e) {
+                    n = 0;
+                }
+            }
+            
+        } // end of if(n1 == 1)
+	            
+		return n;
+	}
+
+
+	@Override
+	public int assignmentEdit_End(AssignScheInsertDTO dto) {
+		
+		int n = 0;
+		
+		n = dao.assignmentEdit_End(dto);
+		
+		return n;
+	}
+
+
+	@Override
+	public AssignScheInsertDTO file_check(String schedule_seq_assignment) {
+		
+		AssignScheInsertDTO file_check = dao.file_check(schedule_seq_assignment);
+		
+		return file_check;
+	}
+
+
+	@Override
+	public List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment) {
+		
+		List<Map<String, String>> assignmentCheckJSON = dao.assignmentCheckJSON(schedule_seq_assignment);
+		
+		return assignmentCheckJSON;
+	}
+
+
 
 	
 

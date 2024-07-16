@@ -198,7 +198,7 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		return n;
 	}
-
+	
 	
 	@Override
 	public AssignJoinSchedule assignmentEdit(String schedule_seq_assignment) {
@@ -206,6 +206,66 @@ public class ProfessorDao_imple implements ProfessorDao {
 		AssignJoinSchedule assign_edit = sqlSession.selectOne("professor.assignmentEdit", schedule_seq_assignment);
 		
 		return assign_edit;
+	}
+
+
+	@Override
+	public int delAttatched_file(String schedule_seq_assignment) {
+		
+		int n = sqlSession.update("professor.delAttatched_file", schedule_seq_assignment);
+		
+		return n;
+	}
+
+
+	@Override
+	public int assignmentEdit_End(AssignScheInsertDTO dto) {
+		
+		int n = 0;
+		String schedule_seq_assignment = String.valueOf(dto.getSchedule_seq_assignment());
+		//System.out.println("확인용 dto 시작 " + dto.getStartDate());
+		//System.out.println("확인용 dto 끝 " + dto.getEndDate());
+		//System.out.println("확인용 dto 제목 " + dto.getTitle());
+			
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("title", dto.getTitle());
+		paraMap.put("startDate", dto.getStartDate());
+		paraMap.put("endDate", dto.getEndDate());
+		paraMap.put("schedule_seq_assignment", schedule_seq_assignment);
+		
+		n = sqlSession.update("professor.update_tbl_schedule", paraMap);
+		
+		if(n != 0) {
+			
+			paraMap.put("content", dto.getContent());
+			paraMap.put("attatched_file", dto.getAttatched_file());
+			
+			String attatched_file = paraMap.get("attatched_file");
+			System.out.println("확인용 attatched_file : " + attatched_file);
+			
+			n = sqlSession.update("professor.update_tbl_assignment", paraMap);
+				
+		}		
+		
+		return n;
+	}
+
+
+	@Override
+	public AssignScheInsertDTO file_check(String schedule_seq_assignment) {
+		
+		AssignScheInsertDTO file_check = sqlSession.selectOne("professor.file_check", schedule_seq_assignment);
+		
+		return file_check;
+	}
+
+
+	@Override
+	public List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment) {
+		
+		List<Map<String, String>> assignmentCheckJSON = sqlSession.selectList("professor.assignmentCheckJSON", schedule_seq_assignment);
+		
+		return assignmentCheckJSON;
 	}
 
 

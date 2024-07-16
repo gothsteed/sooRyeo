@@ -216,10 +216,10 @@ SELECT
         order by schedule_seq desc;
         
         
-        select attatched_file
+        select *
         from
         tbl_assignment
-        where schedule_seq_assignment = 47
+        where schedule_seq_assignment = 81
         
         --- 과제 테이블 셀렉트용 --
         select
@@ -298,16 +298,66 @@ join tbl_registered_course R ON S.student_id = R.fk_student_id
 left join tbl_assignment_submit A ON S.student_id = A.fk_student_id
 
 
-		select
-		A.fk_course_seq as fk_course_seq,
-		A.schedule_seq_assignment as schedule_seq_assignment,
-        A.content as content,
-        NVL(A.attatched_file, '없음') as attatched_file,
-        S.schedule_seq as schedule_seq,
-        S.title as title,
-        S.start_date as start_date,
-        S.end_date as end_date 
-        from
-        tbl_assignment A
-        join tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
-        where A.schedule_seq_assignment = 46
+
+-- 기존 외래 키 제약 조건 삭제
+ALTER TABLE tbl_assignment_submit
+DROP CONSTRAINT FK_ASSIGN_TO_ASSIGN_SUBMIT;
+
+
+commit;
+-- 새로운 외래 키 제약 조건 추가
+ALTER TABLE tbl_assignment_submit
+ADD CONSTRAINT FK_ASSIGN_TO_ASSIGN_SUBMIT
+FOREIGN KEY (fk_schedule_seq_assignment)
+REFERENCES tbl_assignment (schedule_seq_assignment)
+ON DELETE CASCADE;
+
+
+-- 과제번호, 제목, 내용, 시작일자, 마감일자, 점수, 제출시간, 첨부파일
+SELECT V.schedule_seq_assignment as schedule_seq_assignment
+     , V.title as title
+     , V.content as content
+     , V.start_date as start_date
+     , V.end_date as end_date
+     , B.score as score
+     , B.submit_datetime as submit_datetime
+     , B.attatched_file as attatched_file
+FROM
+(
+    select *
+    from tbl_assignment A join tbl_schedule S
+    on A.schedule_seq_assignment = S.schedule_seq
+    where schedule_type = 1
+)V LEFT JOIN
+(
+    select *
+    from tbl_assignment_submit
+) B
+on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+where schedule_seq_assignment = 81
+
+select *
+from
+tbl_assignment_submit
+
+select *
+from
+tbl_assignment
+
+SELECT ROW_NUMBER() OVER(order by V.end_date asc) row_num,
+SA.fk_schedule_seq_assignment AS fk_schedule_seq_assignment,
+S.name AS name,
+NVL(SA.attatched_file, '없음')AS attached_file,
+to_char(V.end_date, 'yyyy-mm-dd')AS end_date,
+NVL(to_char(SA.submit_datetime, 'yyyy-mm-dd'), '미제출')AS submit_datetime,
+NVL(to_char(SA.score), '미채점') AS score
+FROM
+tbl_student S
+join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+left join
+(select *
+from tbl_assignment A join tbl_schedule S
+on A.schedule_seq_assignment = S.schedule_seq
+where schedule_type = 1)V
+ON SA.fk_schedule_seq_assignment = V.schedule_seq_assignment
+WHERE SA.fk_schedule_seq_assignment = 45

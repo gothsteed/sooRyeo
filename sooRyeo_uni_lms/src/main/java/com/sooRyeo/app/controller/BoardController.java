@@ -1,6 +1,5 @@
 package com.sooRyeo.app.controller;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -18,8 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -112,7 +109,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/board/lecture_notice_view.lms")
-	public ModelAndView view(ModelAndView mav, HttpServletRequest request, Model model) {
+	public ModelAndView lecture_notice_view(ModelAndView mav, HttpServletRequest request, Model model) {
 		
 		HttpSession session = request.getSession();
 		
@@ -234,7 +231,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/board/lecture_notice_view_2.lms")
-	public ModelAndView announcementView_2(ModelAndView mav, HttpServletRequest request, RedirectAttributes redirectAttr) {
+	public ModelAndView lecture_notice_view_2(ModelAndView mav, HttpServletRequest request, RedirectAttributes redirectAttr) {
 		
 		// 조회하고자 하는 글번호 받아오기
 		String seq = request.getParameter("seq");
@@ -313,7 +310,7 @@ public class BoardController {
 	}	
 	
 	@PostMapping("/board/del.lms")
-	public ModelAndView delEnd(ModelAndView mav,HttpServletRequest request) { // 여기서는 받아올것이 1개밖에 없어서 굳이 boardvo로 불러올 필요가 없어서 안적었다.
+	public ModelAndView L_delEnd(ModelAndView mav,HttpServletRequest request) { // 여기서는 받아올것이 1개밖에 없어서 굳이 boardvo로 불러올 필요가 없어서 안적었다.
 		
 		String seq = request.getParameter("seq");
 		String fk_course_seq = request.getParameter("fk_course_seq");
@@ -331,6 +328,67 @@ public class BoardController {
 		}
 		return mav;
 	}	
+	
+	@GetMapping("/board/edit.lms")
+	public ModelAndView L_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String seq = request.getParameter("seq");
+		String fk_course_seq = request.getParameter("fk_course_seq");
+		
+		String message = "";
+		
+		try {
+			Integer.parseInt(seq);
+			
+			// 수정해야할 글 1개의 내용을 가져오기
+			Map<String,String> paraMap = new HashMap<>();
+			paraMap.put("seq", seq);
+			paraMap.put("fk_course_seq", fk_course_seq);
+			paraMap.put("searchWord", "");
+			
+			BoardDTO bdto = LecService.getView_no_increase_readCount(paraMap); // 조회수 증가 없이 글 한개만 조회하는 것(만들어둔 메소드).
+			
+			if(bdto == null) {
+				message = "글 수정이 불가합니다."; // 없는 번호를 입력했을 경우
+			}
+			else {
+				mav.addObject("bdto", bdto);
+				mav.addObject("fk_course_seq", fk_course_seq);
+				mav.setViewName("lecture_notice/lecture_notice_edit");
+				
+				return mav;
+			}
+		} catch (NumberFormatException e) {
+			message = "글 수정이 불가합니다."; // get 방식으로 문자 입력을 시도할 경우 띄워준다.
+		}
+		String loc = "javascript:history.back()";
+		mav.addObject("message", message); // 이것 자체가 request에 담아주는 행위
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
+	@PostMapping("/board/lecture_notice_edit_End.lms")
+	public ModelAndView lecture_notice_edit_End(ModelAndView mav, BoardDTO bdto ,HttpServletRequest request) {
+
+		String fk_course_seq = request.getParameter("fk_course_seq");
+		
+		int n = LecService.edit(bdto);
+		
+		if(n==1) {
+			mav.addObject("message", "글이 수정되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/board/lecture_notice_view.lms?seq="+bdto.getSeq()+"&fk_course_seq="+fk_course_seq);
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
 	
 	
 }
