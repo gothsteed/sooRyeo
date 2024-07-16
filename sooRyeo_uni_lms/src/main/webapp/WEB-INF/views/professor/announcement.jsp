@@ -16,6 +16,7 @@
 
 <script type="text/javascript">
 
+
 	$(document).ready(function(){
 		
 		$("input.form-control").keyup(function(key){
@@ -24,7 +25,6 @@
 		    }
 		 });
 	});
-
 
 	function goView(announcement_seq){
 		const goBackURL = "${requestScope.goBackURL}";

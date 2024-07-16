@@ -25,7 +25,6 @@
 		 });
 	});
 
-
 	function goView(announcement_seq){
 		const goBackURL = "${requestScope.goBackURL}";
 		

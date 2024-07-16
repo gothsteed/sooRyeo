@@ -152,11 +152,6 @@ public class AdminService_imple implements AdminService {
 		return result.toString();
 	}
 
-	@Override
-	public Pager<Announcement> getAnnouncement(Map<String, Object> paraMap) {
-		Pager<Announcement> announcementList = admindao.getAnnouncement(paraMap);
-		return announcementList;
-	}
 
 	@Override
 	public ResponseEntity<String> deleteCurriculum(HttpServletRequest request, ModelAndView mav) throws NumberFormatException {
@@ -193,15 +188,6 @@ public class AdminService_imple implements AdminService {
 		System.out.println("수정 성공");
 		return ResponseEntity.ok().body("수정 성공하였습니다");
 	}
-
-	// 학사공지사항 글의 개수를 알아오는 메소드
-	@Override
-	public int getTotalElementCount() {
-		
-		int totalElementCount = admindao.getTotalElementCount();
-		return totalElementCount;	
-	}
-	
 	
 	@Override
 	public ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
@@ -210,53 +196,7 @@ public class AdminService_imple implements AdminService {
 		return mav;
 	}
 
-	@Override
-	public Announcement getView(Map<String, String> paraMap) {
-		
-		int n = admindao.increase_viewCount(paraMap.get("seq")); //
-		Announcement an = admindao.getView(paraMap); // 글 1개 조회하기
-		
-		return an;
-	}
 
-	// 조회수 증가없이 글을 불러오는 메소드
-	@Override
-	public Announcement getView_no_increase_readCount(Map<String, String> paraMap) {
-		
-		Announcement an = admindao.getView(paraMap);
-		return an;
-		
-	}
-
-	// 고정글을 불러오는 메소드
-	@Override
-	public List<Announcement> getStaticList() {
-
-		List<Announcement> getStaticList = admindao.getStaticList();
-		return getStaticList;
-	}
-
-	// 공지사항 쓰기 메소드
-	@Override
-	public int addList(BoardDTO bdto) {
-
-		int n = admindao.addList(bdto);
-		return n;
-	}
-
-	// 공지사항을 삭제하는 메소드 
-	@Override
-	public int del(Map<String, String> paraMap) {
-		int n = admindao.del(paraMap);
-		return n;
-	}
-
-	// 공지사항을 수정하는 메소드 
-	@Override
-	public int edit(BoardDTO bdto) {
-		int n = admindao.edit(bdto);
-		return n;
-	}
 
 	
 
