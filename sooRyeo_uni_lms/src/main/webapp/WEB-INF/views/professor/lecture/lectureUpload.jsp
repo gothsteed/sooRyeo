@@ -250,7 +250,7 @@
             if (xhr.status === 200) {
                 document.getElementById('message').innerText = '강의가 성공적으로 업로드되었습니다';
                 alert("강의가 업로드 되었습니다.")
-                location.href=""
+                location.href="<%=ctxPath%>/professor/courseDetail.lms?course_seq="+${requestScope.course_seq}
             } else {
                 document.getElementById('message').innerText = '강의 업로드에 실패했습니다';
             }
