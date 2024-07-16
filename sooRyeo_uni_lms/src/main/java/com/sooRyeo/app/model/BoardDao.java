@@ -20,4 +20,6 @@ public interface BoardDao {
 
 	int del(Map<String, String> paraMap);
 
+	int edit(BoardDTO bdto);
+
 }
