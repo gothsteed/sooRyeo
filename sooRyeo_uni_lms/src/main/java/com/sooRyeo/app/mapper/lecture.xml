@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="lecture">
+
+	<insert id="insertLecture" parameterType="com.sooRyeo.app.dto.LectureInsertDto">
+		INSERT INTO TBL_LECTURE (
+		LECTURE_SEQ,
+		FK_COURSE_SEQ,
+		VIDEO_FILE_NAME,
+		LECTURE_FILE_NAME,
+		LECTURE_TITLE,
+		LECTURE_CONTENT,
+		START_DATE,
+		END_DATE,
+		UPLOAD_VIDEO_FILE_NAME,
+		UPLOAD_LECTURE_FILE_NAME
+		) VALUES (
+		lecture_seq.nextval, -- LECTURE_SEQ
+		#{course_seq}, -- FK_COURSE_SEQ
+		#{originalVideoTitle}, -- VIDEO_FILE_NAME
+		<if test="originalAttachName != null">
+			#{originalAttachName}
+		</if>
+		<if test="originalAttachName == null">
+			NULL
+		</if>, -- LECTURE_FILE_NAME
+		#{title}, -- LECTURE_TITLE
+		#{content}, -- LECTURE_CONTENT
+		#{startDateTime}, -- START_DATE
+		#{endDateTime}, -- END_DATE
+		#{uploadVideoTitle}, -- UPLOAD_VIDEO_FILE_NAME
+		<if test="uploadAttachName != null">
+			#{uploadAttachName}
+		</if>
+		<if test="uploadAttachName == null">
+			NULL
+		</if> -- COLUMN_NAME
+		)
+	</insert>
+
+</mapper>
