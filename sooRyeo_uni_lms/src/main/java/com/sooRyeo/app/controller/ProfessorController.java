@@ -287,7 +287,7 @@ public class ProfessorController {
 	            System.out.println("확인용 newFileName " + newFileName);
 	            
 	            dto.setAttatched_file(newFileName); // 업로드된 파일 이름 설정
-	            dto.setOriginalFilename(originalFilename); // 원래 파일 이름 설정
+	            dto.setOrgfilename(originalFilename); // 원래 파일 이름 설정
 	            
 	        } catch (Exception e) {
 	        	dto.setAttatched_file(newFileName); // 첨부파일이 없을 경우 ""	        	
