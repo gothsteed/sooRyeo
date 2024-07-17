@@ -67,4 +67,10 @@
 	</select>
 
 
+	<select id="getStudentList"
+		resultType="com.sooRyeo.app.domain.Student">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		SELECT *
+		FROM tbl_student
+	</select>
+
 </mapper>

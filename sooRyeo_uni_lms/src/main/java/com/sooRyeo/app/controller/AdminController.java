@@ -1,17 +1,10 @@
 package com.sooRyeo.app.controller;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -23,18 +16,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
-import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
@@ -47,10 +37,6 @@ import com.google.gson.JsonObject;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
-import com.sooRyeo.app.domain.Announcement;
-import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.service.DepartmentService;
-import com.sooRyeo.app.common.MyUtil;
 
 @Controller
 @RequireLogin(type = {Admin.class})
@@ -74,9 +60,14 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/admin/MemberCheck.lms", method = RequestMethod.GET)
-	public String MemberCheck() {
+	public ModelAndView MemberCheck(HttpServletRequest request ,ModelAndView mav, Student student) {
 		
-		return "MemberCheck";
+		List<Student> studentList = adminService.getStudentList();
+		
+		mav.addObject("studentList", studentList);
+		mav.setViewName("MemberCheck");
+		
+		return mav;
 	}
 	
 	@RequestMapping(value = "/admin/MemberRegister.lms", method = RequestMethod.GET)
