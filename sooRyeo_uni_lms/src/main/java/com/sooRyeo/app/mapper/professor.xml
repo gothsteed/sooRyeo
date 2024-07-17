@@ -201,6 +201,7 @@
 		<result property="fk_course_seq" 			column="fk_course_seq" 	 	 		javaType="int" />
 		<result property="content" 					column="content" 	 	 			javaType="String" />
 		<result property="attatched_file" 			column="attatched_file" 	 	 	javaType="String" />
+		<result property="orgfilename" 				column="orgfilename" 	 	 		javaType="String" />
 		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment" 	javaType="int" />
 		<result property="schedule_seq" 			column="schedule_seq" 	 	 		javaType="int" />
 		<result property="title" 					column="title" 	 	 				javaType="String" />
@@ -213,6 +214,7 @@
         A.fk_course_seq as fk_course_seq,
         A.content as content,
         NVL(A.attatched_file, '없음') as attatched_file,
+        NVL(A.orgfilename, '없음') as orgfilename,
         A.schedule_seq_assignment as schedule_seq_assignment,
         S.schedule_seq as schedule_seq,
         S.title as title,

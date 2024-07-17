@@ -230,6 +230,7 @@ public class ProfessorController {
            jsonObj.put("fk_course_seq", map.get("fk_course_seq"));
            jsonObj.put("content", map.get("content"));
            jsonObj.put("attatched_file", map.get("attatched_file"));
+           jsonObj.put("orgfilename", map.get("orgfilename"));
            jsonObj.put("schedule_seq_assignment", map.get("schedule_seq_assignment"));
            jsonObj.put("schedule_seq", map.get("schedule_seq"));
            jsonObj.put("title", map.get("title"));
