@@ -140,25 +140,36 @@ function editLecture(lectureSeq) {
 }
 
 function deleteLecture(lectureSeq) {
-	if (confirm('강의를 삭제 하시겠습니다?')) {
+	if (confirm('강의를 삭제 하시겠습니까?')) {
 		$.ajax({
 			url: '<%=ctxPath%>/professor/deleteLectureREST.lms',
 			type: 'POST',
 			data: { lecture_seq: lectureSeq },
 			success: function(response) {
-				if (response.ok) {
-					alert('강의가 삭제되었습니다.');
-					location.reload();
-				} else {
-					alert('강의 삭제가 실패하였습니다. 다시 시도해 주세요');
-				}
+				alert('강의가 삭제되었습니다.');
+				location.reload();
 			},
 			error: function(xhr, status, error) {
-				alert('오류 발생 :  ' + error);
+				let message = '오류 발생 : ' + error;
+
+				if (xhr.status === 400) {
+					message = '잘못된 요청입니다. 다시 시도해 주세요.';
+				} else if (xhr.status === 401) {
+					message = '로그인이 필요합니다.';
+				} else if (xhr.status === 403) {
+					message = '권한이 없습니다.';
+				} else if (xhr.status === 404) {
+					message = '강의를 찾을 수 없습니다.';
+				} else if (xhr.status === 500) {
+					message = '서버 오류가 발생하였습니다. 다시 시도해 주세요.';
+				}
+
+				alert(message);
 			}
 		});
 	}
 }
+
 
 
 </script>
@@ -224,6 +235,8 @@ function deleteLecture(lectureSeq) {
 			<div class="pagination justify-content-center">${requestScope.pageBar}</div>
 		</div>
 
+		<br>
+		<br>
 
 		<c:forEach var="lecture" items="${requestScope.lectureList}">
 			<div class="card mb-5">

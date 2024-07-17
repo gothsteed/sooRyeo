@@ -193,17 +193,17 @@ public class ProfessorController {
 			currentPage = 1;
 		}
 		
-		int getTotalElementCount = service.getTotalElementCount(fk_course_seq);
-		
 		Pager<Map<String, String>> studentList = service.studentList(fk_course_seq, currentPage);
-		
+		List<Lecture> lectureList = studentService.getlectureList(fk_course_seq);
+
 		mav.addObject("fk_course_seq", fk_course_seq);
 		
 		mav.addObject("studentList", studentList.getObjectList());
 		mav.addObject("currentPage", studentList.getPageNumber());
 		mav.addObject("perPageSize", studentList.getPerPageSize());
 		mav.addObject("pageBar", studentList.makePageBar(request.getContextPath() + "/professor/courseDetail.lms", "course_seq="+fk_course_seq));
-		
+		mav.addObject("lectureList", lectureList);
+
 		mav.setViewName("professor_courseDetail");
 		
 		return mav;
