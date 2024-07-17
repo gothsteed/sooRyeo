@@ -11,6 +11,7 @@ import com.sooRyeo.app.dto.LectureUploadDto;
 import com.sooRyeo.app.model.CourseDao;
 import com.sooRyeo.app.model.LectureDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -161,8 +162,13 @@ public class LectureService_imple implements LectureService{
         int lecture_seq = Integer.parseInt(request.getParameter("lecture_seq"));
 
         Lecture lecture =  lectureDao.getLectureInfo(lecture_seq);
+
+        if (lecture == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("강의를 찾을 수 없습니다.");
+        }
+
         if (!lecture.checkLectureAuth(courseDao, loginuser)) {
-            throw new AuthException("권한이 없습니다");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
 
         if(lecture.getVideo_file_name() != null) {
@@ -173,10 +179,9 @@ public class LectureService_imple implements LectureService{
         }
 
         int result = lectureDao.deleteLecture(lecture_seq);
-        if(result != 1) {
-            return  ResponseEntity.internalServerError().body("삭제에 실패하였습니다");
+        if (result != 1) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제에 실패하였습니다.");
         }
-
 
         return ResponseEntity.ok("강의가 삭제되었습니다.");
     }

@@ -71,7 +71,7 @@
 
 	<delete id="deleteLecture" parameterType="int">
 		DELETE FROM TBL_LECTURE
-		WHERE lecture_seq = #{lecture_seq};
+		WHERE lecture_seq = #{lecture_seq}
 	</delete>
 
 
