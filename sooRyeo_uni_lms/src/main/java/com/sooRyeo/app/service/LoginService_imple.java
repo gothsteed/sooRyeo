@@ -3,6 +3,8 @@ package com.sooRyeo.app.service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.sooRyeo.app.aop.LogType;
+import com.sooRyeo.app.aop.Logging;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import com.sooRyeo.app.model.StudentDao;
 
 
 @Service
+@Logging(type = LogType.LOGIN)
 public class LoginService_imple implements LoginService {
 	
 	@Autowired
