@@ -25,7 +25,7 @@ public class AuthAspect {
 	@Before("@within(requireLogin) || @annotation(requireLogin)")
 	public void checkAuth(JoinPoint joinPoint, RequireLogin requireLogin) throws Throwable {
 		
-		/*
+
 		if(requireLogin == null) {
 			
 			requireLogin = joinPoint.getTarget().getClass().getAnnotation(RequireLogin.class);
@@ -59,7 +59,7 @@ public class AuthAspect {
 			}
 			throw new AuthException("권한이 없습니다");
 		}
-		*/
+
 	
 		
 		

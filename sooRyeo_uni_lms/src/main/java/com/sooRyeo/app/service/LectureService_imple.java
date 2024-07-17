@@ -149,4 +149,35 @@ public class LectureService_imple implements LectureService{
         }
         return ResponseEntity.ok("강의가 수정되었습니다.");
     }
+
+    @Override
+    public ResponseEntity<String> deleteLecture(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        Professor loginuser = (Professor) session.getAttribute("loginuser");
+
+        ServletContext servletContext = request.getServletContext();
+        String path = servletContext.getRealPath("/resources/lectures");
+
+        int lecture_seq = Integer.parseInt(request.getParameter("lecture_seq"));
+
+        Lecture lecture =  lectureDao.getLectureInfo(lecture_seq);
+        if (!lecture.checkLectureAuth(courseDao, loginuser)) {
+            throw new AuthException("권한이 없습니다");
+        }
+
+        if(lecture.getVideo_file_name() != null) {
+            fileManager.doFileDelete(path, lecture.getUploaded_video_file_name());
+        }
+        if(lecture.getLecture_file_name() != null) {
+            fileManager.doFileDelete(path, lecture.getUploaded_lecture_file_name());
+        }
+
+        int result = lectureDao.deleteLecture(lecture_seq);
+        if(result != 1) {
+            return  ResponseEntity.internalServerError().body("삭제에 실패하였습니다");
+        }
+
+
+        return ResponseEntity.ok("강의가 삭제되었습니다.");
+    }
 }

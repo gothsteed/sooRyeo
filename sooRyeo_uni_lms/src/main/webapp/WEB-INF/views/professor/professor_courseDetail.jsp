@@ -140,21 +140,21 @@ function editLecture(lectureSeq) {
 }
 
 function deleteLecture(lectureSeq) {
-	if (confirm('Are you sure you want to delete this lecture?')) {
+	if (confirm('강의를 삭제 하시겠습니다?')) {
 		$.ajax({
-			url: '<%=ctxPath%>/professor/deleteLecture.lms',
+			url: '<%=ctxPath%>/professor/deleteLectureREST.lms',
 			type: 'POST',
-			data: { lectureSeq: lectureSeq },
+			data: { lecture_seq: lectureSeq },
 			success: function(response) {
-				if (response.success) {
-					alert('Lecture deleted successfully.');
+				if (response.ok) {
+					alert('강의가 삭제되었습니다.');
 					location.reload();
 				} else {
-					alert('Failed to delete lecture.');
+					alert('강의 삭제가 실패하였습니다. 다시 시도해 주세요');
 				}
 			},
 			error: function(xhr, status, error) {
-				alert('Error deleting lecture: ' + error);
+				alert('오류 발생 :  ' + error);
 			}
 		});
 	}

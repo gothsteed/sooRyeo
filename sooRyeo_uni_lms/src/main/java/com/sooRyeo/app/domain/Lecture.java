@@ -1,5 +1,7 @@
 package com.sooRyeo.app.domain;
 
+import com.sooRyeo.app.model.CourseDao;
+
 import java.util.Date;
 
 public class Lecture {
@@ -49,4 +51,10 @@ public class Lecture {
 	public String getUploaded_lecture_file_name() {
 		return uploaded_lecture_file_name;
 	}
+
+	public boolean checkLectureAuth(CourseDao courseDao, Professor professor) {
+		Course course = courseDao.getCourse(fk_course_seq);
+		return professor.getProf_id().equals(course.getFk_professor_id());
+	}
+
 }

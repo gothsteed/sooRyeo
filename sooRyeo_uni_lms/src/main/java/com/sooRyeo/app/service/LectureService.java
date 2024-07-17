@@ -16,4 +16,6 @@ public interface LectureService {
     ModelAndView getLectureEditPage(ModelAndView mav, HttpServletRequest request);
 
     ResponseEntity<String> editLecture(HttpServletRequest request, LectureUploadDto lectureUploadDto) throws Exception;
+
+    ResponseEntity<String> deleteLecture(HttpServletRequest request) throws Exception;
 }

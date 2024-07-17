@@ -30,4 +30,9 @@ public class LectureDao_imple implements LectureDao {
     public int updateLecture(LectureUpdateDto lectureDto) {
         return sqlSession.update("lecture.updateLecture", lectureDto);
     }
+
+    @Override
+    public int deleteLecture(int lectureSeq) {
+        return sqlSession.delete("lecture.deleteLecture", lectureSeq);
+    }
 }

@@ -11,4 +11,6 @@ public interface LectureDao {
     Lecture getLectureInfo(int lectureSeq);
 
     int updateLecture(LectureUpdateDto lectureDto);
+
+    int deleteLecture(int lectureSeq);
 }

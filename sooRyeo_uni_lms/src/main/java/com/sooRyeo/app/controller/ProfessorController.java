@@ -524,6 +524,14 @@ public class ProfessorController {
 		return  lectureService.editLecture(request, lectureUploadDto);
 	}
 
+
+	@PostMapping("/professor/deleteLectureREST.lms")
+	public ResponseEntity<String> deleteLecturePage(HttpServletRequest request) throws Exception {
+		return  lectureService.deleteLecture(request);
+	}
+
+
+
 	
 	@PostMapping("/professor/assignmentEdit_end.lms")
 	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 과제 수정 끝
