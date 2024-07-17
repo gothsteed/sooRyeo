@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -40,8 +42,9 @@ public interface AdminService {
 			CurriculumRequestDto requestDto);
 
 	List<Map<String, String>> studentCntByDeptname();
-	
 
+	// 학생회원을 불러오는 메소드
+	List<Student> getStudentList();
 
 
 }

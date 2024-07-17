@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -46,5 +47,13 @@ public class AdminDao_imple implements AdminDao {
 		List<Map<String, String>> deptnamePercentageList = sqlSession.selectList("admin.deptnamePercentageList");
 		return deptnamePercentageList;
 	}
+
+
+	@Override
+	public List<Student> getStudentList() {
+		List<Student> getStudentList = sqlSession.selectList("admin.getStudentList");
+		return getStudentList;
+	}
+
 
 }

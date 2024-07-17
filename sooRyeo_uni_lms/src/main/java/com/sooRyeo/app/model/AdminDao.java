@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Admin;
-import com.sooRyeo.app.domain.Announcement;
-import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.dto.BoardDTO;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -23,6 +21,10 @@ public interface AdminDao {
 	String emailDuplicateCheck(String email);
 
 	List<Map<String, String>> studentCntByDeptname();
+
+	// 학생회원을 불러오는 메소드
+	List<Student> getStudentList();
+
 
 
 }
