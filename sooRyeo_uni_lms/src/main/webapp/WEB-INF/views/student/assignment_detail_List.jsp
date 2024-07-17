@@ -41,28 +41,6 @@ $(document).ready(function(){
 	$("div#form").hide();
 	
 	goReadComment();	// 과제제출내역 읽어오기
-	
-	
-	// 과제제출 - schedule_seq_assignment 가져오기
-	const schedule_seq_assignment = $("td#schedule_seq_assignment").text();
-	// console.log(schedule_seq_assignment);
-
-	$.ajax({
-		
-		url:"<%=ctxPath%>/selectSeq.lms",
-		data:{"schedule_seq_assignment" : schedule_seq_assignment},
-		type:"post",
-		dataType:"json",
-		success:function(json){
-			
-			let v_html = "";
-			
-		},
-		error: function(request, status, error){
-			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		}
-		
-	}); // end of $.ajax
 
 	
 }); // end of $(document).ready(function(){})

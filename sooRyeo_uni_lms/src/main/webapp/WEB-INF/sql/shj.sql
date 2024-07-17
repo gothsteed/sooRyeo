@@ -268,7 +268,7 @@ from tbl_assignment_submit
 
 
 delete from tbl_assignment_submit
-where assignment_submit_seq between 14 and 17
+where fk_student_id = '202400009';
 
 commit;
 
@@ -425,9 +425,6 @@ where fk_student_id = '202400005' AND fk_schedule_seq_assignment ='5'
 select assignment_submit_seq, fk_student_id, title, content, attatched_file, submit_datetime
 from tbl_assignment_submit
 where fk_schedule_seq_assignment = '5' AND fk_student_id = '202400005'
-
-
-
 
 
 

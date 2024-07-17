@@ -67,9 +67,6 @@ public interface StudentDao {
 	// 스케줄, 상담 테이블에 insert
 	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
 
-	// 과제제출  - schedule_seq_assignment 받아오기
-	String selectSeq(String schedule_seq_assignment);
-
 	// 과제 제출 내용보기
 	Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid);
 

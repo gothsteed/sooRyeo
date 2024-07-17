@@ -240,17 +240,6 @@ public class StudentDao_imple implements StudentDao {
 	}
 
 	
-	// 과제제출  - schedule_seq_assignment 받아오기
-	@Override
-	public String selectSeq(String schedule_seq_assignment) {
-		
-		String schedule_seq = sqlSession.selectOne("student.selectSeq", schedule_seq_assignment);
-
-		return schedule_seq;
-		
-	} // end of public String selectSeq
-
-	
 	// 과제 제출 내용보기
 	@Override
 	public Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid) {

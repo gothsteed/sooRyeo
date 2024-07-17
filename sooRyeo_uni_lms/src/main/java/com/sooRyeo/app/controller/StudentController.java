@@ -303,36 +303,6 @@ public class StudentController {
 	
 	
 	
-	// 과제제출  - schedule_seq_assignment 가져오기
-	@ResponseBody
-	@PostMapping(value="/selectSeq.lms", produces="text/plain;charset=UTF-8")
-	public String selectSeq(HttpServletRequest request) {
-		
-		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
-		
-		String schedule_seq  = service.selectSeq(schedule_seq_assignment);
-		
-		String result = "";
-		
-		if(schedule_seq == null) {
-			result = "0";
-		}
-		else {
-			result = "1";
-		}
-		
-		// System.out.println("~~~ 확인용 result : " + result);
-		
-		JSONObject jsonobj = new JSONObject();
-		
-		jsonobj.put("result", result);
-		
-		return jsonobj.toString();
-		
-	} // end of public String selectSeq
-	
-	
-	
 	// 제출한 과제 조회
 	@ResponseBody
 	@PostMapping(value="/readComment.lms", produces="text/plain;charset=UTF-8")

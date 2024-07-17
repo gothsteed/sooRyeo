@@ -490,17 +490,6 @@ public class StudentService_imple implements StudentService {
 
 
 
-	
-	// 과제제출  - schedule_seq_assignment 받아오기
-	@Override
-	public String selectSeq(String schedule_seq_assignment) {
-		
-		String schedule_seq  = dao.selectSeq(schedule_seq_assignment); 
-		
-		return schedule_seq;
-	} // end of public String selectSeq
-
-
 
 	// 과제 제출 내용보기
 	@Override
