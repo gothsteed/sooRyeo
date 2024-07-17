@@ -53,12 +53,17 @@
 					
 					v_html += `<tr>
 			      				<td style="text-align: center;">\${item.row_num}</td> 
-			      				<td style="text-align: center;">\${item.schedule_seq_assignment}</td> 
-				            	<td><span class="subject" onclick="goView('\${item.schedule_seq_assignment}')">\${item.title}</span></td>
-				            	<td style="text-align: center;">\${item.start_date}</td>
-				            	<td style="text-align: center;">\${item.end_date}</td>
-				            	<td style="text-align: center;">\${item.orgfilename}</td> 
-		      				   </tr>`;
+			      				<td style="text-align: center;">\${item.schedule_seq_assignment}</td>`;
+			      				
+      				if (item.orgfilename === "없음") {
+				        v_html += `<td><span class="subject" onclick="goView('\${item.schedule_seq_assignment}')">\${item.title}</span></td>`;
+				    } else {
+				        v_html += `<td><span class="subject" onclick="goView('\${item.schedule_seq_assignment}')">\${item.title}</span>&nbsp;<img src="<%= ctxPath%>/resources/images/disk.gif" /></td>`;
+				    }
+				        
+		            v_html +=  `<td style="text-align: center;">\${item.start_date}</td>
+	            		 		<td style="text-align: center;">\${item.end_date}</td>
+      				     		</tr>`;
 					
 				});
 				
@@ -140,7 +145,6 @@
 						<th style="text-align: center;">제목</th>
 						<th style="text-align: center;">시작일자</th>
 						<th style="text-align: center;">마감일자</th>
-						<th style="text-align: center;">첨부파일</th>
 					</tr>
 				</thead>
 				<tbody>

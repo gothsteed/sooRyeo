@@ -115,7 +115,7 @@ public class AdminService_imple implements AdminService {
 		List<Department> departments =  departmentDao.departmentList_select();
 		mav.addObject("departments", departments);
 		
-		mav.setViewName("curriculum.admin");
+		mav.setViewName("curriculum");
 		return mav;
 	}
 
@@ -192,7 +192,7 @@ public class AdminService_imple implements AdminService {
 	@Override
 	public ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
 		mav.addObject("departments", departmentDao.departmentList_select());
-		mav.setViewName("courseRegister.admin");
+		mav.setViewName("courseRegister");
 		return mav;
 	}
 
