@@ -375,6 +375,11 @@ select *
 from
 tbl_assignment_submit
 
+select *
+from
+tbl_student
+where student_id = 202400009
+
 ALTER TABLE tbl_assignment_submit ADD orgfilename NVARCHAR2(200);
 
 commit;
