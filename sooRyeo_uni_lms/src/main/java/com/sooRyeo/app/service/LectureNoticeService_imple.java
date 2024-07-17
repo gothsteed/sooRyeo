@@ -26,7 +26,7 @@ public class LectureNoticeService_imple implements LectureNoticeService {
 	@Override
 	public BoardDTO getView(Map<String, String> paraMap) {
 		
-		int n = bdao.increase_viewCount(paraMap.get("seq")); //
+		int n = bdao.increase_viewCount(paraMap.get("seq"));
 		BoardDTO bdto = bdao.getView(paraMap); // 글 1개 조회하기
 		
 		return bdto;
@@ -83,7 +83,7 @@ public class LectureNoticeService_imple implements LectureNoticeService {
 	@Override
 	public Announcement getA_View(Map<String, String> paraMap) {
 		
-		int n = bdao.increase_viewCount(paraMap.get("seq")); //
+		int n = bdao.a_increase_viewCount(paraMap.get("seq"));
 		Announcement an = bdao.getA_View(paraMap); // 글 1개 조회하기
 		
 		return an;

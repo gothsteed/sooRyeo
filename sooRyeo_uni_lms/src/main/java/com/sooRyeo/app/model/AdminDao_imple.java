@@ -1,6 +1,5 @@
 package com.sooRyeo.app.model;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,10 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
-import com.sooRyeo.app.domain.Announcement;
-import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -43,6 +38,13 @@ public class AdminDao_imple implements AdminDao {
 	public String emailDuplicateCheck(String email) {
 		String emailDuplicateCheck = sqlSession.selectOne("admin.emailDuplicateCheck", email);
 		return emailDuplicateCheck;
+	}
+
+
+	@Override
+	public List<Map<String, String>> studentCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = sqlSession.selectList("admin.deptnamePercentageList");
+		return deptnamePercentageList;
 	}
 
 }

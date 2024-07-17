@@ -41,6 +41,9 @@ import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.service.AdminService;
 import com.sooRyeo.app.service.CourseService;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
@@ -295,6 +298,34 @@ public class AdminController {
 		return courseService.updateCourse(request, requestDto);
 	}
 	
+	
+	  // ==== #236. 차트그리기(Ajax) 부서명별 인원수 및 퍼센티지 가져오기 ==== // 
+    @ResponseBody
+    @GetMapping(value="/admin/studentCntByDeptname.lms", produces="text/plain;charset=UTF-8") 
+    public String studentCntByDeptname() { 
+       
+       List<Map<String, String>> deptnamePercentageList = adminService.studentCntByDeptname();
+       
+       JsonArray jsonArr = new JsonArray(); // [] 
+       
+       for(Map<String, String> map : deptnamePercentageList) {
+          JsonObject jsonObj = new JsonObject(); // {} 
+          jsonObj.addProperty("department_name", map.get("department_name")); // {"department_name":"Shipping"} 
+          jsonObj.addProperty("cnt", map.get("cnt")); // {"department_name":"Shipping","cnt":"45"} 
+          jsonObj.addProperty("percentage", map.get("percentage")); // {"department_name":"Shipping","cnt":"45","percentage":"40.5"} 
+          
+          jsonArr.add(jsonObj); // [{"department_name":"Shipping","cnt":"45","percentage":"40.5"}]
+       }// end of for-------------------------
+       
+    /*   
+       Gson gson = new Gson();
+       gson.toJson(jsonArr); // "[{"department_name":"Shipping","cnt":"45","percentage":"40.5"}]" 
+       return gson.toJson(jsonArr);  
+    */   
+       return new Gson().toJson(jsonArr); // "[{"department_name":"Shipping","cnt":"45","percentage":"40.5"}]" 
+    }
+    
+    
 	
 	
 }

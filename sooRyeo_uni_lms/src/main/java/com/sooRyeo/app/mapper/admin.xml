@@ -50,4 +50,21 @@
 	</select>
 
 
+    <resultMap type="HashMap" id="studentCntByDeptname_Map">
+       <result property="department_name"    column="department_name"    javaType="String" />
+       <result property="cnt"             column="cnt"             javaType="String" />
+       <result property="percentage"       column="percentage"       javaType="String" />
+    </resultMap>
+	<!-- === employees 테이블에서 부서명별 인원수 및 퍼센티지 가져오기  === --> 
+	<select id="deptnamePercentageList" resultMap="studentCntByDeptname_Map">
+		select department_name
+		   , count(*) AS cnt 
+		   , round(count(*)/(select count(*) from tbl_student) * 100, 2) AS percentage 
+		from tbl_student S left join tbl_department D
+		on fk_department_seq = D.department_seq
+		group by D.department_name
+		order by cnt desc, department_name asc
+	</select>
+
+
 </mapper>

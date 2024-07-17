@@ -68,7 +68,7 @@
 			    <tr>
 			      <th scope="row">첨부파일</th>
 			      <c:if test="${requestScope.an.attatched_file != null}">
-				      <td colspan="2"><a href="<%= ctxPath%>/admin/download.lms?seq=${requestScope.an.announcement_seq}">${requestScope.an.orgfilename}</a></td>
+				      <td colspan="2"><a href="<%= ctxPath%>/board/download.lms?seq=${requestScope.an.announcement_seq}">${requestScope.an.orgfilename}</a></td>
 			      </c:if>
 			      <c:if test="${requestScope.an.attatched_file == null}">
 				      <td colspan="2">첨부파일이 없습니다.</td>
@@ -85,7 +85,7 @@
 	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.previousseq}')">이전글</button>
 				</c:if>
                 <div>
-	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/admin/announcement.lms'">전체목록보기</button>
+	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/board/announcement.lms'">전체목록보기</button>
 	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">검색목록보기</button>
                 </div>
 				<c:if test="${requestScope.an.nextseq != null}">

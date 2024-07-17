@@ -8,11 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
-import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -41,6 +38,8 @@ public interface AdminService {
 
 	ResponseEntity<String> updateCurriculum(HttpServletRequest request, ModelAndView mav,
 			CurriculumRequestDto requestDto);
+
+	List<Map<String, String>> studentCntByDeptname();
 	
 
 
