@@ -88,9 +88,6 @@ public class HomeController {
 	@PostMapping(value="/admin/login.lms")
 	public String adminLogin(HttpServletRequest resquest,  LoginDTO loginDTO) {// 교수 로그인
 		
-		System.out.println("id : " + loginDTO.getId());
-		System.out.println("pwd : " + loginDTO.getPassword());
-		
 		JSONObject json = loginService.adminLogin(resquest, loginDTO);
 			
 		return json.toString();
