@@ -86,6 +86,20 @@ body {
 </style>	
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+	$("input#password").keyup(function(key){
+	    if(key.keyCode == 13) {
+	    	handleLogin(); 
+	    }
+	 });
+	
+	$("input#id").keyup(function(key){
+	    if(key.keyCode == 13) {
+	    	handleLogin(); 
+	    }
+	 });
+});
 function handleLogin() {
     const memberType = document.querySelector('input[name="memberType"]:checked').value;
     const form = $('#loginForm');

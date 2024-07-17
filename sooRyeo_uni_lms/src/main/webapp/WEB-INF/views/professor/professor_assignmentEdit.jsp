@@ -101,9 +101,53 @@
 			}
 		});
 		
-				
 		
-		// 등록 버튼 클릭
+		// 기존 날짜 가져오기
+		const start = "${requestScope.assign_edit.schedule.start_date}";
+		const startdate = start.substring(0,10);
+		
+		const startHour = start.substring(11,13);
+		const startMin = start.substring(14,16);
+		
+		const end = "${requestScope.assign_edit.schedule.end_date}";
+		const enddate = end.substring(0,10);
+		
+		const endHour = end.substring(11,13);
+		const endMin = end.substring(14,16);
+		
+		$("input#startDate").val(startdate);
+		$("select#startHour").val(startHour);
+		$("select#startMinute").val(startMin);
+		
+		$("input#endDate").val(enddate);
+		$("select#endHour").val(endHour);
+		$("select#endMinute").val(endMin);
+		
+		// 파일선택 클릭하면 기존 파일 이름 없애기
+		$("input[name='attach']").on("click", function() {
+	        $("p#exist_file").remove();
+	    });
+		
+		// x버튼을 누르면 첨부된 파일 삭제
+		$("button#fileDelete").click(function(){
+			
+			if (confirm("첨부된 파일을 삭제하시겠습니까?")) {
+				const frm = document.scheduleFrm;
+				frm.action="<%= ctxPath%>/professor/fileDelete_end.lms";
+				frm.method="post";
+				frm.submit();
+	        
+			} else {
+	           alert("취소를 누르셨습니다.");
+	           return;
+						
+	        }// end of if~else
+			
+		});
+		
+		
+		
+		// 수정 버튼 클릭
 		$("button#edit").click(function(){
 		
 			// 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
@@ -158,7 +202,11 @@
 				return;
 			}
 	        
-
+	        const attach = $("input[name='attach']").val().trim();
+			if(attach == ""){
+				alert("파일을 첨부하세요.");
+				return;
+			}
 			
 			// 달력 형태로 만들어야 한다.(시작일과 종료일)
 			// 오라클에 들어갈 date 형식(년월일시분초)으로 만들기
@@ -185,35 +233,9 @@
 	}); // end of $(document).ready(function(){}-----------------------------------
 
 
-	// ~~~~ Function Declaration ~~~~
 	
-	$(document).ready(function(){
-		
-		const start = "${requestScope.assign_edit.schedule.start_date}";
-		const startdate = start.substring(0,10);
-		
-		const startHour = start.substring(11,13);
-		const startMin = start.substring(14,16);
-		
-		const end = "${requestScope.assign_edit.schedule.end_date}";
-		const enddate = end.substring(0,10);
-		
-		const endHour = end.substring(11,13);
-		const endMin = end.substring(14,16);
-		
-		$("input#startDate").val(startdate);
-		$("select#startHour").val(startHour);
-		$("select#startMinute").val(startMin);
-		
-		$("input#endDate").val(enddate);
-		$("select#endHour").val(endHour);
-		$("select#endMinute").val(endMin);
-		
-		$("input[name='attach']").on("change", function() {
-	        $("p#exist_file").remove();
-	    });
-		
-	});
+	
+	
 	
 // value="${requestScope.assign_edit.schedule.start_date}" 
 </script>
@@ -249,21 +271,21 @@
 			<tr>
 				<th>첨부파일</th>
 				<td><input type="file" name="attach"/>
-				<c:if test="${not empty requestScope.assign_edit.assignment.attatched_file}">
-				<br>
-				<p id="exist_file" class="mt-1">
-        		${requestScope.assign_edit.assignment.attatched_file}
-        		<button type="button" class="btn btn-outline-secondary">X</button>	
-    			</p>	
+				<c:if test="${requestScope.assign_edit.assignment.attatched_file != '없음'}">
+					<br>
+					<p id="exist_file" class="mt-1">
+	        		${requestScope.assign_edit.assignment.attatched_file}
+	        		<button type="button" class="btn btn-outline-secondary" id="fileDelete">X</button>	
+	    			</p>	
 				</c:if>
-				<c:if test="${empty requestScope.assign_edit.assignment.attatched_file}">
-					
+				<c:if test="${requestScope.assign_edit.assignment.attatched_file == '없음'}">
 				</c:if>
 				</td>
 			</tr>
 		</table>
 		<input type="hidden" value="${requestScope.assign_edit.assignment.schedule_seq_assignment}" name="schedule_seq_assignment"/>
 		<input type="hidden" value="${requestScope.assign_edit.assignment.attatched_file}" name="attatched_file"/>
+		<input type="hidden" value="${requestScope.goBackURL}" name="goBackURL"/>
 	</form>
 	
 	<div style="float: right;">

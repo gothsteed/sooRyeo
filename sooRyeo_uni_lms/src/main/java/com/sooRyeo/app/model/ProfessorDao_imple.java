@@ -7,11 +7,13 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
@@ -117,13 +119,30 @@ public class ProfessorDao_imple implements ProfessorDao {
 		return new ProfessorTimeTable(prof_id, profCourseList);
 	}
 	
+	@Override
+	public int getTotalElementCount(String fk_course_seq) {
+		int n = sqlSession.selectOne("professor.getTotalElementCount", fk_course_seq);
+		return n;
+	}
 	
 	@Override
-	public List<Map<String, String>> studentList(String fk_course_seq) {
+	public Pager<Map<String, String>> studentList(String fk_course_seq, int currentPage) {
 		
-		List<Map<String, String>> studentList = sqlSession.selectList("professor.studentList", fk_course_seq);
+		int sizePerPage = 5;
 		
-		return studentList;
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("startRno", startRno);
+		paraMap.put("endRno", endRno);
+		paraMap.put("currentShowPageNo", currentPage);
+		paraMap.put("fk_course_seq", fk_course_seq);
+		List<Map<String, String>> studentList = sqlSession.selectList("professor.studentList", paraMap);
+		
+		int totalElementCount = sqlSession.selectOne("professor.getTotalElementCount", fk_course_seq);
+		
+		return new Pager(studentList, currentPage, sizePerPage, totalElementCount);
 	}
 
 
@@ -167,9 +186,13 @@ public class ProfessorDao_imple implements ProfessorDao {
 			paraMap.put("content", dto.getContent());
 			paraMap.put("schedule_seq_assignment", schedule_seq);
 			paraMap.put("attatched_file", dto.getAttatched_file());
+			paraMap.put("orgfilename", dto.getOrgfilename());
 			
+			String orgfilename = dto.getOrgfilename();
 			String attatched_file = paraMap.get("attatched_file");
+			
 			System.out.println("확인용 attatched_file : " + attatched_file);
+			System.out.println("확인용 orgfilename : " + orgfilename);
 			
 			n = sqlSession.insert("professor.insert_tbl_assignment", paraMap);
 				
@@ -198,7 +221,7 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		return n;
 	}
-
+	
 	
 	@Override
 	public AssignJoinSchedule assignmentEdit(String schedule_seq_assignment) {
@@ -207,6 +230,93 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		return assign_edit;
 	}
+
+
+	@Override
+	public int delAttatched_file(String schedule_seq_assignment) {
+		
+		int n = sqlSession.update("professor.delAttatched_file", schedule_seq_assignment);
+		
+		return n;
+	}
+
+
+	@Override
+	public int assignmentEdit_End(AssignScheInsertDTO dto) {
+		
+		int n = 0;
+		String schedule_seq_assignment = String.valueOf(dto.getSchedule_seq_assignment());
+		//System.out.println("확인용 dto 시작 " + dto.getStartDate());
+		//System.out.println("확인용 dto 끝 " + dto.getEndDate());
+		//System.out.println("확인용 dto 제목 " + dto.getTitle());
+			
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("title", dto.getTitle());
+		paraMap.put("startDate", dto.getStartDate());
+		paraMap.put("endDate", dto.getEndDate());
+		paraMap.put("schedule_seq_assignment", schedule_seq_assignment);
+		
+		n = sqlSession.update("professor.update_tbl_schedule", paraMap);
+		
+		if(n != 0) {
+			
+			paraMap.put("content", dto.getContent());
+			paraMap.put("attatched_file", dto.getAttatched_file());
+			paraMap.put("orgfilename", dto.getOrgfilename());
+			
+			String attatched_file = paraMap.get("attatched_file");
+			System.out.println("확인용 attatched_file : " + attatched_file);
+			
+			n = sqlSession.update("professor.update_tbl_assignment", paraMap);
+				
+		}		
+		
+		return n;
+	}
+
+
+	@Override
+	public AssignScheInsertDTO file_check(String schedule_seq_assignment) {
+		
+		AssignScheInsertDTO file_check = sqlSession.selectOne("professor.file_check", schedule_seq_assignment);
+		
+		return file_check;
+	}
+
+
+	@Override
+	public List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment) {
+		
+		List<Map<String, String>> assignmentCheckJSON = sqlSession.selectList("professor.assignmentCheckJSON", schedule_seq_assignment);
+		
+		return assignmentCheckJSON;
+	}
+
+
+	@Override
+	public int scoreUpdate(Map<String, String> paraMap) {
+		
+		int n = 0;
+		
+		try {
+			n = sqlSession.update("professor.scoreUpdate", paraMap);
+		} catch (DataIntegrityViolationException e) {
+			
+		}
+		return n;
+	}
+
+	
+	@Override
+	public Assignment searchFile(String schedule_seq_assignment) {
+		
+		Assignment assignment = sqlSession.selectOne("professor.searchFile", schedule_seq_assignment);
+		
+		return assignment;
+	}
+
+
+
 
 
 

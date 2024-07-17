@@ -24,7 +24,22 @@
 	input#joinUserName:focus{
 		outline: none;
 	}
-		
+	
+	span.plusUser{
+			float:left; 
+			background-color:#737373; 
+			color:white;
+			border-radius: 10%;
+			padding: 8px;
+			margin: 3px;
+			transition: .8s;
+			margin-top: 6px;
+	}
+	
+	span.plusUser > i {
+		cursor: pointer;
+	}
+	
 	.ui-autocomplete {
 		max-height: 100px;
 		overflow-y: auto;
@@ -45,6 +60,9 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		
+		// 캘린더 소분류 카테고리 숨기기
+		$("select.small_category").hide();
 		
 		// === *** 달력(type="date") 관련 시작 *** === //
 		// 시작시간, 종료시간		

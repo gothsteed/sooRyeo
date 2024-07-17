@@ -21,7 +21,68 @@
 </style>
 
 <script type="text/javascript">
-	
+
+	$(document).ready(function(){
+		
+		<%-- ============== ajax로 테이블 내용물 가져오기 시작 ============== --%>
+
+		$.ajax({
+			url:"<%= ctxPath%>/professor/assignment_checkJSON.lms",
+			method: "POST",
+			data:{"schedule_seq_assignment":"${requestScope.assign_view.assignment.schedule_seq_assignment}"},
+			enctype:"multipart/form-data",
+			dataType:"json",
+			
+			success:function(json){			
+				
+				let v_html = ``;
+				
+				json.forEach(function(item, index, array){
+					
+					v_html += `<tr>
+			      				<td style="text-align: center; vertical-align: middle;">\${item.row_num}</td> 
+			      				<td style="text-align: center; vertical-align: middle;">\${item.assignment_submit_seq}</td> 
+			      				<td style="text-align: center; vertical-align: middle;">\${item.name}</td>
+			      				<td style="text-align: center; vertical-align: middle;">\${item.attatched_file}</td>
+				            	<td style="text-align: center; vertical-align: middle;">\${item.end_date}</td>
+				            	<td style="text-align: center; vertical-align: middle;">\${item.submit_datetime}</td>`;
+				            	
+					if (item.score === "미채점") {
+				        v_html += `<td style='text-align: center; vertical-align: middle;'>
+				            <input type='text' id="score" style="width: 50%"/>
+				            <button type='button' class='btn btn-secondary mt-1' onclick='insertGrade("\${item.assignment_submit_seq}")'>점수입력</button>
+				        </td>`;
+				    } else {
+				        v_html += `<td id="editScore" style="text-align: center; vertical-align: middle;">\${item.score}점<br>
+				        <button type='button' class='btn btn-secondary mt-1' onclick='editScore("\${item.score}", "\${item.assignment_submit_seq}")'>점수수정</button>
+				        </td>`;
+				    }
+
+				    v_html += `</tr>`;
+					
+				});
+				
+				$("table#assignCheck tbody").html(v_html);
+				
+					
+			},
+		    error: function(request, status, error){
+		        alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		   	}
+				
+		});		
+		
+		<%-- ============== ajax로 테이블 내용물 가져오기 끝 ============== --%>
+		
+		
+		
+		
+		
+	});// end of $(document).ready(function() 
+
+	////////////////////////////////////////////////
+	// Function Declaration
+			
 	function goEdit(schedule_seq_assignment){
 		
 		const goBackURL = "${requestScope.goBackURL}";
@@ -38,27 +99,84 @@
 		
 	}// end of function goEdit(schedule_seq_assignment)
 	
+	
 	function goDelete(schedule_seq_assignment){
 		
-		const goBackURL = "${requestScope.goBackURL}";
+		if (confirm("과제를 삭제하시겠습니까?")){
+			const goBackURL = "${requestScope.goBackURL}";
+			
+			const frm = document.reviseFrm;
+			
+			frm.schedule_seq_assignment.value = schedule_seq_assignment;
+			frm.goBackURL.value = goBackURL;
+			frm.method = "post";
+			frm.enctype = "multipart/form-data";
+			frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
+			frm.submit();
 		
-		const frm = document.reviseFrm;
+		} else {
+           alert("취소를 누르셨습니다.");
+           return;
+						
+        }// end of if~else
 		
-		frm.schedule_seq_assignment.value = schedule_seq_assignment;
-		frm.goBackURL.value = goBackURL;
-		frm.method = "post";
-		frm.enctype = "multipart/form-data";
-		frm.action = "<%= ctxPath%>/professor/assignmentDelete.lms";
-		frm.submit();	
 		
 		
 	}// end of function goDelete(schedule_seq_assignment) 
-
+	
+	function insertGrade(assignment_submit_seq){
+		
+		const goBackURL = "${requestScope.goBackURL}";
+		const score = $("input#score").val().trim();
+		const frm = document.reviseFrm;
+		
+		if(confirm("점수를 입력하시겠습니까?")){
+		
+		
+			if(score == 0){
+				alert("점수를 입력해주세요.");
+				return;
+			}
+			else if(score > 30){
+				alert("점수는 최대 30점까지 입력해주세요.");
+				return;
+				
+			}
+			else{
+				frm.assignment_submit_seq.value = assignment_submit_seq;
+				frm.score.value = score;
+				frm.goBackURL.value = goBackURL;
+				frm.method = "post";
+				frm.action = "<%= ctxPath%>/professor/scoreUpdate.lms";
+				frm.submit();
+				
+			}
+		} else{
+			alert("취소를 누르셨습니다.");
+			return;
+		}
+			
+	}// end of function insertGrade(fk_schedule_seq_assignment) 
+	
+	function editScore(score, assignment_submit_seq){
+		
+		if(confirm("점수를 수정하시겠습니까?")){
+			
+			const tdScore = $("td#editScore");
+			tdScore.html(`
+		            <input type='text' id='score' style='width: 50%' value='\${score}' />
+		            <button type='button' class='btn btn-secondary mt-1' onclick='insertGrade("\${assignment_submit_seq}")'>점수입력</button>
+		        `);
+	    } else {
+	        alert("취소를 누르셨습니다.");
+	        return;
+	    }
+	}// end of function editScore(score) 
 
 </script>
 
 <div style="display: flex;">
-	<div style="margin: auto; padding-left: 3%;">
+	<div style="margin: auto;">
 		<h2 style="margin-bottom: 30px;">글내용보기</h2>
 		
 		<c:if test="${not empty requestScope.assign_view}">
@@ -99,7 +217,7 @@
               		<th>첨부파일</th>
                		<td>
                			<c:if test="${requestScope.assign_view.assignment.attatched_file != '없음'}">
-               				<a href="<%= ctxPath%>/download.lms?seq=${requestScope.assign_view.assignment.fk_course_seq}">${requestScope.assign_view.assignment.attatched_file}</a>
+               				<a href="<%= ctxPath%>/download.lms?schedule_seq_assignment=${requestScope.assign_view.assignment.schedule_seq_assignment}">${requestScope.assign_view.assignment.attatched_file}</a>
                			</c:if>
 						<c:if test="${requestScope.assign_view.assignment.attatched_file == '없음'}">
                				${requestScope.assign_view.assignment.attatched_file}
@@ -118,7 +236,33 @@
 	</div>
 </div>
 
+<br>
+
+<div style="display: flex;">
+	<div class="table-container mt-3" style="margin: auto;">
+		<table class="table table-bordered" id="assignCheck" style="width: 1080px; word-wrap: break-word; table-layout: fixed;">
+			<thead>
+				<tr>
+					<th style="text-align: center;">글번호</th>
+					<th style="text-align: center;">제출번호</th>
+					<th style="text-align: center;">이름</th>
+					<th style="text-align: center;">제출과제</th>
+					<th style="text-align: center;">마감일자</th>
+					<th style="text-align: center;">제출일자</th>
+					<th style="text-align: center;">점수(최대 30점)</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<%-- 페이징처리 할 부분 --%>
+</div>
+
+
 <form name="reviseFrm">
 	<input type="hidden" name="schedule_seq_assignment"/>
+	<input type="hidden" name="assignment_submit_seq"/>
 	<input type="hidden" name="goBackURL"/>
+	<input type="hidden" name="score"/>
 </form>

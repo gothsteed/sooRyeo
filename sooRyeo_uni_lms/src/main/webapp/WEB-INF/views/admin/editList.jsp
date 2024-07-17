@@ -71,7 +71,7 @@
     	 // 폼(form)을 전송(submit)
     	 const frm = document.addFrm;
     	 frm.method = "post";
-    	 frm.action = "<%= ctxPath%>/admin/editListEnd.lms";
+    	 frm.action = "<%= ctxPath%>/board/editListEnd.lms";
     	 frm.submit();
     	 
      });
@@ -99,7 +99,7 @@
          </tr>
         </table>
         <div style="margin: 20px;">
-            <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">글쓰기</button>
+            <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">수정하기</button>
             <button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">취소</button>  
             <%-- === 타입에 버튼을 명시하지 않으면 submit으로 인식되어 의도치 않은 제출이 될 수 있다. === --%>
         </div>

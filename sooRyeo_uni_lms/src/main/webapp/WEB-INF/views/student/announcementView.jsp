@@ -21,21 +21,6 @@
 		
 	}// end of function goView('${boardvo.seq}'){}-----------------------------------------
 
-	function goDel(){
-		
-		if(confirm("정말로 삭제하시겠습니까?")){
-			const frm = document.Del
-	
-			frm.method = "post";
-			frm.action = "<%= ctxPath%>/board/a_del.lms";
-			frm.submit();
-		}
-		else{
-			return;
-		}
-		
-	}// end of function goView('${boardvo.seq}'){}-----------------------------------------
-
 </script>
 
 <div class="container">
@@ -44,11 +29,6 @@
             <h2>학사 공지사항</h2>
         </div>
         <div class="card-body">
-        	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="goDel()">글삭제하기</button>
-		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/board/a_edit.lms?seq=${requestScope.an.announcement_seq}'">글수정하기</button>
-        	        <form name="Del">
-						<input type="hidden" name="announcement_seq" value="${requestScope.an.announcement_seq}"/>  
-					</form>
 			<table class="table">
 			  <thead>
 			    <tr>

@@ -1,9 +1,13 @@
 package com.sooRyeo.app.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.formula.functions.Mode;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,7 +22,8 @@ import com.sooRyeo.app.domain.Student;
 public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(LoginException.class) 
-	public ModelAndView handleLoginException(LoginException exception) {
+	public ModelAndView handleLoginException(LoginException exception, HttpServletResponse response) {
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		ModelAndView modelView = new ModelAndView();
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = requestAttributes.getRequest();
@@ -33,7 +38,9 @@ public class GlobalExceptionHandler {
 	
 	
 	@ExceptionHandler(AuthException.class) 
-	public ModelAndView handleAuthException(AuthException exception) {
+	public ModelAndView handleAuthException(AuthException exception,  HttpServletResponse response) {
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
 		ModelAndView modelView = new ModelAndView();
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = requestAttributes.getRequest();
@@ -67,7 +74,9 @@ public class GlobalExceptionHandler {
 	
 	
 	@ExceptionHandler(AlreadyLoggedInException.class) 
-	public ModelAndView handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
+	public ModelAndView handleAlreadyLoggedInException(AlreadyLoggedInException exception,  HttpServletResponse response) {
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
 		ModelAndView modelView = new ModelAndView();
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = requestAttributes.getRequest();

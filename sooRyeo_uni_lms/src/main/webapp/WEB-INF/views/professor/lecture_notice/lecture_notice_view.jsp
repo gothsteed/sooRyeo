@@ -45,7 +45,7 @@
         </div>
         <div class="card-body">
         	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="goDel()">글삭제하기</button>
-		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/admin/edit.lms?seq=${requestScope.an.announcement_seq}'">글수정하기</button>
+		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/board/edit.lms?seq=${requestScope.bdto.seq}&fk_course_seq=${requestScope.fk_course_seq}'">글수정하기</button>
   	        <form name="Del">
 				<input type="hidden" name="seq" value="${requestScope.bdto.seq}"/>
 				<input type="hidden" name="fk_course_seq" value="${requestScope.fk_course_seq}"/>

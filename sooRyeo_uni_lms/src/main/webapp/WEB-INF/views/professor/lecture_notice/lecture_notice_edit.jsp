@@ -16,12 +16,6 @@
 
   $(document).ready(function(){
 	     
-     $(".form-select").change(function() {
-        
-    	 var selectedValue = $(this).val();
-         $("#Listtype").val(selectedValue);
-     });
-	  
 	  <%-- === #166-1. 스마트 에디터 구현 시작 === --%>
       //전역변수
       var obj = [];
@@ -51,16 +45,11 @@
          <%-- === 스마트 에디터 구현 끝 === --%>
     	 
     	 // 글제목 유효성 검사
-    	 const subject = $("input:text[name='subject']").val(); <%-- name 값은 컬럼명과 같아야 한다. --%>
-    	 if(subject == ""){
+    	 const title = $("input:text[name='title']").val(); <%-- name 값은 컬럼명과 같아야 한다. --%>
+    	 if(title == ""){
     		 alert("글제목은 필수 항목입니다.");
-    		 $("input:text[name='subject']").val(""); <%-- 공백 없애주기 --%>
+    		 $("input:text[name='title']").val(""); <%-- 공백 없애주기 --%>
     		 return; // 종료
-    	 }
-    	 
-    	 if($(".form-select").val() == "글 유형 선택"){
-    		 alert("글유형을 선택하세요.");
-    		 return;
     	 }
     	 
     	 // 글내용 유효성 검사(스마트에디터를 사용할 경우)
@@ -82,7 +71,7 @@
     	 // 폼(form)을 전송(submit)
     	 const frm = document.addFrm;
     	 frm.method = "post";
-    	 frm.action = "<%= ctxPath%>/board/addListEnd.lms";
+    	 frm.action = "<%= ctxPath%>/board/lecture_notice_edit_End.lms";
     	 frm.submit();
     	 
      });
@@ -93,31 +82,20 @@
 <div style="display: flex;">
   <div style="margin: auto; padding-left: 3%;">
        <h2 style="margin-bottom: 30px;">글쓰기</h2>
-      <select class="form-select" aria-label="Default select example">
-          <option selected>글 유형 선택</option>
-          <option value="0">일반글</option>
-          <option value="1">고정글</option>
-      </select>
-       <form name="addFrm" enctype="multipart/form-data">
-       <input type="hidden" id="Listtype" name="Listtype"/>
+       <form name="addFrm">
+       <input type="text" name="fk_course_seq" value="${requestScope.fk_course_seq}">
+       <input type="text" name="seq" value="${requestScope.bdto.seq}">
         <table style="width: 1024px" class="table table-bordered">
          <tr>
             <th style="width: 15%; background-color: #DDDDDD;">제목</th>
             <td>
-                <input type="text" name="title" size="100" maxlength="200" />
+                <input type="text" name="title" size="100" maxlength="200" value="${requestScope.bdto.title}"/>
             </td>
          </tr>
          <tr>
             <th style="width: 15%; background-color: #DDDDDD;">내용</th> 
             <td>
-                <textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
-            </td>
-         </tr>
-          <%-- === #170. 파일첨부 타입 추가하기 --%>
-         <tr>
-            <th style="width: 15%; background-color: #DDDDDD;">파일첨부</th>  
-            <td>
-                <input type="file" name="attach" /> <!-- name이 attach이기에 제출되면 boardvo에 set 되어진다 -->
+                <textarea style="width: 100%; height: 612px;" name="content" id="content">${requestScope.bdto.content}</textarea>
             </td>
          </tr>
         </table>
