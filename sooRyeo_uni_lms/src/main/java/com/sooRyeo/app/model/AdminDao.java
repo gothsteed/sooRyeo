@@ -22,5 +22,7 @@ public interface AdminDao {
 	// 회원등록시 입력한 이메일이 이미 있는 이메일인지 검사하는 메소드
 	String emailDuplicateCheck(String email);
 
+	List<Map<String, String>> studentCntByDeptname();
+
 
 }

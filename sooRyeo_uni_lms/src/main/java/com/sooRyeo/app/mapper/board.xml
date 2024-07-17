@@ -112,7 +112,7 @@
 		</if>
 	</select>
 
-	<update id="a_increase_readCount" parameterType="String">
+	<update id="a_increase_viewCount" parameterType="String">
 		update tbl_announcement set viewCount = viewCount + 1
 		where announcement_seq = #{seq}
 	</update>

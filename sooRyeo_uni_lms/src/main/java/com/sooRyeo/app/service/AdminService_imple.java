@@ -196,6 +196,12 @@ public class AdminService_imple implements AdminService {
 		return mav;
 	}
 
+	@Override
+	public List<Map<String, String>> studentCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = admindao.studentCntByDeptname();
+	    return deptnamePercentageList;
+	}
+
 
 
 	
