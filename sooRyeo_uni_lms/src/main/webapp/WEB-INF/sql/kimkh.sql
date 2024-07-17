@@ -375,10 +375,39 @@ select *
 from
 tbl_assignment_submit
 
-select *
+
+select S.name as name, S.grade as grade, C.semester_date as semester_date, CU.name as gradename, CU.credit as credit, sum(CU.credit) as totalcredit, CU.required as required
 from
-tbl_student
+tbl_student S 
+join tbl_registered_course R on S.student_id = R.fk_student_id
+join tbl_course C on R.fk_course_seq = C.course_seq
+join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
 where student_id = 202400009
+
+
+SELECT 
+    S.name AS name, 
+    S.grade AS grade, 
+    C.semester_date AS semester_date, 
+    CU.name AS gradename, 
+    CU.credit AS credit, 
+    CU.required AS required
+FROM
+    tbl_student S 
+    JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+    JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+    JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+WHERE 
+    S.student_id = 202400009
+GROUP BY 
+    S.name, 
+    S.grade, 
+    C.semester_date, 
+    CU.name, 
+    CU.credit, 
+    CU.required;
+
+
 
 ALTER TABLE tbl_assignment_submit ADD orgfilename NVARCHAR2(200);
 
