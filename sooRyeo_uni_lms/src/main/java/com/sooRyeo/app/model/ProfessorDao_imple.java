@@ -262,6 +262,7 @@ public class ProfessorDao_imple implements ProfessorDao {
 			
 			paraMap.put("content", dto.getContent());
 			paraMap.put("attatched_file", dto.getAttatched_file());
+			paraMap.put("orgfilename", dto.getOrgfilename());
 			
 			String attatched_file = paraMap.get("attatched_file");
 			System.out.println("확인용 attatched_file : " + attatched_file);

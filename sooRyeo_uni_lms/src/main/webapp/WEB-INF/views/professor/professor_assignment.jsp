@@ -57,7 +57,7 @@
 				            	<td><span class="subject" onclick="goView('\${item.schedule_seq_assignment}')">\${item.title}</span></td>
 				            	<td style="text-align: center;">\${item.start_date}</td>
 				            	<td style="text-align: center;">\${item.end_date}</td>
-				            	<td style="text-align: center;">\${item.attatched_file}</td> 
+				            	<td style="text-align: center;">\${item.orgfilename}</td> 
 		      				   </tr>`;
 					
 				});

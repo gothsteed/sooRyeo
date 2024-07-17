@@ -370,4 +370,11 @@ tbl_assignment
 
 ALTER TABLE tbl_assignment ADD orgfilename NVARCHAR2(200);
 
+
+select *
+from
+tbl_assignment_submit
+
+ALTER TABLE tbl_assignment_submit ADD orgfilename NVARCHAR2(200);
+
 commit;
