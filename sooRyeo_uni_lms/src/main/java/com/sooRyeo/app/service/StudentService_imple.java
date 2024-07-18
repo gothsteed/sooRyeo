@@ -23,7 +23,9 @@ import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
@@ -447,6 +449,33 @@ public class StudentService_imple implements StudentService {
 		
 		int n = dao.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid); 
 		return n;
+	}
+
+
+
+
+	@Override
+	public String student_chart_credit(int student_id) {
+		
+		List<Map<String, String>> creditList = dao.student_chart_credit(student_id);
+
+		JsonArray jsonArr = new JsonArray();
+      
+		if(creditList != null && creditList.size() > 0) {
+			for(Map<String, String> map : creditList) {
+				JsonObject jsonObj = new JsonObject();
+				jsonObj.addProperty("name", map.get("name"));
+				jsonObj.addProperty("grade", map.get("grade"));
+				jsonObj.addProperty("semester_date", map.get("semester_date"));
+				jsonObj.addProperty("gradename", map.get("gradename"));
+				jsonObj.addProperty("credit", map.get("credit"));
+				jsonObj.addProperty("required", map.get("required"));
+            
+				jsonArr.add(jsonObj);
+			}// end of for------------------------------
+		}
+      
+		return new Gson().toJson(jsonArr);
 	}
 
 

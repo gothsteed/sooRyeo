@@ -205,6 +205,14 @@ public class StudentDao_imple implements StudentDao {
 		return n;
 	}
 
+	@Override
+	public List<Map<String, String>> student_chart_credit(int student_id) {
+		
+		List<Map<String, String>> creditList = sqlSession.selectList("student.select_creditList", student_id);
+		
+		return creditList;
+	}
+
 	
 	
 	
