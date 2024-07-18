@@ -776,8 +776,8 @@ public class ProfessorController {
 
 
 	@GetMapping("/professor/course.lms")
-	public ModelAndView getConsultPage(HttpServletRequest request, HttpServletResponse response) {
-		return scheduleService.getProfessorConsultPage(request);
+	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
+		return scheduleService.getProfessorConsultPage(request, mav);
 	}
 	
 	

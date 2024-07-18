@@ -43,5 +43,5 @@ public interface ScheduleService {
 
 	ResponseEntity<String>  updateConsultApproveStatus(HttpServletRequest request, ConsultApprovalDto consultApprovalDto);
 
-    ModelAndView getProfessorConsultPage(HttpServletRequest request);
+    ModelAndView getProfessorConsultPage(HttpServletRequest request,  ModelAndView mav);
 }
