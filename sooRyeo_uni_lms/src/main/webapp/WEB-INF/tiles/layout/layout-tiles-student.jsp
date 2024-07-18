@@ -198,7 +198,7 @@
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
                     <a class="dropdown-item" href="<%=ctxPath%>/student/classList.lms">내 수업</a>
                     <a class="dropdown-item" href="<%=ctxPath%>/student/courseRegister.lms">수강신청</a>
-                    <a class="dropdown-item" href="#">출석현황</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/attendance.lms">출석현황</a>
                 </div>
             </li>
             <li class="nav-item">

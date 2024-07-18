@@ -640,4 +640,49 @@ public class StudentController {
 		
 		return service.student_chart_credit(student_id); 
 	}
+	
+	
+	
+	// 메인 - 사이드바  - 수업  - 출석현황
+	@GetMapping("/student/attendance.lms")
+	public String attendance(HttpServletRequest request) {
+		
+		// List<Map<String, Object>> attendanceList = service.getattendanceList();
+		
+		
+		
+		
+		return "attendance";
+		
+	} // end of public String attendance
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
