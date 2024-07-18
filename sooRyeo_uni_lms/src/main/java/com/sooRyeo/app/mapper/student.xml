@@ -246,6 +246,41 @@
 	</select>
 	
 	
+	<!-- 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함  -->
+	<select id="select_tbl_attendance" parameterType="HashMap" resultType="String">
+		select attendance_seq
+		from tbl_attendance
+		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
+	</select>
+	
+	<!-- 처음 동영상을 재생한 경우 tbl_attendance 에 insert -->
+	<insert id="insert_tbl_attendance" parameterType="HashMap">
+		insert into tbl_attendance (attendance_seq, fk_student_id, fk_lecture_seq, play_time)
+		values (attendance_seq.nextval, #{userid}, #{lecture_seq}, #{play_time})
+	</insert>
+	
+	
+	<select id="select_play_time_lecture_time" parameterType="HashMap" resultType="int">
+		select L.lecture_time - (A.play_time + #{play_time}) 
+		from tbl_attendance A join tbl_lecture L
+		on A.fk_lecture_seq  = L.lecture_seq
+		where A.fk_student_id  = #{userid} and A.FK_LECTURE_SEQ = #{lecture_seq}
+	</select>
+	
+	<!-- 처음 동영상을 재생한 경우 tbl_attendance play_time 컬럼 update -->
+	<update id="update_tbl_attendance" parameterType="HashMap">
+		update tbl_attendance set play_time = play_time + #{play_time}
+		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
+	</update>
+	
+	
+	<!-- 출석을 완료했을 경우 isAttended 컬럼 1로 update 하기  -->
+	<update id="update_tbl_attendance_isAttended">
+		update tbl_attendance set ISATTENDED = '1'
+		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
+	</update>
+	
+	
 	
 	
 	

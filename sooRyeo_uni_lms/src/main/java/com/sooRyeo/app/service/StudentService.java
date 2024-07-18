@@ -54,6 +54,22 @@ public interface StudentService {
 	// 수업 - 강의 한개 제목, 내용 select
 	Map<String, String> classPlay_One(String lecture_seq);
 
+	// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
+	String select_tbl_attendance(String lecture_seq, int userid);
+	
+	// 처음 동영상을 재생한 경우 tbl_attendance 에 insert
+	int insert_tbl_attendance(String play_time, String lecture_seq, int userid);
+
+	// 처음 동영상을 재생한 경우 tbl_attendance play_time 컬럼 update
+	int update_tbl_attendance(String play_time, String lecture_seq, int userid);
+
+	// play_time 컬럼과 lecture_time 컬럼을 비교 
+	int select_play_time_lecture_time(String play_time, String lecture_seq, int userid);
+	
+	// 출석완료 처리하기
+	int update_tbl_attendance_isAttended(String lecture_seq, int userid);
+
+
 
 
 	

@@ -214,6 +214,78 @@ public class StudentDao_imple implements StudentDao {
 	}
 
 	
+	// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
+	@Override
+	public String select_tbl_attendance(String lecture_seq, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", String.valueOf(userid));
+		paraMap.put("lecture_seq", lecture_seq);
+		
+		String fk_lecture_seq = sqlSession.selectOne("student.select_tbl_attendance", paraMap);
+		return fk_lecture_seq;
+	}
+
+	// 처음 동영상을 재생한 경우 tbl_attendance 에 insert
+	@Override
+	public int insert_tbl_attendance(String play_time, String lecture_seq, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", String.valueOf(userid));
+		paraMap.put("play_time", play_time);
+		paraMap.put("lecture_seq", lecture_seq);
+		
+		int n = sqlSession.insert("student.insert_tbl_attendance", paraMap);
+		return n;
+	}
+
+	
+	// play_time 컬럼과 lecture_time 컬럼을 비교 
+	@Override
+	public int select_play_time_lecture_time(String play_time, String lecture_seq, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", String.valueOf(userid));
+		paraMap.put("lecture_seq", lecture_seq);
+		paraMap.put("play_time", play_time);
+		
+		int i = sqlSession.selectOne("student.select_play_time_lecture_time", paraMap);
+		
+		return i;
+	}
+	
+
+	// 동영상 재생 이력이 있는 경우 tbl_attendance play_time 컬럼 update
+	@Override
+	public int update_tbl_attendance(String play_time, String lecture_seq, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", String.valueOf(userid));
+		paraMap.put("play_time", play_time);
+		paraMap.put("lecture_seq", lecture_seq);
+		
+		int n1 = sqlSession.update("student.update_tbl_attendance", paraMap);
+		System.out.println("dao 에서 n 체크 => " +  n1);
+		
+		return n1;
+	}
+
+	
+	// 출석을 완료했을 경우 isAttended 컬럼 1로 update 하기
+	@Override
+	public int update_tbl_attendance_isAttended(String lecture_seq, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", String.valueOf(userid));
+		paraMap.put("lecture_seq", lecture_seq);
+		
+		int n2 = sqlSession.update("student.update_tbl_attendance_isAttended", paraMap);
+		return n2;
+	}
+
+
+
+	
 	
 	
 	

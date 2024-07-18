@@ -27,6 +27,7 @@ values (generate_admin_id(), '관리자', '03ac674216f3e15c761ee1a5e255f06795362
 select *
 from tbl_student;
 
+
 select *
 from tbl_professor;
 
@@ -457,7 +458,69 @@ from tbl_lecture
 where lecture_seq = '14'
             
             
+ALTER TABLE tbl_attendance ADD play_time Number(10); 
+
+select play
+from tbl_attendance
+where fk_student_id  = '202400005' and FK_LECTURE_SEQ = '14'
+
+
+ALTER TABLE tbl_attendance ADD play_time Number(10); 
+
+Alter table tbl_attendance
+    modify ( play_time Number);
+
+
+select *
+from all_sequences
+where sequence_name = 'ATTENDANCE_SEQ'
+
+select *
+from tbl_attendance;
+
+select *
+from tbl_lecture
             
             
+ 
+             
+select L.lecture_time - (A.play_time + 1) 
+from tbl_attendance A join tbl_lecture L
+on A.fk_lecture_seq  = L.lecture_seq
+where A.fk_student_id  = '202400005' and A.FK_LECTURE_SEQ = '15'
+ 
+            
+select A.play_time - L.lecture_time 
+from tbl_attendance A join tbl_lecture L
+on A.fk_lecture_seq  = L.lecture_seq
+where A.fk_student_id  = '202400005' and A.FK_LECTURE_SEQ = '15'
+
+
+select L.lecture_time - (A.play_time + #{play_time}) 
+		from tbl_attendance A join tbl_lecture L
+		on A.fk_lecture_seq  = L.lecture_seq
+		where A.fk_student_id  = #{userid} and A.FK_LECTURE_SEQ = #{lecture_seq}
+
+
+select *
+from tbl_lecture
+where lecture_seq = '15';
+
+select *
+from tbl_attendance
+where fk_lecture_seq = '15'
+
+
+update tbl_lecture set lecture_time = '3'
+where lecture_seq = '15'
+
+update tbl_attendance set ISATTENDED = '0'
+where fk_lecture_seq = '15'
+
+
+select *
+from tbl_attendance;
+
+commit;
             
             

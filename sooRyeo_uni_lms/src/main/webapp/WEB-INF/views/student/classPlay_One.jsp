@@ -40,32 +40,43 @@ video {
 
 	
 	$(document).ready(function() {
-		  // Record the time when the page is loaded
+		  
 		  const pageLoadTime = new Date();
 
 		  $("button#end").click(function() {
 		    // Calculate the time spent on the page
-		    const secondsSpent = calculateTimeSpent(pageLoadTime);
-		    // alert(`\${secondsSpent}`);
+		    const minutes = calculateTimeSpent(pageLoadTime);
+		    // alert(`\${minutes}`);
 		    
+		    const lecture_seq = $("input#lecture_seq").val();
+		    
+		    const formData = new FormData();
+
+	        formData.append('play_time', minutes);
+	        formData.append('lecture_seq', lecture_seq);
+	        
 	        $.ajax({
-	     		url:"<%= ctxPath%>/student/insert_schedule_consult.lms",
+	     		url:"<%= ctxPath%>/student/classPlay_time.lms",
 	     		method : "POST",
 	     		data: formData,
 	     		dataType:'json',
 				contentType: false,	
 				processData: false,  
 	     		success: function(json) {
-	     		
-					if( json.result == 1) {
-						$('#ConsultingModal').modal('hide');
-						alert("상담 신청 성공!");
+	     			
+					if( json.n1 == 1) {
+						alert("동영상 재생 시간이 저장되었습니다.");
 						return;
 					}
-	     			
+					
+					if( json.n3 == 1) {
+						alert("출석이 완료되었습니다.");
+						return;
+					}
+				
 	     		},
 		        error: function(xhr, status, error) {
-					alert("상담 신청 실패!");
+					alert("동영상 재생 시간 입력 실패!");
 	       		}
 	     		
 	     	});
@@ -88,8 +99,9 @@ video {
 	function calculateTimeSpent(pageLoadTime) {
 	  const pageLeaveTime = new Date();
 	  const timeSpent = pageLeaveTime - pageLoadTime; 
-	  const secondsSpent = Math.round(timeSpent / 1000); 
-	  return secondsSpent;
+	  const totalSeconds = Math.round(timeSpent / 1000);
+	  const minutes = Math.floor(totalSeconds / 60);
+	  return minutes;
 	}
 
 </script>
@@ -101,6 +113,7 @@ video {
      <div style="display: flex; width: 90%; height: 525pt; margin: 2% auto;">
         <div class="shadow p-3 mb-5 bg-body rounded" style="width : 80%; height: 520pt; background-color: white;">
         
+           <input type="hidden" id="lecture_seq" value="${requestScope.lecture_seq}"/>
            <div style="display: flex; justify-content: space-between;">
            		<div style="height: 50px; margin-left: 7%; margin-top: 3%; font-size: 20pt;">${classOne.lecture_title}</div>
            		<button type="button" class="btn btn-success" id="end" style="height: 40px; margin-top: 3%; margin-right: 7%;">출석 종료</button>

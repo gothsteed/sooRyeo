@@ -457,6 +457,52 @@ public class StudentService_imple implements StudentService {
 		return classOne;
 	}
 
+	
+	// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
+	@Override
+	public String select_tbl_attendance(String lecture_seq, int userid) {
+		String fk_lecture_seq = dao.select_tbl_attendance(lecture_seq, userid);
+		return fk_lecture_seq;
+	}
+
+
+	// 처음 동영상을 재생한 경우 tbl_attendance 에 insert
+	@Override
+	public int insert_tbl_attendance(String play_time, String lecture_seq, int userid) {
+		int n = dao.insert_tbl_attendance(play_time, lecture_seq, userid);
+		return n;
+	}
+
+	
+	@Override
+	public int select_play_time_lecture_time(String play_time, String lecture_seq, int userid) {
+		int i = dao.select_play_time_lecture_time(play_time, lecture_seq, userid);
+		return i;
+	}
+	
+	
+	// 동영상 재생이력이 있는 경우 재생한 경우 tbl_attendance play_time 컬럼 update
+	@Override
+	public int update_tbl_attendance(String play_time, String lecture_seq, int userid) {
+
+		int n1 = dao.update_tbl_attendance(play_time, lecture_seq, userid);
+		System.out.println("service 에서 n1 체크 => " +  n1);
+		return n1;
+	}
+
+
+	@Override
+	public int update_tbl_attendance_isAttended(String lecture_seq, int userid) {
+		
+		int n2 = dao.update_tbl_attendance_isAttended(lecture_seq, userid);
+		return n2;
+	}
+
+
+
+
+
+
 
 
 	
