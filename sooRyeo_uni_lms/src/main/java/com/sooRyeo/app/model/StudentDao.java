@@ -77,4 +77,13 @@ public interface StudentDao {
 	AssignmentSubmitDTO getCommentOne(String assignment_submit_seq);
 
 	
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	int credit_point(int student_id);
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	int application_status_change(int student_id, int status_num);
+
+	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+	String getApplication_status(int student_id);
+
 }

@@ -96,6 +96,17 @@ public class StudentController {
 		
 		// System.out.println(member_student.getStatus());
 		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+		String application_status = studentservice.getApplication_status(student_id);
+		if(application_status == null) {
+			application_status = "0";
+		}
+		
+		mav.addObject("application_status", application_status);
 		mav.addObject("member_student", member_student);
 		mav.setViewName("myInfo");
 		// /WEB-INF/views/student/{1}.jsp
@@ -683,6 +694,98 @@ public class StudentController {
 	
 	
 	
+	// 졸업 신청
+	@GetMapping(value = "/student/application_graduation.lms")
+	public ModelAndView application_graduation( ModelAndView mav, StudentDTO student, HttpServletRequest request) {
+		     
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		int grade = loginuser.getGrade();
+		
+		String application_status = studentservice.getApplication_status(student_id);
+		if(application_status != null) {
+			mav.addObject("message", "이미 승인 대기중인 신청이 있습니다.");
+      	    mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+      	    mav.setViewName("msg");
+      	    
+      	    return mav;
+		}
+		
+		// 이수한 학점이 몇점인지 알아오는 메소드
+	    int credit_point = studentservice.credit_point(student_id);
+	    
+        if(credit_point >= 10 && grade == 4) {
+          // 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+          int status_num = 3;
+        	
+          int n = studentservice.application_status_change(student_id, status_num);
+          if(n == 1) {
+        	  mav.addObject("message", "졸업 신청되었습니다.");
+        	  mav.addObject("loc", request.getContextPath()+"/student/myInfo.lms");
+        	  mav.setViewName("msg");
+          }
+        }
+        else {
+      	  mav.addObject("message", "졸업 요건이 충족되지 않았습니다.");
+      	  mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+      	  mav.setViewName("msg");
+        }
+        
+        return mav;
+	}
+	
+	// 복학 신청
+	@GetMapping(value = "/student/application_status.lms")
+	public ModelAndView application_status(  HttpServletRequest request, ModelAndView mav) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		String application_status = studentservice.getApplication_status(student_id);
+		if(application_status != null) {
+			mav.addObject("message", "이미 승인 대기중인 신청이 있습니다.");
+      	    mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+      	    mav.setViewName("msg");
+      	    
+      	    return mav;
+		}
+		
+		int status_num = Integer.parseInt(request.getParameter("num"));
+		
+		// 학적변경테이블(tbl_student_status_change)에 재학신청을 insert 하는 메소드 
+		int n = studentservice.application_status_change(student_id, status_num);
+		
+		if(n == 1) {
+			if(status_num == 1) {
+				mav.addObject("message", "복학 신청되었습니다.");
+			}
+			if(status_num == 2) {
+				mav.addObject("message", "휴학 신청되었습니다.");
+			}
+			if(status_num == 4) {
+				mav.addObject("message", "자퇴 신청되었습니다.");
+			}
+			mav.addObject("loc", request.getContextPath()+"/student/myInfo.lms");
+			mav.setViewName("msg");
+		}
+		else {
+			if(status_num == 1) {
+				mav.addObject("message", "복학 신청이 실패되었습니다.");
+			}
+			if(status_num == 2) {
+				mav.addObject("message", "휴학 신청이 실패되었습니다.");
+			}
+			if(status_num == 4) {
+				mav.addObject("message", "자퇴 신청이 실패되었습니다.");
+			}
+			mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
 	
 	
 }

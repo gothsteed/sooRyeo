@@ -148,6 +148,8 @@ ALTER TABLE tbl_lecture_notice ADD writeday date DEFAULT sysdate NOT NULL;
 ALTER TABLE tbl_lecture_notice ADD viewcount number DEFAULT 0 NOT NULL;
 ALTER TABLE tbl_lecture_notice ADD status number DEFAULT 0 NOT NULL;
 
+
+
 select *
 from tbl_student;
 
@@ -295,3 +297,23 @@ ALTER TABLE tbl_student_status_change
 			student_id
 		);
 
+select *
+from tbl_registered_course;
+
+select credit, r.register_date, R.pass_status
+from tbl_student S
+join tbl_registered_course R on S.student_id = R.fk_student_id
+join tbl_course C on R.fk_course_seq = C.course_seq
+join tbl_curriculum L on C.fk_curriculum_seq = L.curriculum_seq
+where student_id = '202400005' and R.pass_status = 1;
+
+select change_status
+from tbl_student_status_change
+where fk_student_id = #{student_id}
+
+delete from tbl_student_status_change
+where change_status = '2';
+commit;
+
+ALTER TABLE tbl_registered_course ADD pass_status number DEFAULT 0 NOT NULL;
+ALTER TABLE tbl_registered_course MODIFY pass_status number DEFAULT 1;

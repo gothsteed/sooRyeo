@@ -277,7 +277,26 @@
 			values(assignment_submit_seq.nextval, #{fk_schedule_seq_assignment}, #{fk_student_id}, #{title}, #{content}, #{attatched_file}, #{orgfilename})
 		</if>
 	</insert>
+	
+	<select id="credit_point" parameterType="Integer" resultType="Integer">
+		select sum(credit)
+		from tbl_student S
+		join tbl_registered_course R on S.student_id = R.fk_student_id
+		join tbl_course C on R.fk_course_seq = C.course_seq
+		join tbl_curriculum L on C.fk_curriculum_seq = L.curriculum_seq
+		where student_id = #{student_id} and R.pass_status = 1
+	</select>
+	
+	<insert id="application_status_change" parameterType="HashMap">
+		insert into tbl_student_status_change(student_status_change_seq, fk_student_id, change_status)
+		values(student_status_change_seq.nextval, #{student_id}, #{status_num})
+	</insert>
 
+	<select id="getApplication_status" parameterType="Integer" resultType="String">
+		select change_status
+		from tbl_student_status_change
+		where fk_student_id = #{student_id}
+	</select>
 
 	<!-- 과제 제출 내용 보기 -->
 	<resultMap type="HashMap" id="readcomment">

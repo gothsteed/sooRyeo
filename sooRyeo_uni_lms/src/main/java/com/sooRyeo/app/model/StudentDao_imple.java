@@ -247,6 +247,30 @@ public class StudentDao_imple implements StudentDao {
 		return creditList;
 	}
 
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	@Override
+	public int credit_point(int student_id) {
+		int credit_point = sqlSession.selectOne("student.credit_point", student_id);
+		return credit_point;
+	}
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	@Override
+	public int application_status_change(int student_id, int status_num) {
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("student_id",student_id);
+		paraMap.put("status_num",status_num);
+		
+		int n = sqlSession.insert("student.application_status_change", paraMap);
+		return n;
+	}
+
+	@Override
+	public String getApplication_status(int student_id) {
+		String Application_status = sqlSession.selectOne("student.getApplication_status", student_id);
+		return Application_status;
+	}
+
 	
 	// 과제 제출 내용보기
 	@Override
