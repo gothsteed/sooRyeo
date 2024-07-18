@@ -1,10 +1,13 @@
 package com.sooRyeo.app.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -270,23 +273,101 @@ public class StudentController {
 	
 	
 	
+	// 수업 - 내 강의 - 과제 - 상세내용 - 파일다운(교수꺼)
+	@GetMapping("/downloadfile.lms")
+	public void downloadfile(HttpServletRequest request, HttpServletResponse response ) {
+
+		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
+		
+		// 웹브라우저에 출력하기 시작
+		response.setContentType("text/html; charset=UTF-8");	// 한글 깨짐 방지
+		
+		PrintWriter out = null;
+		
+		try {
+			
+			Integer.parseInt(schedule_seq_assignment);
+			
+			// 스케쥴, 과제 join
+			// 수업 - 내 강의 - 과제 - 상세내용1
+			Map<String, Object> assignment_detail_1 = service.getassignment_detail_1(schedule_seq_assignment);
+			
+			
+			if(assignment_detail_1 == null || (assignment_detail_1 != null && assignment_detail_1.get("attatched_file") == null)) {
+				
+				out = response.getWriter();
+				// out은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호이거나 첨부파일이 없으므로 파일 다운로드가 불가합니다.'); history.back();</script>");
+	            return;
+			}
+			else {
+				// 정상적으로 다운로드를 할 경우 
+				
+				String fileName = (String) assignment_detail_1.get("attatched_file");
+				// System.out.println("fileName : " + fileName);
+				// fileName : 2024071618011133184019490100.png
+				
+				String orgFilename = (String) assignment_detail_1.get("orgfilename");
+				// System.out.println("orgFilename : " + orgFilename);
+				// orgFilename : refrigerator_lg_normal_1.png
+			
+				HttpSession session_root = request.getSession();
+				String root = session_root.getServletContext().getRealPath("/");
+				
+				// System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+				// ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\
+				
+				String path = root + "resources" + File.separator + "files";
+				// System.out.println("~~~ 확인용 path => " + path);
+				// ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
+				
+				
+				// file 다운로드 하기
+				boolean flag = false;
+				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+				
+				if(!flag) {
+					
+						out = response.getWriter();
+						
+						out.println("<script type='text/javascript'>alert('파일 다운로드가 실패되었습니다.'); history.back();</script>");
+					
+					
+				} // end of if(flag)
+				
+			} // end of if_else
+			
+			
+		} catch(NumberFormatException | IOException e) {
+			
+			try {
+				out = response.getWriter();
+				// out은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back();</script>");
+				
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			
+		}
+		
+	} // end of public void download
+	
+	
+	
 	// 과제제출
 	@ResponseBody
 	@PostMapping(value="/addComment.lms", produces="text/plain;charset=UTF-8")
-	public String addComment(HttpServletRequest request) {
+	public String addComment(HttpServletRequest request, AssignmentSubmitDTO asdto) {
 		
 		// 과제 제출에 첨부파일이 없는 경우
 		int n = 0;
 		
 		try {
 			
-			String fk_schedule_seq_assignment = request.getParameter("fk_schedule_seq_assignment");
-			String fk_student_id = request.getParameter("fk_student_id");
-			String title = request.getParameter("title");	
-			String content = request.getParameter("content");
-		
-			n = service.addComment(fk_schedule_seq_assignment, fk_student_id, title, content);
-			
+			n = service.addComment(asdto);
 			
 			
 		} catch (Exception e) {
@@ -343,21 +424,19 @@ public class StudentController {
 	
 	
 	
-	// 파일첨부가 있는 댓글쓰기
+	// 파일첨부가 있는 과제 제출
 	@ResponseBody
 	@PostMapping(value="/addComment_withAttach.lms", produces="text/plain;charset=UTF-8")
 	public String addComment_withAttach(AssignmentSubmitDTO asdto, MultipartHttpServletRequest mrequest, HttpServletRequest request) {
 	
-		String fk_schedule_seq_assignment = mrequest.getParameter("fk_schedule_seq_assignment");
-		// System.out.println("확인용 fk_schedule_seq_assignment : " + fk_schedule_seq_assignment);
-		// 확인용 fk_schedule_seq_assignment : 5
-		
 		// === 첨부파일 업로드 시작 === //
 		MultipartFile attach = asdto.getAttach();
 		
 		// System.out.println(attach);
 		// MultipartFile[field="attach", filename=2024년도 국가기술자격 검정 시행계획(대외 공고).pdf, contentType=application/pdf, size=466949]
 		
+		String newFileName = "";
+		String originalFilename = "";
 		
 		if( !attach.isEmpty() ) {
 			
@@ -370,13 +449,12 @@ public class StudentController {
 			// System.out.println("확인용 path => " + path);
 			// ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
 			
-			String newFileName = "";
 			byte[] bytes = null;
 			
 			try {
 				bytes = attach.getBytes();
 				
-				String originalFilename = attach.getOriginalFilename();
+				originalFilename = attach.getOriginalFilename();
 				// System.out.println("확인용 originalFilename => " + originalFilename); 
 				// ~~~ 확인용 originalFilename => 2024년도 국가기술자격 검정 시행계획(대외 공고).pdf
 				
@@ -385,6 +463,8 @@ public class StudentController {
 				// 확인용 newFileName 20240714220735250112916872200.pdf
 				
 				asdto.setAttatched_file(newFileName);
+				
+				asdto.setOrgfilename(originalFilename);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -397,12 +477,7 @@ public class StudentController {
 		
 		try {
 			
-			fk_schedule_seq_assignment = request.getParameter("fk_schedule_seq_assignment");
-			String fk_student_id = request.getParameter("fk_student_id");
-			String title = request.getParameter("title");	
-			String content = request.getParameter("content");
-		
-			n = service.addComment(fk_schedule_seq_assignment, fk_student_id, title, content);
+			n = service.addComment(asdto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -420,30 +495,87 @@ public class StudentController {
 	
 	
 	
-	/* 파일첨부가 있는 댓글쓰기에서 파일 다운로드 받기
-	@GetMapping(value="/downloadComment.action")
-	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
+	// 파일첨부가 있는 과제제출에서 내 파일 다운로드 받기(학생)
+	@GetMapping(value="/downloadComment.lms")
+	public void downloadComment(HttpServletRequest request, HttpServletResponse response) {
 		
-		String fk_schedule_seq_assignment = request.getParameter("fk_schedule_seq_assignment");
+		String assignment_submit_seq = request.getParameter("assignment_submit_seq");
 		// 첨부파일이 있는 글번호
-		System.out.println("~~~ 확인용 fk_schedule_seq_assignment : " + fk_schedule_seq_assignment);
+		
+		// System.out.println("~~~ 확인용 assignment_submit_seq : " + assignment_submit_seq);
+		// ~~~ 확인용 assignment_submit_seq : 30
 		
 		response.setContentType("text/html; charset=UTF-8");
 		
 		PrintWriter out = null;
 		
 		try {
+			Integer.parseInt(assignment_submit_seq);
 			
-			Integer.parseInt(fk_schedule_seq_assignment);
-			AssignmentSubmitDTO asdto = service.getCommentOne(fk_schedule_seq_assignment);
+			AssignmentSubmitDTO asdto = service.getCommentOne(assignment_submit_seq);
 			
+			if(asdto == null || (asdto != null && asdto.getAttatched_file() == null)) {
+				
+				out = response.getWriter();
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호이거나 첨부파일이 없으므로 파일 다운로드가 불가합니다.'); history.back();</script>");
+	            return;
+				
+				
+			}
+			else {
+				// 정상적으로 다운로드를 할 경우
+				
+				String fileName = asdto.getAttatched_file();
+				// System.out.println("fileName : " + fileName);
+				// fileName : 20240718152912628114596746500.png
+				
+				String orgFilename = asdto.getOrgfilename();
+				// System.out.println("orgFilename : " + orgFilename);
+				// orgFilename : 01.png
+				
+				HttpSession session = request.getSession(); 
+				String root = session.getServletContext().getRealPath("/"); 
+				// System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+				// ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\
+				
+				String path = root + "resources" + File.separator + "files";
+				// System.out.println("~~~ 확인용 path => " + path);
+				// ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
+				
+				
+				// ***** file 다운로드 하기 ***** //
+	            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
+	            flag = fileManager.doFileDownload(fileName, orgFilename, path, response); 
+	            // file 다운로드 성공 시 flag 는 true,
+	            // file 다운로드 실패 시 flag 는 false 를 가진다.
+	            
+	            if(!flag) {
+					// 다운로드가 실패한 경우 메시지를 띄워준다.
+					out = response.getWriter();
+					// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+
+					out.println("<script type='text/javascript'>alert('파일 다운로드가 실패되었습니다.'); history.back();</script>");
+	            }
+				
+			}
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
+			
+			try {
+				out = response.getWriter();
+				// out은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back();</script>");
+				
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			
 		}
 		
 	} // end of public void requiredLogin_download
-	*/
+
 	
 	
 	

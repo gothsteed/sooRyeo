@@ -200,9 +200,9 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 과제제출
 	@Override
-	public int addComment(Map<String, String> paraMap) {
+	public int addComment(AssignmentSubmitDTO asdto) {
 		
-		int n = sqlSession.insert("student.addComment", paraMap);
+		int n = sqlSession.insert("student.addComment", asdto);
 		
 		return n;
 	} // end of public int addComment
@@ -257,13 +257,14 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	@Override
-	public AssignmentSubmitDTO getCommentOne(String fk_schedule_seq_assignment) {
+	public AssignmentSubmitDTO getCommentOne(String assignment_submit_seq) {
 		
-		AssignmentSubmitDTO asdto = sqlSession.selectOne("student.getCommentOne", fk_schedule_seq_assignment);
+		AssignmentSubmitDTO asdto = sqlSession.selectOne("student.getCommentOne", assignment_submit_seq);
 		
 		return asdto;
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
+
 
 
 

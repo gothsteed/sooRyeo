@@ -14,10 +14,17 @@ public class AssignmentSubmitDTO {
     private Integer score;
     private Date submit_datetime;
     private String attatched_file;
+    private String orgfilename;
     
 	private MultipartFile attach;
     
     
+	public String getOrgfilename() {
+		return orgfilename;
+	}
+	public void setOrgfilename(String orgfilename) {
+		this.orgfilename = orgfilename;
+	}
 	public Integer getAssignment_submit_seq() {
 		return assignment_submit_seq;
 	}

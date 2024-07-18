@@ -114,7 +114,7 @@ function goAddWrite_noAttach() {
 // 첨부파일이 있는 과제 제출인 경우
 function goAddWrite_withAttach(){
 	
-	const queryString = $("form[name='addWriteFrm']");
+	const queryString = $("form[name='addWriteFrm']").serialize();
 	
 	// console.log(queryString);
 	
@@ -159,7 +159,7 @@ function goReadComment(){
 	    dataType: "json",
 	    success: function (json) {
 	    	
-	    	// console.log(JSON.stringify(json));
+	    	console.log(JSON.stringify(json));
 	    	
 	        let v_html = "";
 	        
@@ -171,11 +171,12 @@ function goReadComment(){
 	            v_html += "<td class='comment'>" + json.title + "</td>";
 	            v_html += "<td class='comment'>" + json.content + "</td>";
 	            
-	            if (${requestScope.assignment_detail_2.attatched_file != null} ) {
-	                v_html += "<td class='comment'><a href='<%=ctxPath%>/downloadComment.action?attatched_file=" + json.attatched_file + "'>" + json.attatched_file + "</a></td>";
+	            <%-- 첨부파일 시작 --%>
+	            if (${requestScope.assignment_detail_2.orgfilename != null} ) {
+	                v_html += "<td><a href='<%=ctxPath%>/downloadComment.lms?assignment_submit_seq=${requestScope.assignment_detail_2.assignment_submit_seq}'>${requestScope.assignment_detail_2.orgfilename}</a></td>";
 	            } 
 	            else {
-	                v_html += "<td class='comment'>파일 없음</td>";
+	                v_html += "<td>파일 없음</td>";
 	            }
 	            
 	            // 날짜 형식 변환
@@ -281,7 +282,7 @@ function goReadComment(){
 				   		<p style="color:green;">첨부파일이 없습니다.</p>
 				   	</c:if>
 				   		 <c:if test="${requestScope.assignment_detail_1.attatched_file != null}">
-				   		  	<a href="<%=ctxPath%>/download.action?schedule_seq_assignment=${requestScope.assignment_detail_1.schedule_seq_assignment}">${requestScope.assignment_detail_1.attatched_file}</a>
+				   		  	<a href="<%=ctxPath%>/downloadfile.lms?schedule_seq_assignment=${requestScope.assignment_detail_1.schedule_seq_assignment}">${requestScope.assignment_detail_1.attatched_file}</a>
 				   	</c:if>
 				  </td>
 	   	  </tr>

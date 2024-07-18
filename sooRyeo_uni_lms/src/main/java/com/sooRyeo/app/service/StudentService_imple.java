@@ -453,22 +453,16 @@ public class StudentService_imple implements StudentService {
 	
 	// 과제제출
 	@Override
-	public int addComment(String fk_schedule_seq_assignment, String fk_student_id, String title, String content) {
+	public int addComment(AssignmentSubmitDTO asdto) {
 		
 		int n = 0;
 		
-		Map<String, String> paraMap = new HashMap<>();
-		
-		paraMap.put("fk_schedule_seq_assignment", fk_schedule_seq_assignment);
-		paraMap.put("fk_student_id", fk_student_id);
-		paraMap.put("title", title);
-		paraMap.put("content", content);
-		
-		n = dao.addComment(paraMap);
+		n = dao.addComment(asdto);
 
 		return n;
 		
 	} // end of public int addComment
+	
 	
 
 	// 교수 이름, 교수 번호 select
@@ -505,13 +499,17 @@ public class StudentService_imple implements StudentService {
 
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	@Override
-	public AssignmentSubmitDTO getCommentOne(String fk_schedule_seq_assignment) {
+	public AssignmentSubmitDTO getCommentOne(String assignment_submit_seq) {
 		
-		AssignmentSubmitDTO asdto = dao.getCommentOne(fk_schedule_seq_assignment);
+		AssignmentSubmitDTO asdto = dao.getCommentOne(assignment_submit_seq);
 		
 		return asdto;
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
+
+
+
+
 
 
 	

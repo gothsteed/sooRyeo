@@ -268,7 +268,7 @@ from tbl_assignment_submit
 
 
 delete from tbl_assignment_submit
-where fk_student_id = '202400009';
+where fk_student_id = '202400009'
 
 commit;
 
@@ -408,33 +408,45 @@ B.fk_student_id as fk_student_id,
         
         
 -- 과제 내용1
-select A.schedule_seq_assignment, S.title, A.content, S.start_date, S.end_date, A.attatched_file, A.fk_course_seq
+select A.schedule_seq_assignment, S.title, A.content, S.start_date, S.end_date, A.attatched_file, A.fk_course_seq, A.orgfilename
 from tbl_assignment A join tbl_schedule S
 on A.schedule_seq_assignment = S.schedule_seq
 where schedule_type = 1 AND schedule_seq_assignment ='5'
 
 -- 과제 내용2
-select B.score, B.submit_datetime, B.fk_student_id, B.assignment_submit_seq, B.attatched_file, B.content
+select B.score, B.submit_datetime, B.fk_student_id, B.attatched_file, B.content, B.orgfilename, B.fk_schedule_seq_assignment
 from tbl_assignment A join tbl_assignment_submit B
 on A.schedule_seq_assignment = B.fk_schedule_seq_assignment
 where fk_student_id = '202400005' AND fk_schedule_seq_assignment ='5'
 
 
-순번, 학번, 제목, 내용, 첨부파일, 제출시간
+-- 순번, 학번, 제목, 내용, 첨부파일, 제출시간
 -- 과제 제출 내용 보기
 select assignment_submit_seq, fk_student_id, title, content, attatched_file, submit_datetime
 from tbl_assignment_submit
-where fk_schedule_seq_assignment = '5' AND fk_student_id = '202400005'
+where fk_schedule_seq_assignment = '5' AND fk_student_id = '202400009'
+
+
+select *
+from tbl_assignment_submit;
+
+select *
+from tbl_assignment;
 
 
 
+select *
+from tbl_lecture
 
+alter table tbl_lecture 
+add lecture_time Number;
 
+commit;
 
+update tbl_lecture set lecture_time = 5
+where lecture_seq = 26;
 
-
-
-
+commit;
 
 
 

@@ -59,7 +59,7 @@ public interface StudentDao {
 	Map<String, Object> getassignment_detail_2(String schedule_seq_assignment, int userid);
 
 	// 과제제출
-	int addComment(Map<String, String> paraMap);
+	int addComment(AssignmentSubmitDTO asdto);
 	
 	// 교수 이름, 교수 번호 select
 	List<Professor> select_prof_info(String fk_course_seq);
@@ -71,7 +71,7 @@ public interface StudentDao {
 	Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid);
 
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
-	AssignmentSubmitDTO getCommentOne(String fk_schedule_seq_assignment);
+	AssignmentSubmitDTO getCommentOne(String assignment_submit_seq);
 
 	
 }
