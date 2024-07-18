@@ -100,12 +100,17 @@ from tbl_time
 select *
 from tbl_course C
 JOIN tbl_time T on C.course_seq = T.fk_course_seq
-where fk_professor_id = 202400002
+where course_seq = 12;
 
+delete tbl_course
+where course_seq = 12;
+
+-- course_seq 57, fk_curriculum_seq 5 월 1-3
+-- course_seq 4, fk_curriculum_seq 1 월 1-1
 -- 
 select *
 from tbl_lecture
-
+where fk_professor_id = 202400002
 
 -- 수업
 select *
@@ -385,6 +390,7 @@ join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
 where student_id = 202400009
 
 
+----- 학생 총학점 가져오기
 SELECT 
     S.name AS name, 
     S.grade AS grade, 
@@ -399,13 +405,43 @@ FROM
     JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
 WHERE 
     S.student_id = 202400009
-GROUP BY 
-    S.name, 
-    S.grade, 
-    C.semester_date, 
-    CU.name, 
-    CU.credit, 
-    CU.required;
+
+-- 학생이 듣고 있는 수업리스트
+select S.student_id as student_id, S.name as name, CU.name as gradename, CU.fk_department_seq as fk_department_seq, CU.credit as credit, CU.required as required
+FROM
+tbl_student S 
+JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+WHERE S.student_id = 202400009
+
+
+-- 전공필수 가져오는 식
+select  SUM(CU.credit) AS total_Required_credit
+FROM
+tbl_student S 
+JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+WHERE S.student_id = 202400009 and CU.fk_department_seq is not null and CU.required = 1 
+
+-- 전공선택 가져오는 식
+select SUM(CU.credit) AS total_Unrequired_credit
+FROM
+tbl_student S 
+JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+WHERE S.student_id = 202400009 and CU.fk_department_seq is not null and CU.required = 0
+
+-- 교양 가져오는 식
+select SUM(CU.credit) AS total_Liberal_credit
+FROM
+tbl_student S 
+JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+WHERE S.student_id = 202400009 and CU.fk_department_seq is null
 
 
 

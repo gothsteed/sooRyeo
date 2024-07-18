@@ -62,15 +62,6 @@
 	div#table_container th {background-color: #595959; color: white;} 
 </style> 
 
-<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/highcharts.js"></script>
-<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
-<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/export-data.js"></script>
-<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/accessibility.js"></script>
-
-<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/series-label.js"></script>
-<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/data.js"></script>
-<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/drilldown.js"></script>
-
 <div style="display: flex;">	
 <div style="width: 80%; min-height: 1100px; margin:auto; ">
 
@@ -88,6 +79,15 @@
 
 </div>
 </div>
+
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/highcharts.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/export-data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/accessibility.js"></script>
+
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/series-label.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/drilldown.js"></script>
 
 <script type="text/javascript">
    $(document).ready(function(){
@@ -116,152 +116,75 @@
 					
 			case "credit": // 학생 학점 통계 를 선택한 경우 
 				
-				$.ajax({
-			    	url:"<%= ctxPath%>/student/chart/credit.lms",
-			    	dataType:"json",
-			    	success:function(json){
-			    	 	console.log(JSON.stringify(json)); 
-			    		/*
-			    		  [{"department_name":"Shipping","cnt":"45","percentage":"40.5"}
-			    		  ,{"department_name":"Sales","cnt":"34","percentage":"30.6"}
-			    		  ,{"department_name":"IT","cnt":"9","percentage":"8.1"}
-			    		  ,{"department_name":"Finance","cnt":"6","percentage":"5.4"}
-			    		  ,{"department_name":"Purchasing","cnt":"6","percentage":"5.4"}
-			    		  ,{"department_name":"Executive","cnt":"3","percentage":"2.7"}
-			    		  ,{"department_name":"Accounting","cnt":"2","percentage":"1.8"}
-			    		  ,{"department_name":"Marketing","cnt":"2","percentage":"1.8"}
-			    		  ,{"department_name":"Administration","cnt":"1","percentage":"0.9"}
-			    		  ,{"department_name":"Human Resources","cnt":"1","percentage":"0.9"}
-			    		  ,{"department_name":"Public Relations","cnt":"1","percentage":"0.9"}
-			    		  ,{"department_name":"부서없음","cnt":"1","percentage":"0.9"}
-			    		  ] 
-			    		*/
-			    		
-			    		$("div#chart_container").empty();
-			    		$("div#table_container").empty();
-			    		$("div.highcharts-data-table").empty();
-			    		
-			    		let deptnameArr = []; // 부서명별 인원수 퍼센티지 객체 배열 
-			    		
-			    		$.each(json, function(index, item){
-			    			deptnameArr.push({name: item.department_name,
-	    	                                  y: Number(item.percentage),
-	    	                                  drilldown: item.department_name});
-			    			
-			    		});// end of $.each(json, function(index, item){})-------
-			    		
-			    		
-			    		let genderArr = []; // 특정 부서명에 근무하는 직원들의 성별 인원수 퍼센티지 객체 배열 
-			    		
-			    		$.each(json, function(index, item){
-			    			$.ajax({
-				    			url:"<%= ctxPath%>/emp/chart/genderCntSpecialDeptname.action",
-				    			data:{"deptname":item.department_name},
-				    			dataType:"json",
-				    			success:function(json2){
-				    				console.log(JSON.stringify(json2)); 
-				    				/*
-				    				  [
-				    				   {"gender":"남","cnt":"19","percentage":"17.12"}
-				    				  ,{"gender":"여","cnt":"15","percentage":"13.51"}
-				    				  ]
-				    				*/
-				    				
-				    				let subArr = [];
-				    				
-				    				$.each(json2, function(index2, item2){
-				    					
-				    					subArr.push([item2.gender,
-				    						         Number(item2.percentage)]);
-				    					
-				    				});// end of $.each(json2, function(index, item){})-----------
-				    				
-				    				genderArr.push({
-				    	                             name: item.department_name,
-				    	                             id: item.department_name,
-								    	             data: subArr
-				    	            });
-				    				
-				    			},
-				    			error: function(request, status, error){
-								   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-								}
-				    		});	
-			    		});// end of $.each(json, function(index, item){})----------
-			    		
+				
 			    		
 						///////////////////////////////////////////////
 				    	Highcharts.chart('chart_container', {
-				    	    chart: {
-				    	        type: 'column'
-				    	    },
-				    	    title: {
-				    	        align: 'left',
-				    	        text: '부서별 남녀비율'
-				    	    },
-				    	    subtitle: {
-				    	        align: 'left',
-				    	        text: 'Click the columns to view versions. Source: <a href="http://localhost:9090/board/emp/empList.action" target="_blank">HR.employees</a>' 
-				    	    },
-				    	    accessibility: {
-				    	        announceNewData: {
-				    	            enabled: true
-				    	        }
-				    	    },
-				    	    xAxis: {
-				    	        type: 'category'
-				    	    },
-				    	    yAxis: {
-				    	        title: {
-				    	            text: '구성비율(%)'
-				    	        }
-	
-				    	    },
-				    	    legend: {
-				    	        enabled: false
-				    	    },
-				    	    plotOptions: {
-				    	        series: {
-				    	            borderWidth: 0,
-				    	            dataLabels: {
-				    	                enabled: true,
-				    	                format: '{point.y:.2f}%'
-				    	            }
-				    	        }
-				    	    },
-	
-				    	    tooltip: {
-				    	        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-				    	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-				    	    },
-	
-				    	    series: [
-				    	        {
-				    	            name: "부서명",
-				    	            colorByPoint: true,
-				    	            data: deptnameArr // *** 위에서 구한 값을 대입시킴. 부서명별 인원수 퍼센티지 객체 배열 *** //   
-				    	        }
-				    	    ],
-				    	    drilldown: {
-				    	        breadcrumbs: {
-				    	            position: {
-				    	                align: 'right'
-				    	            }
-				    	        },
-				    	        series: genderArr  // *** 위에서 구한 값을 대입시킴. 특정 부서명에 근무하는 직원들의 성별 인원수 퍼센티지 객체 배열 *** // 
-				    	    }
-				    	});			
+						    chart: {
+						        type: 'column'
+						    },
+						    title: {
+						        text: '학생 학점 통계',
+						        align: 'left'
+						    },
+						    xAxis: {
+						        categories: ['교양', '전공필수', '전공선택', '총학점']
+						    },
+						    yAxis: {
+						        min: 0,
+						        title: {
+						            text: '학점총계'
+						        },
+						        stackLabels: {
+						            enabled: true,
+						            style: {
+						                fontWeight: 'bold',
+						                color: ( // theme
+						                    Highcharts.defaultOptions.title.style &&
+						                    Highcharts.defaultOptions.title.style.color
+						                ) || 'gray',
+						                textOutline: 'none'
+						            }
+						        }
+						    },
+						    legend: {
+						        align: 'left',
+						        x: 70,
+						        verticalAlign: 'top',
+						        y: 70,
+						        floating: true,
+						        backgroundColor:
+						            Highcharts.defaultOptions.legend.backgroundColor || 'white',
+						        borderColor: '#CCC',
+						        borderWidth: 1,
+						        shadow: false
+						    },
+						    tooltip: {
+						        headerFormat: '<b>{point.x}</b><br/>',
+						        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+						    },
+						    plotOptions: {
+						        column: {
+						            stacking: 'normal',
+						            dataLabels: {
+						                enabled: true
+						            }
+						        }
+						    },
+						    series: [{
+						        name: 'BPL',
+						        data: [3, 5, 1, 13]
+						    }, {
+						        name: 'FA Cup',
+						        data: [14, 8, 8, 12]
+						    }, {
+						        name: 'CL',
+						        data: [0, 2, 6, 3]
+						    }]
+						});			
 			    		///////////////////////////////////////////////
 			    		
-				
-			    	  },
-			    	  
-			        error: function(request, status, error){
-						   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-						}
-				});
-				
-				break;
+
 					
 				
 		}// end of switch (searchTypeVal)----------------
