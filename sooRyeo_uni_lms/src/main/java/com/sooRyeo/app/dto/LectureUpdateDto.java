@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
+/*@AllArgsConstructor
+@NoArgsConstructor*/
 public class LectureUpdateDto {
 
     private Integer lecture_seq;
@@ -19,8 +19,20 @@ public class LectureUpdateDto {
     private String originalAttachName;
     private String uploadAttachName;
 
+    public LectureUpdateDto() {
+    }
 
-
+    public LectureUpdateDto(Integer lecture_seq, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String originalVideoTitle, String uploadVideoTitle, String originalAttachName, String uploadAttachName) {
+        this.lecture_seq = lecture_seq;
+        this.title = title;
+        this.content = content;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.originalVideoTitle = originalVideoTitle;
+        this.uploadVideoTitle = uploadVideoTitle;
+        this.originalAttachName = originalAttachName;
+        this.uploadAttachName = uploadAttachName;
+    }
 
     public Integer getLecture_seq() {
         return lecture_seq;

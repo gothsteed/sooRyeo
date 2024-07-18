@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.common.AES256;
-import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
-import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
@@ -201,6 +201,13 @@ public class AdminService_imple implements AdminService {
 		List<Map<String, String>> deptnamePercentageList = admindao.studentCntByDeptname();
 	    return deptnamePercentageList;
 	}
+
+	@Override
+	public List<Student> getStudentList() {
+		List<Student> getStudentList = admindao.getStudentList();
+	    return getStudentList;
+	}
+
 
 
 

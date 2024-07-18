@@ -259,7 +259,7 @@ SELECT SUM(DECODE(TO_CHAR(login_date, 'MM'), '01', sal)) AS "01월"
 FROM tbl_login_history;
 
 select *
-from tbl_department;
+from tbl_student;
 
 select department_name
    , count(*) AS cnt 
@@ -270,5 +270,28 @@ group by D.department_name
 order by cnt desc, department_name asc
 
 
+CREATE TABLE tbl_student_status_change
+( 
+    student_status_change_seq    NUMBER	NOT NULL primary key,
+    fk_student_id          number not null,
+    change_status          number not null
+);
 
+create sequence student_status_change_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+ALTER TABLE tbl_student_status_change
+	ADD
+		CONSTRAINT con_fk_student_id
+		FOREIGN KEY (
+			fk_student_id
+		)
+		REFERENCES tbl_student (
+			student_id
+		);
 

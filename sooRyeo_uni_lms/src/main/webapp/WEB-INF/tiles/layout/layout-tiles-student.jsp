@@ -213,7 +213,7 @@
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#" id="gradesMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
                 <div class="dropdown-menu" aria-labelledby="gradesMenu">
-                    <a class="dropdown-item" href="#">학점 통계</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/Statistics.lms">학점 통계</a>
                     <a class="dropdown-item" href="#">취득 현황</a>
                 </div>
             </li>
