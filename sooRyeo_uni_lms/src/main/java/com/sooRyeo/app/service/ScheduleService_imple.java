@@ -170,6 +170,7 @@ public class ScheduleService_imple implements ScheduleService {
 		HttpSession session = request.getSession();
 		int professor_id = ((Professor) session.getAttribute("loginuser")).getProf_id();
 
+
 /*		List<Consult> approvedConsult = dao.getConfirmedConsultList(professor_id);
 		int totalElementCount = dao.getConfirmedConsultCount(professor_id);
 		mav.addObject("consultList", approvedConsult);*/
