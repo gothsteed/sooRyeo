@@ -160,5 +160,10 @@ public class ScheduleService_imple implements ScheduleService {
 		return ResponseEntity.ok("수정 성공");
 	}
 
+	@Override
+	public ModelAndView getProfessorConsultPage(HttpServletRequest request) {
+		return null;
+	}
+
 
 }
