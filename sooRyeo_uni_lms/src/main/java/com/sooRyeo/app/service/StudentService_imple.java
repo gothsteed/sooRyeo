@@ -480,6 +480,30 @@ public class StudentService_imple implements StudentService {
 
 
 
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	@Override
+	public int credit_point(int student_id) {
+		int credit_point = dao.credit_point(student_id); 
+		return credit_point;
+	}
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	@Override
+	public int application_status_change(int student_id, int status_num) {
+		int n = dao.application_status_change(student_id, status_num); 
+		return n;
+	}
+
+
+	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+	@Override
+	public String getApplication_status(int student_id) {
+		String application_status = dao.getApplication_status(student_id); 
+		return application_status;
+	}
+
+
+
 	
 
 	

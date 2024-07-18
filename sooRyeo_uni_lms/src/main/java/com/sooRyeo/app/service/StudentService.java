@@ -54,6 +54,16 @@ public interface StudentService {
 	// ajax학생 수강과목 가져와서 학점 계산하기(chart)
 	String student_chart_credit(int student_id);
 
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	int credit_point(int student_id);
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	int application_status_change(int student_id, int status_num);
+
+	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+	String getApplication_status(int student_id);
+
+
 
 
 	
