@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -291,4 +292,26 @@ public class StudentController {
 		return mav;
 	} // end of public String class_play()-------
 	
+	
+	// 메인 - 사이드바 - 성적 - 통계
+	@GetMapping("/student/Statistics.lms")
+	public String student_chart(HttpServletRequest request) {
+       
+       return "chart/student_chart";
+	}
+	
+	
+	// === #239. 차트그리기(Ajax) 학생 수강과목 가져와서 학점 계산하기 ==== //
+	@ResponseBody
+	@GetMapping(value="/student/chart/credit.lms", produces="text/plain;charset=UTF-8")  
+	public String student_chart_credit(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		int student_id = loginuser.getStudent_id();
+		
+		return service.student_chart_credit(student_id); 
+	}
 }

@@ -231,6 +231,25 @@
 	</insert>
 	
 	
+	<!-- === ajax학생 수강과목 가져와서 학점 계산하기(chart) === -->
+	<resultMap type="HashMap" id="creditList_Map">
+       <result property="name"    		column="name"    		javaType="String" />
+       <result property="grade"         column="grade"          javaType="String" />
+       <result property="semester_date" column="semester_date"  javaType="String" />
+       <result property="gradename"     column="gradename"      javaType="String" />
+       <result property="credit"        column="credit"         javaType="String" />
+       <result property="required"      column="required"       javaType="String" />
+   	</resultMap>
+	<select id="select_creditList" resultMap="creditList_Map">
+		select S.name as name, S.grade as grade, C.semester_date as semester_date, CU.name as gradename, CU.credit as credit, CU.required as required
+		from
+		tbl_student S 
+		join tbl_registered_course R on S.student_id = R.fk_student_id
+		join tbl_course C on R.fk_course_seq = C.course_seq
+		join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
+		where student_id = #{student_id}	
+	</select>
+	
 	
 	
 	
