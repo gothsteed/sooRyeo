@@ -307,9 +307,11 @@ join tbl_course C on R.fk_course_seq = C.course_seq
 join tbl_curriculum L on C.fk_curriculum_seq = L.curriculum_seq
 where student_id = '202400005' and R.pass_status = 1;
 
-select change_status
+select *
 from tbl_student_status_change
 where fk_student_id = #{student_id}
+
+insert into tbl_student_status_change(student_status_change_seq, fk_student_id, change_status) values(student_status_change_seq.nextval, 202400021, 2)
 
 delete from tbl_student_status_change
 where change_status = '2';
@@ -317,3 +319,9 @@ commit;
 
 ALTER TABLE tbl_registered_course ADD pass_status number DEFAULT 0 NOT NULL;
 ALTER TABLE tbl_registered_course MODIFY pass_status number DEFAULT 1;
+
+
+select S.student_id, C.change_status, S.name, s.grade, d.department_name, S.status
+from tbl_student_status_change C
+join tbl_student S on s.student_id = c.fk_student_id
+join tbl_department D on s.fk_department_seq = d.department_seq;

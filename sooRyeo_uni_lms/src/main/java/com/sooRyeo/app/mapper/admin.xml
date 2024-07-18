@@ -72,5 +72,17 @@
 		SELECT *
 		FROM tbl_student
 	</select>
+	
+	<select id="application_status_student"
+		resultType="com.sooRyeo.app.domain.StudentStatusChange">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		select S.student_id, C.change_status, S.name, s.grade, d.department_name, S.status
+		from tbl_student_status_change C
+		join tbl_student S on s.student_id = c.fk_student_id
+		join tbl_department D on s.fk_department_seq = d.department_seq
+	</select>
+
+
+
+
 
 </mapper>
