@@ -774,16 +774,6 @@ public class ProfessorController {
 		
 	}// end of public void professor_download(HttpServletRequest request, HttpServletResponse response) 
 		
-	
-	@GetMapping("/weather/weatherXML.action")
-	public String weatherXML() {
-		
-		
-		
-		return "weather/weatherXML";
-		// /board/src/main/webapp/WEB-INF/views/weather/weatherXML.jsp 파일을 생성한다.
-	}
-	
 
 
 	@GetMapping("/professor/course.lms")
