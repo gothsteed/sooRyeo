@@ -441,8 +441,14 @@ tbl_student S
 JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
 JOIN tbl_course C ON R.fk_course_seq = C.course_seq
 JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
-WHERE S.student_id = 202400009 and CU.fk_department_seq is null
+WHERE S.student_id = 202400009 and CU.fk_department_seq is null and r
 
+
+select *
+from tbl_registered_course
+
+
+update tbl_registered_course set pass_status = 1
 
 
 ALTER TABLE tbl_assignment_submit ADD orgfilename NVARCHAR2(200);
