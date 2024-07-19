@@ -210,6 +210,20 @@ public class AdminService_imple implements AdminService {
 	    return application_status_student;
 	}
 
+	// 관리자가 승인 혹은 반려한 신청을 삭제해주는 메소드
+	@Override
+	public int deleteApplication(String student_id) {
+		int n = admindao.deleteApplication(student_id);
+		return n;
+	}
+	
+	// 관리자가 승인을 해주면 학생의 학적 상태를 업데이트 해주는 메소드
+	@Override
+	public int updateStudentStatus(String student_id, String change_status) {
+		int n = admindao.updateStudentStatus(student_id, change_status);
+		return n;
+	}
+
 
 
 

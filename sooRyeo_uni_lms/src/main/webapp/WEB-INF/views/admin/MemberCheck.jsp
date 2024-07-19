@@ -9,9 +9,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
 
-<%-- jQueryUI CSS 및 JS --%>
+
+<script type="text/javascript">
+
+
+</script>
 
 </head>
 <body>
@@ -51,8 +54,8 @@
 		  	<c:if test="${student.change_status == 4}">자퇴 신청</c:if>
 	  	</td>
   	 	<td>
-	  		<button type="button" class="btn btn-primary btn-sm"  onclick="yes('${student.student_id}')">승인</button>
-	  		<button type="button" class="btn btn-primary btn-sm"  onclick="no('${student.student_id}')">반려</button>
+	  		<button type="button" class="btn btn-primary btn-sm"  onclick="location.href='${pageContext.request.contextPath}/admin/admitOrRefuse.lms?student_id=${student.student_id}&change_status=${student.change_status}&no=1'">승인</button>
+	  		<button type="button" class="btn btn-primary btn-sm"  onclick="location.href='${pageContext.request.contextPath}/admin/admitOrRefuse.lms?student_id=${student.student_id}&change_status=${student.change_status}&no=2'">반려</button>
 	  	</td>
 	  </tr>
   </c:forEach>  
