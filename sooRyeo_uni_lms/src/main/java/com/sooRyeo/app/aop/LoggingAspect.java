@@ -30,7 +30,7 @@ public class LoggingAspect {
         }
     }
 
-    @Around("@within(logging) || @annotation(logging)")
+    @Around("( @within(logging) || @annotation(logging) ) &&  !execution(* com.sooRyeo.app.service.LoginService.logout(..))")
     public Object logging(ProceedingJoinPoint joinPoint, Logging logging) throws Throwable {
         if (logging == null) {
             logging = joinPoint.getTarget().getClass().getAnnotation(Logging.class);

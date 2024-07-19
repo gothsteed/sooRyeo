@@ -82,17 +82,31 @@ form.profile-form img#profile  {
 						
 						<div class="col-sm-6 m-b30">
 							<label class="form-label">학적상태</label>
-							<c:if test="${requestScope.member_student.status == 1}">
-								<input type="text" disabled  name="stuStatus1" class="form-control" readonly value="재학">
+							<c:if test="${requestScope.application_status == 0}">
+								<c:if test="${requestScope.member_student.status == 1}">
+									<input type="text" disabled  name="stuStatus1" class="form-control" readonly value="재학">
+								</c:if>
+								<c:if test="${requestScope.member_student.status == 2}">
+									<input type="text" disabled  name="stuStatus2" class="form-control" readonly value="휴학">
+								</c:if>
+								<c:if test="${requestScope.member_student.status == 3}">
+									<input type="text" disabled  name="stuStatus3" class="form-control" readonly value="졸업">
+								</c:if>
+								<c:if test="${requestScope.member_student.status == 4}">
+									<input type="text" disabled  name="stuStatus4" class="form-control" readonly value="자퇴">
+								</c:if>
 							</c:if>
-							<c:if test="${requestScope.member_student.status == 2}">
-								<input type="text" disabled  name="stuStatus2" class="form-control" readonly value="휴학">
+							<c:if test="${requestScope.application_status == 1}">
+								<input type="text" disabled  name="stuStatus4" class="form-control" readonly value="재학 승인 대기중">
 							</c:if>
-							<c:if test="${requestScope.member_student.status == 3}">
-								<input type="text" disabled  name="stuStatus3" class="form-control" readonly value="졸업">
+							<c:if test="${requestScope.application_status == 2}">
+								<input type="text" disabled  name="stuStatus4" class="form-control" readonly value="휴학 승인 대기중">
 							</c:if>
-							<c:if test="${requestScope.member_student.status == 4}">
-								<input type="text" disabled  name="stuStatus4" class="form-control" readonly value="자퇴">
+							<c:if test="${requestScope.application_status == 3}">
+								<input type="text" disabled  name="stuStatus4" class="form-control" readonly value="졸업 승인 대기중">
+							</c:if>
+							<c:if test="${requestScope.application_status == 4}">
+								<input type="text" disabled  name="stuStatus4" class="form-control" readonly value="자퇴 승인 대기중">
 							</c:if>
 						</div>
 						
@@ -139,13 +153,27 @@ form.profile-form img#profile  {
 	                             <span id="zipcodeSearch"><button type="button" class="btn btn-outline-success btn-sm mt-3 mb-3">우편번호 찾기</button></span>
 	                             <span id="addressCheckResult"></span>
 	                  	</div>
-	                  	
-
 					</div>
 				</div>
-				<div class="card-footer">
-					<button type="button" class="btn btn-success" style="margin-left:70%;" id="updateBtn" onclick="goEdit('<%=ctxPath%>')">수정하기</button>
-					<input type="reset"  class="btn btn-danger" style="margin-left:3%;" value="취소하기" onclick="self.close()" />
+				<div class="card-footer d-flex">
+				    <div class="mr-auto">
+				    <c:if test="${requestScope.member_student.status != 1 && requestScope.application_status != 1}">
+				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_status.lms?num=1'">복학신청</button>
+					</c:if>
+				    <c:if test="${requestScope.member_student.status != 2 && requestScope.application_status != 2}">
+				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_status.lms?num=2'">휴학신청</button>
+					</c:if>
+				    <c:if test="${requestScope.member_student.status != 3 && requestScope.application_status != 3}">
+				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_graduation.lms'">졸업신청</button>
+					</c:if>
+				    <c:if test="${requestScope.member_student.status != 4 && requestScope.application_status != 4}">
+				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_status.lms?num=4'">자퇴신청</button>
+					</c:if>
+				    </div>
+				    <div> 
+				        <button type="button" class="btn btn-success" id="updateBtn" onclick="goEdit('<%=ctxPath%>')">수정하기</button>
+				        <input type="reset" class="btn btn-danger" value="취소하기" onclick="self.close()" />
+				    </div>
 				</div>
 			</form>
 	    	

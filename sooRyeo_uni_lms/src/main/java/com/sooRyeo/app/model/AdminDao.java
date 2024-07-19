@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Admin;
-import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -22,9 +21,8 @@ public interface AdminDao {
 
 	List<Map<String, String>> studentCntByDeptname();
 
-	// 학생회원을 불러오는 메소드
-	List<Student> getStudentList();
-
+	// 학적변경신청한 학생들을 전부 불러오는 메소드
+	List<StudentStatusChange> application_status_student();
 
 
 }

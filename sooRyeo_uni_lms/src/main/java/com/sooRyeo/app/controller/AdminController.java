@@ -22,8 +22,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
@@ -60,11 +60,12 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/admin/MemberCheck.lms", method = RequestMethod.GET)
-	public ModelAndView MemberCheck(HttpServletRequest request ,ModelAndView mav, Student student) {
+	public ModelAndView MemberCheck(HttpServletRequest request ,ModelAndView mav) {
 		
-		List<Student> studentList = adminService.getStudentList();
+		// 학적변경신청한 학생들을 전부 불러오는 메소드
+		List<StudentStatusChange> application_status_student = adminService.application_status_student();
 		
-		mav.addObject("studentList", studentList);
+		mav.addObject("application_status_student", application_status_student);
 		mav.setViewName("MemberCheck");
 		
 		return mav;

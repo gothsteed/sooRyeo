@@ -10,6 +10,7 @@ import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ConsultDetailDTO;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
+import org.apache.poi.ss.formula.functions.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -158,6 +159,23 @@ public class ScheduleService_imple implements ScheduleService {
 		}
 
 		return ResponseEntity.ok("수정 성공");
+	}
+
+	@Override
+	public ModelAndView getProfessorConsultPage(HttpServletRequest request,  ModelAndView mav) {
+
+		int currentPage = Integer.parseInt(request.getParameter("page")==null? "1" : request.getParameter("page"));
+		int sizePerPage = 10;
+
+		HttpSession session = request.getSession();
+		int professor_id = ((Professor) session.getAttribute("loginuser")).getProf_id();
+
+
+/*		List<Consult> approvedConsult = dao.getConfirmedConsultList(professor_id);
+		int totalElementCount = dao.getConfirmedConsultCount(professor_id);
+		mav.addObject("consultList", approvedConsult);*/
+
+		return null;
 	}
 
 

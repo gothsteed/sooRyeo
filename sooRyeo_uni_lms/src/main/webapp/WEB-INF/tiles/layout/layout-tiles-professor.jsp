@@ -228,7 +228,7 @@
                     <a class="dropdown-item" href="#">과제</a>
                     <a class="dropdown-item" href="#">시험</a>
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/approveConsult.lms">상담 승인</a>
-                    <a class="dropdown-item" href="#">오늘 할 일</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/professor/consult.lms">상담일정</a>
                 </div>
             </li>
             <li class="nav-item">

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -49,10 +50,11 @@ public class AdminDao_imple implements AdminDao {
 	}
 
 
+	// 학적변경신청한 학생들을 전부 불러오는 메소드
 	@Override
-	public List<Student> getStudentList() {
-		List<Student> getStudentList = sqlSession.selectList("admin.getStudentList");
-		return getStudentList;
+	public List<StudentStatusChange> application_status_student() {
+		List<StudentStatusChange> application_status_student = sqlSession.selectList("admin.application_status_student");
+		return application_status_student;
 	}
 
 
