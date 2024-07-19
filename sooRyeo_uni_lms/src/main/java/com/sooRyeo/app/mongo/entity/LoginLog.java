@@ -14,7 +14,7 @@ public class LoginLog {
     @Id
     private String id;
     private Integer userid;
-    private String MemberType;
+    private String memberType;
     private LocalDateTime timestamp;
 
     public String getId() {
@@ -34,11 +34,11 @@ public class LoginLog {
     }
 
     public String getMemberType() {
-        return MemberType;
+        return memberType;
     }
 
     public void setMemberType(String memberType) {
-        MemberType = memberType;
+    	this.memberType = memberType;
     }
 
     public LocalDateTime getTimestamp() {
