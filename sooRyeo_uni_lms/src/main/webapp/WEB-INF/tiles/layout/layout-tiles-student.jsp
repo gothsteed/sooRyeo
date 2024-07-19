@@ -222,6 +222,7 @@
                 	<span class="icon">👥</span>커뮤니티
                 </a>
                 <div class="dropdown-menu" aria-labelledby="groupsMenu">
+                    <a class="dropdown-item" href="<%=ctxPath %>/student/chatting.lms">채팅</a>
                     <a class="dropdown-item" href="#">내 친구</a>
                     <a class="dropdown-item" href="#">커뮤니티</a>
                     <a class="dropdown-item" href="<%=ctxPath %>/board/announcement.lms">학사공지사항</a>
