@@ -81,8 +81,28 @@
 		join tbl_department D on s.fk_department_seq = d.department_seq
 	</select>
 
+	<delete id="deleteApplication" parameterType="String">
+		delete from tbl_student_status_change
+		where fk_student_id = #{student_id}
+	</delete>
 
-
+	<update id="updateStudentStatus" parameterType="String">
+	update tbl_student
+	<if test="change_status == 1">
+	set status = 1
+	</if>
+	<if test="change_status == 2">
+	set status = 2
+	</if>
+	<if test="change_status == 3">
+	set status = 3
+	</if>
+	<if test="change_status == 4">
+	set status = 4
+	</if>
+	where student_id = #{student_id}
+	
+	</update>
 
 
 </mapper>

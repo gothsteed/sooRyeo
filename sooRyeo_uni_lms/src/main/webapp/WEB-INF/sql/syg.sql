@@ -325,3 +325,7 @@ select S.student_id, C.change_status, S.name, s.grade, d.department_name, S.stat
 from tbl_student_status_change C
 join tbl_student S on s.student_id = c.fk_student_id
 join tbl_department D on s.fk_department_seq = d.department_seq;
+
+
+update tbl_student set status = 1
+where fk_student_id = '202500021' 
