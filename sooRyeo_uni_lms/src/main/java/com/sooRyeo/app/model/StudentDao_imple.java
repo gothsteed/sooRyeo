@@ -239,13 +239,35 @@ public class StudentDao_imple implements StudentDao {
 		return n;
 	}
 
+	/////////////////////////////////////////////////////////////////////////////
+	// 통계용 총 학점 가져오기
+	// 전공필수
 	@Override
-	public List<Map<String, String>> student_chart_credit(int student_id) {
+	public Map<String, String> student_RequiredCredit(int student_id) {
 		
-		List<Map<String, String>> creditList = sqlSession.selectList("student.select_creditList", student_id);
+		Map<String, String> student_RequiredCredit = sqlSession.selectOne("student.student_RequiredCredit", student_id);
 		
-		return creditList;
+		return student_RequiredCredit;
 	}
+	// 전공선택
+	@Override
+	public Map<String, String> student_UnrequiredCredit(int student_id) {
+		
+		Map<String, String> student_UnrequiredCredit = sqlSession.selectOne("student.student_UnrequiredCredit", student_id);
+		
+		return student_UnrequiredCredit;
+	}
+	// 교양
+	@Override
+	public Map<String, String> student_LiberalCredit(int student_id) {
+		
+		Map<String, String> student_LiberalCredit = sqlSession.selectOne("student.student_LiberalCredit", student_id);
+		
+		return student_LiberalCredit;
+	}
+	
+	
+	/////////////////////////////////////////////////////////////////////////////
 
 	// 이수한 학점이 몇점인지 알아오는 메소드
 	@Override
@@ -296,6 +318,10 @@ public class StudentDao_imple implements StudentDao {
 		return asdto;
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
+
+
+
+
 
 
 
