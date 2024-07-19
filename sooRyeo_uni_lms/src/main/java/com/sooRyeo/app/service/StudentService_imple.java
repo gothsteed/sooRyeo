@@ -512,28 +512,23 @@ public class StudentService_imple implements StudentService {
 
 
 
-
+	// 통계용 총 학점 가져오기
 	@Override
 	public String student_chart_credit(int student_id) {
 		
-		List<Map<String, String>> creditList = dao.student_chart_credit(student_id);
-
-		JsonArray jsonArr = new JsonArray();
-      
-		if(creditList != null && creditList.size() > 0) {
-			for(Map<String, String> map : creditList) {
-				JsonObject jsonObj = new JsonObject();
-				jsonObj.addProperty("name", map.get("name"));
-				jsonObj.addProperty("grade", map.get("grade"));
-				jsonObj.addProperty("semester_date", map.get("semester_date"));
-				jsonObj.addProperty("gradename", map.get("gradename"));
-				jsonObj.addProperty("credit", map.get("credit"));
-				jsonObj.addProperty("required", map.get("required"));
+		Map<String, String> RequiredCredit = dao.student_RequiredCredit(student_id);
+		Map<String, String> UnrequiredCredit = dao.student_UnrequiredCredit(student_id);
+		Map<String, String> LiberalCredit = dao.student_LiberalCredit(student_id);
+		
+		JsonArray jsonArr = new JsonArray();	
+		JsonObject jsonObj = new JsonObject();
+		jsonObj.addProperty("total_Required_credit", RequiredCredit.get("total_Required_credit"));
+		jsonObj.addProperty("total_Unrequired_credit", UnrequiredCredit.get("total_Unrequired_credit"));
+		jsonObj.addProperty("total_Liberal_credit", LiberalCredit.get("total_Liberal_credit"));
+		
             
-				jsonArr.add(jsonObj);
-			}// end of for------------------------------
-		}
-      
+		jsonArr.add(jsonObj);
+		      
 		return new Gson().toJson(jsonArr);
 	}
 
