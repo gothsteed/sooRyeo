@@ -157,7 +157,7 @@
 		<result property="fk_course_seq" 			column="fk_course_seq"				javaType="String" />
 	</resultMap>
 	
-	<select id="getassignment_List" parameterType="int" resultMap="assignmentMap">
+	<select id="getassignment_List" parameterType="HashMap" resultMap="assignmentMap">
 		SELECT V.title as title
 			 , V.content as content
 			 , V.start_date as start_date
@@ -173,45 +173,57 @@
 		    where schedule_type = 1
 		)V LEFT JOIN
 		(
-		    select *
-		    from tbl_assignment_submit
+            SELECT GUAJE.schedule_seq_assignment, GUAJE_SUBMIT.submit_datetime, GUAJE_SUBMIT.fk_schedule_seq_assignment 
+            FROM tbl_assignment GUAJE LEFT JOIN 
+            (
+              select *
+              from tbl_assignment_submit
+              where fk_student_id = #{userid}
+            ) GUAJE_SUBMIT
+            ON GUAJE.schedule_seq_assignment = GUAJE_SUBMIT.fk_schedule_seq_assignment
 		) B
 		on V.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where V.fk_course_seq = #{fk_course_seq}
 	</select>
 	
-	
-	
-	<!-- 수업 - 내 강의 - 상세내용 -->
-	<resultMap type="HashMap" id="assignment_detail_Map">
-		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment"	javaType="Integer" />
+
+
+	<!-- 수업 - 내 강의 - 상세내용(1) -->
+	<resultMap type="HashMap" id="assignment_detail_1_map">
+		<result property="schedule_seq_assignment" 	column="schedule_seq_assignment"	javaType="String" />
 		<result property="title" 					column="title"						javaType="String" />
 		<result property="content" 					column="content"					javaType="String" />
 		<result property="start_date" 				column="start_date"					javaType="Date" />
 		<result property="end_date" 				column="end_date"					javaType="Date" />
-		<result property="score" 					column="score"						javaType="Integer" />
-		<result property="submit_datetime" 			column="submit_datetime"			javaType="Date" />
 		<result property="attatched_file" 			column="attatched_file"				javaType="String" />
+		<result property="fk_course_seq" 			column="fk_course_seq"				javaType="String" />
+		<result property="orgfilename" 				column="orgfilename"				javaType="String" />
 	</resultMap>
-	
-	<select id="getassignment_detail_List" parameterType="String" resultMap="assignment_detail_Map" >
-	    SELECT 
-	        A.schedule_seq_assignment as schedule_seq_assignment,
-	        S.title as title,
-	        A.content as content,
-	        S.start_date as start_date,
-	        S.end_date as end_date,
-	        B.score as score,
-	        B.submit_datetime as submit_datetime,
-	        B.attatched_file as attatched_file,
-	        A.fk_course_seq as fk_course_seq
-	    FROM
-	        tbl_assignment A
-	    JOIN
-	        tbl_schedule S ON A.schedule_seq_assignment = S.schedule_seq
-	    LEFT JOIN
-	        tbl_assignment_submit B ON A.schedule_seq_assignment = B.fk_schedule_seq_assignment
-	    WHERE
-	        S.schedule_type = 1
+	<select id="getassignment_detail_1" parameterType="String" resultMap="assignment_detail_1_map" resultType="HashMap">
+	    select A.schedule_seq_assignment, S.title, A.content, S.start_date, S.end_date, A.attatched_file, A.fk_course_seq, A.orgfilename
+    	from tbl_assignment A join tbl_schedule S
+    	on A.schedule_seq_assignment = S.schedule_seq
+    	where schedule_type = 1 AND schedule_seq_assignment = #{schedule_seq_assignment}
+	</select>
+
+
+
+	<!-- 수업 - 내 강의 - 상세내용(2) -->
+	<resultMap type="HashMap" id="assignment_detail_2_map">
+		<result property="score" 							column="score"							javaType="String" />
+		<result property="submit_datetime" 					column="submit_datetime"				javaType="Date" />
+		<result property="fk_student_id" 					column="fk_student_id"					javaType="String" />
+		<result property="assignment_submit_seq" 			column="assignment_submit_seq"			javaType="String" />
+		<result property="attatched_file" 					column="attatched_file"					javaType="String" />
+		<result property="orgfilename" 						column="orgfilename"					javaType="String" />
+		<result property="content" 							column="content"						javaType="String" />
+		<result property="fk_schedule_seq_assignment" 		column="fk_schedule_seq_assignment"		javaType="String" />
+	</resultMap>
+	<select id="getassignment_detail_2" parameterType="HashMap" resultMap="assignment_detail_2_map">
+		select B.score, B.submit_datetime, B.fk_student_id, B.assignment_submit_seq, B.attatched_file, B.content, B.orgfilename, B.fk_schedule_seq_assignment
+		from tbl_assignment A join tbl_assignment_submit B
+		on A.schedule_seq_assignment = B.fk_schedule_seq_assignment
+		where fk_student_id = #{userid} AND fk_schedule_seq_assignment = #{schedule_seq_assignment}
 	</select>
 
 
@@ -258,8 +270,109 @@
 	</select>
 	
 	
+	<!-- 과제제출 -->
+	<insert id="addComment" parameterType="HashMap">
+		<!-- 첨부파일 없는 경우 -->
+		<if test="attatched_file == null">
+			insert into tbl_assignment_submit(assignment_submit_seq, fk_schedule_seq_assignment, fk_student_id, title, content) 
+			values(assignment_submit_seq.nextval, #{fk_schedule_seq_assignment}, #{fk_student_id}, #{title}, #{content})
+		</if>
+
+		<!-- 첨부파일 있는 경우  -->
+		<if test="attatched_file != null">
+			insert into tbl_assignment_submit(assignment_submit_seq, fk_schedule_seq_assignment, fk_student_id, title, content, attatched_file, orgfilename) 
+			values(assignment_submit_seq.nextval, #{fk_schedule_seq_assignment}, #{fk_student_id}, #{title}, #{content}, #{attatched_file}, #{orgfilename})
+		</if>
+	</insert>
 	
+	<select id="credit_point" parameterType="Integer" resultType="Integer">
+		select sum(credit)
+		from tbl_student S
+		join tbl_registered_course R on S.student_id = R.fk_student_id
+		join tbl_course C on R.fk_course_seq = C.course_seq
+		join tbl_curriculum L on C.fk_curriculum_seq = L.curriculum_seq
+		where student_id = #{student_id} and R.pass_status = 1
+	</select>
 	
+	<insert id="application_status_change" parameterType="HashMap">
+		insert into tbl_student_status_change(student_status_change_seq, fk_student_id, change_status)
+		values(student_status_change_seq.nextval, #{student_id}, #{status_num})
+	</insert>
+
+	<select id="getApplication_status" parameterType="Integer" resultType="String">
+		select change_status
+		from tbl_student_status_change
+		where fk_student_id = #{student_id}
+	</select>
+
+	<!-- 과제 제출 내용 보기 -->
+	<resultMap type="HashMap" id="readcomment">
+		<result property="assignment_submit_seq"	column="assignment_submit_seq"		javaType="String" />
+		<result property="fk_student_id" 			column="fk_student_id"				javaType="String" />
+		<result property="title" 					column="title"						javaType="String" />
+		<result property="content" 					column="content"					javaType="String" />
+		<result property="attatched_file" 			column="attatched_file"				javaType="String" />
+		<result property="submit_datetime" 			column="submit_datetime"			javaType="Date" />
+	</resultMap>
+	<select id="getreadComment" parameterType="HashMap" resultMap="readcomment">
+		select assignment_submit_seq, fk_student_id, title, content, attatched_file, submit_datetime
+		from tbl_assignment_submit
+		where fk_schedule_seq_assignment = #{fk_schedule_seq_assignment} AND fk_student_id = #{userid}
+	</select>
 
 
+
+	<!-- 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회  -->
+	<select id="getCommentOne" resultType="com.sooRyeo.app.dto.AssignmentSubmitDTO" parameterType="String">
+		select assignment_submit_seq, attatched_file, orgfilename
+		from tbl_assignment_submit
+		where assignment_submit_seq = #{assignment_submit_seq}
+	</select>
+	
+	
+	<!-- // ajax학생 수강과목 가져와서 학점 계산하기(chart) 시작 -->
+	<resultMap type="HashMap" id="RequiredCreditMap">
+		<result property="total_Required_credit"	column="total_Required_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_RequiredCredit" parameterType="int" resultMap="RequiredCreditMap">
+		select  NVL(SUM(CU.credit), 0) AS total_Required_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is not null and CU.required = 1 and R.pass_status = 1
+	</select>
+	
+	
+	<resultMap type="HashMap" id="UnrequiredCreditMap">
+		<result property="total_Unrequired_credit"	column="total_Unrequired_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_UnrequiredCredit" parameterType="int" resultMap="UnrequiredCreditMap">
+		select NVL(SUM(CU.credit), 0) AS total_Unrequired_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is not null and CU.required = 0 and R.pass_status = 1
+	</select>
+	
+	
+	<resultMap type="HashMap" id="LiberalCreditMap">
+		<result property="total_Liberal_credit"	column="total_Liberal_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_LiberalCredit" parameterType="int" resultMap="LiberalCreditMap">
+		select NVL(SUM(CU.credit), 0) AS total_Liberal_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is null and R.pass_status = 1
+	</select>
+	
+	
+	<!-- // ajax학생 수강과목 가져와서 학점 계산하기(chart) 끝 -->
+	
 </mapper>

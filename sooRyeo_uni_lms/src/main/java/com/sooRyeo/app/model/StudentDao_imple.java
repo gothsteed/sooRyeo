@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -152,25 +154,57 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 수업 - 내 강의 - 과제
 	@Override
-	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
+	public List<Map<String, String>> getassignment_List(String fk_course_seq, int userid) {
 		
-		List<Map<String, String>> assignment_List = sqlSession.selectList("student.getassignment_List", fk_course_seq);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_course_seq", fk_course_seq);
+		paraMap.put("userid", String.valueOf(userid));
+		
+		List<Map<String, String>> assignment_List = sqlSession.selectList("student.getassignment_List", paraMap);
 		
 		return assignment_List;
 		
 	} // end of public List<Map<String, String>> getassignment_List
 
 	
-	// 수업 - 내 강의 - 과제 - 상세내용
+	
+	// 수업 - 내 강의 - 과제 - 상세내용1
 	@Override
-	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
+	public Map<String, Object> getassignment_detail_1(String schedule_seq_assignment) {
 		
-		List<Map<String, String>> assignment_detail_List = sqlSession.selectList("student.getassignment_detail_List", schedule_seq_assignment);
+		Map<String, Object> assignment_detail_1 = sqlSession.selectOne("student.getassignment_detail_1", schedule_seq_assignment);
 		
-		return assignment_detail_List;
+		return assignment_detail_1;
 		
-	} // end of public List<Map<String, String>> getassignment_detail_List
+	} // end of public Map<String, Object> getassignment_detail_1
+	
+	
+	
+	
+	// 수업 - 내 강의 - 과제 - 상세내용2
+	@Override
+	public Map<String, Object> getassignment_detail_2(String schedule_seq_assignment, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("schedule_seq_assignment", schedule_seq_assignment);
+		paraMap.put("userid", String.valueOf(userid));
+		
+		Map<String, Object> assignment_detail_2 = sqlSession.selectOne("student.getassignment_detail_2", paraMap);
+		
+		return assignment_detail_2;
+		
+	} // end of public Map<String, Object> getassignment_detail_2
 
+	
+	// 과제제출
+	@Override
+	public int addComment(AssignmentSubmitDTO asdto) {
+		
+		int n = sqlSession.insert("student.addComment", asdto);
+		
+		return n;
+	} // end of public int addComment
+	
 	
 	// 교수번호, 교수 이름  가져오기
 	@Override
@@ -203,17 +237,94 @@ public class StudentDao_imple implements StudentDao {
 		return n;
 	}
 
+	/////////////////////////////////////////////////////////////////////////////
+	// 통계용 총 학점 가져오기
+	// 전공필수
 	@Override
-	public List<Map<String, String>> student_chart_credit(int student_id) {
+	public Map<String, String> student_RequiredCredit(int student_id) {
 		
-		List<Map<String, String>> creditList = sqlSession.selectList("student.select_creditList", student_id);
+		Map<String, String> student_RequiredCredit = sqlSession.selectOne("student.student_RequiredCredit", student_id);
 		
-		return creditList;
+		return student_RequiredCredit;
+	}
+	// 전공선택
+	@Override
+	public Map<String, String> student_UnrequiredCredit(int student_id) {
+		
+		Map<String, String> student_UnrequiredCredit = sqlSession.selectOne("student.student_UnrequiredCredit", student_id);
+		
+		return student_UnrequiredCredit;
+	}
+	// 교양
+	@Override
+	public Map<String, String> student_LiberalCredit(int student_id) {
+		
+		Map<String, String> student_LiberalCredit = sqlSession.selectOne("student.student_LiberalCredit", student_id);
+		
+		return student_LiberalCredit;
+	}
+	
+	
+	/////////////////////////////////////////////////////////////////////////////
+
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	@Override
+	public int credit_point(int student_id) {
+		int credit_point = sqlSession.selectOne("student.credit_point", student_id);
+		return credit_point;
+	}
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	@Override
+	public int application_status_change(int student_id, int status_num) {
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("student_id",student_id);
+		paraMap.put("status_num",status_num);
+		
+		int n = sqlSession.insert("student.application_status_change", paraMap);
+		return n;
+	}
+
+	@Override
+	public String getApplication_status(int student_id) {
+		String Application_status = sqlSession.selectOne("student.getApplication_status", student_id);
+		return Application_status;
 	}
 
 	
+	// 과제 제출 내용보기
+	@Override
+	public Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_schedule_seq_assignment", fk_schedule_seq_assignment);
+		paraMap.put("userid", String.valueOf(userid));
+		
+		Map<String, Object> asdto = sqlSession.selectOne("student.getreadComment", paraMap);
+		
+		return asdto;
+		
+	} // end of public List<AssignmentSubmit> getreadComment
+
 	
-	
+	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
+	@Override
+	public AssignmentSubmitDTO getCommentOne(String assignment_submit_seq) {
+		
+		AssignmentSubmitDTO asdto = sqlSession.selectOne("student.getCommentOne", assignment_submit_seq);
+		
+		return asdto;
+		
+	} // end of public AssignmentSubmitDTO getCommentOne
+
+
+
+
+
+
+
+
+
 	
 	
 }

@@ -10,7 +10,7 @@ public class AssignmentSubmit {
     private String title;
     private String content;
     private Integer score;
-    private Date submit_datetime;
+    private String submit_datetime;
     private String attatched_file;
     
     
@@ -32,7 +32,7 @@ public class AssignmentSubmit {
 	public Integer getScore() {
 		return score;
 	}
-	public Date getSubmit_datetime() {
+	public String getSubmit_datetime() {
 		return submit_datetime;
 	}
 	public String getAttatched_file() {

@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -43,8 +42,15 @@ public interface AdminService {
 
 	List<Map<String, String>> studentCntByDeptname();
 
-	// 학생회원을 불러오는 메소드
-	List<Student> getStudentList();
+	// 학적변경신청한 학생들을 전부 불러오는 메소드
+	List<StudentStatusChange> application_status_student();
+
+	// 관리자가 승인 혹은 반려한 신청을 삭제해주는 메소드
+	int deleteApplication(String student_id);
+
+	// 관리자가 승인을 해주면 학생의 학적 상태를 업데이트 해주는 메소드
+	int updateStudentStatus(String student_id, String change_status);
+
 
 
 }

@@ -126,7 +126,7 @@ $(document).ready(function(){
 <div style="display: flex; width : 100%;" class="row">
 
 	<div style="margin-top: 3%; width: 80%;">
-		<h3 class="ml-5" style="font-weight:bold;"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%;"/>내 수업 목록</h3>
+		<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>내 수업 목록</h3>
 		<hr class="mb-5">
 		
 		<c:if test="${empty requestScope.mapList}">
