@@ -9,4 +9,6 @@ public interface ChatService {
     ResponseEntity<String> createChatRoom(HttpServletRequest request, HttpServletResponse response, Integer scheduleSeq);
 
     ResponseEntity<String> showChatRoom(HttpServletRequest request, HttpServletResponse response);
+
+    ResponseEntity<String> deleteChatRoom(HttpServletRequest request, HttpServletResponse response);
 }

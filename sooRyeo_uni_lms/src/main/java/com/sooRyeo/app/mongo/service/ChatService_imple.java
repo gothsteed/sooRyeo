@@ -71,4 +71,13 @@ public class ChatService_imple implements ChatService {
 
         return ResponseEntity.ok().body(jsonBuilder.toJson(roomList));
     }
+
+    @Override
+    public ResponseEntity<String> deleteChatRoom(HttpServletRequest request, HttpServletResponse response) {
+
+        String chatRoomId = request.getParameter("roomId");
+        chatRoomRepository.deleteById(chatRoomId);
+
+        return ResponseEntity.ok("상담이 종료되었습니다.");
+    }
 }
