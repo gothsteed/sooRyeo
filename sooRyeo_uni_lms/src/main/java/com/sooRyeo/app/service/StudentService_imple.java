@@ -1,6 +1,5 @@
 package com.sooRyeo.app.service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import com.sooRyeo.app.model.StudentDao;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,8 +27,7 @@ import com.google.gson.JsonObject;
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
-import com.sooRyeo.app.domain.Assignment;
-import com.sooRyeo.app.domain.AssignmentSubmit;
+import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -536,6 +533,32 @@ public class StudentService_imple implements StudentService {
       
 		return new Gson().toJson(jsonArr);
 	}
+
+
+
+
+	// 로그인한 학생의 출석현황 보기
+	@Override
+	public List<Map<String, Object>> attendanceList(int student_id) {
+		
+		List<Map<String, Object>> attendanceList = dao.attendanceList(student_id);
+		
+		return attendanceList;
+		
+	} // end of public List<Map<String, Object>> attendanceList
+
+
+
+	
+	// 수업명 가져오기
+	@Override
+	public List<Curriculum> lectureList() {
+		
+		List<Curriculum> lectureList = dao.lectureList();
+		
+		return lectureList;
+		
+	} // end of public List<String> lectureList
 
 
 

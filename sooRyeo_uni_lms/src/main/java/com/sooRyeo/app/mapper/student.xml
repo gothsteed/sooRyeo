@@ -303,4 +303,45 @@
 		where assignment_submit_seq = #{assignment_submit_seq}
 	</select>
 	
+	
+	
+	<!-- 로그인한 학생의 출석현황 보기 -->
+	<resultMap type="HashMap" id="attendanceListMap">
+		<result property="fk_student_id"	column="fk_student_id"		javaType="String" />
+		<result property="name" 			column="name"				javaType="String" />
+		<result property="lecture_title" 	column="lecture_title"		javaType="String" />
+		<result property="attended_date"  	column="attended_date"		javaType="String" />
+	</resultMap>
+	<select id="attendanceList" parameterType="int" resultMap="attendanceListMap" >
+		select D.fk_student_id, A.name, C.lecture_title, D.attended_date
+		from tbl_curriculum A JOIN tbl_course B
+		on A.curriculum_seq = B.fk_curriculum_seq
+		JOIN tbl_lecture C
+		on B.course_seq = C.fk_course_seq
+		JOIN tbl_attendance D
+		on C.lecture_seq = D.fk_lecture_seq
+		where isAttended = 1 And fk_student_id = #{student_id}
+	</select>
+	
+	
+	
+	<!-- 수업명 가져오기 -->
+	<select id="lectureList" resultType="com.sooRyeo.app.domain.Curriculum">
+		select name
+		from tbl_curriculum
+		order by curriculum_seq asc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>

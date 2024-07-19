@@ -437,6 +437,7 @@ from tbl_assignment;
 
 select *
 from tbl_lecture
+where lecture_seq = 15
 
 alter table tbl_lecture 
 add lecture_time Number;
@@ -450,17 +451,31 @@ commit;
 
 
 
+--------------------------------------------------------------
+
+-- 학번(출석테이블), 출석날짜(출석테이블), 수업명(수업테이블), 강의명(강의테이블)
+-- tbl_attendance(fk_student_id), tbl_attendance(attended_date), tbl_curriculum(name), tbl_lecture(lecture_title)
+
+
+select fk_student_id, attended_date
+from tbl_attendance
+where isAttended = 1 And fk_student_id = '202400005'
+
+
+select D.fk_student_id, A.name, C.lecture_title, D.attended_date
+from tbl_curriculum A JOIN tbl_course B
+on A.curriculum_seq = B.fk_curriculum_seq
+JOIN tbl_lecture C
+on B.course_seq = C.fk_course_seq
+JOIN tbl_attendance D
+on C.lecture_seq = D.fk_lecture_seq
+where D.isAttended = 1 AND D.fk_student_id = '202400005'
 
 
 
-
-
-
-
-
-
-
-
+select name
+from tbl_curriculum
+order by curriculum_seq asc;
 
 
 

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.AssignmentSubmit;
+import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -263,6 +265,7 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public List<AssignmentSubmit> getreadComment
 
 	
+	
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	@Override
 	public AssignmentSubmitDTO getCommentOne(String assignment_submit_seq) {
@@ -272,6 +275,29 @@ public class StudentDao_imple implements StudentDao {
 		return asdto;
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
+
+	
+	// 로그인한 학생의 출석현황 보기
+	@Override
+	public List<Map<String, Object>> attendanceList(int student_id) {
+		
+		List<Map<String, Object>> attendanceList = sqlSession.selectList("student.attendanceList", student_id);
+		
+		return attendanceList;
+		
+	} // end of public List<Map<String, Object>> attendanceList
+
+	
+	
+	// 수업명 가져오기
+	@Override
+	public List<Curriculum> lectureList() {
+		
+		List<Curriculum> lectureList = sqlSession.selectList("student.lectureList");
+		
+		return lectureList;
+		
+	} // end of public List<String> lectureList
 
 
 

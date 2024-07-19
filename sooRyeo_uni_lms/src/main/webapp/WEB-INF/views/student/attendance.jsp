@@ -20,6 +20,52 @@ div.display-flex {
 
 
 <script type="text/javascript">
+$(document).ready(function(){
+	
+
+	// 검색하기 클릭 시
+	$("button#btnSearchAjax").click(function(){
+		
+		$.ajax({
+			url:"<%=ctxPath%>/student/attendanceListJSON.lms",
+			data: {"name" : $("select[name='name']").val()},
+			dataType:"json",
+			success: function(json) { 
+				
+				console.log(JSON.stringify(json));
+				
+		 		let v_html = ``;
+				
+				json.forEach(function(item, index, array) {
+					v_html += `<tr>
+			      				 <td>\${item.fk_student_id}</td>	
+			      				 <td>\${item.name}</td>
+			      				 <td>\${item.lecture_title}</td>
+			      				 <td>\${item.attended_date}</td>
+			      			   </tr>`;
+				});
+				
+				$("table#attendance tbody").html(v_html);
+				 
+				
+			},
+			error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+			
+			
+		}); // end of $.ajax
+		
+		
+		
+	}); // end of $("button#btnSearchAjax").click
+
+
+
+
+
+
+}); // end of $(document).ready
 
 </script>
 
@@ -30,31 +76,20 @@ div.display-flex {
 	<hr class="mt-3 mb-3">
 		
      	<form class="mb-3" name="searchFrm">
-     		<select name="gender" style="height: 30px; width: 120px; margin: 10px 30px 0 0;"> 
+     		<select name="name" style="height: 30px; width: 120px; margin: 10px 30px 0 0;"> 
          		<option value="">수업명 선택</option>
-         		<option>국어</option>
-         		<option>수학</option>
+         		<c:forEach var="lecture" items="${requestScope.lectureList}">
+         			<option>${lecture.name}</option>
+         		</c:forEach>
        		</select>
-     		<%-- <button type="button" class="btn btn-secondary btn-sm" id="btnSearch">검색하기</button> --%>
+     		<button type="button" class="btn btn-success btn-sm" id="btnSearchAjax">검색하기</button>
        		&nbsp;&nbsp;
-     		<button type="button" class="btn btn-info btn-sm" id="btnSearchAjax">검색하기(AJAX)</button>
-       		&nbsp;&nbsp;
-     		<button type="button" class="btn btn-success btn-sm" id="btnExcel">Excel 파일로 저장</button>
+     		<button type="button" class="btn btn-info btn-sm" style="margin-left:66%;" id="btnExcel">Excel 파일로 저장</button>
      	</form>
      	
-     	
-		<!-- ==== #209. 엑셀관련파일 업로드 하기 시작 ==== -->
-		<form class="mb-3 mt-5" name="excel_upload_frm" method="post" enctype="multipart/form-data" >
-		<div class="display-flex">
-			<input type="file" id="upload_excel_file" name="excel_file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-			<button type="button" class="btn btn-info btn-sm" id="btn_upload_excel">Excel 업로드</button>
-		</div>
-		</form>
-		<!-- ==== 엑셀관련파일 업로드 하기 끝 ==== -->
-
 		
 		<div class="table-responsive">
-		  <table class="table">
+		  <table id="attendance" class="table">
 		    <thead class="table-info">
 		    	<tr>
 		    		<th>학번</th>
@@ -64,18 +99,24 @@ div.display-flex {
 		    	</tr>
 		    </thead>
 		    <tbody class="table-group-divider">
-		    	<tr>
-		    		<td>20124214</td>
-		    		<td>집에가고싶다수업</td>
-		    		<td>집에가고싶은이유</td>
-		    		<td>2024-07-01</td>
-		    	</tr>
-		    	<tr>
-		    		<td>20124214</td>
-		    		<td>집에가고싶다수업</td>
-		    		<td>집에가고싶은이유</td>
-		    		<td>2024-07-01</td>
-		    	</tr>
+		    	<c:if test="${empty requestScope.attendanceList}">
+		    		<td>출석이 존재하지 않습니다.</td>
+		    	</c:if>
+		    	<c:if test="${not empty requestScope.attendanceList}">
+			    	<c:forEach var="attendanceList" items="${requestScope.attendanceList}">
+			    	<tr>
+			    		<td>${attendanceList.fk_student_id}</td>
+			    		<td>${attendanceList.name}</td>
+			    		<td>${attendanceList.lecture_title}</td>
+			    		<c:if test="${attendanceList.attended_date != null}">
+			    			<td><fmt:formatDate value="${attendanceList.attended_date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+			    		</c:if>
+			    		<c:if test="${attendanceList.attended_date == null}">
+			    			<td style="color:#ff6666; font-weight: bold;">출석 진행중</td>
+			    		</c:if>
+			    	</tr>
+			    	</c:forEach>
+		    	</c:if>
 		    </tbody>
 		  </table>
 		</div>

@@ -27,6 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.AssignmentSubmit;
+import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -647,10 +649,20 @@ public class StudentController {
 	@GetMapping("/student/attendance.lms")
 	public String attendance(HttpServletRequest request) {
 		
-		// List<Map<String, Object>> attendanceList = service.getattendanceList();
+		HttpSession session = request.getSession();
 		
+		Student loginuser = (Student)session.getAttribute("loginuser");
 		
+		int student_id = loginuser.getStudent_id();
 		
+		// 로그인한 학생의 출석현황 보기
+		List<Map<String, Object>> attendanceList = service.attendanceList(student_id);
+
+		// 수업명 가져오기
+		List<Curriculum> lectureList = service.lectureList();
+		
+		request.setAttribute("attendanceList", attendanceList);
+		request.setAttribute("lectureList", lectureList);
 		
 		return "attendance";
 		
@@ -658,8 +670,42 @@ public class StudentController {
 	
 	
 	
+	// 검색하기 클릭 시
+	@ResponseBody
+	@GetMapping(value="attendanceListJSON.lms", produces="text/plain;charset=UTF-8")
+	public String attendanceListJSON(HttpServletRequest request,
+									 @RequestParam(defaultValue = "") String name) {
 	
-	
+		if(!"".equals(name)) {
+			request.setAttribute("name", name);
+		}
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		List<Map<String, Object>> attendanceList = service.attendanceList(student_id);
+		
+		request.setAttribute("attendanceList", attendanceList);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Map<String, Object> map : attendanceList) {
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("fk_student_id", map.get("fk_student_id"));
+			jsonObj.put("name", map.get("name"));
+			jsonObj.put("lecture_title", map.get("lecture_title"));
+			jsonObj.put("attended_date", map.get("attended_date"));
+			
+			jsonArr.put(jsonObj);
+		} // end of for
+		
+		System.out.println(jsonArr.toString());
+		
+		
+		return jsonArr.toString();
+	}
 	
 	
 	

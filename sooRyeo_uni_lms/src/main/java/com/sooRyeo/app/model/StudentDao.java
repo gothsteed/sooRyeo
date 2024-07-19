@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.AssignmentSubmit;
+import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -75,6 +77,12 @@ public interface StudentDao {
 
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	AssignmentSubmitDTO getCommentOne(String assignment_submit_seq);
+
+	// 로그인한 학생의 출석현황 보기
+	List<Map<String, Object>> attendanceList(int student_id);
+
+	// 수업명 가져오기
+	List<Curriculum> lectureList();
 
 	
 }
