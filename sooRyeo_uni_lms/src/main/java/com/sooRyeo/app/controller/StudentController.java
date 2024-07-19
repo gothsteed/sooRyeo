@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
+
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.CourseService;
@@ -329,15 +327,16 @@ public class StudentController {
 		JSONObject jsonobj = new JSONObject();
 		
 		if(fk_lecture_seq == null) { // 처음 동영상을 재생한 경우
+			
 			int n = service.insert_tbl_attendance(play_time, lecture_seq, userid);
 			jsonobj.put("n", n);
 		}
-		else {// 동영상 재생 이력이 있을경우 
+		else { // 동영상 재생 이력이 있을경우 
 			
 			// play_time 컬럼과 lecture_time 컬럼을 비교
 			int i = service.select_play_time_lecture_time(play_time, lecture_seq, userid);
 			
-			// System.out.println("확인용 입니다 => " + i);
+			System.out.println("확인용 입니다 => " + i);
 			
 			if(i > 0) { // 아직 출석인정 시간이 되지 않은 경우
 				
@@ -353,10 +352,9 @@ public class StudentController {
 				int n3 = n1*n2;
 				jsonobj.put("n3", n3);
 			}
-			
 		}
 		
-		System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
+		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
 		return jsonobj.toString();
 	}
 	

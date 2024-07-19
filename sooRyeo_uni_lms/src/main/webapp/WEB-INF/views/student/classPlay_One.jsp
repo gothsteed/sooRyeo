@@ -46,7 +46,7 @@ video {
 		  $("button#end").click(function() {
 		    // Calculate the time spent on the page
 		    const minutes = calculateTimeSpent(pageLoadTime);
-		    // alert(`\${minutes}`);
+		    alert(`\${minutes}`);
 		    
 		    const lecture_seq = $("input#lecture_seq").val();
 		    
@@ -66,25 +66,23 @@ video {
 	     			
 					if( json.n1 == 1) {
 						alert("동영상 재생 시간이 저장되었습니다.");
+						window.history.back();
 						return;
 					}
 					
 					if( json.n3 == 1) {
 						alert("출석이 완료되었습니다.");
+						window.history.back();
 						return;
 					}
 				
 	     		},
 		        error: function(xhr, status, error) {
-					alert("동영상 재생 시간 입력 실패!");
+					alert("동영상 재생 시간 저장 실패!");
 	       		}
 	     		
 	     	});
-		    
-		    
-		    
-		    
-		    
+
 		    
 		  });
 
@@ -100,7 +98,7 @@ video {
 	  const pageLeaveTime = new Date();
 	  const timeSpent = pageLeaveTime - pageLoadTime; 
 	  const totalSeconds = Math.round(timeSpent / 1000);
-	  const minutes = Math.floor(totalSeconds / 60);
+	  const minutes = Math.floor(totalSeconds / 30);
 	  return minutes;
 	}
 
