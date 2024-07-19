@@ -787,5 +787,14 @@ public class StudentController {
 		return mav;
 	}
 	
+	@RequestMapping(value = "/student/chatting.lms", method = RequestMethod.GET)
+	public String chatting() {
+
+		return "chatting";
+		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	
+	
 	
 }
