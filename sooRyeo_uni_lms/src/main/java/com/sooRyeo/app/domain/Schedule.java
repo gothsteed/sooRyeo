@@ -1,6 +1,9 @@
 package com.sooRyeo.app.domain;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Schedule {
 	
 	private Integer schedule_seq;
@@ -29,11 +32,17 @@ public class Schedule {
 	public int getConfirm() {
 		return confirm;
 	}
-	
-	
-	
-	
 
-	
 
+	public boolean isBetweenSchedule(LocalDateTime time) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime start = LocalDateTime.parse(start_date, formatter);
+		LocalDateTime end = LocalDateTime.parse(end_date, formatter);
+
+		if(time.isAfter(start) && time.isBefore(end)) {
+			return true;
+		}
+
+		return false;
+	}
 }

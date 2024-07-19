@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.common.AES256;
+import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ConsultDetailDTO;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
@@ -99,6 +100,12 @@ public class ScheduleService_imple implements ScheduleService {
 		return n2;
 	}
 
+	private void parseStudentEmail(List<Consult> consultList) {
+		for(Consult consult : consultList) {
+			consult.getStudent().setDecodedEmail(aES256);
+		}
+	}
+
 
 	@Override
 	public ModelAndView makeApproveConsultPage(HttpServletRequest request, ModelAndView mav) {
@@ -109,12 +116,8 @@ public class ScheduleService_imple implements ScheduleService {
 		int professor_id = ((Professor) session.getAttribute("loginuser")).getProf_id();
 		
 		List<Consult> unconfirmedConsultList = dao.getUnconfirmedConsultList(currentPage, sizePerPage, professor_id);
-		
-		for(Consult consult : unconfirmedConsultList) {
 
-			consult.getStudent().setDecodedEmail(aES256);
-
-        }
+		parseStudentEmail(unconfirmedConsultList);
 		
 		
 		int totalElementCount = dao.getUnconfirmedConsultCount(professor_id);
@@ -171,11 +174,19 @@ public class ScheduleService_imple implements ScheduleService {
 		int professor_id = ((Professor) session.getAttribute("loginuser")).getProf_id();
 
 
-/*		List<Consult> approvedConsult = dao.getConfirmedConsultList(professor_id);
+		List<Consult> approvedConsult = dao.getConfirmedConsultList(professor_id, currentPage, sizePerPage);
 		int totalElementCount = dao.getConfirmedConsultCount(professor_id);
-		mav.addObject("consultList", approvedConsult);*/
 
-		return null;
+		parseStudentEmail(approvedConsult);
+
+		Pager<Consult> consultPager = new Pager<>(approvedConsult, currentPage, sizePerPage, totalElementCount);
+ 		mav.addObject("consultList", consultPager.getObjectList());
+		mav.addObject("pageBar", consultPager.makePageBar(request.getContextPath() + "/professor/consult.lms"));
+		mav.addObject("currentPage", consultPager.getPageNumber());
+		mav.addObject("perPageSize", consultPager.getPerPageSize());
+		mav.setViewName("approvedConsult");
+
+		return mav;
 	}
 
 
