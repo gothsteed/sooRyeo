@@ -20,7 +20,7 @@ public interface StudentDao {
 	List<Map<String, String>> classList(int userid);
 	
 	// 내정보 보기
-	StudentDTO getViewInfo(String login_userid);
+	Student getStudentById(int studentId);
 
 	// 학과명 가져오기
 	String select_department(Integer student_id);
