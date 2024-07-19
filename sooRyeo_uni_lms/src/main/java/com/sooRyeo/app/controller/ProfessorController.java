@@ -783,6 +783,10 @@ public class ProfessorController {
 	
 	
 	
+	@GetMapping(value = "/professor/exam.lms")
+	public String professor_exam() { // 교수 시험출제 뷰단
+		return "professor_exam";
+	}
 	
 	
 	
