@@ -781,6 +781,15 @@ public class StudentController {
 		return mav;
 	}
 	
+	@RequestMapping(value = "/student/chatting.lms", method = RequestMethod.GET)
+	public String chatting() {
+
+		return "chatting";
+		// /WEB-INF/views/student/{1}.jsp
+	}
+	
+	
+	
 	
 	
 	// 영상재생화면에 내가 머물렀던 시간을 이용해 출석체크 하기

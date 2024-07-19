@@ -18,6 +18,7 @@
 
 </head>
 <body>
+대기중인 승인신청
 <table class="table table-success table-striped-columns" id="student">
   <th>학번</th>
   <th>학년</th>

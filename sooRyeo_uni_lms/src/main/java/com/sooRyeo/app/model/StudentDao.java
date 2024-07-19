@@ -67,9 +67,15 @@ public interface StudentDao {
 	// 스케줄, 상담 테이블에 insert
 	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
 	
-	// ajax학생 수강과목 가져와서 학점 계산하기(chart)
-	List<Map<String, String>> student_chart_credit(int student_id);
-
+	// ajax학생 수강과목 가져와서 학점 계산하기(chart) ///////////////////////////////
+	// 총 전공필수 학점 
+	Map<String, String> student_RequiredCredit(int student_id);
+	// 총 전공선택 학점
+	Map<String, String> student_UnrequiredCredit(int student_id);
+	// 총 교양 학점
+	Map<String, String> student_LiberalCredit(int student_id);
+	//////////////////////////////////////////////////////////////////////
+	
 	// 과제 제출 내용보기
 	Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid);
 

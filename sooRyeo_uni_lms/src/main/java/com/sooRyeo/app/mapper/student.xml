@@ -373,4 +373,50 @@
 		where assignment_submit_seq = #{assignment_submit_seq}
 	</select>
 	
+	
+	<!-- // ajax학생 수강과목 가져와서 학점 계산하기(chart) 시작 -->
+	<resultMap type="HashMap" id="RequiredCreditMap">
+		<result property="total_Required_credit"	column="total_Required_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_RequiredCredit" parameterType="int" resultMap="RequiredCreditMap">
+		select  NVL(SUM(CU.credit), 0) AS total_Required_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is not null and CU.required = 1 and R.pass_status = 1
+	</select>
+	
+	
+	<resultMap type="HashMap" id="UnrequiredCreditMap">
+		<result property="total_Unrequired_credit"	column="total_Unrequired_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_UnrequiredCredit" parameterType="int" resultMap="UnrequiredCreditMap">
+		select NVL(SUM(CU.credit), 0) AS total_Unrequired_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is not null and CU.required = 0 and R.pass_status = 1
+	</select>
+	
+	
+	<resultMap type="HashMap" id="LiberalCreditMap">
+		<result property="total_Liberal_credit"	column="total_Liberal_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_LiberalCredit" parameterType="int" resultMap="LiberalCreditMap">
+		select NVL(SUM(CU.credit), 0) AS total_Liberal_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is null and R.pass_status = 1
+	</select>
+	
+	
+	<!-- // ajax학생 수강과목 가져와서 학점 계산하기(chart) 끝 -->
+	
 </mapper>
