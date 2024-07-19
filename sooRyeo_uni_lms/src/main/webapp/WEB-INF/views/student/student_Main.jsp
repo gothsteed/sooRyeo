@@ -104,7 +104,7 @@
 	            </svg>
 							<h4>오늘 수업</h4>
 						</div>
-						<p class="card-text" style="margin-bottom: 0">...but don't resize me!</p>
+						오케
 					</div>
 				</div>
 				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="4" gs-w="8" gs-h="4" gs-no-resize="true">

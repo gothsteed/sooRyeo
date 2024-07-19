@@ -77,6 +77,9 @@ public interface StudentService {
 	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
 	String getApplication_status(int student_id);
 
+	// 오늘의 수업만을 불러오는 메소드
+	List<String> getToday_lec(int student_id);
+
 
 
 

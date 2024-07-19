@@ -319,6 +319,12 @@ public class StudentDao_imple implements StudentDao {
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
 
+	@Override
+	public List<String> getToday_lec(int student_id) {
+		List<String> today_lec = sqlSession.selectList("student.getToday_lec" , student_id);
+		return today_lec;
+	}
+
 
 
 

@@ -557,6 +557,14 @@ public class StudentService_imple implements StudentService {
 	}
 
 
+	// 오늘의 수업만을 불러오는 메소드
+	@Override
+	public List<String> getToday_lec(int student_id) {
+		List<String> today_lec = dao.getToday_lec(student_id);
+		return today_lec;
+	}
+
+
 
 	
 
