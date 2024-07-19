@@ -16,6 +16,16 @@
 
 <script type="text/javascript">
 
+	$(document).ready(function(){
+		
+		$("input.form-control").keyup(function(key){
+		    if(key.keyCode == 13) {
+		    	goSearch(); 
+		    }
+		 });
+	});
+
+
 	function goView(announcement_seq){
 		const goBackURL = "${requestScope.goBackURL}";
 		
@@ -24,7 +34,7 @@
 		frm.goBackURL.value = goBackURL;
 		
 		frm.method = "post";
-		frm.action = "<%= ctxPath %>/admin/announcementView.lms";
+		frm.action = "<%= ctxPath %>/board/announcementView.lms";
 		frm.submit();
 	}
 

@@ -83,4 +83,98 @@
 		where lecture_notice_seq = #{seq}
 	</update>
 	
+	<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	
+	<select id="getAnnouncement" parameterType="HashMap"
+		resultType="com.sooRyeo.app.domain.Announcement">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		select announcement_seq, a_title, writeday, viewcount
+		from
+        (
+        select rownum rn, announcement_seq, a_title, a_content, attatched_file, writeday, viewcount, status, orgfilename
+        from
+		(
+            SELECT *
+            FROM tbl_announcement
+		<if test="searchWord != null">
+			where lower(a_title) like '%'||lower(#{searchWord})||'%'
+		</if>
+			order by writeday desc
+        )V
+        )T
+		where rn BETWEEN #{startRno} AND #{endRno}
+	</select>
+
+	<select id="getA_TotalElementCount" resultType="Integer" parameterType="HashMap">
+		SELECT count(*)
+		FROM tbl_announcement
+		<if test="searchWord != null">
+			where lower(a_title) like '%'||lower(#{searchWord})||'%'
+		</if>
+	</select>
+
+	<update id="a_increase_viewCount" parameterType="String">
+		update tbl_announcement set viewCount = viewCount + 1
+		where announcement_seq = #{seq}
+	</update>
+
+	<select id="getA_View" parameterType="HashMap" resultType="com.sooRyeo.app.domain.Announcement">
+		SELECT previousseq, previoussubject, announcement_seq, a_title,	a_content
+		, viewcount, writeday
+		, nextseq, nextsubject
+		, attatched_file, orgfilename
+		from
+		(
+			select lag (announcement_seq) over(order by announcement_seq desc) AS previousseq
+			, lag (a_title,1) over(order by announcement_seq desc) AS previoussubject
+			, announcement_seq
+			, lead (announcement_seq) over(order by announcement_seq desc) AS nextseq
+			, lead (a_title, 1) over(order by announcement_seq desc) AS Nextsubject
+			, attatched_file, writeday, viewcount, a_title, a_content, orgfilename
+			from tbl_announcement
+			<if test='searchWord != ""'>
+				where lower(a_title) like '%' || lower(#{searchWord}) || '%'
+			</if>
+		) V
+		WHERE V.announcement_seq = #{seq}
+	</select>
+
+
+	<select id="getA_StaticList" resultType="com.sooRyeo.app.domain.Announcement">
+		SELECT *
+		FROM tbl_announcement
+		where status = 1
+	</select>
+
+
+	<insert id="addList" parameterType="integer">
+		<if test="attatched_file != null">
+			insert into tbl_announcement (announcement_seq, a_title, a_content, attatched_file, orgfilename, status)
+			values (ANNOUNCEMENT_SEQ.nextval, #{title}, #{content}, #{attatched_file}, #{orgfilename}, #{Listtype})
+		</if>
+		<if test="attatched_file == null">
+			insert into tbl_announcement (announcement_seq, a_title, a_content, status)
+			values (ANNOUNCEMENT_SEQ.nextval, #{title}, #{content}, #{Listtype})
+		</if>
+	</insert>
+
+	<delete id="a_del" parameterType="String">
+		delete from tbl_announcement
+		where announcement_seq = #{seq}
+	</delete>
+
+	<update id="a_edit" parameterType="com.sooRyeo.app.dto.BoardDTO">
+		update tbl_announcement set a_content = #{content}, a_title = #{title}
+		where announcement_seq = #{seq}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>

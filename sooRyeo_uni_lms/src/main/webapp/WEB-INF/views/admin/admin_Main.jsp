@@ -3,126 +3,220 @@
 
 <%
    String ctxPath = request.getContextPath();
-%>    
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Styled Sidebar</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+%>
 
-    <!-- Highcharts -->
-    <script src="<%= ctxPath%>/Highcharts-10.3.1/code/highcharts.js"></script>
-    <script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/exporting.js"></script>
-    <script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/export-data.js"></script>
-    <script src="<%= ctxPath%>/Highcharts-10.3.1/code/modules/accessibility.js"></script>
-</head>
-<body>
+<style type="text/css">
+	.highcharts-figure,
+	.highcharts-data-table table {
+	    min-width: 320px;
+	    max-width: 800px;
+	    margin: 1em auto;
+	}
+	
+	div#chart_container {
+	    height: 400px;
+	}
+	
+	.highcharts-data-table table {
+	    font-family: Verdana, sans-serif;
+	    border-collapse: collapse;
+	    border: 1px solid #ebebeb;
+	    margin: 10px auto;
+	    text-align: center;
+	    width: 100%;
+	    max-width: 500px;
+	}
+	
+	.highcharts-data-table caption {
+	    padding: 1em 0;
+	    font-size: 1.2em;
+	    color: #555;
+	}
+	
+	.highcharts-data-table th {
+	    font-weight: 600;
+	    padding: 0.5em;
+	}
+	
+	.highcharts-data-table td,
+	.highcharts-data-table th,
+	.highcharts-data-table caption {
+	    padding: 0.5em;
+	}
+	
+	.highcharts-data-table thead tr,
+	.highcharts-data-table tr:nth-child(even) {
+	    background: #f8f8f8;
+	}
+	
+	.highcharts-data-table tr:hover {
+	    background: #f1f7ff;
+	}
+	
+	input[type="number"] {
+	    min-width: 50px;
+	}
+	
+	div#table_container table {width: 100%}
+	div#table_container th, div#table_container td {border: solid 1px gray; text-align: center;} 
+	div#table_container th {background-color: #595959; color: white;} 
+</style> 
+
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/highcharts.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/export-data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/accessibility.js"></script>
+
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/series-label.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/drilldown.js"></script>
+
+ 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Bootstrap CSS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<script type="text/javascript">
+   $(document).ready(function(){
+	   
+	    $.ajax({
+	    	url:"<%= ctxPath%>/admin/studentCntByDeptname.lms",
+	    	dataType:"json",
+	    	success:function(json){
+	    	 	console.log(JSON.stringify(json)); 
+	    		/*
+	    		  [{"department_name":"Shipping","cnt":"45","percentage":"40.5"}
+	    		  ,{"department_name":"Sales","cnt":"34","percentage":"30.6"}
+	    		  ,{"department_name":"IT","cnt":"9","percentage":"8.1"}
+	    		  ,{"department_name":"Finance","cnt":"6","percentage":"5.4"}
+	    		  ,{"department_name":"Purchasing","cnt":"6","percentage":"5.4"}
+	    		  ,{"department_name":"Executive","cnt":"3","percentage":"2.7"}
+	    		  ,{"department_name":"Accounting","cnt":"2","percentage":"1.8"}
+	    		  ,{"department_name":"Marketing","cnt":"2","percentage":"1.8"}
+	    		  ,{"department_name":"Administration","cnt":"1","percentage":"0.9"}
+	    		  ,{"department_name":"Human Resources","cnt":"1","percentage":"0.9"}
+	    		  ,{"department_name":"Public Relations","cnt":"1","percentage":"0.9"}
+	    		  ,{"department_name":"부서없음","cnt":"1","percentage":"0.9"}
+	    		  ] 
+	    		*/
+	    		
+	    		$("div#chart_container").empty();
+	    		$("div#table_container").empty();
+	    		$("div.highcharts-data-table").empty();
+			    
+	    		let resultArr = [];
+	    		
+	    		for(let i=0; i<json.length; i++){
+	    			
+	    			let obj;
+	    			
+	    			if(i==0) {
+	    				obj = {
+					            name: json[i].department_name,
+					            y: Number(json[i].percentage),
+					            sliced: true,
+					            selected: true
+					          };
+	    			}
+	    			else {
+	    				obj = {
+					            name: json[i].department_name,
+					            y: Number(json[i].percentage)
+					          };
+	    			}
+	    			
+	    			resultArr.push(obj); // 배열속에 객체를 넣기
+	    		}// end of for------------------
+	    		
+			    ///////////////////////////////////   
+				Highcharts.chart('chart_container', {
+				    chart: {
+				        plotBackgroundColor: null,
+				        plotBorderWidth: null,
+				        plotShadow: false,
+				        type: 'pie'
+				    },
+				    title: {
+				        text: '수려대학교 학과별 인원통계'
+				    },
+				    tooltip: {
+				        pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+				    },
+				    accessibility: {
+				        point: {
+				            valueSuffix: '%'
+				        }
+				    },
+				    plotOptions: {
+				        pie: {
+				            allowPointSelect: true,
+				            cursor: 'pointer',
+				            dataLabels: {
+				                enabled: true,
+				                format: '<b>{point.name}</b>: {point.percentage:.2f} %'
+				            }
+				        }
+				    },
+				    series: [{
+				        name: '인원비율',
+				        colorByPoint: true,
+				        data: resultArr
+				    }]
+				});			    
+			    ///////////////////////////////////
+			    
+			    let v_html = "<table>";
+			    
+			        v_html += "<tr>" +
+			                     "<th>부서명</th>" + 
+			                     "<th>인원수</th>" +
+			                     "<th>퍼센티지</th>" + 
+			                  "</tr>";
+			                  
+			    $.each(json, function(index, item){
+			    	v_html += "<tr>" +
+			    	            "<td>"+ item.department_name +"</td>" +
+			    	            "<td>"+ item.cnt +"</td>" +
+			    	            "<td>"+ item.percentage +"</td>" +
+			    	          "</tr>";  
+			    });              
+			    
+			    v_html += "</table>";
+			    
+			    $("div#table_container").html(v_html);
+	    		
+	    	},
+	    	error: function(request, status, error){
+			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+	    });
+
+		
+		
+   });// end of $(document).ready(funciton(){})-------------
+</script>
 
     <div class="content">
         <div class="main-content">
             <div class="justify-content-center">
-                <div class="card">
+
+                <div class="card" style="width:50%;">
                   <h5 class="card-header">
-                    	방문 통계 차트
+                    	학과별 인원 차트
                   </h5>
                   <div class="card-body">
                     <h5 class="card-title">교수 학생 방문통계</h5>
-                    <p class="card-text" id="columStackedBar">highcharts</p>
+                    <p class="card-text" id="columStackedBar">
+                    <div style="display:flex;">
+                   		<div id="chart_container"></div>
+						<div id="table_container" style="margin: 40px 0 0 0;"></div>
+                    </div>
                   </div>
                 </div>
                 
-                <br>
-                
-                <div class="card">
-                  <h5 class="card-header">
-                    	강의개설 신청승인
-                  </h5>
-                  <div class="card-body">
-                    <h5 class="card-title">개설신청 리스트</h5>
-                    <p class="card-text">
-                        <table class="table">
-                            <thead class="thead-dark">
-                              <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">학기</th>
-                                <th scope="col">교수명</th>
-                                <th scope="col">학과</th>
-                                <th scope="col">정원</th>
-                                <th scope="col">강의소개</th>
-                                <th scope="col">계획서</th>
-                                <th scope="col">개설일자</th>
-                                <th scope="col">관리자 승인</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <th scope="row">1</th>
-                                <td>1학기</td>
-                                <td>이정연</td>
-                                <td>국제통상학과</td>
-                                <td>30명</td>
-                                <td>이부분은 modal같은거 해야할 듯</td>
-                                <td>계획서 파일이 첨부</td>
-                                <td>2024-08-09</td>
-                                <td><a href="#" class="btn btn-primary">승인</a>&nbsp;<a href="#" class="btn btn-primary">반려</a></td>
-                                
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>2학기</td>
-                                <td>이경현</td>
-                                <td>국어국문과</td>
-                                <td>20명</td>
-                                <td>강의력이 좋습니다.</td>
-                                <td>계획서 파일이 첨부</td>
-                                <td>2024-08-09</td>
-                                <td><a href="#" class="btn btn-primary">승인</a>&nbsp;<a href="#" class="btn btn-primary">반려</a></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>1학기</td>
-                                <td>강민정</td>
-                                <td>컴퓨터공학과</td>
-                                <td>30명</td>
-                                <td>잘가르칩니다.</td>
-                                <td>계획서 파일이 첨부</td>
-                                <td>2024-08-09</td>
-                                <td><a href="#" class="btn btn-primary">승인</a>&nbsp;<a href="#" class="btn btn-primary">반려</a></td>
-                              </tr>
-                            <tr>
-                                <th scope="row">4</th>
-                                <td>2학기</td>
-                                <td>손혜정</td>
-                                <td>의예과</td>
-                                <td>30명</td>
-                                <td>치료를 잘합니다.</td>
-                                <td>계획서 파일이 첨부</td>
-                                <td>2024-08-09</td>
-                                <td><a href="#" class="btn btn-primary">승인</a>&nbsp;<a href="#" class="btn btn-primary">반려</a></td>
-                              </tr>
-                            <tr>
-                                <th scope="row">5</th>
-                                <td>1학기</td>
-                                <td>손영관</td>
-                                <td>연극영화과</td>
-                                <td>30명</td>
-                                <td>연기를 잘가르칩니다.</td>
-                                <td>계획서 파일이 첨부</td>
-                                <td>2024-08-09</td>
-                                <td><a href="#" class="btn btn-primary">승인</a>&nbsp;<a href="#" class="btn btn-primary">반려</a></td>
-                              </tr>
-                            </tbody>
-                        </table>
-                    </p>
-                  </div>
-                </div>
             </div>
-        </div>
-    </div>
+          </div>
+      </div>
     <!-- Bootstrap JS and dependencies -->
-
-</body>
-</html>

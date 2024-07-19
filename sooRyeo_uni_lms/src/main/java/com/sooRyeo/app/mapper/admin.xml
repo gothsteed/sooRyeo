@@ -49,86 +49,60 @@
 		where email = #{email}
 	</select>
 
-	<select id="getAnnouncement" parameterType="HashMap"
-		resultType="com.sooRyeo.app.domain.Announcement">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		select announcement_seq, a_title, writeday, viewcount
-		from
-        (
-        select rownum rn, announcement_seq, a_title, a_content, attatched_file, writeday, viewcount, status, orgfilename
-        from
-		(
-            SELECT *
-            FROM tbl_announcement
-		<if test="searchWord != null">
-			where lower(a_title) like '%'||lower(#{searchWord})||'%'
-		</if>
-			order by writeday desc
-        )V
-        )T
-		where rn BETWEEN #{startRno} AND #{endRno}
-	</select>
 
-	<select id="getTotalElementCount" resultType="Integer" parameterType="HashMap">
-		SELECT count(*)
-		FROM tbl_announcement
-		<if test="searchWord != null">
-			where lower(a_title) like '%'||lower(#{searchWord})||'%'
-		</if>
-	</select>
-
-	<update id="increase_readCount" parameterType="String">
-		update tbl_announcement set viewCount = viewCount + 1
-		where announcement_seq = #{seq}
-	</update>
-
-	<select id="getView" parameterType="HashMap" resultType="com.sooRyeo.app.domain.Announcement">
-		SELECT previousseq, previoussubject, announcement_seq, a_title,	a_content
-		, viewcount, writeday
-		, nextseq, nextsubject
-		, attatched_file, orgfilename
-		from
-		(
-			select lag (announcement_seq) over(order by announcement_seq desc) AS previousseq
-			, lag (a_title,1) over(order by announcement_seq desc) AS previoussubject
-			, announcement_seq
-			, lead (announcement_seq) over(order by announcement_seq desc) AS nextseq
-			, lead (a_title, 1) over(order by announcement_seq desc) AS Nextsubject
-			, attatched_file, writeday, viewcount, a_title, a_content, orgfilename
-			from tbl_announcement
-			<if test='searchWord != ""'>
-				where lower(a_title) like '%' || lower(#{searchWord}) || '%'
-			</if>
-		) V
-		WHERE V.announcement_seq = #{seq}
+    <resultMap type="HashMap" id="studentCntByDeptname_Map">
+       <result property="department_name"    column="department_name"    javaType="String" />
+       <result property="cnt"             column="cnt"             javaType="String" />
+       <result property="percentage"       column="percentage"       javaType="String" />
+    </resultMap>
+	<!-- === employees 테이블에서 부서명별 인원수 및 퍼센티지 가져오기  === --> 
+	<select id="deptnamePercentageList" resultMap="studentCntByDeptname_Map">
+		select department_name
+		   , count(*) AS cnt 
+		   , round(count(*)/(select count(*) from tbl_student) * 100, 2) AS percentage 
+		from tbl_student S left join tbl_department D
+		on fk_department_seq = D.department_seq
+		group by D.department_name
+		order by cnt desc, department_name asc
 	</select>
 
 
-	<select id="getStaticList" resultType="com.sooRyeo.app.domain.Announcement">
+	<select id="getStudentList"
+		resultType="com.sooRyeo.app.domain.Student">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
 		SELECT *
-		FROM tbl_announcement
-		where status = 1
+		FROM tbl_student
+	</select>
+	
+	<select id="application_status_student"
+		resultType="com.sooRyeo.app.domain.StudentStatusChange">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		select S.student_id, C.change_status, S.name, s.grade, d.department_name, S.status
+		from tbl_student_status_change C
+		join tbl_student S on s.student_id = c.fk_student_id
+		join tbl_department D on s.fk_department_seq = d.department_seq
 	</select>
 
-
-	<insert id="addList" parameterType="integer">
-		<if test="attatched_file != null">
-			insert into tbl_announcement (announcement_seq, a_title, a_content, attatched_file, orgfilename, status)
-			values (ANNOUNCEMENT_SEQ.nextval, #{title}, #{content}, #{attatched_file}, #{orgfilename}, #{Listtype})
-		</if>
-		<if test="attatched_file == null">
-			insert into tbl_announcement (announcement_seq, a_title, a_content, status)
-			values (ANNOUNCEMENT_SEQ.nextval, #{title}, #{content}, #{Listtype})
-		</if>
-	</insert>
-
-	<delete id="del" parameterType="String">
-		delete from tbl_announcement
-		where announcement_seq = #{seq}
+	<delete id="deleteApplication" parameterType="String">
+		delete from tbl_student_status_change
+		where fk_student_id = #{student_id}
 	</delete>
 
-	<update id="edit" parameterType="com.sooRyeo.app.dto.BoardDTO">
-		update tbl_announcement set a_content = #{content}, a_title = #{title}
-		where announcement_seq = #{seq}
-	</update>
+	<update id="updateStudentStatus" parameterType="String">
+	update tbl_student
+	<if test="change_status == 1">
+	set status = 1
+	</if>
+	<if test="change_status == 2">
+	set status = 2
+	</if>
+	<if test="change_status == 3">
+	set status = 3
+	</if>
+	<if test="change_status == 4">
+	set status = 4
+	</if>
+	where student_id = #{student_id}
 	
+	</update>
+
+
 </mapper>

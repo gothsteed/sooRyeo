@@ -15,12 +15,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.common.AES256;
-import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
-import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
 import com.sooRyeo.app.model.AdminDao;
@@ -115,7 +116,7 @@ public class AdminService_imple implements AdminService {
 		List<Department> departments =  departmentDao.departmentList_select();
 		mav.addObject("departments", departments);
 		
-		mav.setViewName("curriculum.admin");
+		mav.setViewName("curriculum");
 		return mav;
 	}
 
@@ -152,11 +153,6 @@ public class AdminService_imple implements AdminService {
 		return result.toString();
 	}
 
-	@Override
-	public Pager<Announcement> getAnnouncement(Map<String, Object> paraMap) {
-		Pager<Announcement> announcementList = admindao.getAnnouncement(paraMap);
-		return announcementList;
-	}
 
 	@Override
 	public ResponseEntity<String> deleteCurriculum(HttpServletRequest request, ModelAndView mav) throws NumberFormatException {
@@ -193,70 +189,43 @@ public class AdminService_imple implements AdminService {
 		System.out.println("수정 성공");
 		return ResponseEntity.ok().body("수정 성공하였습니다");
 	}
-
-	// 학사공지사항 글의 개수를 알아오는 메소드
-	@Override
-	public int getTotalElementCount() {
-		
-		int totalElementCount = admindao.getTotalElementCount();
-		return totalElementCount;	
-	}
-	
 	
 	@Override
 	public ModelAndView makeCourseRegiseterPage(HttpServletRequest request, ModelAndView mav) {
 		mav.addObject("departments", departmentDao.departmentList_select());
-		mav.setViewName("courseRegister.admin");
+		mav.setViewName("courseRegister");
 		return mav;
 	}
 
 	@Override
-	public Announcement getView(Map<String, String> paraMap) {
-		
-		int n = admindao.increase_viewCount(paraMap.get("seq")); //
-		Announcement an = admindao.getView(paraMap); // 글 1개 조회하기
-		
-		return an;
+	public List<Map<String, String>> studentCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = admindao.studentCntByDeptname();
+	    return deptnamePercentageList;
 	}
 
-	// 조회수 증가없이 글을 불러오는 메소드
+	// 학적변경신청한 학생들을 전부 불러오는 메소드
 	@Override
-	public Announcement getView_no_increase_readCount(Map<String, String> paraMap) {
-		
-		Announcement an = admindao.getView(paraMap);
-		return an;
-		
+	public List<StudentStatusChange> application_status_student() {
+		List<StudentStatusChange> application_status_student = admindao.application_status_student();
+	    return application_status_student;
 	}
 
-	// 고정글을 불러오는 메소드
+	// 관리자가 승인 혹은 반려한 신청을 삭제해주는 메소드
 	@Override
-	public List<Announcement> getStaticList() {
-
-		List<Announcement> getStaticList = admindao.getStaticList();
-		return getStaticList;
+	public int deleteApplication(String student_id) {
+		int n = admindao.deleteApplication(student_id);
+		return n;
 	}
-
-	// 공지사항 쓰기 메소드
+	
+	// 관리자가 승인을 해주면 학생의 학적 상태를 업데이트 해주는 메소드
 	@Override
-	public int addList(BoardDTO bdto) {
-
-		int n = admindao.addList(bdto);
+	public int updateStudentStatus(String student_id, String change_status) {
+		int n = admindao.updateStudentStatus(student_id, change_status);
 		return n;
 	}
 
-	// 공지사항을 삭제하는 메소드 
-	@Override
-	public int del(Map<String, String> paraMap) {
-		int n = admindao.del(paraMap);
-		return n;
-	}
 
-	// 공지사항을 수정하는 메소드 
-	@Override
-	public int edit(BoardDTO bdto) {
-		int n = admindao.edit(bdto);
-		return n;
-	}
+
 
 	
 

@@ -24,6 +24,7 @@ import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.Time;
@@ -362,10 +363,8 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public List<Map<String, String>> studentList(String fk_course_seq) {
-		
-		List<Map<String, String>> studentList = dao.studentList(fk_course_seq);
-		
+	public Pager<Map<String, String>> studentList(String fk_course_seq, int currentPage) {
+		Pager<Map<String, String>> studentList = dao.studentList(fk_course_seq, currentPage);
 		return studentList;
 	}
 
@@ -545,6 +544,30 @@ public class ProfessorService_imple implements ProfessorService {
 		List<Map<String, String>> assignmentCheckJSON = dao.assignmentCheckJSON(schedule_seq_assignment);
 		
 		return assignmentCheckJSON;
+	}
+
+
+	@Override
+	public int scoreUpdate(Map<String, String> paraMap) {
+		
+		int n = dao.scoreUpdate(paraMap);
+		
+		return n;
+	}
+
+
+	@Override
+	public Assignment searchFile(String schedule_seq_assignment) {
+		
+		Assignment assignment = dao.searchFile(schedule_seq_assignment);
+		
+		return assignment;
+	}
+	
+	@Override
+	public int getTotalElementCount(String fk_course_seq) {
+		int A_totalElementCount = dao.getTotalElementCount(fk_course_seq);
+		return A_totalElementCount;	
 	}
 
 

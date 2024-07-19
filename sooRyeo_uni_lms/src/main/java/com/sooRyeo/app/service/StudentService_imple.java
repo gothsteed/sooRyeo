@@ -23,14 +23,18 @@ import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
 
@@ -408,29 +412,60 @@ public class StudentService_imple implements StudentService {
 		mav.setViewName("studentCourseRegister");
 		return mav;
 	}
+	
+	
 	// 수업 - 내 강의 - 과제
 	@Override
-	public List<Map<String, String>> getassignment_List(String fk_course_seq) {
+	public List<Map<String, String>> getassignment_List(String fk_course_seq, int userid) {
 		
-		List<Map<String, String>> assignment_List = dao.getassignment_List(fk_course_seq);
+		List<Map<String, String>> assignment_List = dao.getassignment_List(fk_course_seq, userid);
 		
 		return assignment_List;
 		
 	} // end of public List<Map<String, String>> getassignment_List
 
 
-
-	// 수업 - 내 강의 - 과제 - 상세내용
+	
+	
+	// 수업 - 내 강의 - 과제 - 상세내용1
 	@Override
-	public List<Map<String, String>> getassignment_detail_List(String schedule_seq_assignment) {
+	public Map<String, Object> getassignment_detail_1(String schedule_seq_assignment) {
 		
-		List<Map<String, String>> assignment_detail_List = dao.getassignment_detail_List(schedule_seq_assignment);
+		Map<String, Object> assignment_detail_1 = dao.getassignment_detail_1(schedule_seq_assignment);
 		
-		return assignment_detail_List;
+		return assignment_detail_1;
 		
-	} // end of public List<Map<String, String>> getassignment_detail_List
+	} // end of public Map<String, Object> getassignment_detail_1
+
+	
+	
+
+	// 수업 - 내 강의 - 과제 - 상세내용2
+	@Override
+	public Map<String, Object> getassignment_detail_2(String schedule_seq_assignment, int userid) {
+		
+		Map<String, Object> assignment_detail_2 = dao.getassignment_detail_2(schedule_seq_assignment, userid);
+		
+		return assignment_detail_2;
+		
+	} // end of public Map<String, Object> getassignment_detail_2
 
 
+	
+	
+	// 과제제출
+	@Override
+	public int addComment(AssignmentSubmitDTO asdto) {
+		
+		int n = 0;
+		
+		n = dao.addComment(asdto);
+
+		return n;
+		
+	} // end of public int addComment
+	
+	
 
 	// 교수 이름, 교수 번호 select
 	@Override
@@ -502,6 +537,83 @@ public class StudentService_imple implements StudentService {
 
 
 
+
+
+
+
+	// 과제 제출 내용보기
+	@Override
+	public Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid) {
+		
+		Map<String, Object> asdto = dao.getreadComment(fk_schedule_seq_assignment, userid);
+		
+		return asdto;
+		
+	} // end of public List<AssignmentSubmit> getreadComment
+
+
+
+	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
+	@Override
+	public AssignmentSubmitDTO getCommentOne(String assignment_submit_seq) {
+		
+		AssignmentSubmitDTO asdto = dao.getCommentOne(assignment_submit_seq);
+		
+		return asdto;
+		
+	} // end of public AssignmentSubmitDTO getCommentOne
+
+
+
+
+
+	@Override
+	public String student_chart_credit(int student_id) {
+		
+		List<Map<String, String>> creditList = dao.student_chart_credit(student_id);
+
+		JsonArray jsonArr = new JsonArray();
+      
+		if(creditList != null && creditList.size() > 0) {
+			for(Map<String, String> map : creditList) {
+				JsonObject jsonObj = new JsonObject();
+				jsonObj.addProperty("name", map.get("name"));
+				jsonObj.addProperty("grade", map.get("grade"));
+				jsonObj.addProperty("semester_date", map.get("semester_date"));
+				jsonObj.addProperty("gradename", map.get("gradename"));
+				jsonObj.addProperty("credit", map.get("credit"));
+				jsonObj.addProperty("required", map.get("required"));
+            
+				jsonArr.add(jsonObj);
+			}// end of for------------------------------
+		}
+      
+		return new Gson().toJson(jsonArr);
+	}
+
+
+
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	@Override
+	public int credit_point(int student_id) {
+		int credit_point = dao.credit_point(student_id); 
+		return credit_point;
+	}
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	@Override
+	public int application_status_change(int student_id, int status_num) {
+		int n = dao.application_status_change(student_id, status_num); 
+		return n;
+	}
+
+
+	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+	@Override
+	public String getApplication_status(int student_id) {
+		String application_status = dao.getApplication_status(student_id); 
+		return application_status;
+	}
 
 
 

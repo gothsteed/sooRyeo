@@ -16,7 +16,7 @@
 		frm.goBackURL.value = goBackURL;
 		
 		frm.method = "post";
-		frm.action = "<%= ctxPath%>/admin/announcementView_2.lms";
+		frm.action = "<%= ctxPath%>/board/announcementView_2.lms";
 		frm.submit();
 		
 	}// end of function goView('${boardvo.seq}'){}-----------------------------------------
@@ -27,7 +27,7 @@
 			const frm = document.Del
 	
 			frm.method = "post";
-			frm.action = "<%= ctxPath%>/admin/del.lms";
+			frm.action = "<%= ctxPath%>/board/a_del.lms";
 			frm.submit();
 		}
 		else{
@@ -45,9 +45,9 @@
         </div>
         <div class="card-body">
         	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="goDel()">글삭제하기</button>
-		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/admin/edit.lms?seq=${requestScope.an.announcement_seq}'">글수정하기</button>
+		   	   <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/board/a_edit.lms?seq=${requestScope.an.announcement_seq}'">글수정하기</button>
         	        <form name="Del">
-						<input type="text" name="announcement_seq" value="${requestScope.an.announcement_seq}"/>  
+						<input type="hidden" name="announcement_seq" value="${requestScope.an.announcement_seq}"/>  
 					</form>
 			<table class="table">
 			  <thead>
@@ -68,7 +68,7 @@
 			    <tr>
 			      <th scope="row">첨부파일</th>
 			      <c:if test="${requestScope.an.attatched_file != null}">
-				      <td colspan="2"><a href="<%= ctxPath%>/admin/download.lms?seq=${requestScope.an.announcement_seq}">${requestScope.an.orgfilename}</a></td>
+				      <td colspan="2"><a href="<%= ctxPath%>/board/download.lms?seq=${requestScope.an.announcement_seq}">${requestScope.an.orgfilename}</a></td>
 			      </c:if>
 			      <c:if test="${requestScope.an.attatched_file == null}">
 				      <td colspan="2">첨부파일이 없습니다.</td>
@@ -85,7 +85,7 @@
 	                <button type="button" class="btn btn-secondary" onclick="goView('${requestScope.an.previousseq}')">이전글</button>
 				</c:if>
                 <div>
-	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/admin/announcement.lms'">전체목록보기</button>
+	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>/board/announcement.lms'">전체목록보기</button>
 	                <button type="button" class="btn btn-secondary" onclick="javascript:location.href='<%= ctxPath%>${requestScope.goBackURL}'">검색목록보기</button>
                 </div>
 				<c:if test="${requestScope.an.nextseq != null}">

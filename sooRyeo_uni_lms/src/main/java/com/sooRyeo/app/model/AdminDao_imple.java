@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
-import com.sooRyeo.app.domain.Announcement;
-import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.dto.BoardDTO;
+import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -45,74 +43,37 @@ public class AdminDao_imple implements AdminDao {
 		return emailDuplicateCheck;
 	}
 
+
 	@Override
-	public Pager<Announcement> getAnnouncement(Map<String, Object> paraMap) {
-		
-		int sizePerPage = 10;
-		
-		int currentPage = (int) paraMap.get("currentPage");
-		
-		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
-		int endRno = startRno + sizePerPage - 1; // 끝 행번호
-		
-		
-		paraMap.put("startRno", startRno);
-		paraMap.put("endRno", endRno);
-		paraMap.put("currentShowPageNo", currentPage);
-		List<Announcement> announcementList = sqlSession.selectList("admin.getAnnouncement", paraMap);
-		
-		int totalElementCount = sqlSession.selectOne("admin.getTotalElementCount", paraMap);
-		
-		return new Pager(announcementList, currentPage, sizePerPage, totalElementCount);
+	public List<Map<String, String>> studentCntByDeptname() {
+		List<Map<String, String>> deptnamePercentageList = sqlSession.selectList("admin.deptnamePercentageList");
+		return deptnamePercentageList;
 	}
 
-	// 학사공지사항 글의 개수를 알아오는 메소드
+
+	// 학적변경신청한 학생들을 전부 불러오는 메소드
 	@Override
-	public int getTotalElementCount() {
-		int n = sqlSession.selectOne("admin.getTotalElementCount");
+	public List<StudentStatusChange> application_status_student() {
+		List<StudentStatusChange> application_status_student = sqlSession.selectList("admin.application_status_student");
+		return application_status_student;
+	}
+
+	// 관리자가 승인 혹은 반려한 신청을 삭제해주는 메소드
+	@Override
+	public int deleteApplication(String student_id) {
+		int n = sqlSession.delete("admin.deleteApplication", student_id);
 		return n;
 	}
 
-
+	// 관리자가 승인을 해주면 학생의 학적 상태를 업데이트 해주는 메소드
 	@Override
-	public Announcement getView(Map<String, String> paraMap) {
-		Announcement an = sqlSession.selectOne("admin.getView", paraMap);
-		return an;
-	}
-
-
-	@Override
-	public int increase_viewCount(String seq) {
-		int n = sqlSession.update("admin.increase_readCount", seq);
-		return n;
-	}
-
-
-	// 고정글을 불러오는 메소드
-	@Override
-	public List<Announcement> getStaticList() {
-		List<Announcement> getStaticList = sqlSession.selectList("admin.getStaticList");
-		return getStaticList;
-	}
-
-
-	@Override
-	public int addList(BoardDTO bdto) {
-		int n = sqlSession.insert("admin.addList", bdto);
-		return n;
-	}
-
-
-	@Override
-	public int del(Map<String, String> paraMap) {
-		int n = sqlSession.delete("admin.del", paraMap);
-		return n;
-	}
-
-
-	@Override
-	public int edit(BoardDTO bdto) {
-		int n = sqlSession.update("admin.edit", bdto);
+	public int updateStudentStatus(String student_id, String change_status) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("student_id", student_id);
+		paraMap.put("change_status", change_status);
+		
+		int n = sqlSession.update("admin.updateStudentStatus", paraMap);
 		return n;
 	}
 

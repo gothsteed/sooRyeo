@@ -228,7 +228,7 @@
                     <a class="dropdown-item" href="#">과제</a>
                     <a class="dropdown-item" href="#">시험</a>
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/approveConsult.lms">상담 승인</a>
-                    <a class="dropdown-item" href="#">오늘 할 일</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/professor/consult.lms">상담일정</a>
                 </div>
             </li>
             <li class="nav-item">
@@ -242,7 +242,7 @@
                 <a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
                 <div class="dropdown-menu" aria-labelledby="groupsMenu" >
                     <a class="dropdown-item" href="#">내 친구</a>
-                    <a class="dropdown-item" href="#">커뮤니티</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/board/announcement.lms">학사공지사항</a>
                 </div>
             </li>
             <li class="nav-item"><a href="<%=ctxPath%>/professor/info.lms" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>

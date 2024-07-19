@@ -227,8 +227,8 @@ body {
 			<li class="nav-item"><a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티관리</a>
 				<div class="dropdown-menu" aria-labelledby="groupsMenu">
 					<a class="dropdown-item" href="#">내 친구</a> 
-					<a class="dropdown-item" href="<%=ctxPath%>/admin/addList.lms">공지사항쓰기</a>
-					<a class="dropdown-item" href="<%=ctxPath%>/admin/announcement.lms">학사공지사항</a>
+					<a class="dropdown-item" href="<%=ctxPath%>/board/addList.lms">공지사항쓰기</a>
+					<a class="dropdown-item" href="<%=ctxPath%>/board/announcement.lms">학사공지사항</a>
 				</div>
 			</li>
 			<li class="nav-item">

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.domain.TimeTable;
@@ -41,7 +42,7 @@ public interface ProfessorDao {
 	ProfessorTimeTable getProfTimeTable(int prof_id);
 	
 	// 강의 수강생 목록 
-	List<Map<String, String>> studentList(String fk_course_seq);
+	Pager<Map<String, String>> studentList(String fk_course_seq, int currentPage);
 	
 	// 교수 시험, 과제관리
 	List<Map<String, String>> paperAssignment(String fk_course_seq);
@@ -72,6 +73,15 @@ public interface ProfessorDao {
 	
 	// 과제제출확인제이슨
 	List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment);
+	
+	// 점수 입력
+	int scoreUpdate(Map<String, String> paraMap);
+	
+	// 다운로드를 위해 파일 찾기
+	Assignment searchFile(String schedule_seq_assignment);
+
+	int getTotalElementCount(String fk_course_seq);
+
 
 	
 	

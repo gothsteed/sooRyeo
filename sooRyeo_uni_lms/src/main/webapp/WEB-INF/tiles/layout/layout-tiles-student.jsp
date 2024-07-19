@@ -198,7 +198,7 @@
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
                     <a class="dropdown-item" href="<%=ctxPath%>/student/classList.lms">내 수업</a>
                     <a class="dropdown-item" href="<%=ctxPath%>/student/courseRegister.lms">수강신청</a>
-                    <a class="dropdown-item" href="#">출석현황</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/attendance.lms">출석현황</a>
                 </div>
             </li>
             <li class="nav-item">
@@ -213,7 +213,7 @@
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#" id="gradesMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
                 <div class="dropdown-menu" aria-labelledby="gradesMenu">
-                    <a class="dropdown-item" href="#">학점 통계</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/Statistics.lms">학점 통계</a>
                     <a class="dropdown-item" href="#">취득 현황</a>
                 </div>
             </li>
@@ -224,7 +224,7 @@
                 <div class="dropdown-menu" aria-labelledby="groupsMenu">
                     <a class="dropdown-item" href="#">내 친구</a>
                     <a class="dropdown-item" href="#">커뮤니티</a>
-                    <a class="dropdown-item" href="<%=ctxPath%>/admin/announcement.lms">학사공지사항</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/board/announcement.lms">학사공지사항</a>
                 </div>
             </li>
             <li class="nav-item"><a href="<%=ctxPath%>/student/myInfo.lms" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>

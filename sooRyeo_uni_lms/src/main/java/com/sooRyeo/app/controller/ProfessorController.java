@@ -1,25 +1,27 @@
 package com.sooRyeo.app.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.sooRyeo.app.domain.*;
+import com.sooRyeo.app.dto.LectureUploadDto;
+import com.sooRyeo.app.service.LectureService;
+import com.sooRyeo.app.service.ScheduleService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,7 +31,9 @@ import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
+import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
@@ -43,13 +47,20 @@ public class ProfessorController {
 	
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다.
 	// @Qualifier("boardService_imple") DAO는 하나이기 때문에 Qualifier를 통해 지정할 필요가 거의 없다.
-	private ProfessorService service;
+	private ProfessorService professorService;
 	
 	@Autowired
-	private StudentService Studentservice;
+	private StudentService studentService;
+
+	@Autowired
+	private LectureService lectureService;
+
+	@Autowired
+	private ScheduleService scheduleService;
 
 	@Autowired
 	private FileManager fileManager;
+
 	
 	@RequestMapping(value = "/professor/dashboard.lms", method = RequestMethod.GET)
 	public String professor() {// 대시보드 뷰단
@@ -68,7 +79,7 @@ public class ProfessorController {
 	@GetMapping("/professor/info.lms")
 	public ModelAndView professor_info(HttpServletRequest request, ModelAndView mav, Professor professor) {// 교수 내 정보 뷰단
 			
-		professor = service.getInfo(request);
+		professor = professorService.getInfo(request);
 		
 		// System.out.println("확인용 professor name : " + professor.getName());
 		
@@ -88,7 +99,7 @@ public class ProfessorController {
 	@PostMapping(value = "/professor/pwdDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
 	public String pwdDuplicateCheck(HttpServletRequest request, Professor professor) {// 교수 비밀번호 중복확인		
 		
-		JSONObject json = service.pwdDuplicateCheck(request);						
+		JSONObject json = professorService.pwdDuplicateCheck(request);
 		
 		return json.toString();
 	}
@@ -98,7 +109,7 @@ public class ProfessorController {
 	@PostMapping(value = "/professor/telDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
 	public String telDuplicateCheck(HttpServletRequest request, Professor professor) {// 교수 전화번호 중복확인		
 		
-		JSONObject json = service.telDuplicateCheck(request);						
+		JSONObject json = professorService.telDuplicateCheck(request);
 		
 		return json.toString();
 	}
@@ -108,7 +119,7 @@ public class ProfessorController {
 	@PostMapping(value = "/professor/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
 	public String emailDuplicateCheck(HttpServletRequest request, Professor professor) {// 교수 전화번호 중복확인		
 		
-		JSONObject json = service.emailDuplicateCheck(request);						
+		JSONObject json = professorService.emailDuplicateCheck(request);
 		
 		return json.toString();
 	}
@@ -117,7 +128,7 @@ public class ProfessorController {
 	@PostMapping(value = "/professor/professor_info_edit.lms")
 	public ModelAndView professor_info_edit( ModelAndView mav, Professor professor, MultipartHttpServletRequest mrequest) {// 교수 정보 수정
 		     
-	      int n = service.professor_info_edit(professor, mrequest);
+	      int n = professorService.professor_info_edit(professor, mrequest);
 	      
 	      if(n == 1) {
 	    	  mav.addObject("message", "교수정보 수정을 성공하였습니다.");
@@ -142,7 +153,7 @@ public class ProfessorController {
 		
 		int prof_id = loginuser.getProf_id();
 		
-		ProfessorTimeTable timeTable = service.courseList(prof_id);
+		ProfessorTimeTable timeTable = professorService.courseList(prof_id);
 		
 		List<Course> courseList = timeTable.getCourseList();
 		
@@ -171,10 +182,26 @@ public class ProfessorController {
 		
 		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);	
 		
-		List<Map<String, String>> studentList = service.studentList(fk_course_seq);
+		// List<Map<String, String>> studentList = service.studentList(fk_course_seq);
 		
-		mav.addObject("studentList", studentList);
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		
+		Pager<Map<String, String>> studentList = professorService.studentList(fk_course_seq, currentPage);
+		List<Lecture> lectureList = studentService.getlectureList(fk_course_seq);
+
 		mav.addObject("fk_course_seq", fk_course_seq);
+		
+		mav.addObject("studentList", studentList.getObjectList());
+		mav.addObject("currentPage", studentList.getPageNumber());
+		mav.addObject("perPageSize", studentList.getPerPageSize());
+		mav.addObject("pageBar", studentList.makePageBar(request.getContextPath() + "/professor/courseDetail.lms", "course_seq="+fk_course_seq));
+		mav.addObject("lectureList", lectureList);
+
 		mav.setViewName("professor_courseDetail");
 		
 		return mav;
@@ -207,7 +234,7 @@ public class ProfessorController {
 		
 		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
 		
-		List<Map<String,String>> paperAssignment = service.paperAssignment(fk_course_seq);
+		List<Map<String,String>> paperAssignment = professorService.paperAssignment(fk_course_seq);
 		// 과제 목록 리스트로 담아오기
 		
         JSONArray jsonArr = new JSONArray();
@@ -219,6 +246,7 @@ public class ProfessorController {
            jsonObj.put("fk_course_seq", map.get("fk_course_seq"));
            jsonObj.put("content", map.get("content"));
            jsonObj.put("attatched_file", map.get("attatched_file"));
+           jsonObj.put("orgfilename", map.get("orgfilename"));
            jsonObj.put("schedule_seq_assignment", map.get("schedule_seq_assignment"));
            jsonObj.put("schedule_seq", map.get("schedule_seq"));
            jsonObj.put("title", map.get("title"));
@@ -283,12 +311,14 @@ public class ProfessorController {
 	            System.out.println("확인용 newFileName " + newFileName);
 	            
 	            dto.setAttatched_file(newFileName); // 업로드된 파일 이름 설정
+	            dto.setOrgfilename(originalFilename); // 원래 파일 이름 설정
+	            
 	        } catch (Exception e) {
 	        	dto.setAttatched_file(newFileName); // 첨부파일이 없을 경우 ""	        	
 	        }
 	    }
 
-	    int n = service.insert_tbl_schedule(dto, fk_course_seq);
+	    int n = professorService.insert_tbl_schedule(dto, fk_course_seq);
 
 	    if (n != 1) {
 	        mav.addObject("message", "과제 등록을 실패하였습니다.");
@@ -306,7 +336,7 @@ public class ProfessorController {
 	
 	@PostMapping("/professor/assignmentDetail.lms")
 	public ModelAndView professor_assign_view(ModelAndView mav, HttpServletRequest request) {// 교수 과제상세 페이지
-
+		
 		String fk_course_seq = "";
 		String goBackURL = "";
 		String schedule_seq_assignment = "";
@@ -345,7 +375,7 @@ public class ProfessorController {
 			schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		}
 		
-		mav.addObject("goBackURL", goBackURL);
+		mav.addObject("goBackURL", goBackURL); // 과제 관리목록쪽 url
 		
 		try {
 			
@@ -366,7 +396,7 @@ public class ProfessorController {
 			System.out.println("확인용 fk_course_seq :" + fk_course_seq);
 			System.out.println("schedule_seq_assignment :" + schedule_seq_assignment);
 			
-			AssignJoinSchedule assign_view = service.assign_view(paraMap);
+			AssignJoinSchedule assign_view = professorService.assign_view(paraMap);
 			
 			String content = assign_view.getAssignment().getContent();
 			System.out.println("확인용 content : " + content);
@@ -391,7 +421,7 @@ public class ProfessorController {
 		System.out.println("확인용 schedule_seq_assignment :" + schedule_seq_assignment);
 		System.out.println("확인용 goBackURL :" + goBackURL);
 		
-	    int n = service.assignmentDelete(schedule_seq_assignment, mrequest);
+	    int n = professorService.assignmentDelete(schedule_seq_assignment, mrequest);
 		
 	    if (n != 1) {
 	        mav.addObject("message", "과제를 삭제할 수 없습니다.");
@@ -416,7 +446,7 @@ public class ProfessorController {
 		
 		try {		
 			// 수정해야 할 글 1개 내용 가져오기		
-			AssignJoinSchedule assign_edit = service.assignmentEdit(schedule_seq_assignment);
+			AssignJoinSchedule assign_edit = professorService.assignmentEdit(schedule_seq_assignment);
 			// 글 조회수 증가는 없고 단순히 글 1개만 조회해 오는 것
 						
 			if(assign_edit == null) {
@@ -447,7 +477,7 @@ public class ProfessorController {
 	
 	
 	@PostMapping("/professor/fileDelete_end.lms")
-	public ModelAndView professor_fileDelete_end(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+	public ModelAndView professor_fileDelete_end(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 파일 삭제 끝
 		
 		String schedule_seq_assignment = mrequest.getParameter("schedule_seq_assignment");
 		String attatched_file = mrequest.getParameter("attatched_file");
@@ -455,7 +485,7 @@ public class ProfessorController {
 		
 		// System.out.println("확인용 attatched_file : " + attatched_file);
 		
-		int n = service.fileDelete(mrequest, attatched_file, schedule_seq_assignment);
+		int n = professorService.fileDelete(mrequest, attatched_file, schedule_seq_assignment);
 		
 		if(n != 1) {
 	        mav.addObject("message", "파일을 삭제할 수 없습니다.");
@@ -470,10 +500,40 @@ public class ProfessorController {
 		
 		return mav;
 	}
+
+	@PostMapping("/professor/courseUpload.lms")
+	public ModelAndView courseUploadPage(ModelAndView mav, HttpServletRequest request) {
+
+		return lectureService.getUploadLecturePage(request, mav);
+	}
 	
+
+	@PostMapping("/professor/courseUploadREST.lms")
+	public ResponseEntity<String> courseUpload(MultipartHttpServletRequest request, @ModelAttribute LectureUploadDto lectureUploadDto) throws Exception {
+		
+		return lectureService.uploadLecturePage(request, lectureUploadDto);
+	}
+
+	@GetMapping("/professor/editLecture.lms")
+	public ModelAndView lectureEditPage(ModelAndView mav, HttpServletRequest request) {
+		return lectureService.getLectureEditPage(mav, request);
+	}
+	@PostMapping("/professor/updateLectureREST.lms")
+	public ResponseEntity<String> editLecturePage(HttpServletRequest request, @ModelAttribute LectureUploadDto lectureUploadDto) throws Exception {
+		return  lectureService.editLecture(request, lectureUploadDto);
+	}
+
+
+	@PostMapping("/professor/deleteLectureREST.lms")
+	public ResponseEntity<String> deleteLecturePage(HttpServletRequest request) throws Exception {
+		return  lectureService.deleteLecture(request);
+	}
+
+
+
 	
 	@PostMapping("/professor/assignmentEdit_end.lms")
-	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {
+	public ModelAndView professor_assignmentEdit_End(ModelAndView mav, MultipartHttpServletRequest mrequest) {// 과제 수정 끝
 		
 		int n = 0;
 		
@@ -486,7 +546,7 @@ public class ProfessorController {
 		//System.out.println("확인용 schedule_seq_assignment 11 : " + schedule_seq_assignment);
 		
 		// === 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 시작 === //
-		file_check = service.file_check(schedule_seq_assignment);
+		file_check = professorService.file_check(schedule_seq_assignment);
 		
 		
 		
@@ -558,12 +618,13 @@ public class ProfessorController {
 	            //System.out.println("확인용 newFileName " + newFileName);
 	            
 	            dto.setAttatched_file(newFileName); // 업로드된 파일 이름 설정
+	            dto.setOrgfilename(originalFilename); // 원래 파일 이름 설정
 	        } catch (Exception e) {
 	        	dto.setAttatched_file(newFileName); // 첨부파일이 없을 경우 ""	        	
 	        }
 	    }
 
-	    n = service.assignmentEdit_End(dto);
+	    n = professorService.assignmentEdit_End(dto);
 		
 		if(n != 1) {
 	        mav.addObject("message", "과제를 수정할 수 없습니다.");
@@ -582,13 +643,13 @@ public class ProfessorController {
 	
 	@ResponseBody
 	@PostMapping("/professor/assignment_checkJSON.lms")
-	public String professor_assignment_checkJSON(HttpServletRequest request) {
+	public String professor_assignment_checkJSON(HttpServletRequest request) {// 제출과제 확인 제이슨
 		
 		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
 		
 		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);
 		
-		List<Map<String,String>> assignmentCheckJSON = service.assignmentCheckJSON(schedule_seq_assignment);
+		List<Map<String,String>> assignmentCheckJSON = professorService.assignmentCheckJSON(schedule_seq_assignment);
 		// 과제 제출된 것 리스트로 받아오기
 		
         JSONArray jsonArr = new JSONArray();
@@ -598,6 +659,7 @@ public class ProfessorController {
            JSONObject jsonObj = new JSONObject();
            jsonObj.put("row_num", map.get("row_num"));
            jsonObj.put("fk_schedule_seq_assignment", map.get("fk_schedule_seq_assignment"));
+           jsonObj.put("assignment_submit_seq", map.get("assignment_submit_seq"));
            jsonObj.put("name", map.get("name"));
            jsonObj.put("attatched_file", map.get("attatched_file"));
            jsonObj.put("end_date", map.get("end_date"));
@@ -607,11 +669,120 @@ public class ProfessorController {
            
         }// end of for--------------------------------
         
-        System.out.println(jsonArr.toString());
+        // System.out.println(jsonArr.toString());
         
         return jsonArr.toString();
 		
 	}
+	
+	
+	@PostMapping("/professor/scoreUpdate.lms")
+	public ModelAndView professor_scoreUpdate(ModelAndView mav, HttpServletRequest request) {// 과제 점수 등록
+		
+		String goBackURL = request.getParameter("goBackURL");
+		String score = request.getParameter("score");
+		String assignment_submit_seq = request.getParameter("assignment_submit_seq");
+		
+		Map<String, String> paraMap = new HashMap<>(); 
+		
+		System.out.println("확인용 goBackURL : " + goBackURL);
+		System.out.println("확인용 score : " + score);
+		System.out.println("확인용 assignment_submit_seq : " + assignment_submit_seq);
+		
+		paraMap.put("assignment_submit_seq", assignment_submit_seq);
+		paraMap.put("score", score);
+		
+		int n = professorService.scoreUpdate(paraMap);
+		
+		
+		if(n != 1) {
+	        mav.addObject("message", "점수를 입력할 수 없습니다.");
+	        mav.addObject("loc", "javascript:history.back()");
+	        mav.setViewName("msg");
+			
+		} else {
+			mav.addObject("message", "점수가 입력되었습니다.");
+	        mav.addObject("loc", request.getContextPath() + goBackURL);
+	        mav.setViewName("msg");
+	    }
+		
+		return mav;
+	}
+	
+	
+	@GetMapping("/download.lms")
+	public void professor_download(HttpServletRequest request, HttpServletResponse response) {// 첨부파일 다운로드
+			
+		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
+
+		
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null;
+		// out 은 웹브라우저에 기술하는 대상체로 가정
+		
+		try {
+	
+			Assignment assignment = professorService.searchFile(schedule_seq_assignment);
+			
+			if(assignment == null || assignment != null && assignment.getAttatched_file() == null) {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체로 가정
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+	             return;
+			}
+			
+			else {// 정상적으로 다운로드를 할 경우
+				String fileName = assignment.getAttatched_file();
+				// 2024062809210487735185511000.jpg -- WAS(톰캣)에 저장된 파일명
+				
+				String orgFilename = assignment.getOrgfilename();
+
+				HttpSession session = request.getSession(); 
+				String root = session.getServletContext().getRealPath("/");
+
+				String path = root+"resources"+File.separator+"files";
+
+	            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
+
+	            flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+
+	            if(!flag) {
+	               // 다운로드가 실패한 경우 메시지를 띄워준다. 
+	               out = response.getWriter();
+	                // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+	                
+	                out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+	            }
+
+			}
+
+		} catch (NumberFormatException | IOException e) {
+			
+			try {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체로 가정
+				
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+				
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			
+		}	
+		
+	}// end of public void professor_download(HttpServletRequest request, HttpServletResponse response) 
+		
+
+
+	@GetMapping("/professor/course.lms")
+	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
+		return scheduleService.getProfessorConsultPage(request, mav);
+	}
+	
+	
+	
 	
 	
 	
