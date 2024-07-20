@@ -727,7 +727,8 @@ public class ProfessorController {
 	public void professor_download(HttpServletRequest request, HttpServletResponse response) {// 첨부파일 다운로드
 			
 		String schedule_seq_assignment = request.getParameter("schedule_seq_assignment");
-
+		
+		// System.out.println("확인용  schedule_seq_assignment : " + schedule_seq_assignment);
 		
 		response.setContentType("text/html; charset=UTF-8");
 		
