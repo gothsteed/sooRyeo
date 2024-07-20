@@ -36,11 +36,9 @@ public class StudentDao_imple implements StudentDao {
 
 	// 내정보 보기
 	@Override
-	public StudentDTO getViewInfo(String login_userid) {
-		
-		StudentDTO member_student = sqlSession.selectOne("student.getViewInfo", login_userid);
-		
-		return member_student;
+	public Student getStudentById(int studentId) {
+
+        return sqlSession.selectOne("student.getStudentById", studentId);
 		
 	} // end of public StudentDTO getViewInfo
 

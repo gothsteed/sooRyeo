@@ -85,7 +85,7 @@
 	    	url:"<%= ctxPath%>/admin/studentCntByDeptname.lms",
 	    	dataType:"json",
 	    	success:function(json){
-	    	 	console.log(JSON.stringify(json)); 
+	    	 	//console.log(JSON.stringify(json)); 
 	    		/*
 	    		  [{"department_name":"Shipping","cnt":"45","percentage":"40.5"}
 	    		  ,{"department_name":"Sales","cnt":"34","percentage":"30.6"}
@@ -192,12 +192,36 @@
 			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			}
 	    });
-
-		
+	
+	    ///////////////////////////////////////////////////////
+		showCount();
+	    
+	    
 		
    });// end of $(document).ready(funciton(){})-------------
+   
+   function showCount(){
+	   
+	   
+	   $.ajax({
+	    	url:"<%= ctxPath%>/chart/showCount.lms",
+	    	type:"post",
+	    	dataType:"json",
+	    	success: function(json) {
+	    		// 서버에서 받은 JSON 데이터 처리
+	            console.log(json);
+	         
+	        },
+	    	error: function(request, status, error){
+			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+	   });// end of $.ajax 
+	   
+   }// end of function showCount() 
+   
+   
+   
 </script>
-
     <div class="content">
         <div class="main-content">
             <div class="justify-content-center">
@@ -207,7 +231,7 @@
                     	학과별 인원 차트
                   </h5>
                   <div class="card-body">
-                    <h5 class="card-title">교수 학생 방문통계</h5>
+                    <h5 class="card-title">학과 별 인원 통계</h5>
                     <p class="card-text" id="columStackedBar">
                     <div style="display:flex;">
                    		<div id="chart_container"></div>
@@ -216,7 +240,21 @@
                   </div>
                 </div>
                 
+                <div class="card" style="width:50%;">
+                  <h5 class="card-header">
+                    	방문자 차트
+                  </h5>
+                  <div class="card-body">
+                    <h5 class="card-title">교수 학생 방문 통계</h5>
+                    <p class="card-text" id="columStackedBar">
+                    <div style="display:flex;">
+                   		<div id="count_container"></div>
+                   		<div id="table_count_container" style="margin: 40px 0 0 0;"></div>
+                    </div>
+                  </div>
+                </div>
+                
             </div>
           </div>
-      </div>
+    </div>
     <!-- Bootstrap JS and dependencies -->

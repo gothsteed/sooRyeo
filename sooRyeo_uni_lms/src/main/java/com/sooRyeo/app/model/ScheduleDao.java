@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
-import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
-import com.sooRyeo.app.dto.ScheduleDto;
 
 public interface ScheduleDao {
 	
@@ -47,4 +45,10 @@ public interface ScheduleDao {
 	int updateConsultApproveStatus(ConsultApprovalDto consultApprovalDto);
 
 	int deleteUnapprovedConsult(ConsultApprovalDto consultApprovalDto);
+
+    List<Consult> getConfirmedConsultList(int professorId, int currentPage, int sizePerPage);
+
+	int getConfirmedConsultCount(int professorId);
+
+    void updateToComplete(Integer scheduleSeq);
 }
