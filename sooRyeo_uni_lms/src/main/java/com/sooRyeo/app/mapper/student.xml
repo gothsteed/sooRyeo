@@ -396,25 +396,4 @@
 		END
 	</select>
 	
-	<select id="getAnnouncement" parameterType="HashMap"
-		resultType="com.sooRyeo.app.domain.Announcement">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
-		select announcement_seq, a_title, writeday, viewcount
-		from
-        (
-        select rownum rn, announcement_seq, a_title, a_content, attatched_file, writeday, viewcount, status, orgfilename
-        from
-		(
-            SELECT *
-            FROM tbl_announcement
-			order by writeday desc
-        )V
-        )T
-		where rn BETWEEN #{startRno} AND #{endRno}
-	</select>
-
-	<select id="getA_TotalElementCount" resultType="Integer" parameterType="HashMap">
-		SELECT count(*)
-		FROM tbl_announcement
-	</select>
-	
 </mapper>
