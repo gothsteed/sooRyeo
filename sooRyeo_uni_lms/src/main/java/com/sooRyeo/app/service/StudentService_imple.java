@@ -34,6 +34,7 @@ import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -559,8 +560,8 @@ public class StudentService_imple implements StudentService {
 
 	// 오늘의 수업만을 불러오는 메소드
 	@Override
-	public List<String> getToday_lec(int student_id) {
-		List<String> today_lec = dao.getToday_lec(student_id);
+	public List<TodayLecture> getToday_lec(int student_id) {
+		List<TodayLecture> today_lec = dao.getToday_lec(student_id);
 		return today_lec;
 	}
 

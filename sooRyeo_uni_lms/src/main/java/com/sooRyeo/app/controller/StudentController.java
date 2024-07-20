@@ -27,6 +27,7 @@ import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.CourseService;
@@ -56,11 +57,9 @@ public class StudentController {
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int student_id = loginuser.getStudent_id();
 		
-		//List<String> today_lec = studentservice.getToday_lec(student_id);
+		List<TodayLecture> today_lec = studentservice.getToday_lec(student_id);
 		
-		
-		
-		
+		mav.addObject("today_lec",today_lec);
 		mav.setViewName("student_Main");
 		// /WEB-INF/views/student/{1}.jsp
 		

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -78,7 +79,7 @@ public interface StudentService {
 	String getApplication_status(int student_id);
 
 	// 오늘의 수업만을 불러오는 메소드
-	List<String> getToday_lec(int student_id);
+	List<TodayLecture> getToday_lec(int student_id);
 
 
 

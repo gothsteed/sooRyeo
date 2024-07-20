@@ -13,6 +13,7 @@ import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.StudentDTO;
@@ -318,8 +319,8 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public AssignmentSubmitDTO getCommentOne
 
 	@Override
-	public List<String> getToday_lec(int student_id) {
-		List<String> today_lec = sqlSession.selectList("student.getToday_lec" , student_id);
+	public List<TodayLecture> getToday_lec(int student_id) {
+		List<TodayLecture> today_lec = sqlSession.selectList("student.getToday_lec" , student_id);
 		return today_lec;
 	}
 
