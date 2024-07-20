@@ -20,6 +20,7 @@ div.display-flex {
 
 
 <script type="text/javascript">
+
 $(document).ready(function(){
 	
 
@@ -32,22 +33,40 @@ $(document).ready(function(){
 			dataType:"json",
 			success: function(json) { 
 				
-				console.log(JSON.stringify(json));
-				
+				// console.log(JSON.stringify(json));
+				// [{"fk_student_id":"202400005","lecture_title":"제 2장. 언어와 언어학","name":"국어학개론"}]
+		
 		 		let v_html = ``;
-				
+
 				json.forEach(function(item, index, array) {
-					v_html += `<tr>
-			      				 <td>\${item.fk_student_id}</td>	
-			      				 <td>\${item.name}</td>
-			      				 <td>\${item.lecture_title}</td>
-			      				 <td>\${item.attended_date}</td>
-			      			   </tr>`;
+					
+				    // 날짜 형식 변환
+				    let originalDatetime = item.attended_date;
+				    let date = new Date(originalDatetime);
+				    let year = date.getFullYear();
+				    let month = ('0' + (date.getMonth() + 1)).slice(-2);
+				    let day = ('0' + date.getDate()).slice(-2);
+				    let hours = ('0' + date.getHours()).slice(-2);
+				    let minutes = ('0' + date.getMinutes()).slice(-2);
+				    let seconds = ('0' + date.getSeconds()).slice(-2);
+				    
+				    // formattedDatetime을 생성
+				    let formattedDatetime = originalDatetime ? `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}` : null;
+
+				    // formattedDatetime이 null일 경우 "출석 진행 중"으로 설정
+				    let displayDatetime = formattedDatetime ? formattedDatetime : "출석 진행 중";
+
+				    v_html += `<tr>
+				                    <td>\${item.fk_student_id}</td>	
+				                    <td>\${item.name}</td>
+				                    <td>\${item.lecture_title}</td>
+				                    <td>\${displayDatetime}</td>
+				                </tr>`;
+				                
 				});
 				
 				$("table#attendance tbody").html(v_html);
-				 
-				
+	
 			},
 			error: function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -56,15 +75,35 @@ $(document).ready(function(){
 			
 		}); // end of $.ajax
 		
-		
-		
 	}); // end of $("button#btnSearchAjax").click
 
-
-
-
-
-
+	
+	
+	
+<%-- 	// === #207. Excel 파일로 다운받기 시작 === //
+	$("button#btnExcel").click(function(){
+		
+		const arr_deptId = new Array();
+		
+		$("input:checkbox[name='deptId']:checked").each(function(index, item){
+			
+			arr_deptId.push($(item).val());
+			
+		}); // end of $("input:checkbox[name='deptId']:checked").each(function(index, item{})
+		
+		const str_deptId = arr_deptId.join();
+	
+		
+		const frm = document.searchFrm;
+		frm.str_deptId.value = str_deptId;
+		
+		frm.method = "post";		
+		frm.action = "<%=ctxPath%>/emp/downloadExcelFile.action";
+		frm.submit();
+		
+	}); // end of $("button#btnExcel").click(function(){})
+	// === Excel 파일로 다운받기 끝 === // --%>
+	
 }); // end of $(document).ready
 
 </script>
@@ -112,7 +151,7 @@ $(document).ready(function(){
 			    			<td><fmt:formatDate value="${attendanceList.attended_date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 			    		</c:if>
 			    		<c:if test="${attendanceList.attended_date == null}">
-			    			<td style="color:#ff6666; font-weight: bold;">출석 진행중</td>
+			    			<td>출석 진행중</td>
 			    		</c:if>
 			    	</tr>
 			    	</c:forEach>

@@ -313,7 +313,10 @@
 		<result property="attended_date"  	column="attended_date"		javaType="String" />
 	</resultMap>
 	<select id="attendanceList" parameterType="int" resultMap="attendanceListMap" >
-		select D.fk_student_id, A.name, C.lecture_title, D.attended_date
+		select D.fk_student_id AS fk_student_id
+			 , A.name AS name
+			 , C.lecture_title AS lecture_title
+			 , D.attended_date AS attended_date
 		from tbl_curriculum A JOIN tbl_course B
 		on A.curriculum_seq = B.fk_curriculum_seq
 		JOIN tbl_lecture C
@@ -321,6 +324,11 @@
 		JOIN tbl_attendance D
 		on C.lecture_seq = D.fk_lecture_seq
 		where isAttended = 1 And fk_student_id = #{student_id}
+		
+		<!-- 
+		<if test="name != null">
+			AND A.name = #{name}
+		</if> -->
 	</select>
 	
 	

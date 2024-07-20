@@ -79,7 +79,7 @@ public interface StudentDao {
 	AssignmentSubmitDTO getCommentOne(String assignment_submit_seq);
 
 	// 로그인한 학생의 출석현황 보기
-	List<Map<String, Object>> attendanceList(int student_id);
+	List<Map<String, Object>> attendanceList(int student_id, String name);
 
 	// 수업명 가져오기
 	List<Curriculum> lectureList();

@@ -279,7 +279,7 @@ public class StudentDao_imple implements StudentDao {
 	
 	// 로그인한 학생의 출석현황 보기
 	@Override
-	public List<Map<String, Object>> attendanceList(int student_id) {
+	public List<Map<String, Object>> attendanceList(int student_id, String name) {
 		
 		List<Map<String, Object>> attendanceList = sqlSession.selectList("student.attendanceList", student_id);
 		
