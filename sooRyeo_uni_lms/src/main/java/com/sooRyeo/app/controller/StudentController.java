@@ -24,11 +24,15 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
@@ -57,11 +61,27 @@ public class StudentController {
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int student_id = loginuser.getStudent_id();
 		
+		// 오늘의 수업만을 불러오는 메소드
 		List<TodayLecture> today_lec = studentservice.getToday_lec(student_id);
 		
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		// 학사공지사항을 전부 불러오는 메소드
+		Pager<Announcement> announcementList =  studentservice.getAnnouncement(currentPage);
+		
+		mav.addObject("announcementList", announcementList.getObjectList());
+		mav.addObject("currentPage", announcementList.getPageNumber());
+		mav.addObject("perPageSize", announcementList.getPerPageSize());
+		mav.addObject("goBackURL","/board/announcement.lms");
 		mav.addObject("today_lec",today_lec);
 		mav.setViewName("student_Main");
-		// /WEB-INF/views/student/{1}.jsp
 		
 		return mav;
 	}
@@ -673,32 +693,6 @@ public class StudentController {
 		return "attendance";
 		
 	} // end of public String attendance
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	// 졸업 신청

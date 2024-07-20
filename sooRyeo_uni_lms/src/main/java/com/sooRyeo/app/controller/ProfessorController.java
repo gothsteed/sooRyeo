@@ -30,12 +30,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
-import com.sooRyeo.app.domain.AssignJoinSchedule;
-import com.sooRyeo.app.domain.Assignment;
-import com.sooRyeo.app.domain.Course;
-import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.ProfessorTimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
 import com.sooRyeo.app.service.ProfessorService;
 import com.sooRyeo.app.service.StudentService;
@@ -63,9 +57,28 @@ public class ProfessorController {
 
 	
 	@RequestMapping(value = "/professor/dashboard.lms", method = RequestMethod.GET)
-	public String professor() {// 대시보드 뷰단
-
-		return "professor_dashboard";
+	public ModelAndView professor(ModelAndView mav, HttpServletRequest request) {// 대시보드 뷰단
+		
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		// 학사공지사항을 전부 불러오는 메소드
+		Pager<Announcement> announcementList =  professorService.getAnnouncement(currentPage);
+		
+		mav.addObject("announcementList", announcementList.getObjectList());
+		mav.addObject("currentPage", announcementList.getPageNumber());
+		mav.addObject("perPageSize", announcementList.getPerPageSize());
+		mav.addObject("goBackURL","/board/announcement.lms");
+		
+		mav.setViewName("professor_dashboard");
+		
+		return mav;
 	}
 	
 	

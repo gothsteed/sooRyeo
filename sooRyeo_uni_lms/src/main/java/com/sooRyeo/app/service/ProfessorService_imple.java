@@ -20,6 +20,7 @@ import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.common.Sha256;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
@@ -568,6 +569,13 @@ public class ProfessorService_imple implements ProfessorService {
 	public int getTotalElementCount(String fk_course_seq) {
 		int A_totalElementCount = dao.getTotalElementCount(fk_course_seq);
 		return A_totalElementCount;	
+	}
+
+
+	@Override
+	public Pager<Announcement> getAnnouncement(int currentPage) {
+		Pager<Announcement> announcementList = dao.getAnnouncement(currentPage);
+		return announcementList;
 	}
 
 
