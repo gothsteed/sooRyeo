@@ -24,16 +24,40 @@ public class LogService_imple implements LogService {
 	
 	@Override
 	public ResponseEntity<String> showCount(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("fffffff");
-	    
 		
-        List<LoginLog> countList = loginLogRepository.findAllByMemberType(MemberType.ADMIN.toString());
-        for(LoginLog l : countList) {
-        	
-        	System.out.println(l.getId());
+        List<LoginLog> countAdminList = loginLogRepository.findAllByMemberType(MemberType.ADMIN.toString());
+        List<LoginLog> countProList = loginLogRepository.findAllByMemberType(MemberType.PROFESSOR.toString());
+        List<LoginLog> countStudList = loginLogRepository.findAllByMemberType(MemberType.STUDENT.toString());
+        
+        int AdminCount = 0;
+        int ProCount = 0;
+        int StudCount = 0;
+        
+        
+        if(countAdminList.size() != 0) {
+	        for(LoginLog loginlog : countAdminList) {
+	        	
+	        	AdminCount++;     	
+	        }
         }
+        if(countProList.size() != 0) {
+        	for(LoginLog loginlog : countProList) {
+        	
+        		ProCount++;     	
+        	}
+        }
+        if(countStudList.size() != 0) {
+        	for(LoginLog loginlog : countStudList) {
+	
+        		StudCount++;     	
+        	}
+        }
+        
+        System.out.println("확인용 AdminCount : " + AdminCount);
+        System.out.println("확인용 ProCount : " + ProCount);
+        System.out.println("확인용 StudCount : " + StudCount);
 
-        return ResponseEntity.ok().body(jsonBuilder.toJson(countList));
+        return ResponseEntity.ok().body(jsonBuilder.toJson(countAdminList));
 		
 	}
 
