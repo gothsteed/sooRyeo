@@ -535,13 +535,11 @@ public class StudentService_imple implements StudentService {
 	}
 
 
-
-
-	// 로그인한 학생의 출석현황 보기
+	// 출석 현황 조회
 	@Override
-	public List<Map<String, Object>> attendanceList(int student_id, String name) {
+	public List<Map<String, Object>> attendanceList(int userid, String name) {
 		
-		List<Map<String, Object>> attendanceList = dao.attendanceList(student_id, name);
+		List<Map<String, Object>> attendanceList = dao.attendanceList(userid, name);
 		
 		return attendanceList;
 		
@@ -559,6 +557,7 @@ public class StudentService_imple implements StudentService {
 		return lectureList;
 		
 	} // end of public List<String> lectureList
+
 
 
 

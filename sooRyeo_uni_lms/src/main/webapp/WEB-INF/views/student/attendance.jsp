@@ -1,7 +1,8 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
+
 
 <%
     String ctxPath = request.getContextPath();
@@ -10,6 +11,7 @@
 
 
 <style type="text/css">
+
 div.display-flex {
     display: flex;
     justify-content: space-between;
@@ -53,8 +55,8 @@ $(document).ready(function(){
 				    // formattedDatetime을 생성
 				    let formattedDatetime = originalDatetime ? `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}` : null;
 
-				    // formattedDatetime이 null일 경우 "출석 진행 중"으로 설정
-				    let displayDatetime = formattedDatetime ? formattedDatetime : "출석 진행 중";
+				    // formattedDatetime이 null일 경우 "출석 진행중"으로 설정
+				    let displayDatetime = formattedDatetime ? formattedDatetime : "출석 진행중";
 
 				    v_html += `<tr>
 				                    <td>\${item.fk_student_id}</td>	
@@ -138,20 +140,17 @@ $(document).ready(function(){
 		    	</tr>
 		    </thead>
 		    <tbody class="table-group-divider">
-		    	<c:if test="${empty requestScope.attendanceList}">
-		    		<td>출석이 존재하지 않습니다.</td>
-		    	</c:if>
 		    	<c:if test="${not empty requestScope.attendanceList}">
 			    	<c:forEach var="attendanceList" items="${requestScope.attendanceList}">
 			    	<tr>
 			    		<td>${attendanceList.fk_student_id}</td>
 			    		<td>${attendanceList.name}</td>
 			    		<td>${attendanceList.lecture_title}</td>
-			    		<c:if test="${attendanceList.attended_date != null}">
-			    			<td><fmt:formatDate value="${attendanceList.attended_date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-			    		</c:if>
 			    		<c:if test="${attendanceList.attended_date == null}">
 			    			<td>출석 진행중</td>
+			    		</c:if>
+			    		<c:if test="${attendanceList.attended_date != null}">
+			    			<td>${attendanceList.attended_date}</td>
 			    		</c:if>
 			    	</tr>
 			    	</c:forEach>

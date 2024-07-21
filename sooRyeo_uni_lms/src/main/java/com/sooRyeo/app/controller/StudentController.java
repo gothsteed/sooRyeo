@@ -646,20 +646,18 @@ public class StudentController {
 	
 	
 	// 메인 - 사이드바  - 수업  - 출석현황
-	@GetMapping("/student/attendance.lms")
+	@GetMapping(value="/student/attendance.lms" , produces="text/plain;charset=UTF-8")
 	public String attendance(HttpServletRequest request,
 							 @RequestParam(defaultValue = "") String name) {
 		
-		System.out.println(name);	//  안뜸
-		
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
-		int student_id = loginuser.getStudent_id();
+		int userid = loginuser.getStudent_id();
 		
-		// 로그인한 학생의 출석현황 보기
-		List<Map<String, Object>> attendanceList = service.attendanceList(student_id, name);
+		// 전체 출석현황 보기
+		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
 
-		// 수업명 가져오기
+		// 검색-수업명 가져오기
 		List<Curriculum> lectureList = service.lectureList();
 		
 		request.setAttribute("attendanceList", attendanceList);
@@ -677,13 +675,11 @@ public class StudentController {
 	public String attendanceListJSON(HttpServletRequest request,
 									 @RequestParam(defaultValue = "") String name) {
 	
-		//System.out.println(name);
-		
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
-		int student_id = loginuser.getStudent_id();
+		int userid = loginuser.getStudent_id();
 		
-		List<Map<String, Object>> attendanceList = service.attendanceList(student_id, name);
+		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
 		
 		request.setAttribute("attendanceList", attendanceList);
 		

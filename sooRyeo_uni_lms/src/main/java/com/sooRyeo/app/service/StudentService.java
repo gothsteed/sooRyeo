@@ -70,12 +70,13 @@ public interface StudentService {
 
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	AssignmentSubmitDTO getCommentOne(String assignment_submit_seq);
-	
-	// 로그인한 학생의 출석현황 보기
+
+	// 출석 현황 조회
 	List<Map<String, Object>> attendanceList(int student_id, String name);
 
 	// 수업명 가져오기
 	List<Curriculum> lectureList();
+
 
 
 	

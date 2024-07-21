@@ -277,11 +277,16 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public AssignmentSubmitDTO getCommentOne
 
 	
-	// 로그인한 학생의 출석현황 보기
+	
+	// 출석 현황 조회
 	@Override
-	public List<Map<String, Object>> attendanceList(int student_id, String name) {
+	public List<Map<String, Object>> attendanceList(int userid, String name) {
 		
-		List<Map<String, Object>> attendanceList = sqlSession.selectList("student.attendanceList", student_id);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", String.valueOf(userid));
+		paraMap.put("name", name);
+		
+		List<Map<String, Object>> attendanceList = sqlSession.selectList("student.attendanceList", paraMap);
 		
 		return attendanceList;
 		
@@ -298,6 +303,8 @@ public class StudentDao_imple implements StudentDao {
 		return lectureList;
 		
 	} // end of public List<String> lectureList
+
+
 
 
 
