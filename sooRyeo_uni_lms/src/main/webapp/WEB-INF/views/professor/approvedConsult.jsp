@@ -27,21 +27,41 @@
 		justify-content: space-between;
 	}
 	.main-content {
-		width: 75%;
+		width: 100%;
 	}
 	.side-panel {
-		width: 23%;
+		width: 30%;
 		background-color: #f1f1f1;
 		padding: 15px;
 		border-radius: 5px;
 	}
 	.chat-room {
+		cursor: pointer;
 		margin-bottom: 10px;
 		padding: 10px;
 		background-color: white;
 		border-radius: 5px;
 		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 	}
+
+
+	.chat-room:hover {
+		background-color: #e0e0e0;
+	}
+
+	.delete-room-btn {
+		background-color: #ff4d4d;
+		color: white;
+		border: none;
+		padding: 5px 10px;
+		border-radius: 3px;
+		cursor: pointer;
+	}
+
+	.delete-room-btn:hover {
+		background-color: #ff1a1a;
+	}
+
 </style>
 
 <script type="text/javascript">
@@ -79,7 +99,6 @@
 					alert('승인도중 오류가 발생했습니다.: ' + error.message);
 				});
 	}
-
 	function loadCurrentChatRooms() {
 		fetch('<%= ctxPath %>/chat/currentChatRoomREST.lms', {
 			method: 'POST'
@@ -89,24 +108,75 @@
 					const sidePanel = document.getElementById('currentChatRooms');
 					sidePanel.innerHTML = '';
 					rooms.forEach(room => {
-						console.log(room)
+						console.log(room);
 						const roomElement = document.createElement('div');
 						roomElement.className = 'chat-room';
 
-						const strongElement = document.createElement('strong');
-						strongElement.textContent = room.studentName;
-						roomElement.appendChild(strongElement);
+						const nameElement = document.createElement('div');
+						nameElement.className = 'room-name';
 
-						roomElement.appendChild(document.createElement('br'));
+
+						// Make the room element clickable
+						roomElement.onclick = (event) => {
+							// Prevent the click event from bubbling up to parent elements
+							event.stopPropagation();
+							window.location.href = `<%=ctxPath%>/chat.lms?roomId=\${room.id}`;
+						};
+
+						nameElement.textContent = room.name;
+						roomElement.appendChild(nameElement);
+
+						const studentElement = document.createElement('div');
+						studentElement.className = 'student-name';
+						studentElement.textContent = `학생: \${room.studentName}`;
+						roomElement.appendChild(studentElement);
+
+						const deleteButton = document.createElement('button');
+						deleteButton.className = 'delete-room-btn';
+						deleteButton.textContent = '삭제';
+						deleteButton.onclick = (event) => {
+							// Prevent the click event from bubbling up to the room element
+							event.stopPropagation();
+							deleteChatRoom(room.id);
+						};
+						roomElement.appendChild(deleteButton);
 
 						sidePanel.appendChild(roomElement);
 					});
 				})
 				.catch(error => console.error('Failed to load chat rooms:', error));
 	}
-
 	// Load chat rooms when the page loads
 	window.onload = loadCurrentChatRooms;
+
+
+
+
+	function deleteChatRoom(roomId) {
+		if (confirm('정말로 이 채팅방을 삭제하시겠습니까?')) {
+			const formData = new FormData();
+			formData.append('roomId', roomId);
+
+			fetch(`<%= ctxPath %>/chat/deleteChatRoomREST.lms`, {
+				method: 'POST',
+				body: formData
+			})
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('채팅방 삭제 중 오류가 발생했습니다.');
+						}
+						return response.text();
+					})
+					.then(message => {
+						alert(message);
+						loadCurrentChatRooms();  // Reload the chat room list
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						alert(error.message);
+					});
+		}
+	}
 </script>
 
 <div class="container">
@@ -143,7 +213,7 @@
 		</div>
 	</div>
 	<div class="side-panel">
-		<h3>현재 진행 중인 상담</h3>
+		<h3>진행 중인 상담</h3>
 		<div id="currentChatRooms">
 			<!-- Current chat rooms will be loaded here -->
 		</div>

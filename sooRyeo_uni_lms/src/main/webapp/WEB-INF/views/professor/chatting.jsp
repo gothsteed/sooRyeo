@@ -219,7 +219,7 @@ $(document).ready(function(){
 
 		   <input type="text"   id="message" class="form-control" placeholder="메시지 내용"/>
 		   <input type="button" id="btnSendMessage" class="btn btn-success btn-sm my-3" value="메시지보내기" />
-		   <input type="button" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/student/dashboard.lms'" value="채팅방나가기" />
+		   <input type="button" class="btn btn-danger btn-sm my-3 mx-3" onclick="javascript:location.href='<%=request.getContextPath() %>/professor/dashboard.lms'" value="채팅방나가기" />
 		</div>
 	</div>
 </div>
