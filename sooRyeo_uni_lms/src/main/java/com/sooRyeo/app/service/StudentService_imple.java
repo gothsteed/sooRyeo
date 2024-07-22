@@ -628,10 +628,10 @@ public class StudentService_imple implements StudentService {
 		
 	    // 학번, 수업명, 강의명, 출석일자
 	    // 시트 열 너비 설정
-	    sheet.setColumnWidth(0, 2000);
-	    sheet.setColumnWidth(1, 4000);
-	    sheet.setColumnWidth(2, 4000);
-	    sheet.setColumnWidth(3, 2000);
+	    sheet.setColumnWidth(0, 4000);
+	    sheet.setColumnWidth(1, 6000);
+	    sheet.setColumnWidth(2, 8000);
+	    sheet.setColumnWidth(3, 6000);
 	    
 	    // 행의 위치를 나타내는 변수 
 	    int rowLocation = 0;
@@ -698,7 +698,7 @@ public class StudentService_imple implements StudentService {
         
 	    
 	    // 병합할 행에 "우리회사 사원정보" 로 셀을 만들어 셀에 스타일을 주기
-    	for(int i=0; i<8; i++) {
+    	for(int i=0; i<3; i++) {
 	    		
 			Cell cell = mergeRow.createCell(i);
 			
@@ -709,7 +709,7 @@ public class StudentService_imple implements StudentService {
     
     
 	    // 셀 병합하기
-	    sheet.addMergedRegion(new CellRangeAddress(rowLocation, rowLocation, 0, 7)); // 시작 행, 끝 행, 시작 열, 끝 열 
+	    sheet.addMergedRegion(new CellRangeAddress(rowLocation, rowLocation, 0, 3)); // 시작 행, 끝 행, 시작 열, 끝 열 
 
 	    ///////////////////////////////////////////////////////////////////////////////////////////////
 	    
@@ -770,7 +770,13 @@ public class StudentService_imple implements StudentService {
            
             // 데이터 출석일자 표시
             bodyCell = bodyRow.createCell(3);
-            bodyCell.setCellValue((String) attendanceListMap.get("attended_date")); 
+            if(attendanceListMap.get("attended_date") == " ") {
+            	bodyCell.setCellValue("출석 진행중");
+            }
+            else {
+            	bodyCell.setCellValue((String) attendanceListMap.get("attended_date"));
+            }
+             
            
 	    } // end of for
 
