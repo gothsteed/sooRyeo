@@ -874,8 +874,4 @@ public class StudentController {
 		return scheduleService.getStudentConsultPage(request, mav);
 	}
 
-
-
-
-
 }
