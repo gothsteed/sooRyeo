@@ -17,7 +17,8 @@
 		START_DATE,
 		END_DATE,
 		UPLOAD_VIDEO_FILE_NAME,
-		UPLOAD_LECTURE_FILE_NAME
+		UPLOAD_LECTURE_FILE_NAME,
+		LECTURE_TIME
 		) VALUES (
 		lecture_seq.nextval, -- LECTURE_SEQ
 		#{course_seq}, -- FK_COURSE_SEQ
@@ -34,11 +35,12 @@
 		#{endDateTime}, -- END_DATE
 		#{uploadVideoTitle}, -- UPLOAD_VIDEO_FILE_NAME
 		<if test="uploadAttachName != null">
-			#{uploadAttachName}
+			#{uploadAttachName},
 		</if>
 		<if test="uploadAttachName == null">
-			NULL
+			NULL,
 		</if> -- COLUMN_NAME
+		#{durationMinutes}
 		)
 	</insert>
 
@@ -65,6 +67,10 @@
 				, LECTURE_FILE_NAME = #{originalAttachName}
 				,UPLOAD_LECTURE_FILE_NAME = #{uploadAttachName}
 			</if>
+			<if test="durationMinutes != null">
+				,lecture_time = #{durationMinutes}
+			</if>
+
 		</set>
 		WHERE LECTURE_SEQ = #{lecture_seq}
 	</update>

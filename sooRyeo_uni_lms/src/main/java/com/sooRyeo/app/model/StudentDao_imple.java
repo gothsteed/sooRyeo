@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignmentSubmit;
+import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
@@ -391,6 +393,7 @@ public class StudentDao_imple implements StudentDao {
 	} // end of public List<AssignmentSubmit> getreadComment
 
 	
+	
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	@Override
 	public AssignmentSubmitDTO getCommentOne(String assignment_submit_seq) {
@@ -400,6 +403,35 @@ public class StudentDao_imple implements StudentDao {
 		return asdto;
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
+
+	
+	
+	// 출석 현황 조회
+	@Override
+	public List<Map<String, Object>> attendanceList(int userid, String name) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", String.valueOf(userid));
+		paraMap.put("name", name);
+		
+		List<Map<String, Object>> attendanceList = sqlSession.selectList("student.attendanceList", paraMap);
+		
+		return attendanceList;
+		
+	} // end of public List<Map<String, Object>> attendanceList
+
+	
+	
+	// 수업명 가져오기
+	@Override
+	public List<Curriculum> lectureList() {
+		
+		List<Curriculum> lectureList = sqlSession.selectList("student.lectureList");
+		
+		return lectureList;
+		
+	} // end of public List<String> lectureList
+
 
 	@Override
 	public List<TodayLecture> getToday_lec(int student_id) {

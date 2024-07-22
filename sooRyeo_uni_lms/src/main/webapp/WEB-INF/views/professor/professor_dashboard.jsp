@@ -19,33 +19,58 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 <style type="text/css">
+.grid-stack-item-content {
+	background-color: #f9f9f9;
+	color: #333;
+	border: 1px solid #ddd; border-radius : 12px; box-shadow : 0 4px 8px
+	rgba( 0, 0, 0, 0.1); display : flex; flex-direction : column;
+	transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+	border: 1px solid #ddd;
+	border-radius: 12px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	border-radius: 12px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-	.grid-stack { background: #E0E0E0; }
-	.grid-stack-item-content { 
-	  	background-color: white; 
-	  	display: flex;
-	  	flex-direction: column;
-	  	border-radius: 10px;
-	}
-	
-	.time_table td, .time_table th {
+	padding: 20px;
+}
+
+.time_table td, .time_table th {
       	width: 150px;
       	height: 40px;
+      	border: 1px solid black;
       	text-align: center; /* 셀 안의 텍스트를 중앙 정렬 */
       	vertical-align: middle; /* 셀 안의 텍스트를 수직으로 중앙 정렬 */
-    }
-    
-    .smaller-font {
-    	font-size: 11px;	
-    }
-    
-    .a_title:hover {
+}
+
+.grid-stack-item-content:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.grid-stack-item-content {
+    transition: height 0.3s ease-in-out;
+}
+
+.grid-stack-item-content .content {
+	margin-top:5px;
+}
+
+.a_title:hover {
     color: #d1e0e0;
     cursor: pointer; /* 마우스를 올렸을 때 포인터 모양으로 변경 */
 }
 </style>
 
-  <!-- support for IE -->
+<!-- highcharts -->
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/highcharts.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/export-data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/accessibility.js"></script>
+
+
+
+<!-- support for IE -->
 <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-poly.js"></script>
 <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-all.js"></script>
 <script type="text/javascript">
@@ -145,9 +170,9 @@
 			        
 					
 					// ====== XML 을 JSON 으로 변경하기  시작 ====== //
-					   //var jsonObj = {"locationName":$(local).text(), "ta":$(local).attr("ta")};
+					var jsonObj = {"locationName":$(local).text(), "ta":$(local).attr("ta")};
 					   
-					   //jsonObjArr.push(jsonObj);
+					jsonObjArr.push(jsonObj);
 					// ====== XML 을 JSON 으로 변경하기  끝 ====== //
 					
 			    }// end of for------------------------ 
@@ -156,95 +181,92 @@
 			    
 			    $("div#displayWeather").html(html);
 			    
+			    var str_jsonObjArr = JSON.stringify(jsonObjArr); 
+		        // JSON객체인 jsonObjArr를 String(문자열) 타입으로 변경해주는 것 
 			    
-			 // ====== XML 을 JSON 으로 변경된 데이터를 가지고 차트그리기 시작  ====== //
-			<%-- 	
-			 
-			 	var str_jsonObjArr = JSON.stringify(jsonObjArr); 
-				                  // JSON객체인 jsonObjArr를 String(문자열) 타입으로 변경해주는 것 
-				                  
-				$.ajax({
-					url:"<%= request.getContextPath()%>/opendata/weatherXMLtoJSON.action",
+			    $.ajax({
+					url:"<%= request.getContextPath()%>/weatherXMLtoJSON.lms",
 					type:"POST",
 					data:{"str_jsonObjArr":str_jsonObjArr},
 					dataType:"JSON",
 					success:function(json){
-						
+					
 					//	alert(json.length);
-						
-						// ======== chart 그리기 ========= // 
-						var dataArr = [];
-						$.each(json, function(index, item){
-							dataArr.push([item.locationName, 
-								          Number(item.ta)]);
-						});// end of $.each(json, function(index, item){})------------
-						
-						
-						Highcharts.chart('weather_chart_container', {
-						    chart: {
-						        type: 'column'
-						    },
-						    title: {
-						        text: '오늘의 전국 기온(℃)'   // 'ㄹ' 을 누르면 ℃ 가 나옴.
-						    },
-						    subtitle: {
-						    //    text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
-						    },
-						    xAxis: {
-						        type: 'category',
-						        labels: {
-						            rotation: -45,
-						            style: {
-						                fontSize: '10px',
-						                fontFamily: 'Verdana, sans-serif'
-						            }
-						        }
-						    },
-						    yAxis: {
-						        min: -10,
-						        title: {
-						            text: '온도 (℃)'
-						        }
-						    },
-						    legend: {
-						        enabled: false
-						    },
-						    tooltip: {
-						        pointFormat: '현재기온: <b>{point.y:.1f} ℃</b>'
-						    },
-						    series: [{
-						        name: '지역',
-						        data: dataArr, // **** 위에서 만든것을 대입시킨다. **** 
-						        dataLabels: {
-						            enabled: true,
-						            rotation: -90,
-						            color: '#FFFFFF',
-						            align: 'right',
-						            format: '{point.y:.1f}', // one decimal
-						            y: 10, // 10 pixels down from the top
-						            style: {
-						                fontSize: '10px',
-						                fontFamily: 'Verdana, sans-serif'
-						            }
-						        }
-						    }]
-						});
-						// ====== XML 을 JSON 으로 변경된 데이터를 가지고 차트그리기 끝  ====== //
+				
+					// ======== chart 그리기 ========= // 
+					var dataArr = [];
+					$.each(json, function(index, item){
+						dataArr.push([item.locationName, 
+							          Number(item.ta)]);
+					});// end of $.each(json, function(index, item){})------------
+				
+				
+					Highcharts.chart('weather_chart_container', {
+					  chart: {
+					      type: 'column'
+					  },
+					  title: {
+					      text: '오늘의 전국 기온(℃)'   // 'ㄹ' 을 누르면 ℃ 가 나옴.
+					  },
+					  subtitle: {
+					  //    text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+					  },
+					  xAxis: {
+					      type: 'category',
+					      labels: {
+					          rotation: -45,
+					          style: {
+					              fontSize: '10px',
+					              fontFamily: 'Verdana, sans-serif'
+					          }
+					      }
+					  },
+					  yAxis: {
+					      min: -10,
+					      title: {
+					          text: '온도 (℃)'
+					      }
+					  },
+					  legend: {
+					      enabled: false
+					  },
+					  tooltip: {
+					      pointFormat: '현재기온: <b>{point.y:.1f} ℃</b>'
+					  },
+					  series: [{
+					      name: '지역',
+					      data: dataArr, // **** 위에서 만든것을 대입시킨다. **** 
+					      dataLabels: {
+					          enabled: true,
+					          rotation: -90,
+					          color: '#FFFFFF',
+					          align: 'right',
+					          format: '{point.y:.1f}', // one decimal
+					          y: 10, // 10 pixels down from the top
+					          style: {
+					              fontSize: '10px',
+					              fontFamily: 'Verdana, sans-serif'
+					          }
+					      }
+					  }]
+					});
+					// ====== XML 을 JSON 으로 변경된 데이터를 가지고 차트그리기 끝  ====== //
 					},
+						
 					error: function(request, status, error){
 						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 					}
-				});                  
-				///////////////////////////////////////////////////
-				--%>
+					});
+		         
+			    
 			},// end of success: function(xml){ }------------------	
 				error: function(request, status, error){
 					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 				}
 			});
 		
-	}// end of success: function(xml){ }------------------
-    
+	}// end of function showWeather()------------------
+    	
 	
 	function goView(announcement_seq){
 		const goBackURL = "${requestScope.goBackURL}";
@@ -268,7 +290,7 @@
     <div class="col-sm-12 col-md-12">
       <div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 720px;">
         <!-- Widget 1: Weather -->
-        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
+        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="4" gs-w="4" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
@@ -280,7 +302,7 @@
           </div>
         </div>
         <!-- Widget 2: Timetable -->
-        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="6" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
+        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	           	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
@@ -352,20 +374,22 @@
           </div>
         </div>
         <!-- Widget 3: University Schedule -->
-        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="4" gs-w="8" gs-h="4" gs-no-resize="true">
+        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="4" gs-w="8" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	           	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
 	            <path d="M337.8 5.4C327-1.8 313-1.8 302.2 5.4L166.3 96H48C21.5 96 0 117.5 0 144V464c0 26.5 21.5 48 48 48H256V416c0-35.3 28.7-64 64-64s64 28.7 64 64v96H592c26.5 0 48-21.5 48-48V144c0-26.5-21.5-48-48-48H473.7L337.8 5.4zM96 192h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V208zM96 320h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V336c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V336zM232 176a88 88 0 1 1 176 0 88 88 0 1 1 -176 0zm88-48c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H336V144c0-8.8-7.2-16-16-16z"/>
 	            </svg>                       
-            	<h4>수려대학교 일정</h4>
+            	<h4>오늘의 기온</h4>
             </div>
-            <p class="card-text" style="margin-bottom: 0">...but don't resize me!</p>
+            <figure class="highcharts-figure">
+		    	<div id="weather_chart_container"></div>
+			</figure>
           </div>
         </div>
         <!-- Widget 4: University Announcements -->
-        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="8" gs-w="8" gs-h="4" gs-no-resize="true">
+        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="0" gs-w="8" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	           	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">

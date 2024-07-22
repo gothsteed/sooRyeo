@@ -3,6 +3,7 @@ package com.sooRyeo.app.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,22 +11,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import com.sooRyeo.app.service.ScheduleService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import com.sooRyeo.app.aop.NoView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
+import com.sooRyeo.app.domain.AssignmentSubmit;
+import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Lecture;
@@ -54,6 +63,9 @@ public class StudentController {
 	
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private ScheduleService scheduleService;
 	
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
@@ -702,13 +714,22 @@ public class StudentController {
 	
 	
 	// 메인 - 사이드바  - 수업  - 출석현황
-	@GetMapping("/student/attendance.lms")
-	public String attendance(HttpServletRequest request) {
+	@GetMapping(value="/student/attendance.lms" , produces="text/plain;charset=UTF-8")
+	public String attendance(HttpServletRequest request,
+							 @RequestParam(defaultValue = "") String name) {
 		
-		// List<Map<String, Object>> attendanceList = service.getattendanceList();
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
 		
+		// 전체 출석현황 보기
+		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
+
+		// 검색-수업명 가져오기
+		List<Curriculum> lectureList = service.lectureList();
 		
-		
+		request.setAttribute("attendanceList", attendanceList);
+		request.setAttribute("lectureList", lectureList);
 		
 		return "attendance";
 		
@@ -755,6 +776,58 @@ public class StudentController {
         
         return mav;
 	}
+	
+	// 검색하기 클릭 시
+	@ResponseBody
+	@GetMapping(value="/student/attendanceListJSON.lms", produces="text/plain;charset=UTF-8")
+	public String attendanceListJSON(HttpServletRequest request,
+									 @RequestParam(defaultValue = "") String name) {
+	
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
+		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
+		
+		request.setAttribute("attendanceList", attendanceList);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Map<String, Object> map : attendanceList) {
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("fk_student_id", map.get("fk_student_id"));
+			jsonObj.put("name", map.get("name"));
+			jsonObj.put("lecture_title", map.get("lecture_title"));
+			jsonObj.put("attended_date", map.get("attended_date"));
+			
+			jsonArr.put(jsonObj);
+		} // end of for
+		
+		// System.out.println(jsonArr.toString());
+		
+		return jsonArr.toString();
+		
+	} // end of public String attendanceListJSON
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	// 복학 신청
 	@GetMapping(value = "/student/application_status.lms")
@@ -868,4 +941,10 @@ public class StudentController {
 		return jsonobj.toString();
 	}
 	
+
+	@GetMapping("/student/consult.lms")
+	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
+		return scheduleService.getStudentConsultPage(request, mav);
+	}
+
 }

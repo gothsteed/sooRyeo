@@ -208,6 +208,7 @@
                     <a class="dropdown-item" href="#">과제</a>
                     <a class="dropdown-item" href="#">시험</a>
                     <a class="dropdown-item" href="<%=ctxPath%>/student/scheduleManagement.lms">캘린더</a>
+                    <a class="dropdown-item" href="<%=ctxPath%>/student/consult.lms">상담</a>
                 </div>
             </li>
             <li class="nav-item">
