@@ -1,5 +1,7 @@
 package com.sooRyeo.app.domain;
 
+import java.time.LocalDateTime;
+
 public class Consult {
 	
 	private Integer fk_schedule_seq;
@@ -7,10 +9,12 @@ public class Consult {
 	private Integer fk_prof_id;
 	
 	private String content;
+	private Integer complete;
 	
 	
 	private Schedule schedule;
 	private Student student;
+	private Professor professor;
 	
 	
 	
@@ -31,6 +35,18 @@ public class Consult {
 	}
 	public Student getStudent() {
 		return student;
+	}
+
+
+	public Integer getStudentId() {
+		return student.getStudent_id();
+	}
+	public String getStudentName() {
+		return student.getName();
+	}
+
+	public boolean isAvailableTime(LocalDateTime time) {
+		return  schedule.isBetweenSchedule(time);
 	}
 	
 	

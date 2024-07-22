@@ -328,4 +328,27 @@ join tbl_department D on s.fk_department_seq = d.department_seq;
 
 
 update tbl_student set status = 1
-where fk_student_id = '202500021' 
+where fk_student_id = '202500021';
+
+select distinct(cu.name), p.name, credit
+from tbl_student S
+join tbl_registered_course R on S.student_id = R.fk_student_id
+join tbl_course C on R.fk_course_seq = C.course_seq
+join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
+join tbl_time T on C.course_seq = T.fk_course_seq
+join tbl_professor P on P.prof_id = C.fk_professor_id
+where student_id = '202400005' and 
+      day_of_week =
+CASE
+    WHEN to_char(sysdate, 'd') = '2' THEN 1 
+    WHEN to_char(sysdate, 'd') = '3' THEN 2 
+    WHEN to_char(sysdate, 'd') = '4' THEN 3 
+    WHEN to_char(sysdate, 'd') = '5' THEN 4 
+    WHEN to_char(sysdate, 'd') = '6' THEN 5
+END;
+
+select *
+from tbl_curriculum;
+
+
+

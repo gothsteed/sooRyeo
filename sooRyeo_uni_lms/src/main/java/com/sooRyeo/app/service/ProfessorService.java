@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Pager;
@@ -76,6 +77,8 @@ public interface ProfessorService {
 	
 	// 다운로드를 위해 파일 찾기
 	Assignment searchFile(String schedule_seq_assignment);
+
+	Pager<Announcement> getAnnouncement(int currentPage);
 	
 	
 	

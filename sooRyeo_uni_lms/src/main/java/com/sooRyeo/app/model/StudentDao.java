@@ -3,12 +3,16 @@ package com.sooRyeo.app.model;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -20,7 +24,7 @@ public interface StudentDao {
 	List<Map<String, String>> classList(int userid);
 	
 	// 내정보 보기
-	StudentDTO getViewInfo(String login_userid);
+	Student getStudentById(int studentId);
 
 	// 학과명 가져오기
 	String select_department(Integer student_id);
@@ -97,6 +101,11 @@ public interface StudentDao {
 
 	// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
 	String select_tbl_attendance(String lecture_seq, int userid);
+	// 오늘의 수업만을 불러오는 메소드
+	List<TodayLecture> getToday_lec(int student_id);
+
+	// 학사공지사항 리스트를 select 해오는 메소드
+	Pager<Announcement> getAnnouncement(int currentPage);
 	
 	// 처음 동영상을 재생한 경우 tbl_attendance 에 insert
 	int insert_tbl_attendance(String play_time, String lecture_seq, int userid);

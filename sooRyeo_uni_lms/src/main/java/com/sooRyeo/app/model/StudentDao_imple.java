@@ -9,11 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
@@ -36,11 +40,9 @@ public class StudentDao_imple implements StudentDao {
 
 	// 내정보 보기
 	@Override
-	public StudentDTO getViewInfo(String login_userid) {
-		
-		StudentDTO member_student = sqlSession.selectOne("student.getViewInfo", login_userid);
-		
-		return member_student;
+	public Student getStudentById(int studentId) {
+
+        return sqlSession.selectOne("student.getStudentById", studentId);
 		
 	} // end of public StudentDTO getViewInfo
 
@@ -399,9 +401,31 @@ public class StudentDao_imple implements StudentDao {
 		
 	} // end of public AssignmentSubmitDTO getCommentOne
 
+	@Override
+	public List<TodayLecture> getToday_lec(int student_id) {
+		List<TodayLecture> today_lec = sqlSession.selectList("student.getToday_lec" , student_id);
+		return today_lec;
+	}
 
 
-
+	@Override
+	public Pager<Announcement> getAnnouncement(int currentPage) {
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		
+		int sizePerPage = 5;
+		
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		
+		paraMap.put("startRno", startRno);
+		paraMap.put("endRno", endRno);
+		paraMap.put("currentShowPageNo", currentPage);
+		List<Announcement> announcementList = sqlSession.selectList("board.getAnnouncement", paraMap);
+		
+		int A_totalElementCount = sqlSession.selectOne("board.getA_TotalElementCount", paraMap);
+		return new Pager(announcementList, currentPage, sizePerPage, A_totalElementCount);
+	}
 
 
 

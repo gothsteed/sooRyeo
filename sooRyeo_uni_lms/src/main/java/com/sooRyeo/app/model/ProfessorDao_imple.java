@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
@@ -313,6 +314,25 @@ public class ProfessorDao_imple implements ProfessorDao {
 		Assignment assignment = sqlSession.selectOne("professor.searchFile", schedule_seq_assignment);
 		
 		return assignment;
+	}
+
+
+	@Override
+	public Pager<Announcement> getAnnouncement(int currentPage) {
+		Map<String, Object> paraMap = new HashMap<>();
+		
+		int sizePerPage = 5;
+		
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		
+		paraMap.put("startRno", startRno);
+		paraMap.put("endRno", endRno);
+		paraMap.put("currentShowPageNo", currentPage);
+		List<Announcement> announcementList = sqlSession.selectList("board.getAnnouncement", paraMap);
+		
+		int A_totalElementCount = sqlSession.selectOne("board.getA_TotalElementCount", paraMap);
+		return new Pager(announcementList, currentPage, sizePerPage, A_totalElementCount);
 	}
 
 

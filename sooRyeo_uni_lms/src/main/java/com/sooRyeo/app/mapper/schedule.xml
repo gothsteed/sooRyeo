@@ -44,6 +44,7 @@
         <result property="fk_student_id" column="fk_student_id"/>
         <result property="fk_prof_id" column="fk_prof_id"/>
         <result property="content" column="content"/>
+		<result property="complete" column="complete"/>
         <association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
         <association property="student" javaType="com.sooRyeo.app.domain.Student" resultMap="StudentResultMap"/>
     </resultMap>
@@ -113,7 +114,7 @@
 		    from tbl_schedule
 		),
 		C AS (
-		    select content, fk_schedule_seq, fk_prof_id, fk_student_id
+		    select content, fk_schedule_seq, fk_prof_id, fk_student_id, complete
 		    from tbl_consult
 		),                
 		P AS (
@@ -260,7 +261,7 @@ where rno between #{startRno} and #{endRno}
 				join
 			tbl_department d on st.fk_department_seq = d.department_seq
 		WHERE
-			s.schedule_type = 4 AND s.confirm = 0
+			s.schedule_type = 4
 		  AND c.fk_schedule_seq = #{schedule_seq}
 
 	</select>
@@ -275,6 +276,85 @@ where rno between #{startRno} and #{endRno}
 		DELETE FROM tbl_schedule
 		WHERE schedule_seq = #{schedule_seq}
 	</delete>
+
+	<select id="getConfirmedConsultList" parameterType="HashMap" resultMap="ConsultResultMap">
+
+		select *
+		from
+			(
+				select rownum as rno,
+					   schedule_seq,
+					   fk_schedule_seq,
+					   title,
+					   schedule_type,
+					   start_date,
+					   end_date,
+					   confirm,
+					   name ,
+					   email
+				from
+					(
+						SELECT
+							s.schedule_seq,
+							s.title,
+							s.schedule_type,
+							s.start_date,
+							s.end_date,
+							s.confirm,
+							c.fk_schedule_seq,
+							c.fk_student_id,
+							c.fk_prof_id,
+							c.content,
+							st.student_id,
+							st.fk_department_seq,
+							st.pwd,
+							st.name ,
+							st.jubun ,
+							st.tel ,
+							st.grade,
+							st.address,
+							st.email,
+							st.register_year,
+							st.status
+						FROM
+							tbl_schedule s
+								JOIN
+							tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+								JOIN
+							tbl_student st ON c.fk_student_id = st.student_id
+						WHERE
+							s.schedule_type = 4 AND s.confirm = 1
+						  AND c.fk_prof_id = #{professor_id} and COMPLETE = 0
+						order by  schedule_seq
+
+					)
+			)
+		where rno between #{startRno} and #{endRno}
+
+	</select>
+
+
+	<select id="getConfirmedConsultCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			tbl_schedule s
+				JOIN
+			tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+				JOIN
+			tbl_student st ON c.fk_student_id = st.student_id
+		WHERE
+			s.schedule_type = 4 AND s.confirm = 1
+		  AND c.fk_prof_id = #{professor_id} and COMPLETE = 0
+
+	</select>
+
+
+	<update id="updateToComplete" parameterType="int">
+		update TBL_CONSULT set COMPLETE = 1
+		where FK_SCHEDULE_SEQ = #{schedule_seq}
+
+	</update>
 
 
 </mapper>

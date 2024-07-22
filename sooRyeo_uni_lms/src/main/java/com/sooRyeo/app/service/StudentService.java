@@ -8,10 +8,14 @@ import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
 public interface StudentService {
@@ -77,6 +81,8 @@ public interface StudentService {
 	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
 	String getApplication_status(int student_id);
 
+	// 오늘의 수업만을 불러오는 메소드
+	List<TodayLecture> getToday_lec(int student_id);
 
 	// 수업 - 강의 한개 제목, 내용 select
 	Map<String, String> classPlay_One(String lecture_seq);
@@ -97,6 +103,8 @@ public interface StudentService {
 	int update_tbl_attendance_isAttended(String lecture_seq, int userid);
 
 
+	// 학사공지사항 리스트를 select 해오는 메소드
+	Pager<Announcement> getAnnouncement(int currentPage);	
 
 
 	
