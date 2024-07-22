@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -94,6 +95,9 @@ public interface StudentService {
 
 	// 수업명 가져오기
 	List<Curriculum> lectureList();
+
+	// 출석 현황 조회 - Excel
+	void employeeList_to_Excel(String name, Model model, HttpServletRequest request);
 
 
 

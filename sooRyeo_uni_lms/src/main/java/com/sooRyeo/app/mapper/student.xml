@@ -331,7 +331,7 @@
 	
 
 	
-	<!-- 특정 수업의 출석 현황 조회 -->
+	<!-- 출석 현황 조회 -->
 	<resultMap type="HashMap" id="attendanceListMap">
 		<result property="fk_student_id"	column="fk_student_id"		javaType="String" />
 		<result property="name" 			column="name"				javaType="String" />

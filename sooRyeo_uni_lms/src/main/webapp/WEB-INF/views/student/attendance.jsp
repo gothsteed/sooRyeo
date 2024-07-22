@@ -89,7 +89,7 @@ $(document).ready(function(){
 		frm.name.value = name;
 		
 		frm.method = "post";		
-		frm.action = "<%=ctxPath%>/student/downloadExcelFile.action";
+		frm.action = "<%=ctxPath%>/downloadExcelFile.action";
 		frm.submit();
 		
 	}); // end of $("button#btnExcel").click(function(){})
