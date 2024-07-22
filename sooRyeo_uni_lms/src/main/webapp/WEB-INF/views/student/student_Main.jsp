@@ -296,6 +296,7 @@ function showWeather(){
 							      <th scope="col">수업명</th>
 							      <th scope="col">학점</th>
 							      <th scope="col">교수명</th>
+							      <th scope="col">교시</th>
 							    </tr>
 							  </thead>
 							  <tbody class="table-group-divider">
@@ -305,6 +306,7 @@ function showWeather(){
 							      <td>${lec.lec_name}</td>
 							      <td>${lec.credit}학점</td>
 							      <td>${lec.prof_name}</td>
+							      <td>${lec.start_period} - ${lec.end_period}</td>
 							    </tr>
 							</c:forEach>
 							  </tbody>

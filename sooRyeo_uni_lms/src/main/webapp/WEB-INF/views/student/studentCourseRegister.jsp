@@ -557,7 +557,7 @@ function deleteCourse(courseId) {
     console.log(`Deleting course with ID: \${courseId}`);
     
     
-    if(!confirm("수강 취소 하시겠습니다?")) {
+    if(!confirm("수강 취소 하시겠습니까?")) {
     	return false;
     }
    

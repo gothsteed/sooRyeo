@@ -348,7 +348,6 @@ CASE
 END;
 
 select *
-from tbl_curriculum;
-
+from tbl_time;
 
 
