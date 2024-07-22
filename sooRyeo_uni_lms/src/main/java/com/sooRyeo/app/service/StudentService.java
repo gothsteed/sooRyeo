@@ -5,11 +5,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignmentSubmit;
+import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
@@ -86,6 +89,16 @@ public interface StudentService {
 
 	// 학사공지사항 리스트를 select 해오는 메소드
 	Pager<Announcement> getAnnouncement(int currentPage);	
+
+	// 출석 현황 조회
+	List<Map<String, Object>> attendanceList(int student_id, String name);
+
+	// 수업명 가져오기
+	List<Curriculum> lectureList();
+
+	// 출석 현황 조회 - Excel
+	void employeeList_to_Excel(String name, Model model, HttpServletRequest request);
+
 
 
 	
