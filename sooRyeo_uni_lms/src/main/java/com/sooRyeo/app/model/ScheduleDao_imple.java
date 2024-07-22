@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Consult;
-import com.sooRyeo.app.domain.Schedule;
-import com.sooRyeo.app.dto.ScheduleDto;
 
 @Repository
 public class ScheduleDao_imple implements ScheduleDao {
@@ -154,6 +152,29 @@ public class ScheduleDao_imple implements ScheduleDao {
 	public int deleteUnapprovedConsult(ConsultApprovalDto consultApprovalDto) {
 		int schedule_seq = consultApprovalDto.getSchedule_seq();
 		return sqlSession.delete("schedule.deleteUnapprovedConsult", schedule_seq);
+	}
+
+	@Override
+	public List<Consult> getConfirmedConsultList(int professor_id, int currentPage, int sizePerPage) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("professor_id", professor_id);
+
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		map.put("startRno", startRno);
+		map.put("endRno", endRno);
+
+		return sqlSession.selectList("schedule.getConfirmedConsultList", map);
+	}
+
+	@Override
+	public int getConfirmedConsultCount(int professor_id) {
+		return sqlSession.selectOne("schedule.getConfirmedConsultCount", professor_id);
+	}
+
+	@Override
+	public void updateToComplete(Integer scheduleSeq) {
+		sqlSession.update("schedule.updateToComplete", scheduleSeq);
 	}
 
 

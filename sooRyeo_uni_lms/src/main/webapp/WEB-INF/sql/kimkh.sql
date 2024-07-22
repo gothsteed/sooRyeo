@@ -417,33 +417,39 @@ WHERE S.student_id = 202400009
 
 
 -- 전공필수 가져오는 식
-select  SUM(CU.credit) AS total_Required_credit
+select  NVL(SUM(CU.credit), 0) AS total_Required_credit
 FROM
 tbl_student S 
 JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
 JOIN tbl_course C ON R.fk_course_seq = C.course_seq
 JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
-WHERE S.student_id = 202400009 and CU.fk_department_seq is not null and CU.required = 1 
+WHERE S.student_id = 202400009 and CU.fk_department_seq is not null and CU.required = 1 and R.pass_status = 1 
 
 -- 전공선택 가져오는 식
-select SUM(CU.credit) AS total_Unrequired_credit
+select NVL(SUM(CU.credit), 0) AS total_Unrequired_credit
 FROM
 tbl_student S 
 JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
 JOIN tbl_course C ON R.fk_course_seq = C.course_seq
 JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
-WHERE S.student_id = 202400009 and CU.fk_department_seq is not null and CU.required = 0
+WHERE S.student_id = 202400009 and CU.fk_department_seq is not null and CU.required = 0 and R.pass_status = 1
 
 -- 교양 가져오는 식
-select SUM(CU.credit) AS total_Liberal_credit
+select NVL(SUM(CU.credit), 0) AS total_Liberal_credit
 FROM
 tbl_student S 
 JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
 JOIN tbl_course C ON R.fk_course_seq = C.course_seq
 JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
-WHERE S.student_id = 202400009 and CU.fk_department_seq is null
+WHERE S.student_id = 202400009 and CU.fk_department_seq is null and R.pass_status = 1
 
 
+select *
+from tbl_registered_course
+
+
+update tbl_registered_course set pass_status = 1
+commit;
 
 ALTER TABLE tbl_assignment_submit ADD orgfilename NVARCHAR2(200);
 

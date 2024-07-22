@@ -12,6 +12,13 @@
 		ON tbl_department.department_seq = tbl_student.fk_department_seq
 		WHERE student_id = #{id} AND pwd = #{password}	
 	</select>
+
+	<select id="getStudentById" resultType="com.sooRyeo.app.domain.Student" parameterType="int">
+		SELECT *
+		FROM tbl_department JOIN tbl_student
+								 ON tbl_department.department_seq = tbl_student.fk_department_seq
+		WHERE student_id = #{studentId}
+	</select>
 	
 	
 	
@@ -277,7 +284,26 @@
 			values(assignment_submit_seq.nextval, #{fk_schedule_seq_assignment}, #{fk_student_id}, #{title}, #{content}, #{attatched_file}, #{orgfilename})
 		</if>
 	</insert>
+	
+	<select id="credit_point" parameterType="Integer" resultType="Integer">
+		select sum(credit)
+		from tbl_student S
+		join tbl_registered_course R on S.student_id = R.fk_student_id
+		join tbl_course C on R.fk_course_seq = C.course_seq
+		join tbl_curriculum L on C.fk_curriculum_seq = L.curriculum_seq
+		where student_id = #{student_id} and R.pass_status = 1
+	</select>
+	
+	<insert id="application_status_change" parameterType="HashMap">
+		insert into tbl_student_status_change(student_status_change_seq, fk_student_id, change_status)
+		values(student_status_change_seq.nextval, #{student_id}, #{status_num})
+	</insert>
 
+	<select id="getApplication_status" parameterType="Integer" resultType="String">
+		select change_status
+		from tbl_student_status_change
+		where fk_student_id = #{student_id}
+	</select>
 
 	<!-- 과제 제출 내용 보기 -->
 	<resultMap type="HashMap" id="readcomment">
@@ -349,5 +375,71 @@
 	
 	
 	
+	
+	<!-- // ajax학생 수강과목 가져와서 학점 계산하기(chart) 시작 -->
+	<resultMap type="HashMap" id="RequiredCreditMap">
+		<result property="total_Required_credit"	column="total_Required_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_RequiredCredit" parameterType="int" resultMap="RequiredCreditMap">
+		select  NVL(SUM(CU.credit), 0) AS total_Required_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is not null and CU.required = 1 and R.pass_status = 1
+	</select>
+	
+	
+	<resultMap type="HashMap" id="UnrequiredCreditMap">
+		<result property="total_Unrequired_credit"	column="total_Unrequired_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_UnrequiredCredit" parameterType="int" resultMap="UnrequiredCreditMap">
+		select NVL(SUM(CU.credit), 0) AS total_Unrequired_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is not null and CU.required = 0 and R.pass_status = 1
+	</select>
+	
+	
+	<resultMap type="HashMap" id="LiberalCreditMap">
+		<result property="total_Liberal_credit"	column="total_Liberal_credit"		javaType="String" />
+	</resultMap>
+	<select id="student_LiberalCredit" parameterType="int" resultMap="LiberalCreditMap">
+		select NVL(SUM(CU.credit), 0) AS total_Liberal_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and CU.fk_department_seq is null and R.pass_status = 1
+	</select>
+	
+	
+	<!-- // ajax학생 수강과목 가져와서 학점 계산하기(chart) 끝 -->
+	
+	
+	
+	<select id="getToday_lec" parameterType="Integer" resultType="com.sooRyeo.app.domain.TodayLecture">
+		select distinct(cu.name) as lec_name, p.name as prof_name, credit
+		from tbl_student S
+		join tbl_registered_course R on S.student_id = R.fk_student_id
+		join tbl_course C on R.fk_course_seq = C.course_seq
+		join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
+		join tbl_time T on C.course_seq = T.fk_course_seq
+		join tbl_professor P on P.prof_id = C.fk_professor_id
+		where student_id = #{student_id} and 
+		      day_of_week =
+		CASE
+		    WHEN to_char(sysdate, 'd') = '2' THEN 1 
+		    WHEN to_char(sysdate, 'd') = '3' THEN 2 
+		    WHEN to_char(sysdate, 'd') = '4' THEN 3 
+		    WHEN to_char(sysdate, 'd') = '5' THEN 4 
+		    WHEN to_char(sysdate, 'd') = '6' THEN 5
+		END
+	</select>
 	
 </mapper>

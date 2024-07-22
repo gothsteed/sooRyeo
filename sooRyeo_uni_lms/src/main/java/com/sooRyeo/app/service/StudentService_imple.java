@@ -28,10 +28,16 @@ import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.Curriculum;
+import com.sooRyeo.app.domain.Announcement;
+import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
 
@@ -509,28 +515,23 @@ public class StudentService_imple implements StudentService {
 
 
 
-
+	// 통계용 총 학점 가져오기
 	@Override
 	public String student_chart_credit(int student_id) {
 		
-		List<Map<String, String>> creditList = dao.student_chart_credit(student_id);
-
-		JsonArray jsonArr = new JsonArray();
-      
-		if(creditList != null && creditList.size() > 0) {
-			for(Map<String, String> map : creditList) {
-				JsonObject jsonObj = new JsonObject();
-				jsonObj.addProperty("name", map.get("name"));
-				jsonObj.addProperty("grade", map.get("grade"));
-				jsonObj.addProperty("semester_date", map.get("semester_date"));
-				jsonObj.addProperty("gradename", map.get("gradename"));
-				jsonObj.addProperty("credit", map.get("credit"));
-				jsonObj.addProperty("required", map.get("required"));
+		Map<String, String> RequiredCredit = dao.student_RequiredCredit(student_id);
+		Map<String, String> UnrequiredCredit = dao.student_UnrequiredCredit(student_id);
+		Map<String, String> LiberalCredit = dao.student_LiberalCredit(student_id);
+		
+		JsonArray jsonArr = new JsonArray();	
+		JsonObject jsonObj = new JsonObject();
+		jsonObj.addProperty("total_Required_credit", RequiredCredit.get("total_Required_credit"));
+		jsonObj.addProperty("total_Unrequired_credit", UnrequiredCredit.get("total_Unrequired_credit"));
+		jsonObj.addProperty("total_Liberal_credit", LiberalCredit.get("total_Liberal_credit"));
+		
             
-				jsonArr.add(jsonObj);
-			}// end of for------------------------------
-		}
-      
+		jsonArr.add(jsonObj);
+		      
 		return new Gson().toJson(jsonArr);
 	}
 
@@ -560,6 +561,42 @@ public class StudentService_imple implements StudentService {
 
 
 
+
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	@Override
+	public int credit_point(int student_id) {
+		int credit_point = dao.credit_point(student_id); 
+		return credit_point;
+	}
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	@Override
+	public int application_status_change(int student_id, int status_num) {
+		int n = dao.application_status_change(student_id, status_num); 
+		return n;
+	}
+
+
+	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+	@Override
+	public String getApplication_status(int student_id) {
+		String application_status = dao.getApplication_status(student_id); 
+		return application_status;
+	}
+
+
+	// 오늘의 수업만을 불러오는 메소드
+	@Override
+	public List<TodayLecture> getToday_lec(int student_id) {
+		List<TodayLecture> today_lec = dao.getToday_lec(student_id);
+		return today_lec;
+	}
+
+	@Override
+	public Pager<Announcement> getAnnouncement(int currentPage) {
+		Pager<Announcement> announcementList = dao.getAnnouncement(currentPage);
+		return announcementList;
+	}
 
 	
 

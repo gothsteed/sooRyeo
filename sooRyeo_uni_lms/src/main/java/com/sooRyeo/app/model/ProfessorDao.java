@@ -3,6 +3,7 @@ package com.sooRyeo.app.model;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Pager;
@@ -81,6 +82,8 @@ public interface ProfessorDao {
 	Assignment searchFile(String schedule_seq_assignment);
 
 	int getTotalElementCount(String fk_course_seq);
+
+	Pager<Announcement> getAnnouncement(int currentPage);
 
 
 	

@@ -148,6 +148,8 @@ ALTER TABLE tbl_lecture_notice ADD writeday date DEFAULT sysdate NOT NULL;
 ALTER TABLE tbl_lecture_notice ADD viewcount number DEFAULT 0 NOT NULL;
 ALTER TABLE tbl_lecture_notice ADD status number DEFAULT 0 NOT NULL;
 
+
+
 select *
 from tbl_student;
 
@@ -294,4 +296,59 @@ ALTER TABLE tbl_student_status_change
 		REFERENCES tbl_student (
 			student_id
 		);
+
+select *
+from tbl_registered_course;
+
+select credit, r.register_date, R.pass_status
+from tbl_student S
+join tbl_registered_course R on S.student_id = R.fk_student_id
+join tbl_course C on R.fk_course_seq = C.course_seq
+join tbl_curriculum L on C.fk_curriculum_seq = L.curriculum_seq
+where student_id = '202400005' and R.pass_status = 1;
+
+select *
+from tbl_student_status_change
+where fk_student_id = #{student_id}
+
+insert into tbl_student_status_change(student_status_change_seq, fk_student_id, change_status) values(student_status_change_seq.nextval, 202400021, 2)
+
+delete from tbl_student_status_change
+where change_status = '2';
+commit;
+
+ALTER TABLE tbl_registered_course ADD pass_status number DEFAULT 0 NOT NULL;
+ALTER TABLE tbl_registered_course MODIFY pass_status number DEFAULT 1;
+
+
+select S.student_id, C.change_status, S.name, s.grade, d.department_name, S.status
+from tbl_student_status_change C
+join tbl_student S on s.student_id = c.fk_student_id
+join tbl_department D on s.fk_department_seq = d.department_seq;
+
+
+update tbl_student set status = 1
+where fk_student_id = '202500021';
+
+select distinct(cu.name), p.name, credit
+from tbl_student S
+join tbl_registered_course R on S.student_id = R.fk_student_id
+join tbl_course C on R.fk_course_seq = C.course_seq
+join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
+join tbl_time T on C.course_seq = T.fk_course_seq
+join tbl_professor P on P.prof_id = C.fk_professor_id
+where student_id = '202400005' and 
+      day_of_week =
+CASE
+    WHEN to_char(sysdate, 'd') = '2' THEN 1 
+    WHEN to_char(sysdate, 'd') = '3' THEN 2 
+    WHEN to_char(sysdate, 'd') = '4' THEN 3 
+    WHEN to_char(sysdate, 'd') = '5' THEN 4 
+    WHEN to_char(sysdate, 'd') = '6' THEN 5
+END;
+
+select *
+from tbl_curriculum;
+
+
 

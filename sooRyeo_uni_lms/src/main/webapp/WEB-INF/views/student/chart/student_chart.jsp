@@ -116,75 +116,81 @@
 					
 			case "credit": // 학생 학점 통계 를 선택한 경우 
 				
-				
-			    		
-						///////////////////////////////////////////////
-				    	Highcharts.chart('chart_container', {
-						    chart: {
-						        type: 'column'
-						    },
-						    title: {
-						        text: '학생 학점 통계',
-						        align: 'left'
-						    },
-						    xAxis: {
-						        categories: ['교양', '전공필수', '전공선택', '총학점']
-						    },
-						    yAxis: {
-						        min: 0,
-						        title: {
-						            text: '학점총계'
-						        },
-						        stackLabels: {
-						            enabled: true,
-						            style: {
-						                fontWeight: 'bold',
-						                color: ( // theme
-						                    Highcharts.defaultOptions.title.style &&
-						                    Highcharts.defaultOptions.title.style.color
-						                ) || 'gray',
-						                textOutline: 'none'
-						            }
-						        }
-						    },
-						    legend: {
-						        align: 'left',
-						        x: 70,
-						        verticalAlign: 'top',
-						        y: 70,
-						        floating: true,
-						        backgroundColor:
-						            Highcharts.defaultOptions.legend.backgroundColor || 'white',
-						        borderColor: '#CCC',
-						        borderWidth: 1,
-						        shadow: false
-						    },
-						    tooltip: {
-						        headerFormat: '<b>{point.x}</b><br/>',
-						        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-						    },
-						    plotOptions: {
-						        column: {
-						            stacking: 'normal',
-						            dataLabels: {
-						                enabled: true
-						            }
-						        }
-						    },
-						    series: [{
-						        name: 'BPL',
-						        data: [3, 5, 1, 13]
-						    }, {
-						        name: 'FA Cup',
-						        data: [14, 8, 8, 12]
-						    }, {
-						        name: 'CL',
-						        data: [0, 2, 6, 3]
-						    }]
-						});			
-			    		///////////////////////////////////////////////
-			    		
+			
+				$.ajax({
+				    url:"<%= ctxPath%>/student/chart/credit.lms",
+				    dataType:"json",
+				    success:function(json){
+				        var data = json[0];
 
+				        var totalCredit = parseInt(data.total_Liberal_credit) + 
+				                          parseInt(data.total_Required_credit) + 
+				                          parseInt(data.total_Unrequired_credit);
+
+				        Highcharts.chart('chart_container', {
+				            chart: {
+				                type: 'column'
+				            },
+				            title: {
+				                text: '학생 학점 통계',
+				                align: 'left'
+				            },
+				            xAxis: {
+				                categories: ['교양', '전공필수', '전공선택', '총학점']
+				            },
+				            yAxis: {
+				                min: 0,
+				                title: {
+				                    text: '학점'
+				                },
+				                stackLabels: {
+				                    enabled: true,
+				                    style: {
+				                        fontWeight: 'bold',
+				                        color: 'gray',
+				                        textOutline: 'none'
+				                    }
+				                }
+				            },
+				            legend: {
+				                align: 'left',
+				                x: 70,
+				                verticalAlign: 'top',
+				                y: 70,
+				                floating: true,
+				                backgroundColor: 'white',
+				                borderColor: '#CCC',
+				                borderWidth: 1,
+				                shadow: false
+				            },
+				            tooltip: {
+				                headerFormat: '<b>{point.x}</b><br/>',
+				                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+				            },
+				            plotOptions: {
+				                column: {
+				                    stacking: 'normal',
+				                    dataLabels: {
+				                        enabled: true
+				                    }
+				                }
+				            },
+				            series: [{
+				                name: '교양',
+				                data: [parseInt(data.total_Liberal_credit), 0, 0, parseInt(data.total_Liberal_credit)]
+				            }, {
+				                name: '전공필수',
+				                data: [0, parseInt(data.total_Required_credit), 0, parseInt(data.total_Required_credit)]
+				            }, {
+				                name: '전공선택',
+				                data: [0, 0, parseInt(data.total_Unrequired_credit), parseInt(data.total_Unrequired_credit)]
+				            }]
+				        });
+				    },
+				    error: function(request, status, error){
+				        console.log("Error: " + error);
+				    }   
+				});
 					
 				
 		}// end of switch (searchTypeVal)----------------

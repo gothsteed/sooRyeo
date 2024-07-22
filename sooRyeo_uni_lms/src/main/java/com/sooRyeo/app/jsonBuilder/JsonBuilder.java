@@ -1,5 +1,6 @@
 package com.sooRyeo.app.jsonBuilder;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,5 +26,16 @@ public class JsonBuilder {
 		}
 		
 	}
+
+	public <T> T fromJson(String json, Class<T> clazz) {
+		 try {
+			 return  objectMapper.readValue(json, clazz);
+		 }
+		 catch (JsonProcessingException e) {
+			 e.printStackTrace();
+			 return null;
+		 }
+
+    }
 
 }

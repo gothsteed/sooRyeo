@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -29,10 +27,15 @@ import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Curriculum;
+import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
@@ -55,10 +58,35 @@ public class StudentController {
 	
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
-	public String student() {
+	public ModelAndView student(ModelAndView mav, HttpServletRequest request) {
 
-		return "student_Main";
-		// /WEB-INF/views/student/{1}.jsp
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		// 오늘의 수업만을 불러오는 메소드
+		List<TodayLecture> today_lec = studentservice.getToday_lec(student_id);
+		
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		// 학사공지사항을 전부 불러오는 메소드
+		Pager<Announcement> announcementList =  studentservice.getAnnouncement(currentPage);
+		
+		mav.addObject("announcementList", announcementList.getObjectList());
+		mav.addObject("currentPage", announcementList.getPageNumber());
+		mav.addObject("perPageSize", announcementList.getPerPageSize());
+		mav.addObject("goBackURL","/board/announcement.lms");
+		mav.addObject("today_lec",today_lec);
+		mav.setViewName("student_Main");
+		
+		return mav;
 	}
 	
 	@RequestMapping(value = "/student/lectureList.lms", method = RequestMethod.GET)
@@ -98,6 +126,17 @@ public class StudentController {
 		
 		// System.out.println(member_student.getStatus());
 		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+		String application_status = studentservice.getApplication_status(student_id);
+		if(application_status == null) {
+			application_status = "0";
+		}
+		
+		mav.addObject("application_status", application_status);
 		mav.addObject("member_student", member_student);
 		mav.setViewName("myInfo");
 		// /WEB-INF/views/student/{1}.jsp
@@ -668,6 +707,46 @@ public class StudentController {
 	} // end of public String attendance
 	
 	
+	// 졸업 신청
+	@GetMapping(value = "/student/application_graduation.lms")
+	public ModelAndView application_graduation( ModelAndView mav, StudentDTO student, HttpServletRequest request) {
+		     
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		int grade = loginuser.getGrade();
+		
+		String application_status = studentservice.getApplication_status(student_id);
+		if(application_status != null) {
+			mav.addObject("message", "이미 승인 대기중인 신청이 있습니다.");
+      	    mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+      	    mav.setViewName("msg");
+      	    
+      	    return mav;
+		}
+		
+		// 이수한 학점이 몇점인지 알아오는 메소드
+	    int credit_point = studentservice.credit_point(student_id);
+	    
+        if(credit_point >= 10 && grade == 4) {
+          // 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+          int status_num = 3;
+        	
+          int n = studentservice.application_status_change(student_id, status_num);
+          if(n == 1) {
+        	  mav.addObject("message", "졸업 신청되었습니다.");
+        	  mav.addObject("loc", request.getContextPath()+"/student/myInfo.lms");
+        	  mav.setViewName("msg");
+          }
+        }
+        else {
+      	  mav.addObject("message", "졸업 요건이 충족되지 않았습니다.");
+      	  mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+      	  mav.setViewName("msg");
+        }
+        
+        return mav;
+	}
 	
 	// 검색하기 클릭 시
 	@ResponseBody
@@ -722,6 +801,64 @@ public class StudentController {
 	
 	
 	
+	// 복학 신청
+	@GetMapping(value = "/student/application_status.lms")
+	public ModelAndView application_status(  HttpServletRequest request, ModelAndView mav) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		String application_status = studentservice.getApplication_status(student_id);
+		if(application_status != null) {
+			mav.addObject("message", "이미 승인 대기중인 신청이 있습니다.");
+      	    mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+      	    mav.setViewName("msg");
+      	    
+      	    return mav;
+		}
+		
+		int status_num = Integer.parseInt(request.getParameter("num"));
+		
+		// 학적변경테이블(tbl_student_status_change)에 재학신청을 insert 하는 메소드 
+		int n = studentservice.application_status_change(student_id, status_num);
+		
+		if(n == 1) {
+			if(status_num == 1) {
+				mav.addObject("message", "복학 신청되었습니다.");
+			}
+			if(status_num == 2) {
+				mav.addObject("message", "휴학 신청되었습니다.");
+			}
+			if(status_num == 4) {
+				mav.addObject("message", "자퇴 신청되었습니다.");
+			}
+			mav.addObject("loc", request.getContextPath()+"/student/myInfo.lms");
+			mav.setViewName("msg");
+		}
+		else {
+			if(status_num == 1) {
+				mav.addObject("message", "복학 신청이 실패되었습니다.");
+			}
+			if(status_num == 2) {
+				mav.addObject("message", "휴학 신청이 실패되었습니다.");
+			}
+			if(status_num == 4) {
+				mav.addObject("message", "자퇴 신청이 실패되었습니다.");
+			}
+			mav.addObject("loc", request.getContextPath()+ "/student/myInfo.lms");
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping(value = "/student/chatting.lms", method = RequestMethod.GET)
+	public String chatting() {
+
+		return "chatting";
+		// /WEB-INF/views/student/{1}.jsp
+	}
 	
 	
 	

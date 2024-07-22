@@ -8,12 +8,16 @@ import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
+import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
 public interface StudentService {
@@ -70,6 +74,20 @@ public interface StudentService {
 
 	// 파일첨부가 되어진 과제에서 서버에 업로드되어진 파일명 조회
 	AssignmentSubmitDTO getCommentOne(String assignment_submit_seq);
+	// 이수한 학점이 몇점인지 알아오는 메소드
+	int credit_point(int student_id);
+
+	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
+	int application_status_change(int student_id, int status_num);
+
+	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
+	String getApplication_status(int student_id);
+
+	// 오늘의 수업만을 불러오는 메소드
+	List<TodayLecture> getToday_lec(int student_id);
+
+	// 학사공지사항 리스트를 select 해오는 메소드
+	Pager<Announcement> getAnnouncement(int currentPage);	
 
 	// 출석 현황 조회
 	List<Map<String, Object>> attendanceList(int student_id, String name);

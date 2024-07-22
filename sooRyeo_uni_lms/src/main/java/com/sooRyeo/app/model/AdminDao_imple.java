@@ -1,5 +1,6 @@
 package com.sooRyeo.app.model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
 
@@ -49,10 +51,30 @@ public class AdminDao_imple implements AdminDao {
 	}
 
 
+	// 학적변경신청한 학생들을 전부 불러오는 메소드
 	@Override
-	public List<Student> getStudentList() {
-		List<Student> getStudentList = sqlSession.selectList("admin.getStudentList");
-		return getStudentList;
+	public List<StudentStatusChange> application_status_student() {
+		List<StudentStatusChange> application_status_student = sqlSession.selectList("admin.application_status_student");
+		return application_status_student;
+	}
+
+	// 관리자가 승인 혹은 반려한 신청을 삭제해주는 메소드
+	@Override
+	public int deleteApplication(String student_id) {
+		int n = sqlSession.delete("admin.deleteApplication", student_id);
+		return n;
+	}
+
+	// 관리자가 승인을 해주면 학생의 학적 상태를 업데이트 해주는 메소드
+	@Override
+	public int updateStudentStatus(String student_id, String change_status) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("student_id", student_id);
+		paraMap.put("change_status", change_status);
+		
+		int n = sqlSession.update("admin.updateStudentStatus", paraMap);
+		return n;
 	}
 
 

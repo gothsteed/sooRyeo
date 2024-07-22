@@ -22,13 +22,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
-import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CourseInsertReqeustDTO;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
+import com.sooRyeo.app.dto.StudentDTO;
 import com.sooRyeo.app.service.AdminService;
 import com.sooRyeo.app.service.CourseService;
 import com.google.gson.Gson;
@@ -60,11 +61,12 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/admin/MemberCheck.lms", method = RequestMethod.GET)
-	public ModelAndView MemberCheck(HttpServletRequest request ,ModelAndView mav, Student student) {
+	public ModelAndView MemberCheck(HttpServletRequest request ,ModelAndView mav) {
 		
-		List<Student> studentList = adminService.getStudentList();
+		// 학적변경신청한 학생들을 전부 불러오는 메소드
+		List<StudentStatusChange> application_status_student = adminService.application_status_student();
 		
-		mav.addObject("studentList", studentList);
+		mav.addObject("application_status_student", application_status_student);
 		mav.setViewName("MemberCheck");
 		
 		return mav;
@@ -316,7 +318,58 @@ public class AdminController {
        return new Gson().toJson(jsonArr); // "[{"department_name":"Shipping","cnt":"45","percentage":"40.5"}]" 
     }
     
-    
+	// 내정보 보기
+	@GetMapping(value="/admin/admitOrRefuse.lms")
+	public ModelAndView admitOrRefuse(ModelAndView mav, HttpServletRequest request) {
+		
+		String student_id = request.getParameter("student_id");
+		String change_status = request.getParameter("change_status");
+		int no = Integer.parseInt(request.getParameter("no")); // 승인인지 반려인지 구분하기 위한것
+		
+		// 승인 or 반려하면 학생은 업데이트 하고, 신청은 딜리트
+		int n =0;
+		int n2 =0;
+		
+		if(no == 1) {
+			n = adminService.deleteApplication(student_id);
+			n2 = adminService.updateStudentStatus(student_id, change_status);
+		}
+		else {
+			n = adminService.deleteApplication(student_id);
+		}
+		
+		switch (change_status) {
+		case "1":
+			change_status = "복학 신청을 ";
+			break;
+		case "2":
+			change_status = "휴학 신청을 ";
+			break;
+		case "3":
+			change_status = "졸업 신청을 ";
+			break;
+		case "4":
+			change_status = "자퇴 신청을 ";
+			break;
+
+		default:
+			break;
+		}
+		
+		if(n*n2 == 1) {
+			mav.addObject("message", change_status+"승인하셨습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
+			mav.setViewName("msg");
+		}
+		else {
+			mav.addObject("message", change_status+"반려하셨습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+		
+	} // end of public ModelAndView myInfo
 	
 	
 }

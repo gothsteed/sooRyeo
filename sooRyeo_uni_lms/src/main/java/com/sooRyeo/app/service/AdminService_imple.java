@@ -20,6 +20,7 @@ import com.sooRyeo.app.domain.Department;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
 import com.sooRyeo.app.dto.CurriculumPageRequestDto;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -202,10 +203,25 @@ public class AdminService_imple implements AdminService {
 	    return deptnamePercentageList;
 	}
 
+	// 학적변경신청한 학생들을 전부 불러오는 메소드
 	@Override
-	public List<Student> getStudentList() {
-		List<Student> getStudentList = admindao.getStudentList();
-	    return getStudentList;
+	public List<StudentStatusChange> application_status_student() {
+		List<StudentStatusChange> application_status_student = admindao.application_status_student();
+	    return application_status_student;
+	}
+
+	// 관리자가 승인 혹은 반려한 신청을 삭제해주는 메소드
+	@Override
+	public int deleteApplication(String student_id) {
+		int n = admindao.deleteApplication(student_id);
+		return n;
+	}
+	
+	// 관리자가 승인을 해주면 학생의 학적 상태를 업데이트 해주는 메소드
+	@Override
+	public int updateStudentStatus(String student_id, String change_status) {
+		int n = admindao.updateStudentStatus(student_id, change_status);
+		return n;
 	}
 
 
