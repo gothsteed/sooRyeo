@@ -82,29 +82,19 @@ $(document).ready(function(){
 	
 	
 	
-<%-- 	// === #207. Excel 파일로 다운받기 시작 === //
+	// === #207. Excel 파일로 다운받기 시작 === //
 	$("button#btnExcel").click(function(){
 		
-		const arr_deptId = new Array();
-		
-		$("input:checkbox[name='deptId']:checked").each(function(index, item){
-			
-			arr_deptId.push($(item).val());
-			
-		}); // end of $("input:checkbox[name='deptId']:checked").each(function(index, item{})
-		
-		const str_deptId = arr_deptId.join();
-	
-		
 		const frm = document.searchFrm;
-		frm.str_deptId.value = str_deptId;
+		frm.name.value = name;
 		
 		frm.method = "post";		
-		frm.action = "<%=ctxPath%>/emp/downloadExcelFile.action";
+		frm.action = "<%=ctxPath%>/student/downloadExcelFile.action";
 		frm.submit();
 		
 	}); // end of $("button#btnExcel").click(function(){})
-	// === Excel 파일로 다운받기 끝 === // --%>
+	// === Excel 파일로 다운받기 끝 === // 
+	
 	
 }); // end of $(document).ready
 
