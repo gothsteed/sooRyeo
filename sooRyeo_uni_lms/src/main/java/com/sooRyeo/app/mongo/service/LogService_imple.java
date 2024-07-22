@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import com.sooRyeo.app.mongo.entity.LoginLog;
 import com.sooRyeo.app.mongo.entity.MemberType;
@@ -35,6 +37,9 @@ public class LogService_imple implements LogService {
 	
 	@Autowired
     private JsonBuilder jsonBuilder;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	@Override
 	public ResponseEntity<String> showCount(HttpServletRequest request, HttpServletResponse response) {		
@@ -58,8 +63,8 @@ public class LogService_imple implements LogService {
         Instant startOfDayInstant = startOfDay.atZone(zoneId).toInstant();
         Instant endOfDayInstant = endOfDay.atZone(zoneId).toInstant();
 
-        System.out.println("Start of day: " + startOfDayInstant);
-        System.out.println("End of day: " + endOfDayInstant);
+        //System.out.println("Start of day: " + startOfDayInstant);
+        //System.out.println("End of day: " + endOfDayInstant);
         
         Instant oneDayBefore = startOfDayInstant.minus(1, ChronoUnit.DAYS); 		// 하루 전
         Instant twoDayBefore = startOfDayInstant.minus(2, ChronoUnit.DAYS); 		// 이틀 전
@@ -71,9 +76,9 @@ public class LogService_imple implements LogService {
         
         
 
-        System.out.println("확인용 endOfDay : " + endOfDay);
-        System.out.println("확인용 startOfDay : " + startOfDay);
-        System.out.println("확인용 oneDayBefore : " + oneDayBefore);
+        //System.out.println("확인용 endOfDay : " + endOfDay);
+        //System.out.println("확인용 startOfDay : " + startOfDay);
+        //System.out.println("확인용 oneDayBefore : " + oneDayBefore);
 
         List<LoginLog> countDateList = loginLogRepository.findByTimestampBetween(startOfDayInstant.minus(7, ChronoUnit.DAYS), endOfDayInstant);
         
@@ -91,13 +96,13 @@ public class LogService_imple implements LogService {
             for(LoginLog loginlog : countDateList) {
             	
             	LocalDate logDate = loginlog.getTimestamp().toLocalDate();
-            	System.out.println("확인용 logDate : " + logDate);
+            	//System.out.println("확인용 logDate : " + logDate);
             	
             	LocalDateTime localDateTime = loginlog.getTimestamp();          	
             	
             	Instant logTimestamp = localDateTime.atZone(zoneId).toInstant();
                 
-                System.out.println("확인용 logTimestamp : " + logTimestamp);
+                //System.out.println("확인용 logTimestamp : " + logTimestamp);
                 
                 
                 if (logTimestamp.isAfter(oneDayBefore) && !logTimestamp.isAfter(endOfDayInstant)) {
@@ -163,12 +168,20 @@ public class LogService_imple implements LogService {
         }
         
         
-        System.out.println("확인용 AdminCount : " + AdminCount);
-        System.out.println("확인용 ProCount : " + ProCount);
-        System.out.println("확인용 StudCount : " + StudCount);
+        //System.out.println("확인용 AdminCount : " + AdminCount);
+        //System.out.println("확인용 ProCount : " + ProCount);
+        //System.out.println("확인용 StudCount : " + StudCount);
         
         
-        return ResponseEntity.ok().body(jsonBuilder.toJson());
+        String jsonResponse = "";
+		try {
+			jsonResponse = objectMapper.writeValueAsString(dailyCountMap);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+        return ResponseEntity.ok().body(jsonResponse);
 		
 	}
 
