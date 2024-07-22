@@ -44,6 +44,26 @@ $(function() {
 		
 	}// end of for----------------------
 	
+	$("select#startHour").html(html);
+	$("select#endHour").html(html);
+	
+	
+	// 시작분, 종료분 
+	html="";
+	for(var i=0; i<60; i=i+5) {
+		if(i<10){
+			html+="<option value='0"+i+"'>0"+i+"</option>";
+		}
+		else {
+			html+="<option value="+i+">"+i+"</option>";
+		}
+	}// end of for--------------------
+	html+="<option value="+59+">"+59+"</option>";
+	
+
+	$("select#startMinute").html(html);
+	$("select#endMinute").html(html);
+	
 	
 	
 	
@@ -122,11 +142,42 @@ function previewPDF() {
 // 출제하기 버튼
 function set_exam() {
 
-	// 유효성 검사
-	
-	
-	
-	
+		 // 시험 구분 유효성 검사
+		 var pTest = document.getElementById("pTest");
+	     var pTestValue = pTest.value;
+
+	      if (pTestValue === "") {
+	           	alert("시험 구분을 선택하세요!");
+	           	return;
+	      }
+	      
+	      
+	      // 시험 날짜 유효성 검사
+          var dateValue = $("#test-date").val();
+          var selectedDate = new Date(dateValue);
+          var today = new Date();
+          today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간 부분을 0으로 설정
+
+           if (!dateValue) {
+               alert("날짜를 선택해 주세요.");
+               return;
+           }
+          
+           if(selectedDate <= today) {
+               alert("이미 지난 날짜입니다. 다시 선택해주세요.");
+               return;
+           }
+           
+           // pdf 파일 유효성 검사
+           var fileInput = document.getElementById("fileInput");
+           var filePath = fileInput.value;
+
+           if (!filePath) {
+               alert("파일을 선택해 주세요.");
+               return;
+           }
+
+
 }
 
 
@@ -138,8 +189,9 @@ function set_exam() {
 
    <div class="container-fluid" style="padding-top: 10px;">
       <div class="card" id="card-title-1">
-         <div class="card-header border-0 pb-0 ">
+         <div class="card-header border-0 pb-0 " style="display: flex; justify-content: space-between; ">
             <h1 class="card-title" style="color:#6e6e6e;  font-weight: 900; font-size: 23px;">국어학개론 시험 출제</h1>
+            <button type="button" id="ok" class="btn btn-secondary" style="width: 150px;">출제하기</button>
          </div>
          <hr>
          <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
@@ -152,33 +204,34 @@ function set_exam() {
                <hr>
                <div>
                   <div style="margin-bottom: 6px;"> 
-                     <span style="margin-left: 69px;">> 시험구분</span>
-                     <span style="margin-left: 92px;">> 시험일자</span>
-                     <span style="margin-left: 120px;">> 시험 시작 시간</span>
-                     <span style="margin-left: 120px;">> 시험 종료 시간</span>
-                     <span style="margin-left: 250px;">> 시험지 등록</span>
+                     <span style="margin-left: 55px;">> 시험구분</span>
+                     <span style="margin-left: 60px;">> 시험일자</span>
+                     <span style="margin-left: 100px;">> 시험 시작 시간</span>
+                     <span style="margin-left: 142px;">> 시험 종료 시간</span>
+                     <span style="margin-left: 150px;">> 시험지 등록</span>
                   </div>
                   <div class="con-wrap" style="display: flex;">
                   
-                     <select class="form-control" id="pTest" name="testSe" style="width: 120px; margin-left: 69px;">
+                     <select class="form-control" id="pTest" name="testSe" style="width: 120px; margin-left: 55px;">
                         <option value="">선택</option>
                         <option value="middle">중간고사</option>
                         <option value="final">기말고사</option>
                      </select>
                      
-                     <input type="text" class="datepicker  form-control" id="test-date" placeholder="날짜 선택" style="width: 120px; margin-left: 70px;" readonly>
-                     <select class="form-control" id="startHour" class="form-select"></select> 시:
-					 <select class="form-control" id="startMinute" class="form-select"></select> 분
-					 <select class="form-control" id="endHour" class="schedule"></select> 시
-					 <select class="form-control" id="endMinute" class="schedule"></select> 분
+                     <input type="text" class="datepicker  form-control" id="test-date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
+                     <select class="form-control" id="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
+					 <select class="form-control" id="startMinute" class="form-select" style="width: 100px;"></select>&nbsp;분
+					 <select class="form-control" id="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
+					 <select class="form-control" id="endMinute" class="schedule" style="width: 100px;"></select>&nbsp;분
 					 
 					 <!-- <input type="file" class="form-control" id="test-file" name="pdfFile" style="width: 300px; margin-left: 80px;"> -->
-                     <input type="file" class="form-control" id="fileInput" accept="application/pdf" style="width: 300px; margin-left: 80px;" onchange="previewPDF()" />
-                     
-					 <button type="button" id="ok" class="btn btn-secondary" style="margin-left: 50px; width: 120px;">출제하기</button>
+                     <input type="file" class="form-control" id="fileInput" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
 
+					
                   </div>
                </div>
+               
+               
                
                <hr>
                <div class="answer-wrap" style="display: flex;">
