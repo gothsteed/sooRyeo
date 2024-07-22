@@ -99,10 +99,13 @@ FROM tbl_professor P
 JOIN tbl_course C ON P.prof_id = C.fk_professor_id
 JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
 JOIN tbl_time T ON C.course_seq = T.fk_course_seq
-WHERE P.prof_id = 202400002 and C.exist = 1;
+WHERE P.prof_id = 202400002 and C.exist = 1 and to_char(C.semester_date, 'yyyy-mm') = ;
 
 select *
 from tbl_time
+
+select *
+from tbl_course
 
 -- 개설수업
 select *

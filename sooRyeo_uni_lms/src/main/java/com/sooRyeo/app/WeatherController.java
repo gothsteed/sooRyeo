@@ -63,7 +63,7 @@ public class WeatherController {
 		result = result.substring(0, result.length()-1);
 		result += "]";
 		
-		System.out.println("result 확인 : " + result);
+		//System.out.println("result 확인 : " + result);
 			
 		return result;
 	}

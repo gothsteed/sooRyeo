@@ -415,5 +415,39 @@
 		join tbl_course C on R.fk_course_seq = C.course_seq
 		where course_seq = #{fk_course_seq}
 	</select>
+	
+	
+	<resultMap type="HashMap" id="assignmentReCheckMap">
+		<result property="fk_schedule_seq_assignment" 	column="fk_schedule_seq_assignment" javaType="int" />
+		<result property="assignment_submit_seq" 		column="assignment_submit_seq" 			javaType="int" />
+		<result property="name" 						column="name" 						javaType="String" />
+		<result property="attatched_file" 				column="attatched_file"      		javaType="String" />
+		<result property="end_date" 					column="end_date"  					javaType="String" />
+		<result property="submit_datetime" 				column="submit_datetime"      		javaType="String" />
+		<result property="score" 						column="score"      				javaType="String" />
+	</resultMap>
+	<select id="assignmentReCheckJSON" parameterMap="paraMap" resultMap="assignmentReCheckMap" >
+		SELECT P.prof_id AS prof_id,
+       	P.name AS prof_name,
+       	C.COURSE_SEQ AS course_seq, 
+       	C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       	C.CAPACITY AS capacity, 
+       	C.SEMESTER_DATE AS semester_date,
+       	CU.fk_department_seq AS fk_department_seq, 
+       	CU.grade AS grade, 
+       	CU.name AS name, 
+       	CU.credit AS credit, 
+       	CU.required AS required, 
+       	CU.exist AS exist,
+       	T.DAY_OF_WEEK AS day_of_week,
+       	T.start_period AS start_period,
+       	T.end_period AS end_period
+		FROM tbl_professor P
+		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
+		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+		JOIN tbl_time T ON C.course_seq = T.fk_course_seq
+		WHERE P.prof_id = #{prof_id} and C.exist = 1 and to_char(C.semester_date, 'yyyy-mm') = to_char(#{semester_date}, 'yyyy-mm');
+	</select>
+	
 
 </mapper>

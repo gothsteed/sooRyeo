@@ -1,5 +1,9 @@
 package com.sooRyeo.app.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -288,7 +292,7 @@ public class ProfessorDao_imple implements ProfessorDao {
 	@Override
 	public List<Map<String, String>> assignmentCheckJSON(String schedule_seq_assignment) {
 		
-		List<Map<String, String>> assignmentCheckJSON = sqlSession.selectList("professor.assignmentCheckJSON", schedule_seq_assignment);
+		List<Map<String, String>> assignmentCheckJSON = sqlSession.selectList("professor.assignmentReCheckJSON", schedule_seq_assignment);
 		
 		return assignmentCheckJSON;
 	}
@@ -333,6 +337,30 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		int A_totalElementCount = sqlSession.selectOne("board.getA_TotalElementCount", paraMap);
 		return new Pager(announcementList, currentPage, sizePerPage, A_totalElementCount);
+	}
+
+
+	@Override
+	public List<Map<String, String>> courseListJson(String semester, int prof_id) {
+		
+		 SimpleDateFormat smft = new SimpleDateFormat("yyyy-MM");
+		 Date semester_date = null;
+
+		 try {
+			 // String을 Date 타입으로 변환
+			 semester_date = smft.parse(semester);
+		 } catch (ParseException e) {
+			 e.printStackTrace();
+			 // 예외 처리 추가 (필요에 따라 적절한 예외 처리)
+		 }
+		 Map<String, Object> paraMap = new HashMap<>();
+	        paraMap.put("semester_date", semester_date);
+	        paraMap.put("prof_id", prof_id);
+		 
+		 
+        List<Map<String, String>> courseListJson = sqlSession.selectList("professor.courseListJson", paraMap); 
+		
+		return courseListJson;
 	}
 
 

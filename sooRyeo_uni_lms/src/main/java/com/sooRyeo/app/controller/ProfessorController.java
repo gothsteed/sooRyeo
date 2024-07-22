@@ -796,6 +796,45 @@ public class ProfessorController {
 	}
 	
 	
+	@ResponseBody
+	@PostMapping("/professor/courseListJson.lms")
+	public String courseListJson(HttpServletRequest request) {// 학기별 개강과목 json
+		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		int prof_id = loginuser.getProf_id();
+		
+		String semester = request.getParameter("semester");
+		System.out.println("확인용 semester : " + semester);
+		// 202103
+		
+		List<Map<String,String>> courseListJson = professorService.courseListJson(semester, prof_id);
+		// 해당학기 수업 리스트
+		
+		JSONArray jsonArr = new JSONArray();
+        
+        for(Map<String, String> map : courseListJson) {
+           
+           JSONObject jsonObj = new JSONObject();
+           jsonObj.put("row_num", map.get("row_num"));
+           jsonObj.put("fk_schedule_seq_assignment", map.get("fk_schedule_seq_assignment"));
+           jsonObj.put("assignment_submit_seq", map.get("assignment_submit_seq"));
+           jsonObj.put("name", map.get("name"));
+           jsonObj.put("attatched_file", map.get("attatched_file"));
+           jsonObj.put("end_date", map.get("end_date"));
+           jsonObj.put("submit_datetime", map.get("submit_datetime"));
+           jsonObj.put("score", map.get("score"));
+           jsonArr.put(jsonObj);
+           
+        }// end of for--------------------------------
+        
+        // System.out.println(jsonArr.toString());
+        
+        return jsonArr.toString();
+				
+	}
+	
 	
 	
 	

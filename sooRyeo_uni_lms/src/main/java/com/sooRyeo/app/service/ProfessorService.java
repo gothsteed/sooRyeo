@@ -80,6 +80,9 @@ public interface ProfessorService {
 
 	Pager<Announcement> getAnnouncement(int currentPage);
 	
+	// 학기 별 개강과목
+	List<Map<String, String>> courseListJson(String semester, int prof_id);
+	
 	
 	
 

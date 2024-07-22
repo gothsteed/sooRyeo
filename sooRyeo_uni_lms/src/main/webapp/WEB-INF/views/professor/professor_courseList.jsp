@@ -113,17 +113,79 @@ $(document).ready(function(){
 		
 	}); // end of $("div.border").click(function(e){})
  	
-	
+	$("button#submitButton").click(function(e){
+		
+		const year = $("select#year").val();
+	  	const semester = $("select#semester").val();
+		  
+	  	// 선택된 값을 출력하거나 다른 함수에서 사용
+	  	//console.log('선택된 년도:', year);
+	  	//console.log('선택된 학기:', semester);
+		  
+	  	// 선택된 값을 함수에 전달
+	  	selectCourse(year, semester);
+		
+		
+	}); // end of $("button#submitButton").click(function(e) 
+
+			
 }); // end of $(document).ready(function(){})
+
+
+function selectCourse(year, semester){
+	
+	const selector = year+semester;
+	console.log(selector);
+	
+	$("div#showCourse").remove();
+	
+	$.ajax({
+		url:"<%= ctxPath%>/professor/courseListJson.lms",
+		data:{"semester":selector},
+		type:"post",
+		dataType:"json",
+		success:function(json){
+			console.log(JSON.stringify(json));
+	
+			
+		},
+		error: function(request, status, error){
+			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		}
+	});
+	
+}
+
+
+
 
 </script>
 
-
+<div class="form-group ml-1" style="width:10%;">
+  <label for="grade">년도 선택</label> 
+  <select id="year" name="year" class="form-control">
+    <option value="">--년도 선택--</option>
+    <option value="2021">2021</option>
+    <option value="2022">2022</option>
+    <option value="2023">2023</option>
+    <option value="2024">2024</option>
+  </select>
+  
+  <label for="grade">학기 선택</label> 
+  <select id="semester" name="semester" class="form-control">
+    <option value="">--학기 선택--</option>
+    <option value="03">1학기</option>
+    <option value="07">2학기</option>
+  </select>
+  
+  <button id="submitButton" class="btn btn-primary">확인</button>
+  
+</div>
 <div style="display: flex; width : 100%;" class="row">
 
-	<div style="margin-top: 5%; width : 80%; border: solid 0px green;">
+	<div style="margin-top: 5%; width : 80%; border: solid 0px green;" id="showCourse">
 		<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
-		
+			<div id="select">
 			<div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
 			   <input type="hidden" name="course_seq" value="${course.course_seq}"/>
 			   <div style="display: flex;" >
@@ -162,7 +224,7 @@ $(document).ready(function(){
 			      <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
 			   </div>
 			</div>
-			
+		</div>	
 		</c:forEach>
 	</div>
 	
@@ -175,6 +237,5 @@ $(document).ready(function(){
 	</div>
 
 </div>
-
 
 

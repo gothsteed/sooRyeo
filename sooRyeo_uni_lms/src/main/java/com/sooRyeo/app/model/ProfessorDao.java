@@ -84,6 +84,9 @@ public interface ProfessorDao {
 	int getTotalElementCount(String fk_course_seq);
 
 	Pager<Announcement> getAnnouncement(int currentPage);
+	
+	// 학기 별 개강과목
+	List<Map<String, String>> courseListJson(String semester, int prof_id);
 
 
 	

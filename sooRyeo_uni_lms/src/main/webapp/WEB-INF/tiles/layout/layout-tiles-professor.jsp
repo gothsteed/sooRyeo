@@ -224,9 +224,6 @@
             <li class="nav-item">
                 <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
-                    <a class="dropdown-item" href="#">시간표</a>
-                    <a class="dropdown-item" href="#">과제</a>
-                    <a class="dropdown-item" href="#">시험</a>
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/approveConsult.lms">상담 승인</a>
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/consult.lms">상담일정</a>
                 </div>
@@ -234,7 +231,7 @@
             <li class="nav-item">
                 <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
                 <div class="dropdown-menu" aria-labelledby="gradesMenu" >
-                    <a class="dropdown-item" href="#">학점 통계</a>
+                    <a class="dropdown-item" href="#">성적 기입</a>
                     <a class="dropdown-item" href="#">취득 현황</a>
                 </div>
             </li>
@@ -246,16 +243,6 @@
                 </div>
             </li>
             <li class="nav-item"><a href="<%=ctxPath%>/professor/info.lms" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="certificatesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="icon">📜</span>증명서
-                </a>
-                <div class="dropdown-menu" aria-labelledby="certificatesDropdown">
-                    <a class="dropdown-item" href="#certificate1">성적증명서</a>
-                    <a class="dropdown-item" href="#certificate2">재학증명서</a>
-                    <a class="dropdown-item" href="#certificate3">졸업증명서</a>
-                </div>
-            </li>
             <li class="nav-item"><a href="<%=ctxPath%>/logout.lms" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
         </ul>
     </div>
