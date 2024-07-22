@@ -172,6 +172,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
 
         for(WebSocketSession connected : roomSessions.get(roomId)) {
+            if(connected.getId().equals(session.getId())) {
+                continue;
+            }
             connected.sendMessage(new TextMessage(jsonBuilder.toJson(messageDto)));
         }
 

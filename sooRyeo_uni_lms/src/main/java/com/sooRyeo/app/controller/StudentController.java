@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import com.sooRyeo.app.service.ScheduleService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +62,9 @@ public class StudentController {
 	
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private ScheduleService scheduleService;
 	
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
@@ -864,8 +868,14 @@ public class StudentController {
 		return "chatting";
 		// /WEB-INF/views/student/{1}.jsp
 	}
-	
-	
-	
-	
+
+	@GetMapping("/student/consult.lms")
+	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
+		return scheduleService.getStudentConsultPage(request, mav);
+	}
+
+
+
+
+
 }
