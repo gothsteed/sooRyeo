@@ -10,4 +10,6 @@ import java.util.List;
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
 
     List<ChatRoom> findAllByProfessorId(Integer profId);
+
+    List<ChatRoom> findAllByStudentId(Integer studentId);
 }
