@@ -5,12 +5,15 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +42,6 @@ public class LogService_imple implements LogService {
 		int AdminCount = 0;
 	    int ProCount = 0;
 	    int StudCount = 0;
-	    int TodayCount = 0;
 		
         List<LoginLog> countAdminList = loginLogRepository.findAllByMemberType(MemberType.ADMIN.toString());
         List<LoginLog> countProList = loginLogRepository.findAllByMemberType(MemberType.PROFESSOR.toString());
@@ -50,7 +52,9 @@ public class LogService_imple implements LogService {
         LocalDate today = LocalDate.now(zoneId);
         LocalDateTime startOfDay = today.atStartOfDay(); // 오늘 00:00:00
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // 오늘 23:59:59.999999999
-
+   
+        
+        
         Instant startOfDayInstant = startOfDay.atZone(zoneId).toInstant();
         Instant endOfDayInstant = endOfDay.atZone(zoneId).toInstant();
 
@@ -86,7 +90,11 @@ public class LogService_imple implements LogService {
         if(countDateList.size() != 0) {
             for(LoginLog loginlog : countDateList) {
             	
-            	LocalDateTime localDateTime = loginlog.getTimestamp();
+            	LocalDate logDate = loginlog.getTimestamp().toLocalDate();
+            	System.out.println("확인용 logDate : " + logDate);
+            	
+            	LocalDateTime localDateTime = loginlog.getTimestamp();          	
+            	
             	Instant logTimestamp = localDateTime.atZone(zoneId).toInstant();
                 
                 System.out.println("확인용 logTimestamp : " + logTimestamp);
@@ -119,7 +127,14 @@ public class LogService_imple implements LogService {
                 } else if (logTimestamp.isAfter(sevenDayBefore) && !logTimestamp.isAfter(sixDayBefore)) {
                 	
                     dailyCountMap.put("day7", dailyCountMap.get("day7") + 1);
+                
+            	} 
+                            
+                if (logDate.getMonth() == today.getMonth() && logDate.getYear() == today.getYear()) {
+                    dailyCountMap.put("totalday", dailyCountMap.get("totalday") + 1);
                 }
+                
+                
             }// end of for(LoginLog loginlog : countDateList) 
         }// end of if(countDateList.size() != 0)
         
@@ -151,9 +166,9 @@ public class LogService_imple implements LogService {
         System.out.println("확인용 AdminCount : " + AdminCount);
         System.out.println("확인용 ProCount : " + ProCount);
         System.out.println("확인용 StudCount : " + StudCount);
-        System.out.println("확인용 TodayCount : " + TodayCount);
         
-        return ResponseEntity.ok().body(jsonBuilder.toJson(countAdminList));
+        
+        return ResponseEntity.ok().body(jsonBuilder.toJson());
 		
 	}
 
