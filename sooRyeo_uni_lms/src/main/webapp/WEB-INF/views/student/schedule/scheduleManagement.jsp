@@ -462,6 +462,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 		// 시작시간, 종료시간		
 		var html="";
 		for(var i=0; i<24; i++) {
+			
 			if(i<10){
 				html+="<option value='0"+i+"'>0"+i+"</option>";
 			}

@@ -15,7 +15,6 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
 <script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
 
-<!-- <link rel="stylesheet" href="/css/datepicker-ver2.css"> -->
 
 <!-- DataPicker -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -32,11 +31,30 @@
 
 $(function() {
 	
+	// 시작시간, 종료시간		
+	var html="";
+	for(var i=0; i<24; i++) {
+		
+		if(i<10){
+			html+="<option value='0"+i+"'>0"+i+"</option>";
+		}
+		else{
+			html+="<option value="+i+">"+i+"</option>";
+		}
+		
+	}// end of for----------------------
+	
+	
+	
+	
+	// 데이터피커
     $(".datepicker").datepicker({
         dateFormat: "yy-mm-dd" // 원하는 날짜 형식 설정
     });
+    
+    
 
-
+	// 문제 수 증가, 감소
     var i = 1; // 변수 설정은 함수의 바깥에 설정!
 
     $("button#addBtn").click(function() {
@@ -59,7 +77,57 @@ $(function() {
     	i--;
     });
     
+    
+    
+    $("button#ok").click(function(){
+    	
+    	set_exam();
+    	
+    });
+    
+    
 });
+
+// pdf 미리보기
+function previewPDF() {
+	
+    const input = document.getElementById('fileInput');
+    const previewDiv = document.getElementById('pdfPreview');
+
+    // 파일이 선택되지 않았을 경우
+    if (input.files.length === 0) {
+        previewDiv.innerHTML = '선택된 파일이 없습니다.';
+        return;
+    }
+
+    const file = input.files[0];
+
+    // 파일이 PDF인지 확인
+    if (file.type !== 'application/pdf') {
+        previewDiv.innerHTML = 'PDF 파일이 아닙니다.';
+        return;
+    }
+
+    const fileReader = new FileReader();
+    fileReader.onload = function(e) {
+        const pdfData = e.target.result;
+        previewDiv.innerHTML = `<iframe src="\${pdfData}#toolbar=0&navpanes=0&scrollbar=0" style="width:800px; height:900px;" type="application/pdf"></iframe>`;
+        
+    };
+
+    fileReader.readAsDataURL(file); // 파일을 Data URL로 읽기
+}
+
+
+// 출제하기 버튼
+function set_exam() {
+
+	// 유효성 검사
+	
+	
+	
+	
+}
 
 
 </script>
@@ -86,7 +154,8 @@ $(function() {
                   <div style="margin-bottom: 6px;"> 
                      <span style="margin-left: 69px;">> 시험구분</span>
                      <span style="margin-left: 92px;">> 시험일자</span>
-                     <span style="margin-left: 120px;">> 제한시간</span>
+                     <span style="margin-left: 120px;">> 시험 시작 시간</span>
+                     <span style="margin-left: 120px;">> 시험 종료 시간</span>
                      <span style="margin-left: 250px;">> 시험지 등록</span>
                   </div>
                   <div class="con-wrap" style="display: flex;">
@@ -98,36 +167,23 @@ $(function() {
                      </select>
                      
                      <input type="text" class="datepicker  form-control" id="test-date" placeholder="날짜 선택" style="width: 120px; margin-left: 70px;" readonly>
-                     <input type="hidden" id="timeLimt" name="testTimeLimit">
-                     <select class="form-control" id="hours" style="width: 120px; margin-left: 92px; margin-right: 10px;">   
-                        <option value="">--시--</option>
-                        <option value="0" >00 시간</option>
-                        <option value="3600" >01 시간</option>
-                        <option value="7200" >02 시간</option>
-                        <option value="10800" >03 시간</option>
-                        <option value="14400" >04 시간</option>
-                     </select>:
-                     <select class="form-control" id="minute" style="width: 120px; margin-left: 10px;">
-                        <option value="">--분--</option>
-                        <option value="0" >00 분</option>
-                        <option value="600" >10 분</option>
-                        <option value="1200" >20 분</option>
-                        <option value="1800" >30 분</option>
-                        <option value="2400" >40 분</option>
-                        <option value="3000">50 분</option>
-                     </select>
+                     <select class="form-control" id="startHour" class="form-select"></select> 시:
+					 <select class="form-control" id="startMinute" class="form-select"></select> 분
+					 <select class="form-control" id="endHour" class="schedule"></select> 시
+					 <select class="form-control" id="endMinute" class="schedule"></select> 분
+					 
+					 <!-- <input type="file" class="form-control" id="test-file" name="pdfFile" style="width: 300px; margin-left: 80px;"> -->
+                     <input type="file" class="form-control" id="fileInput" accept="application/pdf" style="width: 300px; margin-left: 80px;" onchange="previewPDF()" />
                      
-					 <input type="file" class="form-control" id="test-file" name="pdfFile" style="width: 300px; margin-left: 80px;">
-                     
-					 <button type="button" class="btn btn-secondary" style="margin-left: 50px; width: 120px;">출제하기</button>
+					 <button type="button" id="ok" class="btn btn-secondary" style="margin-left: 50px; width: 120px;">출제하기</button>
 
                   </div>
                </div>
                
                <hr>
                <div class="answer-wrap" style="display: flex;">
-                  <div id="myPdf" style="width:800px;height:900px; border: solid 1px red;">
-                     <div class="preview" style="text-align: center; margin-top: 50%;">시험지 미리보기 <br>(파일을 먼저 등록해주세요.)</div>
+                  <div id="myPdf" style="width:800px; height:900px; border: solid 1px black;">
+                  	 <div id="pdfPreview" style="text-align: center;"><div style="margin-top: 50%;">시험지 미리보기 <br>(파일을 먼저 등록해주세요.)</div></div>
                   </div>
                   <div class="hidden"></div>
                   <div style="padding-left: 20px; width: 50%;"> 
