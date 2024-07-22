@@ -471,8 +471,6 @@ JOIN tbl_attendance D
 on C.lecture_seq = D.fk_lecture_seq
 where D.isAttended = 1 AND D.fk_student_id = '202400005'
 
-select *
-from tbl_attendance
 
 select name
 from tbl_curriculum
@@ -481,9 +479,43 @@ order by curriculum_seq asc;
 
 select *
 from tbl_lecture
+order by lecture_seq;
 
-14	4	1단원 영상	1주차 수업 자료	제 1장. 국어학개론의 이해	1) 국어학개론의 이해	24/07/07	24/07/14			3
+
+select *
+from tbl_attendance
+order by fk_lecture_seq;
+
+
+-- 14	4	1단원 영상	1주차 수업 자료	제 1장. 국어학개론의 이해	1) 국어학개론의 이해	24/07/07	24/07/14			3
 
 insert into tbl_attendance(attendance_seq, fk_student_id, isattended, attended_date, fk_lecture_seq, play_time) 
 values(attendance_seq.nextval, '202400005', 1, sysdate, '14', 3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
