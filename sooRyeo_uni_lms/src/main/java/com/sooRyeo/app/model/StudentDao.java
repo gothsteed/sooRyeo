@@ -93,7 +93,6 @@ public interface StudentDao {
 
 	// 수업명 가져오기
 	List<Curriculum> lectureList();
-
 	
 	// 이수한 학점이 몇점인지 알아오는 메소드
 	int credit_point(int student_id);
@@ -109,6 +108,9 @@ public interface StudentDao {
 
 	// 학사공지사항 리스트를 select 해오는 메소드
 	Pager<Announcement> getAnnouncement(int currentPage);
+
+	// 학생 대쉬보드 - 수강중인 과목 출석률 
+	List<String> myAttendance_byCategoryJSON(int student_id);
 	
 
 }

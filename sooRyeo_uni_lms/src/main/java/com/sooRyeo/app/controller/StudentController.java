@@ -788,23 +788,6 @@ public class StudentController {
 	} // end of public String attendanceListJSON
 	
 	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// 복학 신청
 	@GetMapping(value = "/student/application_status.lms")
@@ -864,6 +847,55 @@ public class StudentController {
 		return "chatting";
 		// /WEB-INF/views/student/{1}.jsp
 	}
+	
+	
+	
+	
+	
+	// 학생 대쉬보드 - 수강중인 과목 출석률 
+	@ResponseBody
+	@GetMapping(value="/student/myAttendance_byCategoryJSON.lms", produces="text/plain;charset=UTF-8")
+	public String myAttendance_byCategoryJSON(HttpServletRequest request, HttpServletResponse response,
+											  @RequestParam(defaultValue = "") String userid) {
+		
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		System.out.println("확인용 : " + student_id);
+		
+		List<String> myAttendance_List = service.myAttendance_byCategoryJSON(student_id);
+		
+		request.setAttribute("myAttendance_List", myAttendance_List);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(myAttendance_List.size() > 0) {
+			
+			for(String name : myAttendance_List) {
+				
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("name", name);
+				
+				jsonArr.put(jsonObj);
+				
+			} // end of for
+			
+		} // end of if(myAttendance_List.size() > 0)
+		
+		System.out.println(jsonArr.toString());
+		
+		return jsonArr.toString();
+		
+	} // end of public String myAttendance_byCategoryJSON
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

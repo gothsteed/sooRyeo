@@ -72,8 +72,8 @@
      		 , end_date
 		from tbl_lecture join tbl_course
 		on tbl_lecture.fk_course_seq = tbl_course.course_seq
-		where fk_course_seq = #{fk_course_seq}
-		order by lecture_seq asc <!-- where exist = 1 -->
+		where exist = 1 AND fk_course_seq = #{fk_course_seq}
+		order by lecture_seq asc
 	</select>
 	
 	
@@ -441,5 +441,43 @@
 		    WHEN to_char(sysdate, 'd') = '6' THEN 5
 		END
 	</select>
+	
+	
+	
+	
+	<!-- 학생 대쉬보드 - 수강중인 과목 출석률 -->
+	<select id="myAttendance_byCategoryJSON" parameterType="Integer" resultType="String">
+		select L.name AS name
+		from tbl_registered_course R
+		JOIN tbl_course C
+		ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum L
+		ON C.fk_curriculum_seq = L.curriculum_seq
+		where R.fk_student_id = #{student_id}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </mapper>

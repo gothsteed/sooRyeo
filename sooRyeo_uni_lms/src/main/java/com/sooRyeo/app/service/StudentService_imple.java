@@ -786,6 +786,18 @@ public class StudentService_imple implements StudentService {
 		
 	} // end of public void employeeList_to_Excel
 
+
+
+	// 학생 대쉬보드 - 수강중인 과목 출석률 
+	@Override
+	public List<String> myAttendance_byCategoryJSON(int student_id) {
+		
+		List<String> myAttendance_byCategoryJSON = dao.myAttendance_byCategoryJSON(student_id);
+		
+		return myAttendance_byCategoryJSON;
+		
+	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
+
 	
 
 	
