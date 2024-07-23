@@ -18,12 +18,16 @@
 <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
 <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/highcharts-more.js"></script>
 <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/modules/solid-gauge.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/export-data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/accessibility.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/series-label.js"></script>
 
 
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="<%=ctxPath%>/resources/node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet" />
 
 <style type="text/css">
+
 .grid-stack-item-content {
 	background-color: #f9f9f9;
 	color: #333;
@@ -57,7 +61,52 @@
     color: #d1e0e0;
     cursor: pointer; /* 마우스를 올렸을 때 포인터 모양으로 변경 */
 }
+
+
+.highcharts-figure,
+.highcharts-data-table table {
+   min-width: 320px;
+   max-width: 500px;
+   margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
 </style>
+
 
 
 <script type="text/javascript">
@@ -65,6 +114,168 @@
 $(document).ready(function(){
 	
 	showWeather();
+
+	<%--
+	$.ajax({
+		url:"<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
+		data:{"userid" : "${sessionScope.loginuser.userid}"},
+		dataType:"json",
+		success:function(json){
+			
+			console.log(JSON.stringify(json));
+			
+			
+		},
+		error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+		
+	}); // end of $.ajax
+	--%>
+	
+	
+	//////////////////////////////////////////////
+	// 전체 출석률 하이차트
+	Highcharts.chart('lecture_container', {
+	    chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+	        type: 'pie'
+	    },
+	    title: {
+	        text: '전체강의 출석[%]'
+	    },
+	    tooltip: {
+	        valueSuffix: '%'
+	    },
+	    plotOptions: {
+	        series: {
+	            allowPointSelect: true,
+	            cursor: 'pointer',
+	            dataLabels: [{
+	                enabled: true,
+	                distance: 20
+	            }, {
+	                enabled: true,
+	                distance: -40,
+	                format: '{point.percentage:.1f}%',
+	                style: {
+	                    fontSize: '1.2em',
+	                    textOutline: 'none',
+	                    opacity: 0.7
+	                },
+	                filter: {
+	                    operator: '>',
+	                    property: 'percentage',
+	                    value: 10
+	                }
+	            }]
+	        }
+	    },
+	    series: [
+	        {
+	            name: 'Percentage',
+	            colorByPoint: true,
+	            data: [
+	                {
+	                    name: 'Water',
+	                    y: 55.02
+	                },
+	                {
+	                    name: 'Fat',
+	                    sliced: true,
+	                    selected: true,
+	                    y: 26.71
+	                },
+	                {
+	                    name: 'Carbohydrates',
+	                    y: 1.09
+	                },
+	                {
+	                    name: 'Protein',
+	                    y: 15.5
+	                },
+	                {
+	                    name: 'Ash',
+	                    y: 1.68
+	                }
+	            ]
+	        }
+	    ]
+	});
+	//////////////////////////////////////////////
+	
+	
+	
+	//////////////////////////////////////////////
+	// 과제달성률 하이차트
+	Highcharts.chart('assignment_container', {
+	    chart: {
+	        type: 'pie'
+	    },
+	    title: {
+	        text: '과제달성률[%]'
+	    },
+	    tooltip: {
+	        valueSuffix: '%'
+	    },
+	    plotOptions: {
+	        series: {
+	            allowPointSelect: true,
+	            cursor: 'pointer',
+	            dataLabels: [{
+	                enabled: true,
+	                distance: 20
+	            }, {
+	                enabled: true,
+	                distance: -40,
+	                format: '{point.percentage:.1f}%',
+	                style: {
+	                    fontSize: '1.2em',
+	                    textOutline: 'none',
+	                    opacity: 0.7
+	                },
+	                filter: {
+	                    operator: '>',
+	                    property: 'percentage',
+	                    value: 10
+	                }
+	            }]
+	        }
+	    },
+	    series: [
+	        {
+	            name: 'Percentage',
+	            colorByPoint: true,
+	            data: [
+	                {
+	                    name: 'Water',
+	                    y: 55.02
+	                },
+	                {
+	                    name: 'Fat',
+	                    sliced: true,
+	                    selected: true,
+	                    y: 26.71
+	                },
+	                {
+	                    name: 'Carbohydrates',
+	                    y: 1.09
+	                },
+	                {
+	                    name: 'Protein',
+	                    y: 15.5
+	                },
+	                {
+	                    name: 'Ash',
+	                    y: 1.68
+	                }
+	            ]
+	        }
+	    ]
+	});
+	//////////////////////////////////////////////
 	
 });
 
@@ -240,52 +451,59 @@ function showWeather(){
 <body style="">
 	<div class="row">
 		<div class="col-sm-12 col-md-12">
-			<div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 720px;">
+			<div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 600px;">
 				
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="4" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
+					<div class="grid-stack-item-content">
+						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
+							<img src="<%= ctxPath%>/resources/images/attendance.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
+							<h4 style="font-weight: bold;">출석률</h4>
+						</div>
+						
+						<div style="display: flex;">   
+							<div style="width: 80%; margin:auto; max-height:50px;">
+							
+							   <div id="lecture_container"></div>
+							   <div id="table_container" style="margin: 40px 0 0 0;"></div>
+							
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
+					<div class="grid-stack-item-content">
+						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
+							<img src="<%= ctxPath%>/resources/images/tasks.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
+							<h4 style="font-weight: bold;">과제달성률</h4>
+						</div>
+						<div style="display: flex;">   
+							<div style="width: 80%; margin:auto; height:0px;">
+							
+							   <div id="assignment_container"></div>
+							   <div id="table_container" style="margin: 40px 0 0 0;"></div>
+							
+							</div>
+						</div>
+					</div>
+				</div>
+	
 
 				
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="0" gs-w="3" gs-h="3" gs-no-resize="true">
-					<div class="grid-stack-item-content">
-						<div id="graph">
-						
-						</div>
-					</div>
-				</div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="5" gs-y="0" gs-w="3" gs-h="3" gs-no-resize="true">
-					<div class="grid-stack-item-content">
-						<div id="graph">
-						
-						</div>
-					</div>
-				</div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="0" gs-w="3" gs-h="3" gs-no-resize="true">
-					<div class="grid-stack-item-content">
-						<div id="graph">
-						
-						</div>
-					</div>
-				</div>
-				
-
-				
-			        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
+			        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-	            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
-	            <path d="M337.8 5.4C327-1.8 313-1.8 302.2 5.4L166.3 96H48C21.5 96 0 117.5 0 144V464c0 26.5 21.5 48 48 48H256V416c0-35.3 28.7-64 64-64s64 28.7 64 64v96H592c26.5 0 48-21.5 48-48V144c0-26.5-21.5-48-48-48H473.7L337.8 5.4zM96 192h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V208zM96 320h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V336c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V336zM232 176a88 88 0 1 1 176 0 88 88 0 1 1 -176 0zm88-48c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H336V144c0-8.8-7.2-16-16-16z"/>
-	            </svg>
-	            <h4>날씨</h4>           
+	            <img src="<%= ctxPath%>/resources/images/sun.png" style="width: 30px; height: 40px; margin-right:3%; margin-bottom:3%;"/>
+	            <h4 style="font-weight: bold;">날씨</h4>           
             </div>
             <div id="displayWeather" style="min-width: 90%; max-height: 500px; overflow-y: scroll; margin-top: 40px; margin-bottom: 70px; padding-left: 10px; padding-right: 10px;"></div>
           </div>
         </div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="6" gs-y="0" gs-w="4" gs-h="3" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="2" gs-w="4" gs-h="4" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
-				            	<path d="M337.8 5.4C327-1.8 313-1.8 302.2 5.4L166.3 96H48C21.5 96 0 117.5 0 144V464c0 26.5 21.5 48 48 48H256V416c0-35.3 28.7-64 64-64s64 28.7 64 64v96H592c26.5 0 48-21.5 48-48V144c0-26.5-21.5-48-48-48H473.7L337.8 5.4zM96 192h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V208zM96 320h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V336c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V336zM232 176a88 88 0 1 1 176 0 88 88 0 1 1 -176 0zm88-48c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H336V144c0-8.8-7.2-16-16-16z" />
-				            </svg>
-							<h4>오늘 수업</h4>
+							<img src="<%= ctxPath%>/resources/images/class2.png" style="width: 30px; height: 40px; margin-right:3%; margin-bottom:3%;"/>
+							<h4 style="font-weight: bold;">오늘의 수업</h4>
 						</div>
 						
 						<c:if test="${requestScope.today_lec != '[]'}">
@@ -318,28 +536,26 @@ function showWeather(){
 						</c:if>
 					</div>
 				</div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="2" gs-y="4" gs-w="8" gs-h="4" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="12" gs-w="8" gs-h="4" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
-	            <path d="M337.8 5.4C327-1.8 313-1.8 302.2 5.4L166.3 96H48C21.5 96 0 117.5 0 144V464c0 26.5 21.5 48 48 48H256V416c0-35.3 28.7-64 64-64s64 28.7 64 64v96H592c26.5 0 48-21.5 48-48V144c0-26.5-21.5-48-48-48H473.7L337.8 5.4zM96 192h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V208zM96 320h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V336c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V336zM232 176a88 88 0 1 1 176 0 88 88 0 1 1 -176 0zm88-48c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H336V144c0-8.8-7.2-16-16-16z" />
-	            </svg>
-							<h4>시간표</h4>
+							
+							<h4 style="font-weight: bold;">시간표</h4>
 						</div>
-						<p class="card-text" style="margin-bottom: 0">...but don't resize me!</p>
+						<p class="card-text" style="margin-bottom: 0">
+						
+						</p>
 					</div>
 				</div>
 				
 				
 				
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" id="announcement" gs-x="2" gs-y="8" gs-w="8" gs-h="4" gs-no-resize="true" >
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" id="announcement" gs-x="8" gs-y="0" gs-w="8" gs-h="4" gs-no-resize="true" >
 					<div class="grid-stack-item-content" >
 						
 					         <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-					           	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="mr-1 ml-1 mt-2" style="width: 25px; height: 15px;">
-					            <path d="M337.8 5.4C327-1.8 313-1.8 302.2 5.4L166.3 96H48C21.5 96 0 117.5 0 144V464c0 26.5 21.5 48 48 48H256V416c0-35.3 28.7-64 64-64s64 28.7 64 64v96H592c26.5 0 48-21.5 48-48V144c0-26.5-21.5-48-48-48H473.7L337.8 5.4zM96 192h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V208c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V208zM96 320h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H96c-8.8 0-16-7.2-16-16V336c0-8.8 7.2-16 16-16zm400 16c0-8.8 7.2-16 16-16h32c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H512c-8.8 0-16-7.2-16-16V336zM232 176a88 88 0 1 1 176 0 88 88 0 1 1 -176 0zm88-48c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16H336V144c0-8.8-7.2-16-16-16z"/>
-					            </svg>                       
-				            	<h4>수려대학교 공지사항</h4>
+					            <img src="<%= ctxPath%>/resources/images/notificaiton.png" style="width: 40px; height: 40px; margin-right:2%; margin-bottom:3%;"/>
+				            	<h4 style="font-weight: bold;">공지사항</h4>
 				            </div>
 							
 
