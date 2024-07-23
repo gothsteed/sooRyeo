@@ -475,7 +475,7 @@
 	
 	
 	<select id="getToday_lec" parameterType="Integer" resultType="com.sooRyeo.app.domain.TodayLecture">
-		select distinct(cu.name) as lec_name, p.name as prof_name, credit
+		select distinct(cu.name) as lec_name, p.name as prof_name, credit, start_period, end_period
 		from tbl_student S
 		join tbl_registered_course R on S.student_id = R.fk_student_id
 		join tbl_course C on R.fk_course_seq = C.course_seq

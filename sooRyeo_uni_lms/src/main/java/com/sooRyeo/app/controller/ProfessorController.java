@@ -70,7 +70,8 @@ public class ProfessorController {
 		
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  professorService.getAnnouncement(currentPage);
-		
+
+		mav.addObject("prof_id", ((Professor) request.getSession().getAttribute("loginuser")).getProf_id());
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());

@@ -37,8 +37,8 @@ th {
 	text-align: center;
 }
 
-#time_table th, #time_table td {
-	border: 1px solid black;
+.timetable th, .timetable td {
+	/*border: 1px solid black;*/
 	border-collapse: collapse;
 	text-align: center;
 	width: 100px;
@@ -46,6 +46,7 @@ th {
 	height: 20px;
 	text-align: center;
 }
+
 
 .ml-n1 {
 	margin-left: -2.5rem !important;
@@ -294,7 +295,8 @@ function fetchProfTimeTable(prof_id) {
         .then(data => {
 
 			console.log(data);
-			resetTimetable()
+			clearTimetable();
+			recreateTimetableStructure();
 			
 			fillTimetable(data);
 
@@ -643,7 +645,7 @@ function deleteCourse(courseId) {
 
 }
 
-function resetTimetable() {
+/*function resetTimetable() {
     const tableBody = document.getElementById('timetable-body');
     for (let day of ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']) {
         for (let period = 1; period <= 8; period++) {
@@ -656,6 +658,28 @@ function resetTimetable() {
             }
         }
     }
+}*/
+
+
+function clearTimetable() {
+	const timetable = document.querySelector('.timetable tbody');
+	timetable.innerHTML = '';
+}
+
+function recreateTimetableStructure() {
+	const timetable = document.querySelector('.timetable tbody');
+	const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+	for (let i = 1; i <= 8; i++) {
+		const row = document.createElement('tr');
+		row.innerHTML = `<td>\${i}</td>`;
+
+		days.forEach(day => {
+			row.innerHTML += `<td id="\${day}-\${i}" class="time-slot"></td>`;
+		});
+
+		timetable.appendChild(row);
+	}
 }
 
 let formCounter = 0;

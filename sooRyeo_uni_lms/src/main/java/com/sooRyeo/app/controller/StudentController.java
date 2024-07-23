@@ -150,7 +150,6 @@ public class StudentController {
 		mav.addObject("application_status", application_status);
 		mav.addObject("member_student", member_student);
 		mav.setViewName("myInfo");
-		// /WEB-INF/views/student/{1}.jsp
 		
 		return mav;
 		
@@ -848,7 +847,7 @@ public class StudentController {
 		
 		int status_num = Integer.parseInt(request.getParameter("num"));
 		
-		// 학적변경테이블(tbl_student_status_change)에 재학신청을 insert 하는 메소드 
+		// 학적변경테이블(tbl_student_status_change)에 학적변경신청을 insert 하는 메소드 
 		int n = studentservice.application_status_change(student_id, status_num);
 		
 		if(n == 1) {
@@ -940,6 +939,14 @@ public class StudentController {
 		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
 		return jsonobj.toString();
 	}
+	@GetMapping("/student/test.lms")
+	public String test() {
+		
+		return "test";
+		
+	} // end of public String attendance
+	
+	
 	
 
 	@GetMapping("/student/consult.lms")
