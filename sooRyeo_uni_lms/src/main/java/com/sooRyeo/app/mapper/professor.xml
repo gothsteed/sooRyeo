@@ -417,36 +417,43 @@
 	</select>
 	
 	
-	<resultMap type="HashMap" id="assignmentReCheckMap">
-		<result property="fk_schedule_seq_assignment" 	column="fk_schedule_seq_assignment" javaType="int" />
-		<result property="assignment_submit_seq" 		column="assignment_submit_seq" 			javaType="int" />
-		<result property="name" 						column="name" 						javaType="String" />
-		<result property="attatched_file" 				column="attatched_file"      		javaType="String" />
-		<result property="end_date" 					column="end_date"  					javaType="String" />
-		<result property="submit_datetime" 				column="submit_datetime"      		javaType="String" />
-		<result property="score" 						column="score"      				javaType="String" />
+	<resultMap id="courseReCheckMap" type="com.sooRyeo.app.domain.Course">
+		<id property="course_seq" column="course_seq" />
+		<result property="semester_date" column="semester_date" />
+		<association property="professor" javaType="com.sooRyeo.app.domain.Professor">
+			<id property="prof_id" column="prof_id" />			
+			<result property="name" column="prof_name" />
+		</association>
+		<association property="curriculum" javaType="com.sooRyeo.app.domain.Curriculum">
+			<id property="curriculum_seq" column="curriculum_seq" />
+			<result property="fk_department_seq" column="fk_department_seq" />
+			<result property="name" column="name" />
+			<result property="credit" column="credit" />
+			<result property="required" column="required" />
+		</association>
 	</resultMap>
-	<select id="assignmentReCheckJSON" parameterMap="paraMap" resultMap="assignmentReCheckMap" >
+	<select id="courseListJson" parameterType="HashMap" resultMap="courseReCheckMap" >
 		SELECT P.prof_id AS prof_id,
        	P.name AS prof_name,
        	C.COURSE_SEQ AS course_seq, 
-       	C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       	CU.CURRICULUM_SEQ AS curriculum_seq, 
        	C.CAPACITY AS capacity, 
        	C.SEMESTER_DATE AS semester_date,
-       	CU.fk_department_seq AS fk_department_seq, 
-       	CU.grade AS grade, 
+       	CU.fk_department_seq AS fk_department_seq,  
        	CU.name AS name, 
        	CU.credit AS credit, 
        	CU.required AS required, 
-       	CU.exist AS exist,
-       	T.DAY_OF_WEEK AS day_of_week,
-       	T.start_period AS start_period,
-       	T.end_period AS end_period
+       	CU.exist AS exist
 		FROM tbl_professor P
 		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
 		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
-		JOIN tbl_time T ON C.course_seq = T.fk_course_seq
-		WHERE P.prof_id = #{prof_id} and C.exist = 1 and to_char(C.semester_date, 'yyyy-mm') = to_char(#{semester_date}, 'yyyy-mm')
+		WHERE P.prof_id = #{prof_id} and C.exist = 1 and to_char(C.semester_date, 'yy-MM') = #{semester_date}
+	</select>
+	
+	<select id="courseListTimeJson" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
+		select time_seq, day_of_week, fk_course_seq, start_period, end_period
+		from tbl_time
+		where fk_course_seq = ${course_seq}
 	</select>
 	
 

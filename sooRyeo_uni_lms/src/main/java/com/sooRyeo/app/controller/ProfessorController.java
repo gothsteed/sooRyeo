@@ -167,9 +167,8 @@ public class ProfessorController {
 		int prof_id = loginuser.getProf_id();
 		
 		ProfessorTimeTable timeTable = professorService.courseList(prof_id);
-		
-		List<Course> courseList = timeTable.getCourseList();
-		
+		List<Course> courseList = timeTable.getCourseList();		
+
 		if(courseList == null) {// 정보가 없다면
 			  mav.addObject("message", "담당한 강의가 없습니다.");
 	    	  mav.addObject("loc", request.getContextPath()+"/professor/dashboard.lms");
@@ -806,25 +805,31 @@ public class ProfessorController {
 		int prof_id = loginuser.getProf_id();
 		
 		String semester = request.getParameter("semester");
-		System.out.println("확인용 semester : " + semester);
+		//System.out.println("확인용 semester : " + semester);
 		// 202103
 		
-		List<Map<String,String>> courseListJson = professorService.courseListJson(semester, prof_id);
+		ProfessorTimeTable timeTable = professorService.courseListJson(semester, prof_id);
 		// 해당학기 수업 리스트
+		List<Course> courseListJson = timeTable.getCourseList();
+		
 		
 		JSONArray jsonArr = new JSONArray();
         
-        for(Map<String, String> map : courseListJson) {
+        for(Course course : courseListJson) {
            
            JSONObject jsonObj = new JSONObject();
-           jsonObj.put("row_num", map.get("row_num"));
-           jsonObj.put("fk_schedule_seq_assignment", map.get("fk_schedule_seq_assignment"));
-           jsonObj.put("assignment_submit_seq", map.get("assignment_submit_seq"));
-           jsonObj.put("name", map.get("name"));
-           jsonObj.put("attatched_file", map.get("attatched_file"));
-           jsonObj.put("end_date", map.get("end_date"));
-           jsonObj.put("submit_datetime", map.get("submit_datetime"));
-           jsonObj.put("score", map.get("score"));
+           jsonObj.put("prof_id", course.getProfessor().getProf_id());
+           jsonObj.put("prof_name", course.getProfessor().getName());
+           jsonObj.put("course_seq", course.getCourse_seq());
+           jsonObj.put("semester_date", course.getSemester_date());
+           jsonObj.put("curriculum_seq", course.getCurriculum().getCurriculum_seq());
+           jsonObj.put("fk_department_seq", course.getCurriculum().getFk_department_seq());
+           jsonObj.put("name", course.getCurriculum().getName());
+           jsonObj.put("credit", course.getCurriculum().getCredit());
+           jsonObj.put("required", course.getCurriculum().getRequired());
+           jsonObj.put("timeList", course.getTimeList());
+           
+           
            jsonArr.put(jsonObj);
            
         }// end of for--------------------------------

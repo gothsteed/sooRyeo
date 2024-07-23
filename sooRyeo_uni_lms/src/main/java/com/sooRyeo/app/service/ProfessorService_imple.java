@@ -580,11 +580,11 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public List<Map<String, String>> courseListJson(String semester, int prof_id) {
+	public ProfessorTimeTable courseListJson(String semester, int prof_id) {
 		
-		List<Map<String, String>> courseListJson = dao.courseListJson(semester, prof_id);
+		ProfessorTimeTable courseListJson = dao.courseListJson(semester, prof_id);
 		
-		return null;
+		return courseListJson;
 	}
 
 
