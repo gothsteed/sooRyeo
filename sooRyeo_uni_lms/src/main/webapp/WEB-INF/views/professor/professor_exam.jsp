@@ -29,6 +29,10 @@
 
 <script type="text/javascript">
 
+
+// 문제 수 증가, 감소
+var index = 1; // 변수 설정은 함수의 바깥에 설정!
+
 $(function() {
 	
 	// 시작시간, 종료시간		
@@ -74,30 +78,26 @@ $(function() {
     
     
 
-	// 문제 수 증가, 감소
-    var i = 1; // 변수 설정은 함수의 바깥에 설정!
 
     $("button#addBtn").click(function() {
         $("div#boxWrap").append(`
             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
-                <span style="width: 70px; text-align:center;">\${i+1}번 답 :</span> <!-- i 값을 span에 설정 -->
-                <input type="text" class="form-control aw" style="width: 100px;">
+                <span style="width: 70px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
+                <input type="text" class="form-control aw" style="width: 100px;" id="\${index+1}answer" name="answer"/>
                 <span style="width: 70px; text-align:center;">배점 :</span>
-                <input type="text" class="form-control aw ts-scr" style="width: 130px;" placeholder="숫자만 입력">
+                <input type="text" class="form-control aw ts-scr" style="width: 130px;" placeholder="숫자만 입력" id="\${index+1}score" name="score"/>
             </div>
         `);
         
-        i++; // 함수 내 하단에 증가문 설정
+        index++; // 함수 내 하단에 증가문 설정
     });
     
     
     $("button#delBtn").click(function() { 
     	$("div#boxWrap .aw-wrap").last().remove(); // 마지막 div 제거
     	
-    	i--;
+    	index--;
     });
-    
-    
     
     $("button#ok").click(function(){
     	
@@ -143,40 +143,107 @@ function previewPDF() {
 function set_exam() {
 
 		 // 시험 구분 유효성 검사
-		 var pTest = document.getElementById("pTest");
-	     var pTestValue = pTest.value;
-
-	      if (pTestValue === "") {
-	           	alert("시험 구분을 선택하세요!");
+		 var test_type = $("input#test_type").val().trim();
+		 
+	     if (test_type == "") {
+	           	alert("시험 구분을 입력해주세요!");
 	           	return;
-	      }
+	     }
 	      
 	      
-	      // 시험 날짜 유효성 검사
-          var dateValue = $("#test-date").val();
-          var selectedDate = new Date(dateValue);
-          var today = new Date();
-          today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간 부분을 0으로 설정
+	     // 시험 날짜 유효성 검사
+		  var startDate = $("#test-date").val();
+          var startDate = new Date(startDate);    
+          
+       	  var startHour= $("select#startHour").val();
+     	  var endHour = $("select#endHour").val();
+     	  var startMinute= $("select#startMinute").val();
+     	  var endMinute= $("select#endMinute").val();
+     	
 
-           if (!dateValue) {
+	      if (!startDate) {
                alert("날짜를 선택해 주세요.");
                return;
-           }
-          
-           if(selectedDate <= today) {
-               alert("이미 지난 날짜입니다. 다시 선택해주세요.");
-               return;
-           }
+          }
+
            
-           // pdf 파일 유효성 검사
-           var fileInput = document.getElementById("fileInput");
-           var filePath = fileInput.value;
+        // 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
+		var startDate = $("#test-date").val();	
+    	var sArr = startDate.split("-");
+    	startDate= "";	
+    	for(var i=0; i<sArr.length; i++){
+    		startDate += sArr[i];
+    	}
+    	
+    	var endDate = $("#test-date").val();
+    	var eArr = endDate.split("-");   
+     	var endDate= "";
+     	for(var i=0; i<eArr.length; i++){
+     		endDate += eArr[i];
+     	}
+     	
 
-           if (!filePath) {
-               alert("파일을 선택해 주세요.");
-               return;
-           }
+        
+     	// 조회기간 시작일자가 종료일자 보다 크면 경고
+        if (Number(endDate) - Number(startDate) < 0) {
+         	alert("종료일이 시작일 보다 작습니다."); 
+         	return;
+        }
+     	
+     	// 시작일과 종료일 같을 때 시간과 분에 대한 유효성 검사
+        else if(Number(endDate) == Number(startDate)) {
+        	
+        	if(Number(startHour) > Number(endHour)){
+        		alert("종료일이 시작일 보다 작습니다."); 
+        		return;
+        	}
+        	else if(Number(startHour) == Number(endHour)){
+        		if(Number(startMinute) > Number(endMinute)){
+        			alert("종료일이 시작일 보다 작습니다."); 
+        			return;
+        		}
+        		else if(Number(startMinute) == Number(endMinute)){
+        			alert("시작일과 종료일이 동일합니다."); 
+        			return;
+        		}
+        	}
+       }// end of else if---------------------------------
+           
+       // pdf 파일 유효성 검사
+       var fileInput = document.getElementById("fileInput");
+       var filePath = fileInput.value;
 
+       if (!filePath) {
+           alert("파일을 선택해 주세요.");
+           return;
+       }
+       
+       
+       // 시험 답안 유효성 검사
+       /*
+       for(var i = 1; i<=index; i++) {
+    	   let answerValue = $(`input#\${i}answer`).val();
+           alert(answerValue);
+       }
+       */
+       for(var i = 1; i<=index; i++) {
+	       if($(`input#\${index}answer`).val() == "") {
+	    	   alert("문제의 답을 입력해주세요.");
+	    	   return;
+	       }
+       }
+       
+       for(var i = 1; i<=index; i++) {
+	       if($(`input#\${index}score`).val() == "") {
+	    	   alert("문제의 배점을 입력해주세요.");
+	    	   return;
+	       }
+       }
+       
+       const frm = document.exam;
+       frm.action = "exam_write.lms";
+       frm.method = "post";
+       frm.submit();
 
 }
 
@@ -195,7 +262,7 @@ function set_exam() {
          </div>
          <hr>
          <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
-            <form   enctype="multipart/form-data">
+            <form name="exam" enctype="multipart/form-data">
                <div class="noti-wrap" style="background-color: #175F30;">
                   <span style="padding-bottom: 8px; color: white;">[출제자 유의사항]</span><br>
                   <span style="color: white;">▶ 시험지 업로드는 PDF파일만 가능합니다.</span><br>
@@ -212,11 +279,7 @@ function set_exam() {
                   </div>
                   <div class="con-wrap" style="display: flex;">
                   
-                     <select class="form-control" id="pTest" name="testSe" style="width: 120px; margin-left: 55px;">
-                        <option value="">선택</option>
-                        <option value="middle">중간고사</option>
-                        <option value="final">기말고사</option>
-                     </select>
+					 <input type="text" id="test_type" class="form-control" style="width: 120px; margin-left: 46px;" />	
                      
                      <input type="text" class="datepicker  form-control" id="test-date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
                      <select class="form-control" id="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
@@ -224,13 +287,11 @@ function set_exam() {
 					 <select class="form-control" id="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
 					 <select class="form-control" id="endMinute" class="schedule" style="width: 100px;"></select>&nbsp;분
 					 
-					 <!-- <input type="file" class="form-control" id="test-file" name="pdfFile" style="width: 300px; margin-left: 80px;"> -->
                      <input type="file" class="form-control" id="fileInput" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
 
 					
                   </div>
                </div>
-               
                
                
                <hr>
@@ -249,8 +310,8 @@ function set_exam() {
 							
 	                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
 	                                <input type="hidden" class="form-control aw"  value="1">
-	                                <span style="width: 70px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;">
-	                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" placeholder="숫자만 입력">
+	                                <span style="width: 70px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer">
+	                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" placeholder="숫자만 입력">
 	                             </div>
 
 							</div>
