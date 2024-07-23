@@ -1,5 +1,9 @@
 package com.sooRyeo.app.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -333,6 +337,27 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		int A_totalElementCount = sqlSession.selectOne("board.getA_TotalElementCount", paraMap);
 		return new Pager(announcementList, currentPage, sizePerPage, A_totalElementCount);
+	}
+
+
+	@Override
+	public ProfessorTimeTable courseListJson(String semester, int prof_id) {
+		
+		Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("semester_date", semester);
+        paraMap.put("prof_id", prof_id);		
+		 
+        List<Course> courseListJson = sqlSession.selectList("professor.courseListJson", paraMap); 
+		
+        
+        for(Course course : courseListJson) {
+			
+			int course_seq = course.getCourse_seq();
+			List<Time> times = sqlSession.selectList("professor.courseListTimeJson", course_seq);
+			course.setTimeList(times);
+		}
+        
+		return new ProfessorTimeTable(prof_id, courseListJson);
 	}
 
 

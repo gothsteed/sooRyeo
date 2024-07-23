@@ -104,6 +104,9 @@ WHERE P.prof_id = 202400002 and C.exist = 1;
 select *
 from tbl_time
 
+select *
+from tbl_course
+
 -- 개설수업
 select *
 from tbl_course C
@@ -462,3 +465,31 @@ commit;
 ALTER TABLE tbl_assignment_submit ADD orgfilename NVARCHAR2(200);
 
 commit;
+
+
+
+-- 학기별 수업 가져오기
+
+SELECT P.prof_id AS prof_id,
+       	P.name AS prof_name,
+       	C.COURSE_SEQ AS course_seq, 
+       	C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       	C.CAPACITY AS capacity, 
+       	to_char(C.SEMESTER_DATE, 'YY-MM') AS semester_date,
+       	CU.fk_department_seq AS fk_department_seq,  
+       	CU.name AS name, 
+       	CU.credit AS credit, 
+       	CU.required AS required, 
+       	CU.exist AS exist,
+       	T.DAY_OF_WEEK AS day_of_week,
+       	T.start_period AS start_period,
+       	T.end_period AS end_period
+		FROM tbl_professor P
+		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
+		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+		JOIN tbl_time T ON C.course_seq = T.fk_course_seq
+		WHERE P.prof_id = 202400002 and C.exist = 1 and to_char(C.SEMESTER_DATE, 'yy-MM') = '24-07'
+
+    
+        select *
+        from tbl_course

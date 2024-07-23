@@ -6,6 +6,7 @@ import java.util.Map;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -84,6 +85,9 @@ public interface ProfessorDao {
 	int getTotalElementCount(String fk_course_seq);
 
 	Pager<Announcement> getAnnouncement(int currentPage);
+	
+	// 학기 별 개강과목
+	ProfessorTimeTable courseListJson(String semester, int prof_id);
 
 
 	

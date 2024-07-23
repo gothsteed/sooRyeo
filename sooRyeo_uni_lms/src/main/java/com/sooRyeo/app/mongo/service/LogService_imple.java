@@ -164,7 +164,7 @@ public class LogService_imple implements LogService {
         }
         
         for (Map.Entry<String, Integer> entry : dailyCountMap.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+            //System.out.println(entry.getKey() + ": " + entry.getValue());
         }
         
         
