@@ -3,6 +3,8 @@ package com.sooRyeo.app.service;
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.model.ScheduleDao;
+import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,9 @@ public class ExamService_imple implements ExamService {
 
     @Autowired
     private ScheduleDao scheduleDao;
+    
+    @Autowired
+    private ExamAnswerRepository examAnswerRepository;
 
 
     @Override
@@ -35,4 +40,17 @@ public class ExamService_imple implements ExamService {
 
         return null;
     }
+
+
+	@Override
+	public int insert_examAnswer(String answer, String score, String questionNumber) {
+
+		examAnswerRepository.save(answer);
+		    User user = new User();
+	        user.setName(name);
+	        user.setEmail(email);
+	        return userRepository.insert(user); // insertOne 사용
+	    
+		
+	}
 }

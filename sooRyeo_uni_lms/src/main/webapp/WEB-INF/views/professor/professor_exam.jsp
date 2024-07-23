@@ -82,6 +82,7 @@ $(function() {
     $("button#addBtn").click(function() {
         $("div#boxWrap").append(`
             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
+                <input type="hidden" class="form-control aw"  value="\${index+1}" name="questionNumber">
                 <span style="width: 70px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
                 <input type="text" class="form-control aw" style="width: 100px;" id="\${index+1}answer" name="answer"/>
                 <span style="width: 70px; text-align:center;">배점 :</span>
@@ -241,7 +242,7 @@ function set_exam() {
        }
        
        const frm = document.exam;
-       frm.action = "exam_write.lms";
+       frm.action = "<%=ctxPath%>/exam_write.lms";
        frm.method = "post";
        frm.submit();
 
@@ -309,7 +310,7 @@ function set_exam() {
 							<div id="boxWrap">
 							
 	                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
-	                                <input type="hidden" class="form-control aw"  value="1">
+	                                <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
 	                                <span style="width: 70px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer">
 	                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" placeholder="숫자만 입력">
 	                             </div>
