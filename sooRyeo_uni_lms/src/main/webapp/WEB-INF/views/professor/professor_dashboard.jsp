@@ -285,7 +285,6 @@
 
 
 <div style="gridstack">
-  <h1>교수 대시보드</h1>
   <div class="row"> 
     <div class="col-sm-12 col-md-12">
       <div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 720px;">
