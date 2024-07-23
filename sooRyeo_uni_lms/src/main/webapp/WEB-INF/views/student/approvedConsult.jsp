@@ -128,7 +128,7 @@
 
 						const studentElement = document.createElement('div');
 						studentElement.className = 'student-name';
-						studentElement.textContent = `학생: \${room.studentName}`;
+						studentElement.textContent = `교수: \${room.professorName}`;
 						roomElement.appendChild(studentElement);
 
 						const deleteButton = document.createElement('button');
@@ -190,20 +190,19 @@
 					<thead>
 					<tr>
 						<th scope="col">NO</th>
-						<th scope="col">학생이름</th>
+						<th scope="col">교수
+						</th>
 						<th scope="col">날짜 / 시간</th>
 						<th scope="col">이메일</th>
-						<th scope="col">상담 시작</th>
 					</tr>
 					</thead>
 					<tbody>
 					<c:forEach var="consult" items="${requestScope.consultList}" varStatus="status">
 						<tr>
 							<th scope="row">${((requestScope.currentPage - 1) * requestScope.perPageSize) + status.count}</th>
-							<td>${consult.student.name}</td>
+							<td>${consult.professor.name}</td>
 							<td><script>document.write(formatDateTime('${consult.schedule.start_date}') + ' ~ ' + formatDateTime('${consult.schedule.end_date}').split(' ')[1]);</script></td>
-							<td>${consult.student.email}</td>
-							<td><button class="start-consult-btn" onclick="startConsult(${consult.fk_schedule_seq}); event.stopPropagation();">상담시작</button></td>
+							<td>${consult.professor.email}</td>
 						</tr>
 					</c:forEach>
 					</tbody>
@@ -213,7 +212,7 @@
 		</div>
 	</div>
 	<div class="side-panel">
-		<h3>진행 중인 상담</h3>
+		<h3>열린 상담</h3>
 		<div id="currentChatRooms">
 			<!-- Current chat rooms will be loaded here -->
 		</div>

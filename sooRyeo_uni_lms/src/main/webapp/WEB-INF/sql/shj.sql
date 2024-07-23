@@ -437,6 +437,7 @@ from tbl_assignment;
 
 select *
 from tbl_lecture
+where lecture_seq = 15
 
 alter table tbl_lecture 
 add lecture_time Number;
@@ -450,21 +451,39 @@ commit;
 
 
 
+--------------------------------------------------------------
+
+-- 학번(출석테이블), 출석날짜(출석테이블), 수업명(수업테이블), 강의명(강의테이블)
+-- tbl_attendance(fk_student_id), tbl_attendance(attended_date), tbl_curriculum(name), tbl_lecture(lecture_title)
 
 
+select fk_student_id, attended_date
+from tbl_attendance
+where isAttended = 1 And fk_student_id = '202400005'
 
 
+select D.fk_student_id, A.name, C.lecture_title, D.attended_date
+from tbl_curriculum A JOIN tbl_course B
+on A.curriculum_seq = B.fk_curriculum_seq
+JOIN tbl_lecture C
+on B.course_seq = C.fk_course_seq
+JOIN tbl_attendance D
+on C.lecture_seq = D.fk_lecture_seq
+where D.isAttended = 1 AND D.fk_student_id = '202400005'
+
+select *
+from tbl_attendance
+
+select name
+from tbl_curriculum
+order by curriculum_seq asc;
 
 
+select *
+from tbl_lecture
 
+14	4	1단원 영상	1주차 수업 자료	제 1장. 국어학개론의 이해	1) 국어학개론의 이해	24/07/07	24/07/14			3
 
-
-
-
-
-
-
-
-
-
+insert into tbl_attendance(attendance_seq, fk_student_id, isattended, attended_date, fk_lecture_seq, play_time) 
+values(attendance_seq.nextval, '202400005', 1, sysdate, '14', 3)
 

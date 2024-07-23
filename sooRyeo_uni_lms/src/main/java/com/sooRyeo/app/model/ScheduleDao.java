@@ -51,4 +51,8 @@ public interface ScheduleDao {
 	int getConfirmedConsultCount(int professorId);
 
     void updateToComplete(Integer scheduleSeq);
+
+    List<Consult> getStudentConfirmedConsultList(int studentId, int currentPage, int sizePerPage);
+
+	int getStudentConfirmedConsultCount(int studentId);
 }

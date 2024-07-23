@@ -11,6 +11,14 @@ from tbl_student;
 select *
 from tbl_admin;
 
+select *
+from tbl_professor;
+
+update tbl_professor set prof_id = 202400007
+where prof_id = 202400009
+
+commit;
+
 -- 컬럼 이름 바꾸기
 alter table tbl_admin rename COLUMN admin_seq to admin_id;
 commit;

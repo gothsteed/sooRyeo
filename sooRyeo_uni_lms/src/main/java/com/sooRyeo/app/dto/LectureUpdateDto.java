@@ -18,11 +18,12 @@ public class LectureUpdateDto {
     private String uploadVideoTitle;
     private String originalAttachName;
     private String uploadAttachName;
+    private Long durationMinutes;
 
     public LectureUpdateDto() {
     }
 
-    public LectureUpdateDto(Integer lecture_seq, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String originalVideoTitle, String uploadVideoTitle, String originalAttachName, String uploadAttachName) {
+    public LectureUpdateDto(Integer lecture_seq, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String originalVideoTitle, String uploadVideoTitle, String originalAttachName, String uploadAttachName, Long durationMinutes) {
         this.lecture_seq = lecture_seq;
         this.title = title;
         this.content = content;
@@ -32,6 +33,7 @@ public class LectureUpdateDto {
         this.uploadVideoTitle = uploadVideoTitle;
         this.originalAttachName = originalAttachName;
         this.uploadAttachName = uploadAttachName;
+        this.durationMinutes = durationMinutes;
     }
 
     public Integer getLecture_seq() {
@@ -104,5 +106,13 @@ public class LectureUpdateDto {
 
     public void setUploadAttachName(String uploadAttachName) {
         this.uploadAttachName = uploadAttachName;
+    }
+
+    public Long getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(Long durationMinutes) {
+        this.durationMinutes = durationMinutes;
     }
 }

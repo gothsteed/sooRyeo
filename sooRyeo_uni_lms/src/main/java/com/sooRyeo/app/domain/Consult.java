@@ -36,6 +36,7 @@ public class Consult {
 	public Student getStudent() {
 		return student;
 	}
+	public Professor getProfessor() {return professor;}
 
 
 	public Integer getStudentId() {
