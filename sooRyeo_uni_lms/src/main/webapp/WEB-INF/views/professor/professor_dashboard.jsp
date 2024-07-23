@@ -35,12 +35,14 @@
 	padding: 20px;
 }
 
-.time_table td, .time_table th {
-      	width: 150px;
-      	height: 40px;
-      	border: 1px solid black;
-      	text-align: center; /* 셀 안의 텍스트를 중앙 정렬 */
-      	vertical-align: middle; /* 셀 안의 텍스트를 수직으로 중앙 정렬 */
+.timetable th, .timetable td {
+    /*border: 1px solid black;*/
+    border-collapse: collapse;
+    text-align: center;
+    width: 100px;
+    padding: 5px;
+    height: 20px;
+    text-align: center;
 }
 
 .grid-stack-item-content:hover {
@@ -74,8 +76,24 @@
 <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-poly.js"></script>
 <script src="<%=ctxPath %>/resources/node_modules/gridstack/dist/gridstack-all.js"></script>
 <script type="text/javascript">
-     
-     $(document).ready(function(){
+
+    const colors = [
+        "#d1e7dd", // light green
+        "#f8d7da", // light red
+        "#fff3cd", // light yellow
+        "#d1ecf1", // light cyan
+        "#f5c6cb", // light pink
+        "#d6d8d9", // light gray
+        "#c3e6cb", // light green
+        "#bee5eb"  // light blue
+    ];
+
+
+
+    let colorIndex = 0;
+
+
+    $(document).ready(function(){
         
         <!-- gridstack 작동을 위한 js -->
        let grid = GridStack.init({
@@ -105,6 +123,7 @@
        /////////////////////////////////////////////////////////////////
        
        showWeather();
+        fetchProfTimeTable(${requestScope.prof_id})
        
      });// end of $(document).ready(function()
            
@@ -281,6 +300,95 @@
 	}
 
 
+
+     function fetchProfTimeTable(prof_id) {
+
+         const url = '<%=ctxPath%>' + '/admin/profTimetableJSON.lms?prof_id=' + prof_id;
+
+         console.log(url);
+
+         fetch(url)
+             .then(response => response.json())
+             .then(data => {
+
+                 console.log(data);
+                 clearTimetable();
+                 recreateTimetableStructure();
+
+                 fillTimetable(data);
+
+             })
+             .catch(error => console.error("Error fetching data:", error));
+     }
+     function fillTimetable(data) {
+
+         data.courseList.forEach((course, index) => {
+             const color = colors[index % colors.length];
+
+
+             course.timeList.forEach(time => {
+
+                 // Fill the timetable
+                 const day = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'][time.day_of_week - 1];
+                 if (isTimeslotAvailable(day, time.start_period, time.end_period)) {
+                     const slotId = day + "-" + time.start_period;
+                     const slot = document.getElementById(slotId);
+                     if (slot) {
+                         slot.textContent = course.curriculum.name;
+                         slot.style.backgroundColor = color;
+                         slot.style.verticalAlign = 'middle';
+                         slot.rowSpan = time.end_period - time.start_period + 1;
+                         for (let period = time.start_period + 1; period <= time.end_period; period++) {
+                             const nextSlotId = day + "-" + period;
+                             const nextSlot = document.getElementById(nextSlotId);
+                             if (nextSlot) {
+                                 nextSlot.remove();
+                             }
+                         }
+                     }
+                 } else {
+                     console.warn("이미 선택된 시간입니다");
+                 }
+             });
+         });
+
+     }
+
+     function clearTimetable() {
+         const timetable = document.querySelector('.timetable tbody');
+         timetable.innerHTML = '';
+     }
+
+     function recreateTimetableStructure() {
+         const timetable = document.querySelector('.timetable tbody');
+         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+         for (let i = 1; i <= 8; i++) {
+             const row = document.createElement('tr');
+             row.innerHTML = `<td>\${i}</td>`;
+
+             days.forEach(day => {
+                 row.innerHTML += `<td id="\${day}-\${i}" class="time-slot"></td>`;
+             });
+
+             timetable.appendChild(row);
+         }
+     }
+
+
+    function isTimeslotAvailable(day, start_period, end_period) {
+        for (let period = start_period; period <= end_period; period++) {
+            const slotId = day + "-" + period;
+            const slot = document.getElementById(slotId);
+            if (slot && slot.textContent.trim() !== "") {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 </script>
 
 
@@ -311,65 +419,84 @@
                <h4>시간표</h4>
             </div>
             <div class="table-responsive">
-                <table class="table table-bordered time_table smaller-font">
-                 <tr>
-                   <th> </th>
-                   <th>월</th>
-                   <th>화</th>
-                   <th>수</th>
-                   <th>목</th>
-                   <th>금</th>
-                 </tr>
-                <tr>
-                   <th>1교시</th>
-                   <td style = "background : Plum  ;">문화와 역사2</td>
-                   <td> </td>
-                   <td style = "background : LavenderBlush ;"rowspan="2">정보통신융합공학개론</td>
-                   <td style = "background : Pink ;" rowspan="2">화일구조</td>
-                   <td style = "background : LightGoldenRodYellow;" rowspan="2">참삶의길</td>
-                  </tr>
-                   <tr>
-                   <th>2교시</th>
-                   <td> </td>
-                   <td> </td>
-                 </tr>
-                   <tr>
-                   <th>3교시</th>
-                   <td> </td>
-                   <td> </td>
-                   <td style = "background : LightCyan  ;" rowspan="2">프로그래밍언어구조론</td>
-                   <td style = "background : Lavender;" rowspan="2">웹/xml프로그래밍</td>
-                   <td> </td>
-                 </tr>
-                  <tr>
-                   <th>4교시</th>
-                   <td> </td>
-                   <td> </td>
-                   <td> </td>
-                 </tr>
-                  <tr>
-                   <th>5교시</th>
-                   <td style = "background : Lavender  ;" rowspan="2">웹/xml프로그래밍</td>
-                   <td style = "background : Salmon  ;" rowspan="4">c++ </td>
-                   <td style = "background : MintCream  ;" rowspan="4">임베디드프로그래밍실습</td>
-                   <td style = "background : Wheat   ;" rowspan="4">리눅스컴퓨팅실무</td>
-                   <td> </td>
-                 </tr>
-                  <tr>
-                   <th>6교시</th>
-                   <td> </td>
-                 </tr>
-                  <tr>
-                   <th>7교시</th>
-                   <td> </td>
-                   <td> </td>
-                 </tr>
-                 <tr>
-                  <th>8교시</th>
-                  <td style = "background : LightCyan  ;">프로그래밍언어구조론</td>
-                  <td></td>
-                 </tr>
-            </table>
+                <table class="timetable table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>교시</th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td id="monday-1" class="time-slot"></td>
+                        <td id="tuesday-1" class="time-slot"></td>
+                        <td id="wednesday-1" class="time-slot"></td>
+                        <td id="thursday-1" class="time-slot"></td>
+                        <td id="friday-1" class="time-slot"></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td id="monday-2" class="time-slot"></td>
+                        <td id="tuesday-2" class="time-slot"></td>
+                        <td id="wednesday-2" class="time-slot"></td>
+                        <td id="thursday-2" class="time-slot"></td>
+                        <td id="friday-2" class="time-slot"></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td id="monday-3" class="time-slot"></td>
+                        <td id="tuesday-3" class="time-slot"></td>
+                        <td id="wednesday-3" class="time-slot"></td>
+                        <td id="thursday-3" class="time-slot"></td>
+                        <td id="friday-3" class="time-slot"></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td id="monday-4" class="time-slot"></td>
+                        <td id="tuesday-4" class="time-slot"></td>
+                        <td id="wednesday-4" class="time-slot"></td>
+                        <td id="thursday-4" class="time-slot"></td>
+                        <td id="friday-4" class="time-slot"></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td id="monday-5" class="time-slot"></td>
+                        <td id="tuesday-5" class="time-slot"></td>
+                        <td id="wednesday-5" class="time-slot"></td>
+                        <td id="thursday-5" class="time-slot"></td>
+                        <td id="friday-5" class="time-slot"></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td id="monday-6" class="time-slot"></td>
+                        <td id="tuesday-6" class="time-slot"></td>
+                        <td id="wednesday-6" class="time-slot"></td>
+                        <td id="thursday-6" class="time-slot"></td>
+                        <td id="friday-6" class="time-slot"></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td id="monday-7" class="time-slot"></td>
+                        <td id="tuesday-7" class="time-slot"></td>
+                        <td id="wednesday-7" class="time-slot"></td>
+                        <td id="thursday-7" class="time-slot"></td>
+                        <td id="friday-7" class="time-slot"></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td id="monday-8" class="time-slot"></td>
+                        <td id="tuesday-8" class="time-slot"></td>
+                        <td id="wednesday-8" class="time-slot"></td>
+                        <td id="thursday-8" class="time-slot"></td>
+                        <td id="friday-8" class="time-slot"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
           </div>
         </div>

@@ -28,6 +28,17 @@
 
 <style type="text/css">
 
+
+	.timetable th, .timetable td {
+		/*border: 1px solid black;*/
+		border-collapse: collapse;
+		text-align: center;
+		width: 100px;
+		padding: 5px;
+		height: 20px;
+		text-align: center;
+	}
+
 .grid-stack-item-content {
 	background-color: #f9f9f9;
 	color: #333;
@@ -110,31 +121,26 @@
 
 
 <script type="text/javascript">
+	const colors = [
+		"#d1e7dd", // light green
+		"#f8d7da", // light red
+		"#fff3cd", // light yellow
+		"#d1ecf1", // light cyan
+		"#f5c6cb", // light pink
+		"#d6d8d9", // light gray
+		"#c3e6cb", // light green
+		"#bee5eb"  // light blue
+	];
+
+
+
+	let colorIndex = 0;
+
 
 $(document).ready(function(){
 	
 	showWeather();
 
-	<%--
-	$.ajax({
-		url:"<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
-		data:{"userid" : "${sessionScope.loginuser.userid}"},
-		dataType:"json",
-		success:function(json){
-			
-			console.log(JSON.stringify(json));
-			
-			
-		},
-		error: function(request, status, error){
-            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-        }
-		
-	}); // end of $.ajax
-	--%>
-	
-	
-	//////////////////////////////////////////////
 	// 전체 출석률 하이차트
 	Highcharts.chart('lecture_container', {
 	    chart: {
@@ -276,6 +282,9 @@ $(document).ready(function(){
 	    ]
 	});
 	//////////////////////////////////////////////
+
+
+	fetchTimeTable();
 	
 });
 
@@ -344,100 +353,15 @@ function showWeather(){
 				html += "<td>"+$(local).text()+"</td><td><img src='<%= ctxPath%>/resources/images/weather/"+icon+".png' />"+$(local).attr("desc")+"</td><td>"+$(local).attr("ta")+"</td>";
 				html += "</tr>";
 		        
-				
-				// ====== XML 을 JSON 으로 변경하기  시작 ====== //
-				   //var jsonObj = {"locationName":$(local).text(), "ta":$(local).attr("ta")};
-				   
-				   //jsonObjArr.push(jsonObj);
-				// ====== XML 을 JSON 으로 변경하기  끝 ====== //
+
 				
 		    }// end of for------------------------ 
 		    
 		    html += "</table>";
 		    
 		    $("div#displayWeather").html(html);
-		    
-		    
-		 // ====== XML 을 JSON 으로 변경된 데이터를 가지고 차트그리기 시작  ====== //
-		<%-- 	
-		 
-		 	var str_jsonObjArr = JSON.stringify(jsonObjArr); 
-			                  // JSON객체인 jsonObjArr를 String(문자열) 타입으로 변경해주는 것 
-			                  
-			$.ajax({
-				url:"<%= request.getContextPath()%>/opendata/weatherXMLtoJSON.action",
-				type:"POST",
-				data:{"str_jsonObjArr":str_jsonObjArr},
-				dataType:"JSON",
-				success:function(json){
-					
-				//	alert(json.length);
-					
-					// ======== chart 그리기 ========= // 
-					var dataArr = [];
-					$.each(json, function(index, item){
-						dataArr.push([item.locationName, 
-							          Number(item.ta)]);
-					});// end of $.each(json, function(index, item){})------------
-					
-					
-					Highcharts.chart('weather_chart_container', {
-					    chart: {
-					        type: 'column'
-					    },
-					    title: {
-					        text: '오늘의 전국 기온(℃)'   // 'ㄹ' 을 누르면 ℃ 가 나옴.
-					    },
-					    subtitle: {
-					    //    text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
-					    },
-					    xAxis: {
-					        type: 'category',
-					        labels: {
-					            rotation: -45,
-					            style: {
-					                fontSize: '10px',
-					                fontFamily: 'Verdana, sans-serif'
-					            }
-					        }
-					    },
-					    yAxis: {
-					        min: -10,
-					        title: {
-					            text: '온도 (℃)'
-					        }
-					    },
-					    legend: {
-					        enabled: false
-					    },
-					    tooltip: {
-					        pointFormat: '현재기온: <b>{point.y:.1f} ℃</b>'
-					    },
-					    series: [{
-					        name: '지역',
-					        data: dataArr, // **** 위에서 만든것을 대입시킨다. **** 
-					        dataLabels: {
-					            enabled: true,
-					            rotation: -90,
-					            color: '#FFFFFF',
-					            align: 'right',
-					            format: '{point.y:.1f}', // one decimal
-					            y: 10, // 10 pixels down from the top
-					            style: {
-					                fontSize: '10px',
-					                fontFamily: 'Verdana, sans-serif'
-					            }
-					        }
-					    }]
-					});
-					// ====== XML 을 JSON 으로 변경된 데이터를 가지고 차트그리기 끝  ====== //
-				},
-				error: function(request, status, error){
-					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-				}
-			});                  
-			///////////////////////////////////////////////////
-			--%>
+
+
 		},// end of success: function(xml){ }------------------	
 			error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -445,6 +369,75 @@ function showWeather(){
 		});
 	
 }// end of success: function(xml){ }------------------
+
+
+function fetchTimeTable() {
+
+	const url = '<%=ctxPath%>' + '/student/timetableJSON.lms'
+
+	console.log(url);
+
+	fetch(url)
+			.then(response => response.json())
+			.then(data => {
+
+				console.log(data);
+
+				fillTimetable(data);
+
+			})
+			.catch(error => console.error("Error fetching data:", error));
+}
+
+
+
+function fillTimetable(data) {
+	const courseListContainer = document.getElementById('course-list-container');
+
+
+	data.courseList.forEach((course, index) => {
+		const color = colors[index % colors.length];
+
+		course.timeList.forEach(time => {
+
+			// Fill the timetable
+			const day = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'][time.day_of_week - 1];
+			if (isTimeslotAvailable(day, time.start_period, time.end_period)) {
+				const slotId = day + "-" + time.start_period;
+				const slot = document.getElementById(slotId);
+				if (slot) {
+					slot.textContent = course.curriculum.name;
+					slot.style.backgroundColor = color;
+					slot.style.verticalAlign = 'middle';
+					slot.rowSpan = time.end_period - time.start_period + 1;
+					for (let period = time.start_period + 1; period <= time.end_period; period++) {
+						const nextSlotId = day + "-" + period;
+						const nextSlot = document.getElementById(nextSlotId);
+						if (nextSlot) {
+							nextSlot.remove();
+						}
+					}
+				}
+			} else {
+				console.warn("이미 선택된 시간입니다");
+			}
+		});
+	});
+
+
+
+}
+
+	function isTimeslotAvailable(day, start_period, end_period) {
+		for (let period = start_period; period <= end_period; period++) {
+			const slotId = day + "-" + period;
+			const slot = document.getElementById(slotId);
+			if (slot && slot.textContent.trim() !== "") {
+				return false;
+			}
+		}
+		return true;
+	}
 
 </script>
 
@@ -543,7 +536,84 @@ function showWeather(){
 							<h4 style="font-weight: bold;">시간표</h4>
 						</div>
 						<p class="card-text" style="margin-bottom: 0">
-						
+						<table class="timetable table table-bordered">
+							<thead>
+							<tr>
+								<th>교시</th>
+								<th>월</th>
+								<th>화</th>
+								<th>수</th>
+								<th>목</th>
+								<th>금</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td>1</td>
+								<td id="monday-1" class="time-slot"></td>
+								<td id="tuesday-1" class="time-slot"></td>
+								<td id="wednesday-1" class="time-slot"></td>
+								<td id="thursday-1" class="time-slot"></td>
+								<td id="friday-1" class="time-slot"></td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td id="monday-2" class="time-slot"></td>
+								<td id="tuesday-2" class="time-slot"></td>
+								<td id="wednesday-2" class="time-slot"></td>
+								<td id="thursday-2" class="time-slot"></td>
+								<td id="friday-2" class="time-slot"></td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td id="monday-3" class="time-slot"></td>
+								<td id="tuesday-3" class="time-slot"></td>
+								<td id="wednesday-3" class="time-slot"></td>
+								<td id="thursday-3" class="time-slot"></td>
+								<td id="friday-3" class="time-slot"></td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td id="monday-4" class="time-slot"></td>
+								<td id="tuesday-4" class="time-slot"></td>
+								<td id="wednesday-4" class="time-slot"></td>
+								<td id="thursday-4" class="time-slot"></td>
+								<td id="friday-4" class="time-slot"></td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td id="monday-5" class="time-slot"></td>
+								<td id="tuesday-5" class="time-slot"></td>
+								<td id="wednesday-5" class="time-slot"></td>
+								<td id="thursday-5" class="time-slot"></td>
+								<td id="friday-5" class="time-slot"></td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td id="monday-6" class="time-slot"></td>
+								<td id="tuesday-6" class="time-slot"></td>
+								<td id="wednesday-6" class="time-slot"></td>
+								<td id="thursday-6" class="time-slot"></td>
+								<td id="friday-6" class="time-slot"></td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td id="monday-7" class="time-slot"></td>
+								<td id="tuesday-7" class="time-slot"></td>
+								<td id="wednesday-7" class="time-slot"></td>
+								<td id="thursday-7" class="time-slot"></td>
+								<td id="friday-7" class="time-slot"></td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td id="monday-8" class="time-slot"></td>
+								<td id="tuesday-8" class="time-slot"></td>
+								<td id="wednesday-8" class="time-slot"></td>
+								<td id="thursday-8" class="time-slot"></td>
+								<td id="friday-8" class="time-slot"></td>
+							</tr>
+							</tbody>
+						</table>
 						</p>
 					</div>
 				</div>
