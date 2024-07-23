@@ -117,7 +117,7 @@ $(document).ready(function(){
 
 	<%--
 	$.ajax({
-		url:"<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms"
+		url:"<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
 		data:{"userid" : "${sessionScope.loginuser.userid}"},
 		dataType:"json",
 		success:function(json){
