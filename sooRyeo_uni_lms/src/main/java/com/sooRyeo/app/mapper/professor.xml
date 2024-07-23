@@ -446,7 +446,7 @@
 		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
 		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
 		JOIN tbl_time T ON C.course_seq = T.fk_course_seq
-		WHERE P.prof_id = #{prof_id} and C.exist = 1 and to_char(C.semester_date, 'yyyy-mm') = to_char(#{semester_date}, 'yyyy-mm');
+		WHERE P.prof_id = #{prof_id} and C.exist = 1 and to_char(C.semester_date, 'yyyy-mm') = to_char(#{semester_date}, 'yyyy-mm')
 	</select>
 	
 
