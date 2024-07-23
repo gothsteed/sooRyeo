@@ -869,15 +869,6 @@ public class StudentController {
 	}
 	
 	
-	@GetMapping("/student/test.lms")
-	public String test() {
-		
-		return "test";
-		
-	} // end of public String attendance
-	
-	
-	
 
 	@GetMapping("/student/consult.lms")
 	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
