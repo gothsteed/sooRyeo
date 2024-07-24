@@ -379,17 +379,29 @@ public class StudentDao_imple implements StudentDao {
 		return new Pager(announcementList, currentPage, sizePerPage, A_totalElementCount);
 	}
 
+
+	
+	// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+	@Override
+	public List<Curriculum> Curriculum_nameList(int student_id) {
+		
+		List<Curriculum> Curriculum_nameList = sqlSession.selectList("student.Curriculum_nameList", student_id);
+		
+		return Curriculum_nameList;
+		
+	} // end of public List<Curriculum> Curriculum_nameList
 	
 	
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	@Override
-	public List<String> myAttendance_byCategoryJSON(int student_id) {
+	public List<Map<String, Object>> myAttendance_byCategoryJSON(int student_id) {
 		
-		List<String> myAttendance_byCategoryJSON = sqlSession.selectList("student.myAttendance_byCategoryJSON", student_id);
+		List<Map<String, Object>> myAttendance_byCategoryJSON = sqlSession.selectList("student.myAttendance_byCategoryJSON", student_id);
 		
 		return myAttendance_byCategoryJSON;
 		
 	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
+	
 
 
 

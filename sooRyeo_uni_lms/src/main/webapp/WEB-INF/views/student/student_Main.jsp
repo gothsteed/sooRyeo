@@ -122,12 +122,11 @@ $(document).ready(function(){
 	
     
     // 문서가 로드 되어지면 통계가 보이도록 한다.
-    $("select#searchType").val("myAttendance_byCategory").trigger("change");
+    $("select#searchType").val("Curriculum_nameList").trigger("change");
 
 	
-    
 
-	//////////////////////////////////////////////
+   	//////////////////////////////////////////////
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	Highcharts.chart('lecture_container', {
 	    chart: {
@@ -185,7 +184,6 @@ $(document).ready(function(){
 	});
 	//////////////////////////////////////////////
     
-    
 }); // end of $(document).ready
 
 
@@ -196,27 +194,28 @@ function func_choice(searchTypeVal) {
     // alert(searchTypeVal);
 
     switch (searchTypeVal) {
-        case "": // 수업선택을 선택한 경우
+    	case "": // '수업선택'을 선택한 경우
+	        
+	     	$("div#lecture_container").empty();
+	       	$("div.highcharts-data-table").empty();
+	       	
+        break;
         
-            $("div#lecture_container").empty();
-            $("div.highcharts-data-table").empty();
-            
-            break;
-
         case "myAttendance_byCategory": // 과목을 선택한 경우
-        
+
         	$("div#lecture_container").empty();
             $("div.highcharts-data-table").empty();
-        
+            
             $.ajax({
                 url: "<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
                 data: { "userid": "${sessionScope.loginuser.student_id}" },
                 dataType: "json",
                 success: function(json) {
                 	
-                    // console.log(JSON.stringify(json)); // 안나옴
+                    console.log(JSON.stringify(json));
+                 
                     
-                  
+   
 
 			          
                 },
@@ -423,14 +422,13 @@ function showWeather(){
 								<form name="searchFrm" style="margin: 20px 0 50px 0;">
 								    <select name="searchType" id="searchType" style="height: 40px;" onchange="func_choice(this.value)">
 								        <option value="">수업선택</option>
-								        <c:forEach var="myAttendance" items="${requestScope.myAttendance_List}">
-								            <option>${myAttendance.name}</option>
+								        <c:forEach var="nameList" items="${requestScope.Curriculum_nameList}">
+								            <option value="myAttendance_byCategory">${nameList.name}</option>
 								        </c:forEach>
 								    </select>
 								</form>
 								
 							   	<div id="lecture_container"></div>
-							   	<div id="table_container" style="margin: 40px 0 0 0;"></div>
 							
 							</div>
 						</div>

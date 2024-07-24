@@ -444,9 +444,25 @@
 	
 	
 	
+	<!-- 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드 -->
+	<select id="Curriculum_nameList" parameterType="Integer" resultType="com.sooRyeo.app.domain.Curriculum">
+		select L.name AS name
+		from tbl_registered_course R
+		JOIN tbl_course C
+		ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum L
+		ON C.fk_curriculum_seq = L.curriculum_seq
+		where R.fk_student_id = #{student_id}
+	</select>
 	
-	<!-- 학생 대쉬보드 - 수강중인 과목 출석률 -->
-	<select id="myAttendance_byCategoryJSON" parameterType="Integer" resultType="String">
+	
+	
+	<!-- 학생 대쉬보드 - 수강중인 과목 출석률  -->
+	<resultMap type="HashMap" id="attendanceMapList">
+		<result property="name"		column="name"		javaType="String" />
+		<result property=""	column=""		javaType="String" />
+	</resultMap>
+	<select id="myAttendance_byCategoryJSON" parameterType="int" resultMap="attendanceMapList">
 		select L.name AS name
 		from tbl_registered_course R
 		JOIN tbl_course C

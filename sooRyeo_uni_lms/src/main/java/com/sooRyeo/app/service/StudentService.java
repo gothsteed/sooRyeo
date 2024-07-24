@@ -99,9 +99,13 @@ public interface StudentService {
 	// 출석 현황 조회 - Excel
 	void employeeList_to_Excel(String name, Model model, HttpServletRequest request);
 
-	// 학생 대쉬보드 - 수강중인 과목 출석률 
-	List<String> myAttendance_byCategoryJSON(int student_id);
+	//하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+	List<Curriculum> Curriculum_nameList(int student_id);
 
+	// 학생 대쉬보드 - 수강중인 과목 출석률 
+	List<Map<String, Object>> myAttendance_byCategoryJSON(int student_id);
+	
+	
 
 
 	

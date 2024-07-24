@@ -504,7 +504,7 @@ JOIN tbl_course C
 ON R.fk_course_seq = C.course_seq
 JOIN tbl_curriculum L
 ON C.fk_curriculum_seq = L.curriculum_seq
-where R.fk_student_id = '202400005'
+where R.fk_student_id = 202400005
 
 
 

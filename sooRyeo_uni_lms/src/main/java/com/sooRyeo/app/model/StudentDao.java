@@ -109,8 +109,12 @@ public interface StudentDao {
 	// 학사공지사항 리스트를 select 해오는 메소드
 	Pager<Announcement> getAnnouncement(int currentPage);
 
-	// 학생 대쉬보드 - 수강중인 과목 출석률 
-	List<String> myAttendance_byCategoryJSON(int student_id);
+	// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+	List<Curriculum> Curriculum_nameList(int student_id);
+
+	// 학생 대쉬보드 - 수강중인 과목 출석률
+	List<Map<String, Object>> myAttendance_byCategoryJSON(int student_id);
+
 	
 
 }

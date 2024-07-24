@@ -85,6 +85,13 @@ public class StudentController {
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  studentservice.getAnnouncement(currentPage);
 		
+		
+		// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+		List<Curriculum> Curriculum_nameList = studentservice.Curriculum_nameList(student_id);
+		
+		mav.addObject("Curriculum_nameList", Curriculum_nameList);
+		
+		
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
@@ -852,41 +859,38 @@ public class StudentController {
 	
 	
 	
+	
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	@ResponseBody
 	@GetMapping(value="/student/myAttendance_byCategoryJSON.lms", produces="text/plain;charset=UTF-8")
-	public String myAttendance_byCategoryJSON(HttpServletRequest request, HttpServletResponse response,
-											  @RequestParam(defaultValue = "") String userid) {
-		
+	public List<Map<String, Object>> myAttendance_byCategoryJSON(HttpServletRequest request, HttpServletResponse response) {
 		
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int student_id = loginuser.getStudent_id();
 		
-		System.out.println("확인용 : " + student_id);
+		// System.out.println("확인용 : " + student_id);
+		// 확인용 : 202400005
 		
-		List<String> myAttendance_List = service.myAttendance_byCategoryJSON(student_id);
+		List<Map<String, Object>> myAttendance_byCategoryJSON = service.myAttendance_byCategoryJSON(student_id);
 		
-		request.setAttribute("myAttendance_List", myAttendance_List);
+		JSONArray json_arr = new JSONArray();
 		
-		JSONArray jsonArr = new JSONArray();
-		
-		if(myAttendance_List.size() > 0) {
+		if(myAttendance_byCategoryJSON.size() > 0) {
 			
-			for(String name : myAttendance_List) {
+			for(Map<String, Object> map : myAttendance_byCategoryJSON) {
 				
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("name", name);
+				JSONObject json_obj = new JSONObject();
+				json_obj.put("name", map.get("name"));
 				
-				jsonArr.put(jsonObj);
+				json_arr.put(json_obj);
 				
 			} // end of for
 			
-		} // end of if(myAttendance_List.size() > 0)
+		}
 		
-		System.out.println(jsonArr.toString());
 		
-		return jsonArr.toString();
+		return myAttendance_byCategoryJSON;
 		
 	} // end of public String myAttendance_byCategoryJSON
 	
