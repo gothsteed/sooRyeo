@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
+import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 
 public interface ScheduleDao {
@@ -55,4 +56,6 @@ public interface ScheduleDao {
     List<Consult> getStudentConfirmedConsultList(int studentId, int currentPage, int sizePerPage);
 
 	int getStudentConfirmedConsultCount(int studentId);
+
+	Exam getExam();
 }

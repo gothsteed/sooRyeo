@@ -35,4 +35,13 @@ public class ExamService_imple implements ExamService {
 
         return null;
     }
+
+
+	@Override
+	public Exam getExam() {
+
+		Exam examView = scheduleDao.getExam();
+		
+		return examView;
+	}
 }
