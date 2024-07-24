@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter*/
 @Document(collection = "loginLog")
 public class LoginLog {
+	
     @Id
     private String id;
     private Integer userid;

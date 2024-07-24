@@ -139,9 +139,30 @@ function previewPDF() {
     fileReader.readAsDataURL(file); // 파일을 Data URL로 읽기
 }
 
+function updateDateTime() {
+    // 각 요소의 값 가져오기
+    var date = document.getElementById('test-date').value; // yyyy-mm-dd 형식
+    var startHour = document.getElementById('startHour').value; // 시작 시간
+    var startMinute = document.getElementById('startMinute').value; // 시작 분
+    var endHour = document.getElementById('endHour').value; // 끝 시간
+    var endMinute = document.getElementById('endMinute').value; // 끝 분
+
+    // 모든 값이 입력되었는지 확인
+    if (date && startHour && startMinute && endHour && endMinute) {
+        // 결합하여 새로운 값 생성 (형식: yyyy-mm-dd hh:mm:ss - hh:mm:ss)
+        var startDateTime = date + " " + startHour.padStart(2, '0') + ":" + startMinute.padStart(2, '0') + ":00";
+        var endDateTime = date + " " + endHour.padStart(2, '0') + ":" + endMinute.padStart(2, '0') + ":00";
+
+        // test_date_time input의 value 속성에 설정
+        document.getElementById('test_start_time').value = startDateTime;
+        document.getElementById('test_end_time').value = endDateTime;
+    }
+}
+
 
 // 출제하기 버튼
 function set_exam() {
+	
 
 		 // 시험 구분 유효성 검사
 		 var test_type = $("input#test_type").val().trim();
@@ -241,6 +262,8 @@ function set_exam() {
 	       }
        }
        
+       updateDateTime();
+       
        const frm = document.exam;
        frm.action = "<%=ctxPath%>/exam_write.lms";
        frm.method = "post";
@@ -280,13 +303,17 @@ function set_exam() {
                   </div>
                   <div class="con-wrap" style="display: flex;">
                   
-					 <input type="text" id="test_type" class="form-control" style="width: 120px; margin-left: 46px;" />	
+					 <input type="text" id="test_type" name="test_type" class="form-control" style="width: 120px; margin-left: 46px;" />	
                      
-                     <input type="text" class="datepicker  form-control" id="test-date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
-                     <select class="form-control" id="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
-					 <select class="form-control" id="startMinute" class="form-select" style="width: 100px;"></select>&nbsp;분
-					 <select class="form-control" id="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
-					 <select class="form-control" id="endMinute" class="schedule" style="width: 100px;"></select>&nbsp;분
+                     <input type="text" class="datepicker  form-control" id="test-date" name="test_date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
+                     <select class="form-control" id="startHour" name="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
+					 <select class="form-control" id="startMinute" name="startMinute" class="form-select" style="width: 100px;"></select>&nbsp;분
+					 <select class="form-control" id="endHour" name="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
+					 <select class="form-control" id="endMinute" name="endMinute" class="schedule" style="width: 100px;"></select>&nbsp;분
+					 
+					 <input type="hidden" id="test_start_time" name="test_start_time" />
+					 <input type="hidden" id="test_end_time" name="test_end_time" />
+					 
 					 
                      <input type="file" class="form-control" id="fileInput" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
 
