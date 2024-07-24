@@ -33,6 +33,7 @@ import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.Announcement;
@@ -40,6 +41,7 @@ import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
@@ -109,7 +111,7 @@ public class StudentController {
 	
 	// 수업리스트 보여주기
 	@GetMapping(value="/student/classList.lms")
-	public String classList(HttpServletRequest request) {
+	public ModelAndView classList(HttpServletRequest request, ModelAndView mav) {
 		
 		HttpSession session = request.getSession();
 		
@@ -117,11 +119,16 @@ public class StudentController {
 		
 		int userid = loginuser.getStudent_id();
 		
-		List<Map<String, String>> mapList = service.classList(userid);
+		StudentTimeTable timeTable = service.classList(userid);
 		
-		request.setAttribute("mapList", mapList);
+		List<Course> mapList = timeTable.getCourseList();
+	
 
-		return "classList";
+
+		mav.addObject("mapList", mapList);
+		mav.setViewName("classList");
+		
+		return mav;
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	

@@ -142,21 +142,21 @@ $(document).ready(function(){
 				   <input type="hidden" name="course_seq" value="${mapList.course_seq}"/>
 				   <div style="display: flex;" >
 				      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
-				      <c:if test="${mapList.department_seq != null && mapList.required == '1'}">
+				      <c:if test="${mapList.curriculum.fk_department_seq != null && mapList.curriculum.required == '1'}">
 				      	<div class="majorO rounded">전공필수</div>
 				      </c:if>
-				      <c:if test="${mapList.department_seq != null && mapList.required == '0'}">
+				      <c:if test="${mapList.curriculum.fk_department_seq != null && mapList.curriculum.required == '0'}">
 				      	<div class="majorX rounded">전공선택</div>
 				      </c:if>
-				      <c:if test="${mapList.department_seq == null && mapList.required == '1'}">
+				      <c:if test="${mapList.curriculum.fk_department_seq == null && mapList.curriculum.required == '1'}">
 				      	<div class="no-majorO rounded">교양필수</div>
 				      </c:if>
-				      <c:if test="${mapList.department_seq == null && mapList.required == '0'}">
+				      <c:if test="${mapList.curriculum.fk_department_seq == null && mapList.curriculum.required == '0'}">
 				      	<div class="no-majorX rounded">교양선택</div>
 				      </c:if>
 				      <div style="width: 60%; margin-left: 3%; margin-top: 1%;">
-						  <div style="font-size: 20pt; color: black;">${mapList.className}</div>
-			         	  <div style="font-size: 12pt; color: black;">${mapList.professorName}</div>	
+						  <div style="font-size: 20pt; color: black;">${mapList.curriculum.name}</div>
+			         	  <div style="font-size: 12pt; color: black;">${mapList.professor.name}</div>	
 				      </div>
 				      <div class="arrow" style=" margin-top: 1%; margin-left: 14%;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
 				   </div>

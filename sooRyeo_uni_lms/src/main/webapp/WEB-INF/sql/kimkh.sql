@@ -493,3 +493,33 @@ SELECT P.prof_id AS prof_id,
     
         select *
         from tbl_course
+        
+        commit;
+        
+        
+        
+WITH
+		P AS (
+		select name, prof_id 
+		from tbl_professor
+		),
+		C AS (
+		select curriculum_seq, name, fk_department_seq, required
+		from tbl_curriculum
+		),
+		V AS (
+			select course_seq, fk_curriculum_seq, fk_professor_id, fk_student_id, semester_date
+			from tbl_course join tbl_registered_course
+			on course_seq = fk_course_seq
+		)
+		select p.name as professorName,
+			   c.name as className,
+			   c.fk_department_seq as department_seq,
+       		   c.required as required,
+       		   v.course_seq as course_seq,
+       		   v.semester_date as semester_date
+		from P JOIN V
+		on V.fk_professor_id = P.prof_id
+		JOIN C
+		on V.fk_curriculum_seq = C.curriculum_seq
+		where V.fk_student_id = 202400009 and '24-03' < to_char(V.semester_date, 'yy-MM') and to_char(V.semester_date, 'yy-MM') <= '24-07'
