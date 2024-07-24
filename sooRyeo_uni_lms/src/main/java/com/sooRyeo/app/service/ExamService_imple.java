@@ -39,7 +39,9 @@ public class ExamService_imple implements ExamService {
 
 	@Override
 	public Exam getExam() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Exam examView = scheduleDao.getExam();
+		
+		return examView;
 	}
 }

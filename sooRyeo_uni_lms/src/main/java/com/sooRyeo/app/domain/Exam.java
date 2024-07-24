@@ -7,9 +7,15 @@ public class Exam {
     private String original_file_name;
     private String answer_mongo_id;
     private Integer question_count;
+    private Integer end_date_seconds;
+    
 
     private Schedule schedule;
 
+
+    public Integer getEnd_date_seconds() {
+    	return end_date_seconds;
+    }
 
     public Integer getFk_schedule_seq() {
         return fk_schedule_seq;
