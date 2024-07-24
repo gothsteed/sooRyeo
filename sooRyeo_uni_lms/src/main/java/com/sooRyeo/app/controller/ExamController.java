@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.ExamService;
@@ -24,6 +25,9 @@ public class ExamController {
 	@GetMapping("/exam/test.lms")
 	public ModelAndView test(ModelAndView mav, HttpServletRequest request) {
 		
+		Exam examView = examService.getExam();
+		
+		mav.addObject("examView", examView);
 		mav.setViewName("test");
 		
 		return mav;
