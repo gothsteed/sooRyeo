@@ -303,6 +303,7 @@ function set_exam() {
                   </div>
                   <div class="con-wrap" style="display: flex;">
                   
+                  	 <input type="hidden" value="${requestScope.course_seq}" name="course_seq" id ="course_seq" />
 					 <input type="text" id="test_type" name="test_type" class="form-control" style="width: 120px; margin-left: 46px;" />	
                      
                      <input type="text" class="datepicker  form-control" id="test-date" name="test_date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>

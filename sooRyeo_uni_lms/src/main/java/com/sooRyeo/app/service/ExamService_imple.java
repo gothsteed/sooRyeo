@@ -57,6 +57,17 @@ public class ExamService_imple implements ExamService {
 		
 		ExamAnswer insert_ExamAnswer = examAnswerRepository.save(examAnswer);
 		return insert_ExamAnswer;
+		
+	}
+
+
+
+	@Override
+	public int insert_exam_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score) {
+
+		int n =scheduleDao.insert_tbl_schedule(test_type, test_start_time, test_end_time, question_count, answer_id, course_seq, total_score);
+		
+		return n;
 	}
     
     

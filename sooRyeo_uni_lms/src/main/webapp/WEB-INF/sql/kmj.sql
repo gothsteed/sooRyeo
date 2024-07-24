@@ -522,5 +522,13 @@ select *
 from tbl_attendance;
 
 commit;
+
+alter table tbl_exam modify ORIGINAL_FILE_NAME null;
             
+            select *
+            from tbl_exam
+            
+            select *
+            from tbl_schedule
+            where schedule_type = '2'
             

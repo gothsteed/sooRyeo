@@ -39,13 +39,17 @@ public class ExamController {
 		String test_start_time = request.getParameter("test_start_time");
 		String test_end_time = request.getParameter("test_end_time");
 		int question_count = request.getParameterValues("answer").length; // total 문제 수
+		String course_seq = request.getParameter("course_seq");
 		//String test_type = request.getParameter("test_type"); // pdf 파일명
-		//String test_type = request.getParameter("test_type"); // 몽고디비 id 값
-
-		System.out.println("question_count 확인용 =>" + question_count);
+		
+		
+		System.out.println("test_start_time 확인 => " + test_start_time);
+		System.out.println("test_end_time 확인 => " + test_end_time);
 		
 		
 		List<Answer> answer_list = new ArrayList<>();
+		
+		int total_score = 0;
 		
 		for(int i=0; i<arr_answer.length; i++) {
 			
@@ -56,8 +60,11 @@ public class ExamController {
 				answer.setQuestionNumber(Integer.parseInt(arr_questionNumber[i]));
 				
 				answer_list.add(answer);
+				
+				total_score +=  Integer.parseInt(arr_score[i]);
 			
 		}
+		
 		
 		ExamAnswer examAnswer = new ExamAnswer();
 		examAnswer.setAnswers(answer_list);
@@ -66,9 +73,17 @@ public class ExamController {
 		
 		String answer_id = insert_examAnswer.getId();
 		
-		int n = examService.insert_exam_schedule(test_type, test_start_time, test_end_time, question_count, answer_id);
+		int n = examService.insert_exam_schedule(test_type, test_start_time, test_end_time, question_count, answer_id, course_seq, total_score);
 		
+		if(n==1 && answer_id != null) {
+			
 
+			mav.addObject("message", "시험 출제가 완료되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/professor/courseDetail.lms?course_seq="+course_seq);
+			mav.setViewName("msg");
+		
+		}
+		
 		return mav;
 
 	}

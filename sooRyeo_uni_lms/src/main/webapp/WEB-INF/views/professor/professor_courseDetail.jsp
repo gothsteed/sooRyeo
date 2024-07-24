@@ -110,6 +110,7 @@ function scrollToTarget_down() {
 
 	function goTest(){
 		
+		location.href = "<%=ctxPath%>/professor/exam.lms?course_seq="+${fk_course_seq}; // 페이지 이동
 		
 	}// end of function goAnnouncement() 
 	

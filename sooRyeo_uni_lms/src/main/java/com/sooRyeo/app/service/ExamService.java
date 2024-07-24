@@ -19,4 +19,7 @@ public interface ExamService {
 	
     // 시험 출제 시 몽고db에 insert
 	ExamAnswer insert_examAnswer(ExamAnswer examAnswer);
+
+	// 시험 출제 시 오라클db에 insert
+	int insert_exam_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score);
 }

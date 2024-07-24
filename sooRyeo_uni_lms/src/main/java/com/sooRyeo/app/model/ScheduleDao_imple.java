@@ -196,4 +196,33 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 
+	
+	// 시험 출제 시 스케줄 테이블 insert
+	@Override
+	public int insert_tbl_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score) {
+		
+		Map<String, String> paraMap =  new HashMap<>();
+		paraMap.put("test_type", test_type);
+		paraMap.put("test_start_time", test_start_time);
+		paraMap.put("test_end_time", test_end_time);
+		
+		sqlSession.insert("schedule.insert_tbl_schedule_exam", paraMap);
+		
+		System.out.println(paraMap.get("schedule_seq"));
+		String schedule_seq = (String) paraMap.get("schedule_seq");
+		
+		paraMap.put("schedule_seq", schedule_seq);
+		paraMap.put("question_count",  String.valueOf(question_count));
+		paraMap.put("answer_id", answer_id);
+		paraMap.put("course_seq", course_seq);
+		paraMap.put("total_score", String.valueOf(total_score));
+		
+		int n = sqlSession.insert("schedule.insert_tbl_exam", paraMap);
+		
+		return n;
+	}
+	
+	
+
+
 }

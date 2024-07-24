@@ -844,8 +844,13 @@ public class ProfessorController {
 	
 	// 교수 시험출제 뷰단
 	@GetMapping(value = "/professor/exam.lms")
-	public String professor_exam() { 
-		return "professor_exam";
+	public ModelAndView professor_exam(ModelAndView mav, HttpServletRequest request) {
+		String course_seq = request.getParameter("course_seq");
+		
+		mav.addObject("course_seq", course_seq);
+		mav.setViewName("professor_exam");
+
+		return mav;
 	}
 	
 	
