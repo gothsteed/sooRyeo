@@ -1,5 +1,9 @@
 package com.sooRyeo.app.domain;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class Exam {
     private Integer fk_schedule_seq;
     private Integer fk_course_seq;
@@ -37,5 +41,26 @@ public class Exam {
 
     public Schedule getSchedule() {
         return schedule;
+    }
+
+    public LocalDateTime getStartDate() {
+        return  schedule.getStartLocalDateTime();
+    }
+
+    public long getDurationInMinute() {
+        Duration duration = schedule.getDuration();
+        return  duration.toMinutes();
+    }
+
+    public boolean isBefore(LocalDateTime localDateTime) {
+        return schedule.isBefore(localDateTime);
+    }
+
+    public boolean isAfter(LocalDateTime localDateTime) {
+        return schedule.isAfter(localDateTime);
+    }
+
+    public boolean isBetween(LocalDateTime time) {
+        return schedule.isBetweenSchedule(time);
     }
 }
