@@ -493,3 +493,90 @@ SELECT P.prof_id AS prof_id,
     
         select *
         from tbl_course
+        
+        commit;
+        
+        
+        
+WITH
+		P AS (
+		select name, prof_id 
+		from tbl_professor
+		),
+		C AS (
+		select curriculum_seq, name, fk_department_seq, required
+		from tbl_curriculum
+		),
+		V AS (
+			select course_seq, fk_curriculum_seq, fk_professor_id, fk_student_id, semester_date
+			from tbl_course join tbl_registered_course
+			on course_seq = fk_course_seq
+		)
+		select p.name as professorName,
+			   c.name as className,
+			   c.fk_department_seq as department_seq,
+       		   c.required as required,
+       		   v.course_seq as course_seq,
+       		   v.semester_date as semester_date
+		from P JOIN V
+		on V.fk_professor_id = P.prof_id
+		JOIN C
+		on V.fk_curriculum_seq = C.curriculum_seq
+		where V.fk_student_id = 202400009 and '24-03' < to_char(V.semester_date, 'yy-MM') and to_char(V.semester_date, 'yy-MM') <= '24-07'
+        
+        
+        SELECT
+        A.schedule_seq_assignment as schedule_seq_assignment,
+		SA.assignment_submit_seq AS assignment_submit_seq,
+		S.name AS name,
+		NVL(SA.score, 0) AS score
+		FROM
+		tbl_student S
+		join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+		join tbl_assignment A ON SA.fk_schedule_seq_assignment = A.schedule_seq_assignment
+        join tbl_course C ON A.fk_course_seq = C.course_seq
+        where course_seq = 4 and student_id = 202400005;
+        
+        
+        -- 202400005 학생 과제 총점
+        SELECT sum(SA.score) as totalscore
+		FROM
+		tbl_student S
+		join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+		join tbl_assignment A ON SA.fk_schedule_seq_assignment = A.schedule_seq_assignment
+        join tbl_course C ON A.fk_course_seq = C.course_seq
+        where course_seq = 4 and S.student_id = 202400005
+
+       -- 총 과제 갯수
+        select count(schedule_seq_assignment) as totalCount
+        from tbl_assignment
+        where fk_course_seq = 4
+        
+        -- 과제 백분율 점수
+        (26/500)*100 
+        
+        -- 과목 총 시험 갯수
+        select count(*) as totalCount
+        from tbl_course C
+        join tbl_exam E ON C.course_seq = E.fk_course_seq
+        where course_seq = 4
+        
+        
+        select *
+        from tbl_exam
+        
+        
+        select *
+        from tbl_course C
+        order by course_seq asc
+        join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
+        
+        update tbl_course set semester_date = '2024/07/07'
+        commit;
+        
+        
+        
+
+        
+        
+        

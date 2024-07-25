@@ -217,7 +217,7 @@ function selectCourse(year, semester){
 
 </script>
 
-<div class="form-group ml-1" style="width:10%;">
+<div class="form-group ml-1" style="width:22%;">
   <label for="year">년도 선택</label> 
   <select id="year" name="year" class="form-control">
     <option value="">--년도 선택--</option>
@@ -227,7 +227,7 @@ function selectCourse(year, semester){
     <option value="24">2024</option>
   </select>
   
-  <label for="semester">학기 선택</label> 
+  <label for="semester">학기 선택</label><br> 
   <select id="semester" name="semester" class="form-control">
     <option value="">--학기 선택--</option>
     <option value="03">1학기</option>
@@ -241,6 +241,7 @@ function selectCourse(year, semester){
 <div style="display: flex; width : 100%;" class="row">
 
 	<div style="margin-top: 5%; width : 80%; border: solid 0px green;" id="showCourse">
+	<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>내 수업 목록</h3>
 		<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
 			<div id="select">
 			<div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">

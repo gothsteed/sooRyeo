@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Consult;
+import com.sooRyeo.app.domain.Exam;
 
 @Repository
 public class ScheduleDao_imple implements ScheduleDao {
@@ -227,6 +228,13 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 	
 	
+	@Override
+	public Exam getExam() {
+		
+		Exam examView = sqlSession.selectOne("schedule.getExam");
+		
+		return examView;
+	}
 
 
 }

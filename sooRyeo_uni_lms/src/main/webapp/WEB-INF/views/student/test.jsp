@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     String ctxPath = request.getContextPath();
     //     /sooRyeo
@@ -20,11 +21,12 @@
 
 <script type="text/javascript">
 $(document).ready(function () {
+	
 	  // const btnSubmit = $("button#btnSubmit"); // "제출하기" 버튼
 
 	  const h2_timer = $("#timer"); // 타이머를 보여줄 장소
 
-	  let time = 600; // 타이머 시간을 10분으로 지정함.
+	  let time = ${requestScope.examView.end_date_seconds}; // 타이머 시간을 10분으로 지정함.
 
 	  // === 타이머 함수 만들기 시작 === //
 	  const timer = function () {
@@ -42,6 +44,7 @@ $(document).ready(function () {
 	      let minute = "";
 	      let second = "";
 
+
 	      minute = parseInt(time / 60); // 소수부는 없애 버리고 정수부만 가져오는 것이다.
 	      if (minute < 10) {
 	        minute = "0" + minute;
@@ -52,7 +55,7 @@ $(document).ready(function () {
 	        second = "0" + second;
 	      }
 
-	      h2_timer.html(`\${minute}:\${second}`);
+	      h2_timer.html(`남은 시간 : \${minute}분 \${second}초`);
 
 	      time--;
 	    }
@@ -65,6 +68,11 @@ $(document).ready(function () {
 	  // 또는
 	  const interval_timer = setInterval(timer, 1000); // 1초 마다 주기적으로 타이머 함수가 호출되도록 지정함.
 });
+
+function goCheck(){
+	
+};
+
 </script>
 
 
@@ -77,7 +85,7 @@ $(document).ready(function () {
 			</div>
             <div class="card-body">
                 <p class="card-text">
-                    	시험지 pdf가 들어갈 곳
+                    <iframe width="100%" height="600" src="<%= ctxPath %>/resources/exam/${examView.file_name}#toolbar=0&navpanes=0&scrollbar=0"></iframe>
                 </p>
             </div>
         </div>
@@ -89,15 +97,15 @@ $(document).ready(function () {
             </div>
             <div class="card-body">
                 <p class="card-text">
-                    <div>1. <input type="text" style="width:50%; margin-bottom:5%" maxlength="1"/></div>
-                    <div>2. <input type="text" style="width:50%; margin-bottom:5%" maxlength="1"/></div>
-                    <div>3. <input type="text" style="width:50%; margin-bottom:5%" maxlength="1"/></div>
+				    <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
+				        <div>${questionStatus.index}. <input type="text" style="width:50%; margin-bottom:5%" maxlength="1"/></div>
+				    </c:forEach>
                 </p>
             </div>
         </div>
     </div>
 </div>
 
-<button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-top: 1%;" type="button" onclick="">제출하기</button>
+<button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-top: 1%;" type="button" onclick="goCheck()">제출하기</button>
 
 		

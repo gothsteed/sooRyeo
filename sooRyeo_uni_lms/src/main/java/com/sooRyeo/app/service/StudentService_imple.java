@@ -50,6 +50,7 @@ import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
@@ -392,9 +393,9 @@ public class StudentService_imple implements StudentService {
 
 	// 내수업리스트
 	@Override
-	public List<Map<String, String>> classList(int userid) {
+	public StudentTimeTable classList(int userid) {
 		
-		List<Map<String, String>> classList = dao.classList(userid);
+		StudentTimeTable classList = dao.classList(userid);
 		return classList;
 	}
 

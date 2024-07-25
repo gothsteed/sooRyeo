@@ -1,5 +1,7 @@
 package com.sooRyeo.app.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +14,14 @@ import org.springframework.stereotype.Repository;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentTimeTable;
+import com.sooRyeo.app.domain.Time;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
@@ -129,9 +134,25 @@ public class StudentDao_imple implements StudentDao {
 
 	// 수업리스트 보여주기
 	@Override
-	public List<Map<String, String>> classList(int userid) {
-		List<Map<String, String>> classList = sqlSession.selectList("student.classList", userid);
-		return classList;
+	public StudentTimeTable classList(int userid) {
+		
+		LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter dtft = DateTimeFormatter.ofPattern("yy-MM");
+        String sysdate = currentDate.format(dtft);
+        System.out.println("포맷팅된 현재 날짜: " + sysdate);
+		
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("userid", userid);
+        paraMap.put("sysdate", sysdate);
+        
+		List<Course> classList = sqlSession.selectList("student.classList", paraMap);		
+		
+		for(Course course : classList) {
+			System.out.println("확인용  : " + course.getCourse_seq());
+			
+		}
+		
+		return new StudentTimeTable(userid, classList);
 	}
 	
 

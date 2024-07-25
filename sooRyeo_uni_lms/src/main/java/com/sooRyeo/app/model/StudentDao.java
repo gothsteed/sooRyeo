@@ -12,6 +12,7 @@ import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
@@ -23,7 +24,7 @@ public interface StudentDao {
 	Student selectStudent(LoginDTO loginDTO);
 
 	// 수업리스트 보여주기
-	List<Map<String, String>> classList(int userid);
+	StudentTimeTable classList(int userid);
 	
 	// 내정보 보기
 	Student getStudentById(int studentId);

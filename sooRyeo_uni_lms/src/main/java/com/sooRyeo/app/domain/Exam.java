@@ -1,6 +1,8 @@
 package com.sooRyeo.app.domain;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Exam {
 	
@@ -10,11 +12,16 @@ public class Exam {
     private String original_file_name;
     private String answer_mongo_id;
     private Integer question_count;
+    private Integer end_date_seconds;
+    
 
     private Schedule schedule;
     
-    private MultipartFile attach;
 
+
+    public Integer getEnd_date_seconds() {
+    	return end_date_seconds;
+    }
 
     public Integer getFk_schedule_seq() {
         return fk_schedule_seq;
@@ -42,5 +49,26 @@ public class Exam {
 
     public Schedule getSchedule() {
         return schedule;
+    }
+
+    public LocalDateTime getStartDate() {
+        return  schedule.getStartLocalDateTime();
+    }
+
+    public long getDurationInMinute() {
+        Duration duration = schedule.getDuration();
+        return  duration.toMinutes();
+    }
+
+    public boolean isBefore(LocalDateTime localDateTime) {
+        return schedule.isBefore(localDateTime);
+    }
+
+    public boolean isAfter(LocalDateTime localDateTime) {
+        return schedule.isAfter(localDateTime);
+    }
+
+    public boolean isBetween(LocalDateTime time) {
+        return schedule.isBetweenSchedule(time);
     }
 }

@@ -16,6 +16,7 @@ import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
@@ -24,7 +25,7 @@ import com.sooRyeo.app.dto.StudentDTO;
 public interface StudentService {
 	
 	// 수업리스트 보여주기 
-	List<Map<String, String>> classList(int userid);
+	StudentTimeTable classList(int userid);
 	
 	// 내정보 보기
 	StudentDTO getViewInfo(HttpServletRequest request);

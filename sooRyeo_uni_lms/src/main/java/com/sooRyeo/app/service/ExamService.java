@@ -8,6 +8,7 @@ import com.sooRyeo.app.mongo.entity.ExamAnswer;
 import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 
 import java.util.List;
+import com.sooRyeo.app.domain.Exam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,4 +25,8 @@ public interface ExamService {
 	// 시험 출제 시 오라클db에 insert
 	int insert_exam_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score, ExamDTO examdto);
 
+    ModelAndView getExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+
+    // 시험을 select 하는 메소드
+	Exam getExam();
 }
