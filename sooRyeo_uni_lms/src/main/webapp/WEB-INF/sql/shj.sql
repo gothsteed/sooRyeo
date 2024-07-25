@@ -522,13 +522,26 @@ select *
 from tbl_course
 
 
+-----------------------------------------------------------
+--=== 출석률 구하기 ===--
 
+-- 1과목에 대한 전체 강의 수 : 14개(16주차에서 시험2주차 뺀)
+-- 내가 출석한 강의 수 : 1개(가정)
+-- 1/14 * 100 = 7.14%
 
+-- 수강신청 tbl_registered_course
+-- 개설수업 tbl_course
+-- 강의 tbl_lecture
+-- 출석 tbl_attendance
 
-
-
-
-
+WITH
+V AS
+(
+select *
+from tbl_registered_course A JOIN tbl_course B
+ON A.fk_course_seq = B.course_seq
+where A.fk_student_id = '202400005' AND exist = 1
+)
 
 
 
