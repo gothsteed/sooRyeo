@@ -99,6 +99,12 @@
 	margin-left: 8%;
 }
 
+label, button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 </style>
 
 
@@ -217,28 +223,9 @@ function selectCourse(year, semester){
 
 </script>
 
-<div class="form-group ml-1" style="width:22%;">
-  <label for="year">년도 선택</label> 
-  <select id="year" name="year" class="form-control">
-    <option value="">--년도 선택--</option>
-    <option value="21">2021</option>
-    <option value="22">2022</option>
-    <option value="23">2023</option>
-    <option value="24">2024</option>
-  </select>
-  
-  <label for="semester">학기 선택</label><br> 
-  <select id="semester" name="semester" class="form-control">
-    <option value="">--학기 선택--</option>
-    <option value="03">1학기</option>
-    <option value="07">2학기</option>
-  </select>
-    
-</div>
-
-<button id="submitButton" class="btn btn-primary">확인</button>
  
 <div style="display: flex; width : 100%;" class="row">
+
 
 	<div style="margin-top: 5%; width : 80%; border: solid 0px green;" id="showCourse">
 	<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>내 수업 목록</h3>
@@ -292,6 +279,27 @@ function selectCourse(year, semester){
 		<div class="border border2">등록된 게시글이 없습니다.</div>
 		<div class="border border1">· 예정된 할일(03-03 ~ 03-24)</div>
 		<div class="border border2">계획된 일정이 없습니다.</div>
+		<br>
+		<div style="align-items: center;" class="form-group ml-1">
+		  <label for="year" style="margin-right: 10px;"><span>년도 선택</span></label>
+		  <select id="year" name="year" class="form-control" style="margin-right: 20px;">
+		    <option value="">--년도 선택--</option>
+		    <option value="21">2021</option>
+		    <option value="22">2022</option>
+		    <option value="23">2023</option>
+		    <option value="24">2024</option>
+		  </select>
+		  <br>
+		  <label for="semester" style="margin-right: 10px;"><span>학기 선택</span></label>
+		  <select id="semester" name="semester" class="form-control mb-2" style="margin-right: 20px;">
+		    <option value="">--학기 선택--</option>
+		    <option value="03">1학기</option>
+		    <option value="07">2학기</option>
+		  </select>
+		  
+		  <button id="submitButton" class="btn btn-primary"><span>확인</span></button>
+		</div>
+		
 	</div>
 
 </div>
