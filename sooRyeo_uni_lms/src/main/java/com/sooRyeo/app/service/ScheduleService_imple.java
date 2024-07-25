@@ -217,4 +217,12 @@ public class ScheduleService_imple implements ScheduleService {
 	}
 
 
+	// 시험테이블 select
+	@Override
+	public List<Map<String, String>> showExam(int userid) {
+		List<Map<String, String>> schedule = dao.showExam(userid);
+		return schedule;
+	}
+
+
 }

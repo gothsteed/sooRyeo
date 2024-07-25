@@ -46,4 +46,8 @@ public interface ScheduleService {
     ModelAndView getProfessorConsultPage(HttpServletRequest request,  ModelAndView mav);
 
     ModelAndView getStudentConsultPage(HttpServletRequest request, ModelAndView mav);
+    
+    
+    // 시험테이블 select
+	List<Map<String, String>> showExam(int userid);
 }

@@ -82,4 +82,12 @@ public class ExamService_imple implements ExamService {
 		
 		return examView;
 	}
+
+
+
+	@Override
+	public ModelAndView getExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

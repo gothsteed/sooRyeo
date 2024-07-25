@@ -237,4 +237,11 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 
+	@Override
+	public List<Map<String, String>> showExam(int userid) {
+		List<Map<String, String>> Schedule = sqlSession.selectList("schedule.showExam", userid);
+		return Schedule;
+	}
+
+
 }

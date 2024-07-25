@@ -484,6 +484,29 @@ where rno between #{startRno} and #{endRno}
 		
 	
 	</select>
+	
+	
+	<!-- 시험 테이블 select -->
+	<resultMap type="HashMap" id="examMap">
+		<result column="fk_student_id" property="fk_student_id" javaType="String" />
+		<result column="course_seq" property="course_seq" javaType="String" />
+		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+		<result column="title" property="title" javaType="String" />
+		<result column="schedule_type" property="schedule_type" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+	</resultMap>
+	
+	<select id="showExam" parameterType="Int" resultMap="examMap">
+			select fk_student_id, A.course_seq , schedule_seq, title, schedule_type, start_date, end_date
+			from tbl_schedule join tbl_exam
+			on schedule_seq = fk_schedule_seq
+			join tbl_course A
+			on course_seq = fk_course_seq
+			join tbl_registered_course B
+			on B.fk_course_seq = A.course_seq
+			where fk_student_id = #{userid}
+	</select>
 
 
 

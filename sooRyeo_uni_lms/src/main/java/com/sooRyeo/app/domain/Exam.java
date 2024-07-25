@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Exam {
-	
     private Integer fk_schedule_seq;
     private Integer fk_course_seq;
     private String file_name;
@@ -16,7 +15,6 @@ public class Exam {
     
 
     private Schedule schedule;
-    
 
 
     public Integer getEnd_date_seconds() {
