@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ExamDTO;
 
@@ -196,6 +197,30 @@ public class ScheduleDao_imple implements ScheduleDao {
 	@Override
 	public int getStudentConfirmedConsultCount(int studentId) {
 		return sqlSession.selectOne("schedule.getStudentConfirmedConsultCount", studentId);
+	}
+
+	@Override
+	public List<Exam> getExamList(int currentPage, int sizePerPage, int courseSeq) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("courseSeq", courseSeq);
+
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		map.put("startRno", startRno);
+		map.put("endRno", endRno);
+
+		return sqlSession.selectList("schedule.getExamList", map);
+	}
+
+	@Override
+	public int getExamCount(int courseSeq) {
+		return sqlSession.selectOne("schedule.getExamCount", courseSeq);
+	}
+
+	@Override
+	public Exam getExamSchedule(int schedule_seq) {
+		return sqlSession.selectOne("schedule.getExamSchedule", schedule_seq);
+
 	}
 
 

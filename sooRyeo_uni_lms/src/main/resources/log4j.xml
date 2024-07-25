@@ -32,6 +32,9 @@
 		<level value="info" />
 	</logger>
 
+
+
+<!--	====================login setting ================== -->
 <!--	<logger name="org.springframework.core">
 		<level value="DEBUG" />
 	</logger>
@@ -48,10 +51,11 @@
 		<level value="DEBUG" />
 	</logger>
 
-	&lt;!&ndash; General Spring Logger &ndash;&gt;
 	<logger name="org.springframework">
 		<level value="DEBUG" />
 	</logger>-->
+
+<!--	=================logging setting====================   -->
 
 	<!-- Root Logger -->
 	<root>

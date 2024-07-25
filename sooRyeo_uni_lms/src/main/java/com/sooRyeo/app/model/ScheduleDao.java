@@ -5,8 +5,10 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Exam;
+import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ExamDTO;
+import org.springframework.http.ResponseEntity;
 
 public interface ScheduleDao {
 	
@@ -65,4 +67,10 @@ public interface ScheduleDao {
 
 	// 시험테이블 select
 	List<Map<String, String>> showExam(int userid);
+	
+    List<Exam> getExamList(int currentPage, int sizePerPage, int courseSeq);
+
+	int getExamCount(int courseSeq);
+
+	Exam getExamSchedule(int schedule_seq);
 }

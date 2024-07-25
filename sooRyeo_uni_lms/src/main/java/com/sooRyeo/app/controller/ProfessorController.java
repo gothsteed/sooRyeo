@@ -14,8 +14,9 @@ import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.LectureUploadDto;
-import com.sooRyeo.app.service.LectureService;
-import com.sooRyeo.app.service.ScheduleService;
+import com.sooRyeo.app.service.*;
+import org.apache.poi.ss.formula.functions.Mode;
+import org.checkerframework.checker.units.qual.N;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,6 @@ import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
-import com.sooRyeo.app.service.ProfessorService;
-import com.sooRyeo.app.service.StudentService;
 
 
 @Controller
@@ -51,6 +50,9 @@ public class ProfessorController {
 
 	@Autowired
 	private ScheduleService scheduleService;
+
+	@Autowired
+	private ExamService examService;
 
 	@Autowired
 	private FileManager fileManager;
@@ -514,12 +516,33 @@ public class ProfessorController {
 		return mav;
 	}
 
+	@GetMapping(value = "/professor/exam.lms")
+	public ModelAndView professorExam(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		return examService.getExamPage(mav, request, response);
+	}
+
+
+	@GetMapping("/professor/exam/result.lms")
+	public ModelAndView getExamResultPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
+		//todo : error handler 추가하기
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
+		mav.addObject("schedule_seq", schedule_seq);
+		mav.setViewName("exam/examResult");
+		return mav;
+	}
+
+
+	@GetMapping("/professor/exam/resultREST.lms")
+	public ResponseEntity<String>  getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		return examService.getExamResultPage(mav, request, response);
+	}
+
+
 	@PostMapping("/professor/courseUpload.lms")
 	public ModelAndView courseUploadPage(ModelAndView mav, HttpServletRequest request) {
 
 		return lectureService.getUploadLecturePage(request, mav);
 	}
-	
 
 	@PostMapping("/professor/courseUploadREST.lms")
 	public ResponseEntity<String> courseUpload(MultipartHttpServletRequest request, @ModelAttribute LectureUploadDto lectureUploadDto) throws Exception {

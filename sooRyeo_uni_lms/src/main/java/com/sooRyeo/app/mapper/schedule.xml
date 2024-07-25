@@ -75,6 +75,16 @@
 		<association property="professor" javaType="com.sooRyeo.app.domain.Professor" resultMap="ProfessorResultMap"/>
 	</resultMap>
 
+	<resultMap id="ExamScheduleResultMap" type="com.sooRyeo.app.domain.Exam">
+		<id property="fk_schedule_seq" column="fk_schedule_seq"/>
+		<result property="fk_course_seq" column="fk_course_seq"/>
+		<result property="file_name" column="file_name"/>
+		<result property="original_file_name" column="original_file_name"/>
+		<result property="answer_mongo_id" column="answer_mongo_id"/>
+		<result property="question_count" column="question_count"/>
+		<association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
+	</resultMap>
+
 
 	<!--  과제 읽어오기  -->
 	<resultMap type="HashMap" id="assignmentMap">
@@ -509,5 +519,64 @@ where rno between #{startRno} and #{endRno}
 	</select>
 
 
+	<select id="getExamList" parameterType="HashMap" resultMap="ExamScheduleResultMap">
+        select *
+		from
+		(select
+            ROWNUM as rno,
+			SCHEDULE_SEQ,
+			TITLE,
+			SCHEDULE_TYPE,
+			START_DATE,
+			END_DATE,
+			CONFIRM,
+			FK_SCHEDULE_SEQ,
+			FK_COURSE_SEQ,
+			FILE_NAME,
+			ORIGINAL_FILE_NAME,
+			ANSWER_MONGO_ID
+
+         from TBL_SCHEDULE
+                  join
+              TBL_EXAM
+              on TBL_SCHEDULE.SCHEDULE_SEQ = TBL_EXAM.FK_SCHEDULE_SEQ
+         where FK_COURSE_SEQ = #{courseSeq}
+         )
+        where rno between #{startRno} and #{endRno}
+
+	</select>
+
+
+	<select id="getExamCount" parameterType="int" resultType="int">
+		select count(*)
+		from TBL_SCHEDULE
+                  join
+              TBL_EXAM
+              on TBL_SCHEDULE.SCHEDULE_SEQ = TBL_EXAM.FK_SCHEDULE_SEQ
+         where FK_COURSE_SEQ = #{courseSeq}
+	</select>
+
+
+	<select id="getExamSchedule" parameterType="int" resultMap="ExamScheduleResultMap">
+		select
+			SCHEDULE_SEQ,
+			TITLE,
+			SCHEDULE_TYPE,
+			START_DATE,
+			END_DATE,
+			CONFIRM,
+			FK_SCHEDULE_SEQ,
+			FK_COURSE_SEQ,
+			FILE_NAME,
+			ORIGINAL_FILE_NAME,
+			ANSWER_MONGO_ID
+
+		from TBL_SCHEDULE
+				 join
+			 TBL_EXAM
+			 on TBL_SCHEDULE.SCHEDULE_SEQ = TBL_EXAM.FK_SCHEDULE_SEQ
+		where FK_SCHEDULE_SEQ = #{schedule_seq}
+
+	</select>
 
 </mapper>
