@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Exam;
+import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
+import org.springframework.http.ResponseEntity;
 
 public interface ScheduleDao {
 	
@@ -58,4 +60,9 @@ public interface ScheduleDao {
 	int getStudentConfirmedConsultCount(int studentId);
 
 	Exam getExam();
+    List<Exam> getExamList(int currentPage, int sizePerPage, int courseSeq);
+
+	int getExamCount(int courseSeq);
+
+	Exam getExamSchedule(int schedule_seq);
 }
