@@ -463,7 +463,7 @@ where rno between #{startRno} and #{endRno}
 		
 		from tbl_exam E
 		join tbl_schedule S on S.schedule_seq = E.fk_schedule_seq  
-		where fk_course_seq = 4
+		where fk_schedule_seq = 91
 		
 	
 	</select>
