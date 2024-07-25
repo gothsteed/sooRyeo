@@ -57,8 +57,11 @@ public class LogService_imple implements LogService {
         LocalDate today = LocalDate.now(zoneId);
         LocalDateTime startOfDay = today.atStartOfDay(); // 오늘 00:00:00
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // 오늘 23:59:59.999999999
-   
         
+        //System.out.println("확인용 today : " + today);
+        //LocalDateTime rightnow = LocalDateTime.now();
+        //System.out.println("확인용 rightnow : " + rightnow);
+        // 확인용 rightnow : 2024-07-25T10:33:07.605369100
         
         Instant startOfDayInstant = startOfDay.atZone(zoneId).toInstant();
         Instant endOfDayInstant = endOfDay.atZone(zoneId).toInstant();
