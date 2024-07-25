@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
@@ -27,7 +29,12 @@ public class ExamController {
     
 	// 출제하기 버튼 클릭 시  데이터 insert
 	@PostMapping("exam_write.lms")
-	public ModelAndView exam_write(HttpServletRequest request, ModelAndView mav) throws Exception {
+	public ModelAndView exam_write(HttpServletRequest request, ModelAndView mav, MultipartHttpServletRequest mrequest) throws Exception {
+		
+		
+		MultipartFile attach = mrequest.getFile("attach");
+	
+		
 		
 		// 몽고DB insert
 		String[] arr_answer = request.getParameterValues("answer");

@@ -316,7 +316,7 @@ function set_exam() {
 					 <input type="hidden" id="test_end_time" name="test_end_time" />
 					 
 					 
-                     <input type="file" class="form-control" id="fileInput" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
+                     <input type="file" class="form-control" id="fileInput" name="attach" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
 
 					
                   </div>
