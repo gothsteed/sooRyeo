@@ -46,10 +46,10 @@ public class ExamService_imple implements ExamService {
 
 
 
-/*
     @Override
     public ModelAndView getExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-        int currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
+        
+    	int currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
         int course_seq = Integer.parseInt(request.getParameter("course_seq"));
         int sizePerPage = 10;
 
@@ -109,7 +109,7 @@ public class ExamService_imple implements ExamService {
     }
 
 	
-	*/
+	
     
 	@Override
 	public ExamAnswer insert_examAnswer(ExamAnswer examAnswer) {
@@ -143,9 +143,8 @@ public class ExamService_imple implements ExamService {
 
 
 
-	@Override
-	public ModelAndView getExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+
+
+
 }
