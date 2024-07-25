@@ -70,7 +70,8 @@ public class ProfessorController {
 		
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  professorService.getAnnouncement(currentPage);
-		
+
+		mav.addObject("prof_id", ((Professor) request.getSession().getAttribute("loginuser")).getProf_id());
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
@@ -167,9 +168,8 @@ public class ProfessorController {
 		int prof_id = loginuser.getProf_id();
 		
 		ProfessorTimeTable timeTable = professorService.courseList(prof_id);
-		
-		List<Course> courseList = timeTable.getCourseList();
-		
+		List<Course> courseList = timeTable.getCourseList();		
+
 		if(courseList == null) {// 정보가 없다면
 			  mav.addObject("message", "담당한 강의가 없습니다.");
 	    	  mav.addObject("loc", request.getContextPath()+"/professor/dashboard.lms");
@@ -795,6 +795,51 @@ public class ProfessorController {
 		return scheduleService.getProfessorConsultPage(request, mav);
 	}
 	
+	
+	@ResponseBody
+	@PostMapping("/professor/courseListJson.lms")
+	public String courseListJson(HttpServletRequest request) {// 학기별 개강과목 json
+		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		int prof_id = loginuser.getProf_id();
+		
+		String semester = request.getParameter("semester");
+		//System.out.println("확인용 semester : " + semester);
+		// 202103
+		
+		ProfessorTimeTable timeTable = professorService.courseListJson(semester, prof_id);
+		// 해당학기 수업 리스트
+		List<Course> courseListJson = timeTable.getCourseList();
+		
+		
+		JSONArray jsonArr = new JSONArray();
+        
+        for(Course course : courseListJson) {
+           
+           JSONObject jsonObj = new JSONObject();
+           jsonObj.put("prof_id", course.getProfessor().getProf_id());
+           jsonObj.put("prof_name", course.getProfessor().getName());
+           jsonObj.put("course_seq", course.getCourse_seq());
+           jsonObj.put("semester_date", course.getSemester_date());
+           jsonObj.put("curriculum_seq", course.getCurriculum().getCurriculum_seq());
+           jsonObj.put("fk_department_seq", course.getCurriculum().getFk_department_seq());
+           jsonObj.put("name", course.getCurriculum().getName());
+           jsonObj.put("credit", course.getCurriculum().getCredit());
+           jsonObj.put("required", course.getCurriculum().getRequired());
+           jsonObj.put("timeList", course.getTimeList());
+           
+           
+           jsonArr.put(jsonObj);
+           
+        }// end of for--------------------------------
+        
+        // System.out.println(jsonArr.toString());
+        
+        return jsonArr.toString();
+				
+	}
 	
 	
 	

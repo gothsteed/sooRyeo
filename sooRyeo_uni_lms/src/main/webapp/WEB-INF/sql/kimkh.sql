@@ -11,6 +11,14 @@ from tbl_student;
 select *
 from tbl_admin;
 
+select *
+from tbl_professor;
+
+update tbl_professor set prof_id = 202400007
+where prof_id = 202400009
+
+commit;
+
 -- 컬럼 이름 바꾸기
 alter table tbl_admin rename COLUMN admin_seq to admin_id;
 commit;
@@ -95,6 +103,9 @@ WHERE P.prof_id = 202400002 and C.exist = 1;
 
 select *
 from tbl_time
+
+select *
+from tbl_course
 
 -- 개설수업
 select *
@@ -454,3 +465,118 @@ commit;
 ALTER TABLE tbl_assignment_submit ADD orgfilename NVARCHAR2(200);
 
 commit;
+
+
+
+-- 학기별 수업 가져오기
+
+SELECT P.prof_id AS prof_id,
+       	P.name AS prof_name,
+       	C.COURSE_SEQ AS course_seq, 
+       	C.FK_CURRICULUM_SEQ AS fk_curriculum_seq, 
+       	C.CAPACITY AS capacity, 
+       	to_char(C.SEMESTER_DATE, 'YY-MM') AS semester_date,
+       	CU.fk_department_seq AS fk_department_seq,  
+       	CU.name AS name, 
+       	CU.credit AS credit, 
+       	CU.required AS required, 
+       	CU.exist AS exist,
+       	T.DAY_OF_WEEK AS day_of_week,
+       	T.start_period AS start_period,
+       	T.end_period AS end_period
+		FROM tbl_professor P
+		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
+		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+		JOIN tbl_time T ON C.course_seq = T.fk_course_seq
+		WHERE P.prof_id = 202400002 and C.exist = 1 and to_char(C.SEMESTER_DATE, 'yy-MM') = '24-07'
+
+    
+        select *
+        from tbl_course
+        
+        commit;
+        
+        
+        
+WITH
+		P AS (
+		select name, prof_id 
+		from tbl_professor
+		),
+		C AS (
+		select curriculum_seq, name, fk_department_seq, required
+		from tbl_curriculum
+		),
+		V AS (
+			select course_seq, fk_curriculum_seq, fk_professor_id, fk_student_id, semester_date
+			from tbl_course join tbl_registered_course
+			on course_seq = fk_course_seq
+		)
+		select p.name as professorName,
+			   c.name as className,
+			   c.fk_department_seq as department_seq,
+       		   c.required as required,
+       		   v.course_seq as course_seq,
+       		   v.semester_date as semester_date
+		from P JOIN V
+		on V.fk_professor_id = P.prof_id
+		JOIN C
+		on V.fk_curriculum_seq = C.curriculum_seq
+		where V.fk_student_id = 202400009 and '24-03' < to_char(V.semester_date, 'yy-MM') and to_char(V.semester_date, 'yy-MM') <= '24-07'
+        
+        
+        SELECT
+        A.schedule_seq_assignment as schedule_seq_assignment,
+		SA.assignment_submit_seq AS assignment_submit_seq,
+		S.name AS name,
+		NVL(SA.score, 0) AS score
+		FROM
+		tbl_student S
+		join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+		join tbl_assignment A ON SA.fk_schedule_seq_assignment = A.schedule_seq_assignment
+        join tbl_course C ON A.fk_course_seq = C.course_seq
+        where course_seq = 4 and student_id = 202400005;
+        
+        
+        -- 202400005 학생 과제 총점
+        SELECT sum(SA.score) as totalscore
+		FROM
+		tbl_student S
+		join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+		join tbl_assignment A ON SA.fk_schedule_seq_assignment = A.schedule_seq_assignment
+        join tbl_course C ON A.fk_course_seq = C.course_seq
+        where course_seq = 4 and S.student_id = 202400005
+
+       -- 총 과제 갯수
+        select count(schedule_seq_assignment) as totalCount
+        from tbl_assignment
+        where fk_course_seq = 4
+        
+        -- 과제 백분율 점수
+        (26/500)*100 
+        
+        -- 과목 총 시험 갯수
+        select count(*) as totalCount
+        from tbl_course C
+        join tbl_exam E ON C.course_seq = E.fk_course_seq
+        where course_seq = 4
+        
+        
+        select *
+        from tbl_exam
+        
+        
+        select *
+        from tbl_course C
+        order by course_seq asc
+        join tbl_curriculum CU on C.fk_curriculum_seq = CU.curriculum_seq
+        
+        update tbl_course set semester_date = '2024/07/07'
+        commit;
+        
+        
+        
+
+        
+        
+        

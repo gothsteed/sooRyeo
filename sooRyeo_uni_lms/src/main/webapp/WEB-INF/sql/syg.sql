@@ -348,7 +348,23 @@ CASE
 END;
 
 select *
-from tbl_curriculum;
+from tbl_exam E
+join tbl_schedule S on S.schedule_seq = E.fk_schedule_seq  
+where fk_course_seq = 4;
 
+select to_num,to_char(end_date* 86400, 'yyyy-mm-dd hh24:mi:ss')* 86400, to_char(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+from tbl_schedule
+where schedule_seq = 91;
 
+SELECT 
+    ceil((END_DATE - SYSDATE) * 86400) AS end_date_seconds
+FROM 
+    tbl_schedule
+    where schedule_seq = 91;
 
+select *
+from tbl_exam;
+
+update tbl_exam set question_count = 5;
+
+commit;

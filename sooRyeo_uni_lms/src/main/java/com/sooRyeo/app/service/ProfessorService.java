@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -79,6 +80,9 @@ public interface ProfessorService {
 	Assignment searchFile(String schedule_seq_assignment);
 
 	Pager<Announcement> getAnnouncement(int currentPage);
+	
+	// 학기 별 개강과목
+	ProfessorTimeTable courseListJson(String semester, int prof_id);
 	
 	
 	

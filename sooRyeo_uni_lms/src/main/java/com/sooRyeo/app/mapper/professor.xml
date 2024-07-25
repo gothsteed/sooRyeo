@@ -415,5 +415,46 @@
 		join tbl_course C on R.fk_course_seq = C.course_seq
 		where course_seq = #{fk_course_seq}
 	</select>
+	
+	
+	<resultMap id="courseReCheckMap" type="com.sooRyeo.app.domain.Course">
+		<id property="course_seq" column="course_seq" />
+		<result property="semester_date" column="semester_date" />
+		<association property="professor" javaType="com.sooRyeo.app.domain.Professor">
+			<id property="prof_id" column="prof_id" />			
+			<result property="name" column="prof_name" />
+		</association>
+		<association property="curriculum" javaType="com.sooRyeo.app.domain.Curriculum">
+			<id property="curriculum_seq" column="curriculum_seq" />
+			<result property="fk_department_seq" column="fk_department_seq" />
+			<result property="name" column="name" />
+			<result property="credit" column="credit" />
+			<result property="required" column="required" />
+		</association>
+	</resultMap>
+	<select id="courseListJson" parameterType="HashMap" resultMap="courseReCheckMap" >
+		SELECT P.prof_id AS prof_id,
+       	P.name AS prof_name,
+       	C.COURSE_SEQ AS course_seq, 
+       	CU.CURRICULUM_SEQ AS curriculum_seq, 
+       	C.CAPACITY AS capacity, 
+       	C.SEMESTER_DATE AS semester_date,
+       	CU.fk_department_seq AS fk_department_seq,  
+       	CU.name AS name, 
+       	CU.credit AS credit, 
+       	CU.required AS required, 
+       	CU.exist AS exist
+		FROM tbl_professor P
+		JOIN tbl_course C ON P.prof_id = C.fk_professor_id
+		JOIN tbl_curriculum CU ON CU.curriculum_seq = C.fk_curriculum_seq
+		WHERE P.prof_id = #{prof_id} and C.exist = 1 and to_char(C.semester_date, 'yy-MM') = #{semester_date}
+	</select>
+	
+	<select id="courseListTimeJson" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
+		select time_seq, day_of_week, fk_course_seq, start_period, end_period
+		from tbl_time
+		where fk_course_seq = ${course_seq}
+	</select>
+	
 
 </mapper>

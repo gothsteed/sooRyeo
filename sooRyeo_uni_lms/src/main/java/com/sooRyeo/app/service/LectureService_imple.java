@@ -10,6 +10,8 @@ import com.sooRyeo.app.dto.LectureUpdateDto;
 import com.sooRyeo.app.dto.LectureUploadDto;
 import com.sooRyeo.app.model.CourseDao;
 import com.sooRyeo.app.model.LectureDao;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 
 @Service
@@ -33,6 +36,9 @@ public class LectureService_imple implements LectureService{
 
     @Autowired
     private CourseDao courseDao;
+
+    @Autowired
+    private FFprobe ffprobe;
 
 
     private boolean checkLectureAuth(HttpServletRequest request, int lecture_seq) {
@@ -62,6 +68,12 @@ public class LectureService_imple implements LectureService{
         String videoOriginalFileName =  lectureUploadDto.getVideo().getOriginalFilename();
         String uploadedVideoName =  fileManager.doFileUpload(lectureUploadDto.getVideo().getBytes(), videoOriginalFileName, path);
 
+        String videoUploadPath = path + File.separator +  uploadedVideoName;
+
+        FFmpegProbeResult probeResult = ffprobe.probe(videoUploadPath);
+        long durationMinutes = (long) (probeResult.getFormat().duration / 60.0);
+
+
 
         String uploadAttachFileName = null;
         String attachOriginalFileName = null;
@@ -72,7 +84,7 @@ public class LectureService_imple implements LectureService{
 
         LectureInsertDto dto = new LectureInsertDto(lectureUploadDto.getCourse_seq(), lectureUploadDto.getTitle(),
                 lectureUploadDto.getContent(), lectureUploadDto.getStartDateTime(), lectureUploadDto.getEndDateTime(),
-                videoOriginalFileName, uploadedVideoName, attachOriginalFileName, uploadAttachFileName);
+                videoOriginalFileName, uploadedVideoName, attachOriginalFileName, uploadAttachFileName, durationMinutes);
 
 
         int result = lectureDao.insertLecture(dto);
@@ -113,11 +125,18 @@ public class LectureService_imple implements LectureService{
 
         String uploadVideoFileName = null;
         String videoOriginalFileName = null;
+        Long durationMinutes = null;
         if(lectureUploadDto.getVideo() != null) {
             fileManager.doFileDelete(lecture.getUploaded_video_file_name(), path);
 
             videoOriginalFileName = lectureUploadDto.getVideo().getOriginalFilename();
             uploadVideoFileName  =  fileManager.doFileUpload(lectureUploadDto.getVideo().getBytes(), videoOriginalFileName, path);
+
+            String videoUploadPath = path + File.separator + uploadVideoFileName;
+
+            FFmpegProbeResult probeResult = ffprobe.probe(videoUploadPath);
+            durationMinutes = (long) (probeResult.getFormat().duration / 60.0);
+
         }
 
 
@@ -139,7 +158,8 @@ public class LectureService_imple implements LectureService{
                 videoOriginalFileName,
                 uploadVideoFileName,
                 attachOriginalFileName,
-                uploadAttachFileName);
+                uploadAttachFileName,
+                durationMinutes);
 
 
 

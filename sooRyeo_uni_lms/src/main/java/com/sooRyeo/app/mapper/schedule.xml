@@ -38,6 +38,21 @@
 		<association property="department" javaType="com.sooRyeo.app.domain.Department" resultMap="departmentMap"/>
     </resultMap>
 
+
+	<resultMap id="ProfessorResultMap" type="com.sooRyeo.app.domain.Professor">
+		<id property="prof_id" column="prof_id"/>
+		<result property="department_seq" column="department_seq"/>
+		<result property="name" column="name"/>
+		<result property="jubun" column="jubun"/>
+		<result property="tel" column="tel"/>
+		<result property="grade" column="grade"/>
+		<result property="office_address" column="office_address"/>
+		<result property="email" column="email"/>
+		<result property="employment_date" column="employment_date"/>
+		<result property="employment_stat" column="employment_stat"/>
+		<association property="department" javaType="com.sooRyeo.app.domain.Department" resultMap="departmentMap"/>
+	</resultMap>
+
     <!-- ResultMap for Consult -->
     <resultMap id="ConsultResultMap" type="com.sooRyeo.app.domain.Consult">
         <id property="fk_schedule_seq" column="fk_schedule_seq"/>
@@ -48,6 +63,17 @@
         <association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
         <association property="student" javaType="com.sooRyeo.app.domain.Student" resultMap="StudentResultMap"/>
     </resultMap>
+
+
+	<resultMap id="ConsultJoinProfessorMap" type="com.sooRyeo.app.domain.Consult">
+		<id property="fk_schedule_seq" column="fk_schedule_seq"/>
+		<result property="fk_student_id" column="fk_student_id"/>
+		<result property="fk_prof_id" column="fk_prof_id"/>
+		<result property="content" column="content"/>
+		<result property="complete" column="complete"/>
+		<association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
+		<association property="professor" javaType="com.sooRyeo.app.domain.Professor" resultMap="ProfessorResultMap"/>
+	</resultMap>
 
 
 	<!--  과제 읽어오기  -->
@@ -355,6 +381,93 @@ where rno between #{startRno} and #{endRno}
 		where FK_SCHEDULE_SEQ = #{schedule_seq}
 
 	</update>
+
+
+
+	<select id="getStudentConfirmedConsultList" parameterType="HashMap" resultMap="ConsultJoinProfessorMap">
+
+		select *
+		from
+			(
+				select rownum as rno,
+					   schedule_seq,
+					   fk_schedule_seq,
+					   title,
+					   schedule_type,
+					   start_date,
+					   end_date,
+					   confirm,
+					   name ,
+					   email
+				from
+					(
+						SELECT
+							s.schedule_seq,
+							s.title,
+							s.schedule_type,
+							s.start_date,
+							s.end_date,
+							s.confirm,
+							c.fk_schedule_seq,
+							c.fk_student_id,
+							c.fk_prof_id,
+							c.content,
+							p.PROF_ID,
+							p.DEPARTMENT_SEQ,
+							p.pwd,
+							p.name ,
+							p.jubun ,
+							p.tel ,
+							p.OFFICE_ADDRESS,
+							p.email,
+							p.EMPLOYMENT_DATE,
+							p.EMPLOYMENT_STAT
+						FROM
+							tbl_schedule s
+								JOIN
+							tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+								JOIN
+							TBL_PROFESSOR p ON c.FK_PROF_ID = p.PROF_ID
+						WHERE
+							s.schedule_type = 4 AND s.confirm = 1
+						  AND c.FK_STUDENT_ID = #{studentId} and COMPLETE = 0
+						order by  schedule_seq
+
+					)
+			)
+		where rno between #{startRno} and #{endRno}
+
+	</select>
+
+
+	<select id="getStudentConfirmedConsultCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			tbl_schedule s
+				JOIN
+			tbl_consult c ON s.schedule_seq = c.fk_schedule_seq
+				JOIN
+			TBL_PROFESSOR p ON c.FK_PROF_ID = p.PROF_ID
+		WHERE
+			s.schedule_type = 4 AND s.confirm = 1
+		  AND c.FK_STUDENT_ID = #{studentId} and COMPLETE = 0
+
+	</select>
+
+	<select id="getExam" resultType="com.sooRyeo.app.domain.Exam">
+	
+		select ceil((END_DATE - SYSDATE) * 86400) AS end_date_seconds,
+		fk_schedule_seq, fk_course_seq, file_name, original_file_name,
+		answer_mongo_id, question_count
+		
+		from tbl_exam E
+		join tbl_schedule S on S.schedule_seq = E.fk_schedule_seq  
+		where fk_course_seq = 4
+		
+	
+	</select>
+
 
 
 </mapper>

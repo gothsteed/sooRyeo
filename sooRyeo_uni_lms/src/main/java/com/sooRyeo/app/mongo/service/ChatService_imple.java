@@ -70,8 +70,16 @@ public class ChatService_imple implements ChatService {
     public ResponseEntity<String> showChatRoom(HttpServletRequest request, HttpServletResponse response) {
 
         HttpSession session = request.getSession();
-        Professor professor = ((Professor) session.getAttribute("loginuser"));
-        List<ChatRoom> roomList = chatRoomRepository.findAllByProfessorId(professor.getProf_id());
+        List<ChatRoom> roomList = null;
+
+        if(session.getAttribute("loginuser") instanceof  Professor) {
+            Professor professor = ((Professor) session.getAttribute("loginuser"));
+            roomList = chatRoomRepository.findAllByProfessorId(professor.getProf_id());
+        }
+        else if(session.getAttribute("loginuser") instanceof  Student) {
+            Student student = ((Student) session.getAttribute("loginuser"));
+            roomList = chatRoomRepository.findAllByStudentId(student.getStudent_id());
+        }
 
         return ResponseEntity.ok().body(jsonBuilder.toJson(roomList));
     }

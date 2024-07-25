@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
+import com.sooRyeo.app.service.ScheduleService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Attendance;
+import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.common.MyUtil;
 import com.sooRyeo.app.domain.Announcement;
@@ -39,6 +41,7 @@ import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
@@ -61,6 +64,9 @@ public class StudentController {
 	
 	@Autowired
 	private CourseService courseService;
+
+	@Autowired
+	private ScheduleService scheduleService;
 	
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
@@ -112,7 +118,7 @@ public class StudentController {
 	
 	// 수업리스트 보여주기
 	@GetMapping(value="/student/classList.lms")
-	public String classList(HttpServletRequest request) {
+	public ModelAndView classList(HttpServletRequest request, ModelAndView mav) {
 		
 		HttpSession session = request.getSession();
 		
@@ -120,11 +126,16 @@ public class StudentController {
 		
 		int userid = loginuser.getStudent_id();
 		
-		List<Map<String, String>> mapList = service.classList(userid);
+		StudentTimeTable timeTable = service.classList(userid);
 		
-		request.setAttribute("mapList", mapList);
+		List<Course> mapList = timeTable.getCourseList();
+	
 
-		return "classList";
+
+		mav.addObject("mapList", mapList);
+		mav.setViewName("classList");
+		
+		return mav;
 		// /WEB-INF/views/student/{1}.jsp
 	}
 	
@@ -152,7 +163,6 @@ public class StudentController {
 		mav.addObject("application_status", application_status);
 		mav.addObject("member_student", member_student);
 		mav.setViewName("myInfo");
-		// /WEB-INF/views/student/{1}.jsp
 		
 		return mav;
 		
@@ -815,7 +825,7 @@ public class StudentController {
 		
 		int status_num = Integer.parseInt(request.getParameter("num"));
 		
-		// 학적변경테이블(tbl_student_status_change)에 재학신청을 insert 하는 메소드 
+		// 학적변경테이블(tbl_student_status_change)에 학적변경신청을 insert 하는 메소드 
 		int n = studentservice.application_status_change(student_id, status_num);
 		
 		if(n == 1) {
@@ -904,4 +914,10 @@ public class StudentController {
 	
 	
 	
+
+	@GetMapping("/student/consult.lms")
+	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
+		return scheduleService.getStudentConsultPage(request, mav);
+	}
+
 }

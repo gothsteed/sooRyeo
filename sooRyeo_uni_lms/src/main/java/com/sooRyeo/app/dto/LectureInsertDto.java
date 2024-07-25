@@ -18,11 +18,12 @@ public class LectureInsertDto {
     private String uploadVideoTitle;
     private String originalAttachName;
     private String uploadAttachName;
+    private Long durationMinutes;
 
     public LectureInsertDto() {
     }
 
-    public LectureInsertDto(Integer course_seq, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String originalVideoTitle, String uploadVideoTitle, String originalAttachName, String uploadAttachName) {
+    public LectureInsertDto(Integer course_seq, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String originalVideoTitle, String uploadVideoTitle, String originalAttachName, String uploadAttachName, Long durationMinutes) {
         this.course_seq = course_seq;
         this.title = title;
         this.content = content;
@@ -32,6 +33,7 @@ public class LectureInsertDto {
         this.uploadVideoTitle = uploadVideoTitle;
         this.originalAttachName = originalAttachName;
         this.uploadAttachName = uploadAttachName;
+        this.durationMinutes = durationMinutes;
     }
 
     public Integer getCourse_seq() {
@@ -104,5 +106,13 @@ public class LectureInsertDto {
 
     public void setUploadAttachName(String uploadAttachName) {
         this.uploadAttachName = uploadAttachName;
+    }
+
+    public Long getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(Long durationMinutes) {
+        this.durationMinutes = durationMinutes;
     }
 }

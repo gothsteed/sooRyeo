@@ -219,8 +219,16 @@ $(document).ready(function(){
 
 	});
 
+	
 });// end of $(document).ready(function(){});
 
+	function goTest1(){
+		// 시험시간 받아와서  // const startTime = 시험시간 // 이런식으로 받아서
+		// 컴펌 안에 if(현재시간 < 시험시간)이런식으로 조건걸어주기
+		if(confirm("지금 시험에 응시하시겠습니까?")){
+			location.href="<%= ctxPath%>/exam/test.lms";
+		}
+	};
 
 // ConsultingModal 모달이 닫히면 안에 쓰던 내용 다 지우기
 $('#ConsultingModal').on('hidden.bs.modal', function () {
@@ -285,6 +293,14 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			<span id="tasks" style="color:black; font-weight: bold;">과제</span>
 			<br>
 		</button>
+		
+		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;" onclick="goTest1()">
+			<img src="<%=ctxPath%>/resources/images/test.png" class="img-fluid" style="width:30%;">
+			<br><br>
+			<span id="tasks" style="color:black; font-weight: bold;">시험</span>
+			<br>
+		</button>
+		
 		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;" onclick="consulting()">
 			<img src="<%=ctxPath%>/resources/images/consulting.png" class="img-fluid" style="width:30%;">
 			<br><br>

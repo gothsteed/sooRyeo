@@ -579,6 +579,15 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public ProfessorTimeTable courseListJson(String semester, int prof_id) {
+		
+		ProfessorTimeTable courseListJson = dao.courseListJson(semester, prof_id);
+		
+		return courseListJson;
+	}
+
+
 
 	
 

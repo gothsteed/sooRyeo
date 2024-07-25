@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Consult;
+import com.sooRyeo.app.domain.Exam;
 
 @Repository
 public class ScheduleDao_imple implements ScheduleDao {
@@ -175,6 +176,33 @@ public class ScheduleDao_imple implements ScheduleDao {
 	@Override
 	public void updateToComplete(Integer scheduleSeq) {
 		sqlSession.update("schedule.updateToComplete", scheduleSeq);
+	}
+
+	@Override
+	public List<Consult> getStudentConfirmedConsultList(int studentId, int currentPage, int sizePerPage) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("studentId", studentId);
+
+		int startRno = ((currentPage- 1) * sizePerPage) + 1; // 시작 행번호
+		int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		map.put("startRno", startRno);
+		map.put("endRno", endRno);
+		return sqlSession.selectList("schedule.getStudentConfirmedConsultList", map);
+	}
+
+	@Override
+	public int getStudentConfirmedConsultCount(int studentId) {
+		return sqlSession.selectOne("schedule.getStudentConfirmedConsultCount", studentId);
+	}
+
+
+	@Override
+	public Exam getExam() {
+		
+		Exam examView = sqlSession.selectOne("schedule.getExam");
+		
+		return examView;
 	}
 
 

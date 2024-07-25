@@ -17,6 +17,11 @@
 	    height: 400px;
 	}
 	
+	div#count_container {
+	    height: 500px;
+	}
+	
+	
 	.highcharts-data-table table {
 	    font-family: Verdana, sans-serif;
 	    border-collapse: collapse;
@@ -200,23 +205,85 @@
 		
    });// end of $(document).ready(funciton(){})-------------
    
-   function showCount(){
-	   
-	   
-	   $.ajax({
-	    	url:"<%= ctxPath%>/chart/showCount.lms",
-	    	type:"post",
-	    	dataType:"json",
-	    	success: function(json) {
-	    		// 서버에서 받은 JSON 데이터 처리
-	            console.log(json);
-	         
-	        },
-	    	error: function(request, status, error){
-			   alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			}
-	   });// end of $.ajax 
-	   
+   function showCount() {
+       $.ajax({
+           url: "<%= ctxPath%>/chart/showCount.lms",
+           type: "post",
+           dataType: "json",
+           success: function(json) {
+               
+               var data = json;
+
+
+               var seriesData = [{
+                   name: '방문자 수',
+                   data: [
+                       data.day7 || 0,
+                       data.day6 || 0,
+                       data.day5 || 0,
+                       data.day4 || 0,
+                       data.day3 || 0,
+                       data.day2 || 0,
+                       data.day1 || 0,
+                       data.totalday || 0
+                   ]
+               }];
+
+               Highcharts.chart('count_container', {
+                   chart: {
+                       type: 'bar'
+                   },
+                   title: {
+                       text: '방문자 수 통계',
+                       align: 'left'
+                   },
+                   xAxis: {
+                       categories: ['6일전','5일전','4일전','3일전','2일전','어제','오늘','이번달'],
+                       title: {
+                           text: null
+                       }
+                   },
+                   yAxis: {
+                       min: 0,
+                       title: {
+                           text: '방문자 수',
+                           align: 'high'
+                       },
+                       labels: {
+                           overflow: 'justify'
+                       }
+                   },
+                   tooltip: {
+                       valueSuffix: ' 명'
+                   },
+                   plotOptions: {
+                       bar: {
+                           dataLabels: {
+                               enabled: true
+                           }
+                       }
+                   },
+                   legend: {
+                       layout: 'vertical',
+                       align: 'right',
+                       verticalAlign: 'top',
+                       x: -40,
+                       y: 80,
+                       floating: true,
+                       borderWidth: 1,
+                       backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                       shadow: true
+                   },
+                   credits: {
+                       enabled: false
+                   },
+                   series: seriesData
+               });
+           },
+           error: function(request, status, error) {
+               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+           }
+       });
    }// end of function showCount() 
    
    
