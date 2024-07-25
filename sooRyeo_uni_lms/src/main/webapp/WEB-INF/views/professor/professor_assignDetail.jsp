@@ -137,10 +137,14 @@
 				alert("점수를 입력해주세요.");
 				return;
 			}
-			else if(score > 30){
-				alert("점수는 최대 30점까지 입력해주세요.");
+			else if(score > 100){
+				alert("점수는 최대 100점까지 입력해주세요.");
 				return;
 				
+			}
+			else if(score < 0){
+				alert("점수는 0 미만으로 입력할 수 없습니다.");
+				return;
 			}
 			else{
 				frm.assignment_submit_seq.value = assignment_submit_seq;
@@ -249,7 +253,7 @@
 					<th style="text-align: center;">제출과제</th>
 					<th style="text-align: center;">마감일자</th>
 					<th style="text-align: center;">제출일자</th>
-					<th style="text-align: center;">점수(최대 30점)</th>
+					<th style="text-align: center;">점수(최대 100점)</th>
 				</tr>
 			</thead>
 			<tbody>
