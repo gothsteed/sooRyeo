@@ -139,18 +139,12 @@ public class StudentDao_imple implements StudentDao {
 		LocalDate currentDate = LocalDate.now();
         DateTimeFormatter dtft = DateTimeFormatter.ofPattern("yy-MM");
         String sysdate = currentDate.format(dtft);
-        System.out.println("포맷팅된 현재 날짜: " + sysdate);
 		
         Map<String, Object> paraMap = new HashMap<>();
         paraMap.put("userid", userid);
         paraMap.put("sysdate", sysdate);
         
 		List<Course> classList = sqlSession.selectList("student.classList", paraMap);		
-		
-		for(Course course : classList) {
-			System.out.println("확인용  : " + course.getCourse_seq());
-			
-		}
 		
 		return new StudentTimeTable(userid, classList);
 	}
