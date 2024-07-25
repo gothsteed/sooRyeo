@@ -2,6 +2,7 @@ package com.sooRyeo.app.service;
 
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.dto.ExamDTO;
 import com.sooRyeo.app.model.ScheduleDao;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
 import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
@@ -63,9 +64,9 @@ public class ExamService_imple implements ExamService {
 
 
 	@Override
-	public int insert_exam_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score) {
+	public int insert_exam_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score, ExamDTO examdto) {
 
-		int n =scheduleDao.insert_tbl_schedule(test_type, test_start_time, test_end_time, question_count, answer_id, course_seq, total_score);
+		int n =scheduleDao.insert_tbl_schedule(test_type, test_start_time, test_end_time, question_count, answer_id, course_seq, total_score, examdto);
 		
 		return n;
 	}

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
+import com.sooRyeo.app.dto.ExamDTO;
 
 public interface ScheduleDao {
 	
@@ -60,5 +61,5 @@ public interface ScheduleDao {
 	
 	
 	// 시험 출제 시 스케줄 테이블 insert
-	int insert_tbl_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score);
+	int insert_tbl_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score, ExamDTO examdto);
 }

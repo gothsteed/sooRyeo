@@ -523,12 +523,30 @@ from tbl_attendance;
 
 commit;
 
-alter table tbl_exam modify ORIGINAL_FILE_NAME null;
-            
+alter table tbl_exam modify ORIGINAL_FILE_NAME not null;
+
+alter table tbl_exam modify FILE_NAME not null;
+
             select *
             from tbl_exam
             
             select *
             from tbl_schedule
             where schedule_type = '2'
+            
+            
+            select *
+            from tbl_exam;
+
+delete
+from tbl_exam
+where fk_schedule_seq = '94';
+
+
+
+
+commit;
+
+66a0ea3dd35ae54a1de7ecc4
+            
             

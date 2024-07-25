@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.dto.ConsultApprovalDto;
+import com.sooRyeo.app.dto.ExamDTO;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -199,7 +201,7 @@ public class ScheduleDao_imple implements ScheduleDao {
 	
 	// 시험 출제 시 스케줄 테이블 insert
 	@Override
-	public int insert_tbl_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score) {
+	public int insert_tbl_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score, ExamDTO examdto) {
 		
 		Map<String, String> paraMap =  new HashMap<>();
 		paraMap.put("test_type", test_type);
@@ -216,6 +218,8 @@ public class ScheduleDao_imple implements ScheduleDao {
 		paraMap.put("answer_id", answer_id);
 		paraMap.put("course_seq", course_seq);
 		paraMap.put("total_score", String.valueOf(total_score));
+		paraMap.put("file_name", examdto.getFile_name());
+		paraMap.put("original_file_name", examdto.getOriginal_file_name());
 		
 		int n = sqlSession.insert("schedule.insert_tbl_exam", paraMap);
 		

@@ -1,6 +1,9 @@
 package com.sooRyeo.app.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Exam {
+	
     private Integer fk_schedule_seq;
     private Integer fk_course_seq;
     private String file_name;
@@ -9,6 +12,8 @@ public class Exam {
     private Integer question_count;
 
     private Schedule schedule;
+    
+    private MultipartFile attach;
 
 
     public Integer getFk_schedule_seq() {
