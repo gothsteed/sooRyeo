@@ -13,7 +13,7 @@ public class StudentAnswer {
     @Id
     private String id;
     private Integer studentId;
-    private String StudentName;
+    private String studentName;
     private String examAnswersId;
     private List<Answer> answers;
     private Integer score;

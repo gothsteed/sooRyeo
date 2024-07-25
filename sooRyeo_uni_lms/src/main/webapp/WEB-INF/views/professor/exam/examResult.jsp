@@ -10,7 +10,9 @@
 
 <%
     String ctxPath = request.getContextPath();
-    String scheduleSeq = (String) request.getAttribute("schedule_seq");
+    int scheduleSeq =  (int) request.getAttribute("schedule_seq");
+
+
 %>
 
 <!DOCTYPE html>
@@ -18,7 +20,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Test Results and Statistics</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/highcharts.js"></script>
+    <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/modules/histogram-bellcurve.js"></script>
+    <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/modules/exporting.js"></script>
+    <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/highcharts-more.js"></script>
+    <script src="<%=ctxPath %>/resources/Highcharts-10.3.1/code/modules/solid-gauge.js"></script>
+    <script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/export-data.js"></script>
+    <script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/accessibility.js"></script>
+    <script src="<%= ctxPath%>/resources/Highcharts-10.3.1/code/modules/series-label.js"></script>
+
     <script>
         $(document).ready(function() {
             var scheduleSeq = '<%= scheduleSeq %>';
@@ -27,11 +37,12 @@
             $.getJSON(url, function(data) {
                 populateResults(data.studuentScoreList);
                 populateStats([{
-                    subject: 'Overall',
                     averageScore: data.averageScore,
                     highestScore: data.highestScore,
                     lowestScore: data.lowestScore
                 }]);
+                renderNormalDistributionChart(data.studuentScoreList);
+
             });
 
             function populateResults(results) {
@@ -54,7 +65,6 @@
                 statsTable.empty();
                 $.each(stats, function(index, stat) {
                     var row = "<tr>" +
-                        "<td>" + stat.subject + "</td>" +
                         "<td>" + stat.averageScore + "</td>" +
                         "<td>" + stat.highestScore + "</td>" +
                         "<td>" + stat.lowestScore + "</td>" +
@@ -63,13 +73,58 @@
                 });
             }
         });
+
+
+        function renderNormalDistributionChart(results) {
+            var scores = results.map(function(result) {
+                return result.score;
+            });
+
+            Highcharts.chart('container', {
+                title: {
+                    text: '성적 정규분포'
+                },
+                xAxis: [{
+                    title: { text: 'Data' },
+                    alignTicks: false
+                }, {
+                    title: { text: 'Histogram' },
+                    alignTicks: false,
+                    opposite: true
+                }],
+
+                yAxis: [{
+                    title: { text: 'Data' }
+                }, {
+                    title: { text: 'Histogram' },
+                    opposite: true
+                }],
+
+                series: [{
+                    name: 'Histogram',
+                    type: 'histogram',
+                    xAxis: 1,
+                    yAxis: 1,
+                    baseSeries: 's1',
+                    zIndex: -1
+                }, {
+                    name: 'Data',
+                    type: 'scatter',
+                    data: scores,
+                    id: 's1',
+                    marker: {
+                        radius: 1.5
+                    }
+                }]
+            });
+        }
     </script>
 </head>
 <body>
 <div class="container">
     <div class="row">
         <section class="col-md-6 section test-result" id="results">
-            <h2>Test Results</h2>
+            <h2>시험 결과</h2>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
@@ -89,15 +144,14 @@
         </section>
 
         <section class="col-md-6 section test-stats" id="stats">
-            <h2>Test Statistics</h2>
+            <h2>기본 통계</h2>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
                     <tr>
-                        <th>Subject</th>
-                        <th>Average Score</th>
-                        <th>Highest Score</th>
-                        <th>Lowest Score</th>
+                        <th>평균 점수</th>
+                        <th>최고 점수</th>
+                        <th>최저 점수</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -107,6 +161,8 @@
             </div>
         </section>
     </div>
+
+    <div id="container" style="width:100%; height:400px;"></div>
 </div>
 </body>
 </html>

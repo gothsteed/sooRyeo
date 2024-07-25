@@ -6,6 +6,7 @@ import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
+import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import com.sooRyeo.app.model.ScheduleDao;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import com.sooRyeo.app.mongo.repository.StudentExamAnswerRepository;
@@ -24,6 +25,9 @@ import java.util.List;
 
 @Service
 public class ExamService_imple implements ExamService {
+
+    @Autowired
+    private JsonBuilder jsonBuilder;
 
     @Autowired
     private ScheduleDao scheduleDao;
@@ -90,7 +94,7 @@ public class ExamService_imple implements ExamService {
         examResultDto.setLowestScore(examResult.getLowestScore());
 
 
-        return null;
+        return ResponseEntity.ok().body(jsonBuilder.toJson(examResultDto));
     }
 
 
