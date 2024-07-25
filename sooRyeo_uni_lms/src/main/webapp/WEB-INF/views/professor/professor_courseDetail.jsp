@@ -109,8 +109,7 @@ function scrollToTarget_down() {
 // Function Declaration ////////////////////
 
 	function goTest(){
-		
-		
+		location.href = "<%=ctxPath%>/professor/exam.lms?course_seq="+${fk_course_seq};
 	}// end of function goAnnouncement() 
 	
 	
@@ -188,7 +187,7 @@ function deleteLecture(lectureSeq) {
 		<button type="button" class="btn btn-outline-light ml-5" id="announcement" style="width:20%; height:150px;" onclick="goTest()">
 			<img src="<%=ctxPath%>/resources/images/test.png" class="img-fluid" style="width:30%;">
 			<br><br>
-			<span id="annoucement" style="color:black; font-weight: bold;">시험</span>
+			<span id="exam" style="color:black; font-weight: bold;">시험</span>
 			<br>
 		</button> 	
 		<button type="button" class="btn btn-outline-light ml-5" id="assignment" style="width:20%; height:150px;" onclick="goAssignment()">
@@ -201,7 +200,7 @@ function deleteLecture(lectureSeq) {
 		<button type="button" class="btn btn-outline-light ml-5" id="assignment" style="width:20%; height:150px;" onclick="goUpload()">
 			<img src="<%=ctxPath%>/resources/images/lecture_upload_icon.png" class="img-fluid" style="width:30%;">
 			<br><br>
-			<span id="tasks" style="color:black; font-weight: bold;">수업 업로드</span>
+			<span id="upload" style="color:black; font-weight: bold;">수업 업로드</span>
 			<br>
 		</button>
 		<div class="table-container mt-3">

@@ -368,3 +368,12 @@ from tbl_exam;
 update tbl_exam set question_count = 5;
 
 commit;
+
+		select ceil((END_DATE - SYSDATE) * 86400) AS end_date_seconds,
+		fk_schedule_seq, fk_course_seq, file_name, original_file_name,
+		answer_mongo_id, question_count
+		
+		from tbl_exam E
+		join tbl_schedule S on S.schedule_seq = E.fk_schedule_seq  
+		where fk_course_seq = 4
+

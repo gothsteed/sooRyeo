@@ -1,11 +1,12 @@
 package com.sooRyeo.app.domain;
 
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Schedule {
-	
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	private Integer schedule_seq;
 	private String title;
 	private Integer schedule_type;
@@ -35,7 +36,6 @@ public class Schedule {
 
 
 	public boolean isBetweenSchedule(LocalDateTime time) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime start = LocalDateTime.parse(start_date, formatter);
 		LocalDateTime end = LocalDateTime.parse(end_date, formatter);
 
@@ -45,4 +45,22 @@ public class Schedule {
 
 		return false;
 	}
+
+	public LocalDateTime getStartLocalDateTime() {
+		return LocalDateTime.parse(start_date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	}
+	public LocalDateTime getEndLocalDateTime() {
+		return LocalDateTime.parse(end_date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+	}
+
+	public Duration getDuration() {
+		return Duration.between(LocalDateTime.parse(start_date, formatter) , LocalDateTime.parse(end_date, formatter));
+	}
+	public boolean isBefore(LocalDateTime time) {
+		return time.isBefore(getStartLocalDateTime());
+	}
+	public boolean isAfter(LocalDateTime time) {
+		return time.isAfter(getEndLocalDateTime());
+	}
+
 }
