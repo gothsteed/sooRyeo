@@ -534,20 +534,55 @@ from tbl_course
 -- 강의 tbl_lecture
 -- 출석 tbl_attendance
 
-WITH
-V AS
-(
-select *
+
+
+-- 내가 듣는 수업에 대한 한 과목의 강의 수(14개 / 현재 DB에 존재하는 국어학개론의 강의 수 7개)
+select count(*)
 from tbl_registered_course A JOIN tbl_course B
 ON A.fk_course_seq = B.course_seq
-where A.fk_student_id = '202400005' AND exist = 1
-)
+JOIN tbl_lecture E
+ON B.course_seq = E.fk_course_seq
+where A.fk_student_id = '202400005' AND exist = 1 and course_seq = '4'
 
 
+-- 내가 출석한 강의 수
+select count(*)
+from tbl_lecture C JOIN tbl_attendance D
+ON C.lecture_seq = D.fk_lecture_seq
+where D.fk_student_id = '202400005' AND attended_date is not null
 
 
+SELECT
+     ROUND(
+        CASE 
+            WHEN total_lectures = 0 THEN 0 
+            ELSE (attended_lectures * 100.0 / total_lectures) 
+        END, 0) AS attendance_rate
+FROM (
+    SELECT
+        -- 총 강의 수
+        (SELECT COUNT(*)
+         FROM tbl_registered_course A 
+         JOIN tbl_course B ON A.fk_course_seq = B.course_seq
+         JOIN tbl_lecture E ON B.course_seq = E.fk_course_seq
+         WHERE A.fk_student_id = '202400005' AND exist = 1 AND B.course_seq = '4') AS total_lectures,
+
+        -- 출석한 강의 수
+        (SELECT COUNT(*)
+         FROM tbl_lecture C 
+         JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
+         WHERE D.fk_student_id = '202400005' AND attended_date IS NOT NULL) AS attended_lectures
+    FROM dual 
+) sub;
 
 
+select L.name AS name, R.registered_course_seq
+		from tbl_registered_course R
+		JOIN tbl_course C
+		ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum L
+		ON C.fk_curriculum_seq = L.curriculum_seq
+		where R.fk_student_id = '202400005'
 
 
 

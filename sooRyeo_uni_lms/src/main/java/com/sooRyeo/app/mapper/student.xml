@@ -465,7 +465,7 @@
 	
 	<!-- 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드 -->
 	<select id="Curriculum_nameList" parameterType="Integer" resultType="com.sooRyeo.app.domain.Curriculum">
-		select L.name AS name
+		select L.name AS name, R.registered_course_seq as registered_course_seq
 		from tbl_registered_course R
 		JOIN tbl_course C
 		ON R.fk_course_seq = C.course_seq
@@ -476,21 +476,30 @@
 	
 	
 	
-	<!-- 학생 대쉬보드 - 수강중인 과목 출석률  -->
-	<resultMap type="HashMap" id="attendanceMapList">
-		<result property="name"		column="name"		javaType="String" />
-		<result property=""	column=""		javaType="String" />
-	</resultMap>
-	<select id="myAttendance_byCategoryJSON" parameterType="int" resultMap="attendanceMapList">
-		select L.name AS name
-		from tbl_registered_course R
-		JOIN tbl_course C
-		ON R.fk_course_seq = C.course_seq
-		JOIN tbl_curriculum L
-		ON C.fk_curriculum_seq = L.curriculum_seq
-		where R.fk_student_id = #{student_id}
+	<!-- 학생 대쉬보드 - 수강중인 과목 출석률 	-->
+	<select id="">
+		SELECT
+		     ROUND(
+		        CASE 
+		            WHEN total_lectures = 0 THEN 0 
+		            ELSE (attended_lectures * 100.0 / total_lectures) 
+		        END, 0) AS attendance_rate
+		FROM (
+		    SELECT
+		        (SELECT COUNT(*)
+		         FROM tbl_registered_course A 
+		         JOIN tbl_course B ON A.fk_course_seq = B.course_seq
+		         JOIN tbl_lecture E ON B.course_seq = E.fk_course_seq
+		         WHERE A.fk_student_id = #{student_id} AND exist = 1 AND B.course_seq = #{course_seq}) AS total_lectures,
+		
+		        (SELECT COUNT(*)
+		         FROM tbl_lecture C 
+		         JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
+		         WHERE D.fk_student_id = #{student_id} AND attended_date IS NOT NULL) AS attended_lectures
+		    FROM dual 
+		) sub
 	</select>
-	
+
 	
 	
 	

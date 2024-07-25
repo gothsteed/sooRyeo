@@ -414,14 +414,6 @@ public class StudentDao_imple implements StudentDao {
 	
 	
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
-	@Override
-	public List<Map<String, Object>> myAttendance_byCategoryJSON(int student_id) {
-		
-		List<Map<String, Object>> myAttendance_byCategoryJSON = sqlSession.selectList("student.myAttendance_byCategoryJSON", student_id);
-		
-		return myAttendance_byCategoryJSON;
-		
-	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
 	
 
 

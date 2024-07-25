@@ -219,8 +219,9 @@ $(document).ready(function(){
 function func_choice(searchTypeVal) {
 	
     // alert(searchTypeVal);
-
-    switch (searchTypeVal) {
+    
+    // console.log("확인용 registered_course_seq : " + registered_course_seq);
+    
     	case "": // '수업선택'을 선택한 경우
 	        
 	     	$("div#lecture_container").empty();
@@ -235,16 +236,15 @@ function func_choice(searchTypeVal) {
             
             $.ajax({
                 url: "<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
-                data: { "userid": "${sessionScope.loginuser.student_id}" },
+                data: { 
+                	//"registered_course_seq" : ${requestScope.Curriculum_nameList.registered_course_seq}
+                },
                 dataType: "json",
                 success: function(json) {
                 	
                     console.log(JSON.stringify(json));
                  
                     
-   
-
-			          
                 },
                 error: function(request, status, error) {
                     alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
@@ -494,13 +494,13 @@ function fillTimetable(data) {
 						</c:if>
 					</div>
 				</div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="12" gs-w="8" gs-h="4" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="4" gs-w="4" gs-h="5" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							
+							<img src="<%= ctxPath%>/resources/images/schedule.png" style="width: 40px; height: 40px; margin-right:2%; margin-bottom:3%;"/>
 							<h4 style="font-weight: bold;">시간표</h4>
 						</div>
-						<p class="card-text" style="margin-bottom: 0">
+						<p class="card-text" style="margin-bottom: 10%;">
 						<table class="timetable table table-bordered">
 							<thead>
 							<tr>

@@ -869,7 +869,7 @@ public class StudentController {
 	
 	
 	
-	
+	/*
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	@ResponseBody
 	@GetMapping(value="/student/myAttendance_byCategoryJSON.lms", produces="text/plain;charset=UTF-8")
@@ -882,16 +882,21 @@ public class StudentController {
 		// System.out.println("확인용 : " + student_id);
 		// 확인용 : 202400005
 		
-		List<Map<String, Object>> myAttendance_byCategoryJSON = service.myAttendance_byCategoryJSON(student_id);
+		
+		
+		
+		
+		List<Course> myAttendance_byCategoryJSON = service.myAttendance_byCategoryJSON(student_id);
 		
 		JSONArray json_arr = new JSONArray();
 		
 		if(myAttendance_byCategoryJSON.size() > 0) {
 			
-			for(Map<String, Object> map : myAttendance_byCategoryJSON) {
+			for(: myAttendance_byCategoryJSON) {
 				
 				JSONObject json_obj = new JSONObject();
 				json_obj.put("name", map.get("name"));
+				json_obj.put("attendance_rate", map.get("attendance_rate"));
 				
 				json_arr.put(json_obj);
 				
@@ -899,11 +904,10 @@ public class StudentController {
 			
 		}
 		
-		
-		return myAttendance_byCategoryJSON;
+		return ;
 		
 	} // end of public String myAttendance_byCategoryJSON
-	
+	*/
 	
 	
 	

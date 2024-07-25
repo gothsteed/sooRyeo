@@ -104,7 +104,6 @@ public interface StudentService {
 	List<Curriculum> Curriculum_nameList(int student_id);
 
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
-	List<Map<String, Object>> myAttendance_byCategoryJSON(int student_id);
 	
 	
 
