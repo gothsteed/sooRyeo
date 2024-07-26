@@ -158,13 +158,7 @@ $(document).ready(function(){
 function func_choice(searchTypeVal) {
 	
      switch (searchTypeVal) {
-    	case "": // '수업선택'을 선택한 경우
-	        
-	     	$("div#lecture_container").empty();
-	       	$("div.highcharts-data-table").empty();
-	       	
-        break;
-        
+     
         case "myAttendance_byCategory": // 과목을 선택한 경우
             
             $.ajax({
@@ -173,10 +167,10 @@ function func_choice(searchTypeVal) {
                 data: {"name" : $("select[name='name']").val()},
                 success: function(json) {
 
-                    console.log( $("select[name='name']").val() );
+                    // console.log( $("select[name='name']").val() );
                     // 국어학개론
                     
-                    console.log(JSON.stringify(json));
+                    // console.log(JSON.stringify(json));
                     // {"name":"국어학개론","attendance_rate":"14"}
                  
                 	$("div#lecture_container").empty();
@@ -220,11 +214,11 @@ function func_choice(searchTypeVal) {
                                 },
                                 states: {
                                     hover: {
-                                        enabled: false
+                                        enabled: true
                                     }
                                 },
-                                size: "80%",
-                                innerSize: "50%",
+                                size: "70%",
+                                innerSize: "40%",
                                 borderColor: null,
                                 borderWidth: 5
                             }
@@ -242,7 +236,7 @@ function func_choice(searchTypeVal) {
 					
 					
                     // HTML 테이블 생성
-                    let v_html = "<table>";
+                    /* let v_html = "<table>";
                     v_html += "<tr><th>수업명</th><th>퍼센티지</th></tr>";
 
                     v_html += "<tr>" +
@@ -253,7 +247,7 @@ function func_choice(searchTypeVal) {
                     
                     
                     v_html += "</table>";
-                    $("div#table_container").html(v_html);
+                    $("div#table_container").html(v_html); */
                 },
                 error: function(request, status, error) {
                     alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
@@ -435,8 +429,8 @@ function fillTimetable(data) {
 							<div style="width: 80%; margin:auto; max-height:50px;">
 								
 								<form name="searchFrm" style="margin: 20px 0 50px 0;">
-								    <select name="name" id="searchType" style="height: 40px;" onchange="func_choice(this.value)">
-								        <option value="">수업선택</option>
+								<span style="font-weight: bold;">수업 선택 :</span>
+								    <select name="name" id="searchType" style="height: 30px;" onchange="func_choice(this.value)">
 									        <c:forEach var="nameList" items="${requestScope.Curriculum_nameList}">
 									            <option value="${nameList.name}">${nameList.name}</option>
 									        </c:forEach>
