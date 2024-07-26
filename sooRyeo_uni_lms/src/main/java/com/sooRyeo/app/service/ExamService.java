@@ -29,5 +29,7 @@ public interface ExamService {
 
     // 시험을 select 하는 메소드
 	Exam getExam();
-    ResponseEntity<String> getExamResultPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+    ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+
+    ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
 }

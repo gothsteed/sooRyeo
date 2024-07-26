@@ -553,7 +553,7 @@ WITH
         where fk_course_seq = 4
         
         -- 과제 백분율 점수
-        (26/500)*100 
+        (190/500)*100 
         
         -- 과목 총 시험 갯수
         select count(*) as totalCount

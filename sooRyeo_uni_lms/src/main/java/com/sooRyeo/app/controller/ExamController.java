@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,6 @@ import com.sooRyeo.app.service.ExamService;
 
 
 @Controller
-@RequireLogin(type = {Admin.class, Student.class, Professor.class})
 public class ExamController {
 
     @Autowired
@@ -149,6 +149,9 @@ public class ExamController {
 	}
 
     
+
+
+	@RequireLogin(type = {Student.class})
 	@GetMapping("/exam/test.lms")
 	public ModelAndView test(ModelAndView mav, HttpServletRequest request) {
 		
@@ -160,4 +163,54 @@ public class ExamController {
 		return mav;
 		
 	}
+
+
+	@RequireLogin(type = {Professor.class})
+	@GetMapping(value = "/professor/exam.lms")
+	public ModelAndView professorExam(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		return examService.getExamPage(mav, request, response);
+	}
+
+	@RequireLogin(type = {Professor.class})
+	@GetMapping("/professor/exam/result.lms")
+	public ModelAndView getExamResultPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
+		//todo : error handler 추가하기
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
+		mav.addObject("schedule_seq", schedule_seq);
+		mav.setViewName("exam/examResult");
+		return mav;
+	}
+
+	@RequireLogin(type = {Professor.class})
+	@GetMapping("/professor/exam/resultREST.lms")
+	public ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		return examService.getExamResultData(mav, request, response);
+	}
+
+	@RequireLogin(type = {Student.class})
+	@GetMapping(value = "/student/exam.lms")
+	public ModelAndView studentExam(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
+		return examService.getExamPage(mav, request, response);
+	}
+
+
+	@RequireLogin(type = {Student.class})
+	@GetMapping("/student/exam/result.lms")
+	public ModelAndView getStudentExamResult(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
+		//todo : error handler 추가하기
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
+		mav.addObject("schedule_seq", schedule_seq);
+		mav.setViewName("exam/examResult");
+		return mav;
+	}
+
+	@RequireLogin(type = {Student.class})
+	@GetMapping("/student/exam/resultREST.lms")
+	public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		return examService.getStudentExamResultData(mav, request, response);
+	}
+
+
+	
+	
 }

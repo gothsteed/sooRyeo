@@ -230,7 +230,12 @@ $(document).ready(function(){
 		if(confirm("지금 시험에 응시하시겠습니까?")){
 			location.href="<%= ctxPath%>/exam/test.lms";
 		}
-	};
+	}
+
+function goExamList(course_seq){
+	location.href="<%= ctxPath%>/student/exam.lms?course_seq="+ course_seq;
+}
+
 
 // ConsultingModal 모달이 닫히면 안에 쓰던 내용 다 지우기
 $('#ConsultingModal').on('hidden.bs.modal', function () {
@@ -296,7 +301,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			<br>
 		</button>
 		
-		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;" onclick="goTest1()">
+		<button type="button" class="btn btn-outline-light ml-5" style="width:20%; height:150px;" onclick="goExamList('${requestScope.fk_course_seq}')">
 			<img src="<%=ctxPath%>/resources/images/test.png" class="img-fluid" style="width:30%;">
 			<br><br>
 			<span id="tasks" style="color:black; font-weight: bold;">시험</span>

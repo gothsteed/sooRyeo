@@ -71,6 +71,20 @@ $(document).ready(function () {
 
 function goCheck(){
 	
+	$.ajax({
+        url:"testCheck.lms",
+        type:"post", 
+        async:true,  
+        dataType : "json", 
+        success:function(json){
+
+			  $("div#submit_div").css({ display: "none" }); // 제출하기 버튼 영역은 안보이도록 한다.
+        	
+        },
+        error: function(request, status, error){
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+    });
 };
 
 </script>
@@ -98,7 +112,7 @@ function goCheck(){
             <div class="card-body">
                 <p class="card-text">
 				    <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
-				        <div>${questionStatus.index}. <input type="text" style="width:50%; margin-bottom:5%" maxlength="1"/></div>
+				        <div>${questionStatus.index}. <input id="${questionStatus.index}" type="text" style="width:50%; margin-bottom:5%" maxlength="1"/></div>
 				    </c:forEach>
                 </p>
             </div>
@@ -106,6 +120,47 @@ function goCheck(){
     </div>
 </div>
 
+        <div class="card">
+            <div class="card-header">
+                	답안지
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                
+					<table class="table">
+					  <thead>
+					    <tr>
+					      <th scope="col">#</th>
+					      <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
+						      <th scope="col">${questionStatus.index}번</th>
+					      </c:forEach>
+					    </tr>
+					  </thead>
+					  <tbody>
+					    <tr>
+					      <th scope="row">정답</th>
+					      <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
+ 						      <td id="co${questionStatus.index}">1</td>
+					      </c:forEach>
+					    </tr>
+					    <tr>
+					      <th scope="row">선택한 답</th>
+					      <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
+						      <td id="sel${questionStatus.index}">1</td>
+					      </c:forEach>
+					    </tr>
+					    <tr>
+					      <th scope="row">채점결과</th>
+					      <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
+						      <td id="res${questionStatus.index}">1</td>
+					      </c:forEach>
+					    </tr>
+					  </tbody>
+					</table>
+                	
+            </div>
+        </div>
+        
 <button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-top: 1%;" type="button" onclick="goCheck()">제출하기</button>
 
 		
