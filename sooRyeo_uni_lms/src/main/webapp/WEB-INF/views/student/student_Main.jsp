@@ -146,7 +146,6 @@ $(document).ready(function(){
     $("select#searchType").val("Curriculum_nameList").trigger("change");
 
     
-    
     $("select[name='name']").change(function() {
         func_choice("myAttendance_byCategory");
     });
@@ -183,29 +182,25 @@ function func_choice(searchTypeVal) {
                 	$("div#lecture_container").empty();
                 	$("div.highcharts-data-table").empty();
                 	
+                	
                 	let resultArr = [];
 
-                	if(json.lengh > 0){
-                		let attendanceRate = json[0].attendance_rate;
-                		
-                		
-                		resultArr.push({
-                	        name: json[i].name,
-                	        y: attendanceRate,
-                	        sliced: i === 0, // 첫 번째 항목을 강조
-                	        selected: i === 0 // 첫 번째 항목을 선택 상태로
-                	    });
-                		
-                		
-                		// 미출석률 추가
-                	    resultArr.push({
-                	        name: json[i].name + ' 미출석',
-                	        y: 0 // 미출석률을 0%로 설정
-                	    });
+                	if(json.attendance_rate) {	// attendance_rate가 존재하는지 확인
                 		
                 	}
-                	
-                    
+                		let attendanceRate = parseFloat(json.attendance_rate); // 문자열을 숫자로 변환
+                		
+                		resultArr.push({
+                            name: json.name,
+                            y: attendanceRate
+                		});
+                		
+                		// 미출석률 추가
+                        resultArr.push({
+                            name: json.name + ' 미출석',
+                            y: 100 - attendanceRate // 미출석률 계산
+                        });
+                            
                    	//////////////////////////////////////////////
                     // 하이차트 생성
                     Highcharts.chart('lecture_container', {
@@ -250,12 +245,11 @@ function func_choice(searchTypeVal) {
                     let v_html = "<table>";
                     v_html += "<tr><th>수업명</th><th>퍼센티지</th></tr>";
 
-                    $.each(json, function(index, item) {
-                        v_html += "<tr>" +
-                            "<td>" + item.name + "</td>" +
-                            "<td>" + item.attendance_rate + "%" + "</td>" +
+                    v_html += "<tr>" +
+                            "<td>" + json.name + "</td>" +
+                            "<td>" + json.attendance_rate + "%" + "</td>" +
                             "</tr>";
-                    });
+              
                     
                     
                     v_html += "</table>";
