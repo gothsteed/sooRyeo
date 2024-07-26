@@ -588,6 +588,15 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public Map<String, Object> score_checkJSON(int student_id, int fk_course_seq) {
+		
+		Map<String, Object> score_checkJSON = dao.score_checkJSON(student_id, fk_course_seq);
+		
+		return score_checkJSON;
+	}
+
+
 
 	
 

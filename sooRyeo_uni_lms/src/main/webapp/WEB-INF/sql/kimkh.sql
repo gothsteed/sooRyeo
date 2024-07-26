@@ -538,6 +538,10 @@ WITH
         where course_seq = 4 and student_id = 202400005;
         
         
+        
+        select *
+        from tbl_assignment_submit
+        
         -- 202400005 학생 과제 총점
         SELECT sum(SA.score) as totalscore
 		FROM
@@ -563,7 +567,34 @@ WITH
         
         
         select *
+        from tbl_student
+        
+        select *
+        from tbl_grade
+        
+        select *
+        from tbl_registered_course
+        
+        select *
         from tbl_exam
+        -- G.score
+        
+        select * 
+        from tbl_student S
+        join tbl_registered_course R ON S.student_id = R.fk_student_id
+        join tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+        Where S.student_id = 202400005 and R.fk_course_seq = 4
+        
+        select * 
+        from tbl_student S
+        join tbl_registered_course R ON S.student_id = R.fk_student_id
+        Where S.student_id = 202400005 and R.fk_course_seq = 4
+        
+        select total_score
+        from tbl_student S
+        join tbl_registered_course R ON S.student_id = R.fk_student_id
+        
+        Where student_id = 202400005 and course_seq = 4
         
         
         select *

@@ -450,11 +450,33 @@
 		WHERE P.prof_id = #{prof_id} and C.exist = 1 and to_char(C.semester_date, 'yy-MM') = #{semester_date}
 	</select>
 	
+	
 	<select id="courseListTimeJson" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
 		select time_seq, day_of_week, fk_course_seq, start_period, end_period
 		from tbl_time
 		where fk_course_seq = ${course_seq}
 	</select>
+	
+	
+	<select id="assignmentTotal" parameterType="HashMap" resultType="int">
+		SELECT sum(SA.score) as totalscore
+		FROM
+		tbl_student S
+		join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+		join tbl_assignment A ON SA.fk_schedule_seq_assignment = A.schedule_seq_assignment
+        join tbl_course C ON A.fk_course_seq = C.course_seq
+        where course_seq = #{fk_course_seq} and S.student_id = #{student_id}
+	</select>
+	
+	
+	<select id="assignmentCount" parameterType="int" resultType="int">
+		select count(schedule_seq_assignment) as totalCount
+        from tbl_assignment
+        where fk_course_seq = #{fk_course_seq}
+	</select>
+	
+	
+	
 	
 
 </mapper>
