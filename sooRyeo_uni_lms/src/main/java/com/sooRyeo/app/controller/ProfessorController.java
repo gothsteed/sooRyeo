@@ -516,27 +516,6 @@ public class ProfessorController {
 		return mav;
 	}
 
-	@GetMapping(value = "/professor/exam.lms")
-	public ModelAndView professorExam(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-		return examService.getExamPage(mav, request, response);
-	}
-
-
-	@GetMapping("/professor/exam/result.lms")
-	public ModelAndView getExamResultPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
-		//todo : error handler 추가하기
-		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
-		mav.addObject("schedule_seq", schedule_seq);
-		mav.setViewName("exam/examResult");
-		return mav;
-	}
-
-
-	@GetMapping("/professor/exam/resultREST.lms")
-	public ResponseEntity<String>  getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-		return examService.getExamResultPage(mav, request, response);
-	}
-
 
 	@PostMapping("/professor/courseUpload.lms")
 	public ModelAndView courseUploadPage(ModelAndView mav, HttpServletRequest request) {

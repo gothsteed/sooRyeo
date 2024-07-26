@@ -70,8 +70,10 @@ public class ExamService_imple implements ExamService {
         return mav;
     }
 
+
+
     @Override
-    public ResponseEntity<String>  getExamResultPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String>  getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 
         int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
 
@@ -109,8 +111,16 @@ public class ExamService_imple implements ExamService {
         return ResponseEntity.ok().body(jsonBuilder.toJson(examResultDto));
     }
 
+    @Override
+    public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 
-	@Override
+        
+
+
+    }
+
+
+    @Override
 	public Exam getExam() {
 
 	    Exam examView = scheduleDao.getExam();  // 스케줄 DAO로부터 Exam 객체를 가져옴

@@ -28,7 +28,7 @@
 	}
 
 	function goview(schedule_seq) {
-		location.href = "<%=ctxPath%>/professor/exam/result.lms?schedule_seq=" + schedule_seq;
+		location.href = "<%=ctxPath%>/student/exam/result.lms?schedule_seq=" + schedule_seq;
 	}
 </script>
 
