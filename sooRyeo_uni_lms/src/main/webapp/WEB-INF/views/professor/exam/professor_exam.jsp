@@ -281,7 +281,7 @@ function set_exam() {
    <div class="container-fluid" style="padding-top: 10px;">
       <div class="card" id="card-title-1">
          <div class="card-header border-0 pb-0 " style="display: flex; justify-content: space-between; ">
-            <h1 class="card-title" style="color:#6e6e6e;  font-weight: 900; font-size: 23px;">국어학개론 시험 출제</h1>
+            <h1 class="card-title" style="color:#6e6e6e;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 출제</h1>
             <button type="button" id="ok" class="btn btn-secondary" style="width: 150px;">출제하기</button>
          </div>
          <hr>

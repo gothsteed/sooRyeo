@@ -130,13 +130,6 @@ public class ExamService_imple implements ExamService {
         return ResponseEntity.ok().body(jsonBuilder.toJson(examResultDto));
     }
 
-    @Override
-    public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-
-        
-
-
-    }
 
 	
 	
@@ -189,6 +182,23 @@ public class ExamService_imple implements ExamService {
 	    return examView;  // 가져온 Exam 객체를 반환
 	}
 
+
+
+    // 시험 출제 뷰단에 과목명 보여주기
+	@Override
+	public String select_coures_name(String course_seq) {
+		String coures_name = scheduleDao.select_coures_name(course_seq);
+		return coures_name;
+	}
+
+
+/*
+	@Override
+	public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		
+		return null;
+	}
+*/
 
 
 

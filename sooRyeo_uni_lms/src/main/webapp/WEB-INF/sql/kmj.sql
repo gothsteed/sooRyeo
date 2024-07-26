@@ -563,5 +563,24 @@ from tbl_exam
 commit;
 
 66a0ea3dd35ae54a1de7ecc4
+
+
+select C.name
+from tbl_course A join tbl_curriculum C
+on A.fk_curriculum_seq = C.curriculum_seq
+where A.course_seq = '4';
+
+
+select *
+from tbl_curriculum;
+
+
+select *
+from tbl_course;
+
+
+
+
+15 : x = 100 
             
             

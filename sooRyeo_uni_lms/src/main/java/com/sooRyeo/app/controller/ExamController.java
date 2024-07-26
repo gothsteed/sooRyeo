@@ -204,10 +204,48 @@ public class ExamController {
 		return mav;
 	}
 
+/*
 	@RequireLogin(type = {Student.class})
 	@GetMapping("/student/exam/resultREST.lms")
 	public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		return examService.getStudentExamResultData(mav, request, response);
+	}
+*/
+	
+	
+	// 교수 시험출제 뷰단
+	@RequireLogin(type = {Professor.class})
+	@GetMapping(value = "/professor/professor_exam.lms")
+	public ModelAndView professor_exam(ModelAndView mav, HttpServletRequest request) {
+		
+		String course_seq = request.getParameter("course_seq");
+		
+		// 시험 출제 뷰단에 과목명 보여주기
+		String  coures_name = examService.select_coures_name(course_seq);
+		
+		mav.addObject("course_seq", course_seq);
+		mav.addObject("coures_name", coures_name);
+		mav.setViewName("exam/professor_exam");
+
+		return mav;
+	}
+	
+	
+	
+	// 시험 수정 뷰단
+	@RequireLogin(type = {Professor.class})
+	@GetMapping(value = "/professor/professor_exam_update.lms")
+	public ModelAndView professor_exam_update(ModelAndView mav, HttpServletRequest request) {
+		
+		String course_seq = request.getParameter("course_seq");
+		
+		// 시험 출제 뷰단에 과목명 보여주기
+		String  coures_name = examService.select_coures_name(course_seq);
+		
+		mav.addObject("coures_name", coures_name);
+		mav.setViewName("exam/professor_exam_update");
+
+		return mav;
 	}
 
 

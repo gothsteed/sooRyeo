@@ -578,5 +578,15 @@ where rno between #{startRno} and #{endRno}
 		where FK_SCHEDULE_SEQ = #{schedule_seq}
 
 	</select>
+	
+	
+	<select id="select_coures_name" parameterType="String" resultType="String">
+		select C.name
+		from tbl_course A join tbl_curriculum C
+		on A.fk_curriculum_seq = C.curriculum_seq
+		where A.course_seq = #{course_seq}
+	</select>
+	
+	
 
 </mapper>

@@ -73,4 +73,7 @@ public interface ScheduleDao {
 	int getExamCount(int courseSeq);
 
 	Exam getExamSchedule(int schedule_seq);
+	
+	// 시험 출제 뷰단에 과목명 보여주기
+	String select_coures_name(String course_seq);
 }

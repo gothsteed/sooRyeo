@@ -269,4 +269,11 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 
+	@Override
+	public String select_coures_name(String course_seq) {
+		String course_name = sqlSession.selectOne("schedule.select_coures_name", course_seq);
+		return course_name;
+	}
+
+
 }

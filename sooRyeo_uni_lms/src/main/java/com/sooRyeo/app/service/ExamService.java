@@ -29,7 +29,11 @@ public interface ExamService {
 
     // 시험을 select 하는 메소드
 	Exam getExam();
-    ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+    
+	ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
 
-    ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+	// 시험 출제 뷰단에 과목명 보여주기
+	String select_coures_name(String course_seq);
+
+    // ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
 }

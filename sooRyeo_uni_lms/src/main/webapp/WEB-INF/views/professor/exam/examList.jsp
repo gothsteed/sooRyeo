@@ -17,11 +17,22 @@
 </style>
 
 <script type="text/javascript">
-	$(document).ready(function() {});
+	$(document).ready(function() {
+		
+		#("")
+		
+		
+		
+	});
 
-	function handleExamClick(schedule_seq, isAfter) {
-		if (!isAfter) {
+	function handleExamClick(schedule_seq, isAfter, isBetweenSchedule, isBefore) {
+		if (isBetweenSchedule) {
 			alert("시험이 아직 종료되지 않았습니다.");
+			return;
+		}
+		
+		if(isBefore) {
+			go_exam_update(schedule_seq);
 			return;
 		}
 		goview(schedule_seq);
@@ -29,6 +40,12 @@
 
 	function goview(schedule_seq) {
 		location.href = "<%=ctxPath%>/professor/exam/result.lms?schedule_seq=" + schedule_seq;
+	}
+	
+	function go_exam_update(schedule_seq) {
+		<%--  location.href = "<%=ctxPath%>/professor/professor_exam_update.lms?schedule_seq=" + schedule_seq; --%>
+		location.href = "<%=ctxPath%>/professor/professor_exam_update.lms?schedule_seq=" + schedule_seq + "&course_seq=" + course_seq; 
+		
 	}
 	
 	
@@ -63,7 +80,7 @@
 	<c:choose>
 		<c:when test="${not empty requestScope.examList}">
 			<c:forEach var="exam" items="${requestScope.examList}" varStatus="status">
-				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}', ${exam.schedule.isAfter(currentTime)})">
+				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}', ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetweenSchedule(currentTime)}, ${exam.schedule.isBefore(currentTime)})">
 					<th scope="row" class="col-1" style="text-align: center">${status.count}</th>
 					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
@@ -78,7 +95,9 @@
 						<c:if test="${exam.schedule.isAfter(currentTime)}">
 							완료
 						</c:if>
+						<input type="hidden" value="${exam.fk_schedule_seq}" />
 					</td>
+					
 				</tr>
 			</c:forEach>
 		</c:when>
@@ -91,3 +110,7 @@
 	</tbody>
 </table>
 <div class="pagination justify-content-center">${requestScope.pageBar}</div>
+
+
+
+
