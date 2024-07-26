@@ -88,6 +88,9 @@ public interface ProfessorDao {
 	
 	// 학기 별 개강과목
 	ProfessorTimeTable courseListJson(String semester, int prof_id);
+	
+	// 특정학생 과목 점수들 가져오기
+	Map<String, Object> score_checkJSON(int student_id, int fk_course_seq);
 
 
 	

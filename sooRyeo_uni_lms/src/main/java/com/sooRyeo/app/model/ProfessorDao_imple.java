@@ -21,6 +21,7 @@ import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.domain.Time;
 import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
@@ -358,6 +359,33 @@ public class ProfessorDao_imple implements ProfessorDao {
 		}
         
 		return new ProfessorTimeTable(prof_id, courseListJson);
+	}
+
+
+	@Override
+	public Map<String, Object> score_checkJSON(int student_id, int fk_course_seq) {
+		
+		Map<String, Object> ScoreMap = new HashMap<>(); 
+		
+		Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("student_id", student_id);
+        paraMap.put("fk_course_seq", fk_course_seq);
+        
+        int assignmentTotal = sqlSession.selectOne("professor.assignmentTotal", paraMap); // 과제 총점
+        
+        int assignmentCount = sqlSession.selectOne("professor.assignmentCount", fk_course_seq); // 과제 갯수
+        
+        //System.out.println("확인용 assignmentTotal : " + assignmentTotal);
+        //System.out.println("확인용 assignmentCount : " + assignmentCount);
+        
+        
+        double assignmentScore = ((double)assignmentTotal/(assignmentCount*100))*100;
+        
+        //System.out.println("확인용 assignmentScore : " + assignmentScore);
+		
+        ScoreMap.put("assignmentScore", assignmentScore);
+        
+		return ScoreMap;
 	}
 
 
