@@ -17,14 +17,31 @@
 </style>
 
 <script type="text/javascript">
-	$(document).ready(function() {}); // end of $(document).ready(function(){})
+
+
+	$(document).ready(function(){}); // end of $(document).ready(function(){})
 
 	function goview(schedule_seq) {
 		location.href = "<%=ctxPath%>/professor/exam/result.lms?schedule_seq=" + schedule_seq;
 	}
+	
+	
+	const course_seq = "${requestScope.course_seq}";
+	console.log(course_seq);
+	
+	function set_exam() {
+		location.href = "<%=ctxPath%>/professor/professor_exam.lms?course_seq=" + course_seq;
+	}
+
+	
+
+	
 </script>
 
-<h3 class="mt-3 mb-3" style="margin-left:10%;"><img src="<%=ctxPath%>/resources/images/assignment.png" style="width:3%; margin-right:2%;">시험</h3>
+<div style="display: flex; border: solid 0px red; width: 80%; height:50px; justify-content: space-between; margin-left:10%;">
+	<h3 class="mt-3 mb-3" style="border: solid 0px blue;"><img src="<%=ctxPath%>/resources/images/assignment.png" style="width:3%; margin-right:1%;">시험</h3>
+	<button type="button" class="btn btn-success" style="height: 40px; width:10%; margin-top: 1%; text-align: center;" onclick="set_exam()">출제하기</button>
+</div>
 <hr style="width:80%;">
 <table class="table" style="width:80%; margin-left:10%;">
 	<thead>

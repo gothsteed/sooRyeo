@@ -542,15 +542,21 @@ delete
 from tbl_exam
 where fk_schedule_seq = '94';
 
+select *
+from tbl_assignment
 
-			select fk_student_id, A.course_seq as course_seq, schedule_seq, title, schedule_type, start_date, end_date
+select *
+from tbl_exam
+
+
+			select fk_student_id, A.course_seq , schedule_seq, title, schedule_type, start_date, end_date
 			from tbl_schedule join tbl_exam
 			on schedule_seq = fk_schedule_seq
 			join tbl_course A
 			on course_seq = fk_course_seq
 			join tbl_registered_course B
 			on B.fk_course_seq = A.course_seq
-			where fk_student_id = #{userid}
+			where fk_student_id = '202400005'
 
 
 

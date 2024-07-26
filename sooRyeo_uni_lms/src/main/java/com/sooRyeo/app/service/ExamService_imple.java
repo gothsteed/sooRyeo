@@ -52,6 +52,8 @@ public class ExamService_imple implements ExamService {
     	int currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
         int course_seq = Integer.parseInt(request.getParameter("course_seq"));
         int sizePerPage = 10;
+        
+        System.out.println("course_seq 확인용 => "+ course_seq);
 
         List<Exam> examPageList = scheduleDao.getExamList(currentPage, sizePerPage, course_seq);
         int examCount = scheduleDao.getExamCount(course_seq);
@@ -64,6 +66,9 @@ public class ExamService_imple implements ExamService {
 
         LocalDateTime currentTime = LocalDateTime.now();
         mav.addObject("currentTime", currentTime);
+        
+        mav.addObject("course_seq", course_seq);
+        
         mav.setViewName("exam/examList");
 
         return mav;
