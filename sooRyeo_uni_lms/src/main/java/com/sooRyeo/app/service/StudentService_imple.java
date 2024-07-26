@@ -800,9 +800,19 @@ public class StudentService_imple implements StudentService {
 		
 	} // end of public List<Curriculum> Curriculum_nameList
 
-	
-	
-	// 학생 대쉬보드 - 수강중인 과목 출석률 
+
+
+	// 학생 대쉬보드 - 하이차트 - 수강중인 과목 출석률 
+	@Override
+	public Map<String, Object> myAttendance_byCategoryJSON(int student_id, String name) {
+		
+		Map<String, Object> myAttendance_byCategoryJSON = dao.myAttendance_byCategoryJSON(student_id, name);
+		
+		return myAttendance_byCategoryJSON;
+		
+	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
+
+
 	
 
 	

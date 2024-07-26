@@ -91,6 +91,13 @@ public class StudentController {
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  studentservice.getAnnouncement(currentPage);
 		
+		
+		// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+		List<Curriculum> Curriculum_nameList = studentservice.Curriculum_nameList(student_id);
+		mav.addObject("Curriculum_nameList", Curriculum_nameList);
+		
+		
+		
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
@@ -864,52 +871,37 @@ public class StudentController {
 
 
 	
-	// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
-	// List<Curriculum> Curriculum_nameList = studentservice.Curriculum_nameList(student_id);
-	
-	// mav.addObject("Curriculum_nameList", Curriculum_nameList);
-	
-	
-	
-	
 	
 
-	/*
+	
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	@ResponseBody
 	@GetMapping(value="/student/myAttendance_byCategoryJSON.lms", produces="text/plain;charset=UTF-8")
-	public List<Map<String, Object>> myAttendance_byCategoryJSON(HttpServletRequest request, HttpServletResponse response) {
+	public String myAttendance_byCategoryJSON(HttpServletRequest request, HttpServletResponse response,
+											  @RequestParam(defaultValue = "") String name) {
 		
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int student_id = loginuser.getStudent_id();
 		
-		// System.out.println("확인용 : " + student_id);
-		// 확인용 : 202400005
+		
+		// 하이차트 - 출석률
+		Map<String, Object> myAttendance_byCategoryJSON = service.myAttendance_byCategoryJSON(student_id, name);
 		
 		
-		List<Course> myAttendance_byCategoryJSON = service.myAttendance_byCategoryJSON(student_id);
+		JSONObject jsonObj = new JSONObject();
 		
-		JSONArray json_arr = new JSONArray();
-		
-		if(myAttendance_byCategoryJSON.size() > 0) {
+		if(myAttendance_byCategoryJSON != null) {
 			
-			for(: myAttendance_byCategoryJSON) {
-				
-				JSONObject json_obj = new JSONObject();
-				json_obj.put("name", map.get("name"));
-				json_obj.put("attendance_rate", map.get("attendance_rate"));
-				
-				json_arr.put(json_obj);
-				
-			} // end of for
+			jsonObj.put("name", myAttendance_byCategoryJSON.get("name"));
+			jsonObj.put("attendance_rate", myAttendance_byCategoryJSON.get("attendance_rate"));
 			
 		}
 		
-		return ;
+		return jsonObj.toString();
 		
 	} // end of public String myAttendance_byCategoryJSON
-*/
+
 	
 	
 	

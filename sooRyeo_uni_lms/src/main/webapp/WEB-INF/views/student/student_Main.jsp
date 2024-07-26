@@ -140,74 +140,16 @@
 $(document).ready(function(){
 	
 	showWeather();
-
-	
-    $("select#searchType").change(function(e){
-        func_choice($(e.target).val());
-     });
 	
     
     // 문서가 로드 되어지면 통계가 보이도록 한다.
     $("select#searchType").val("Curriculum_nameList").trigger("change");
 
-   	//////////////////////////////////////////////
-	// 학생 대쉬보드 - 수강중인 과목 출석률 
-	// 전체 출석률 하이차트
-	Highcharts.chart('lecture_container', {
-	    chart: {
-	        type: 'pie'
-	    },
-	    title: {
-	        text: '출석률'
-	    },
-	    subtitle: {
-	                text: `<div>80%</div> of Total`,
-	                align: "center",
-	                verticalAlign: "middle",
-	                style: {
-	                  "fontSize": "14px",
-	                  "textAlign": "center"
-	                },
-	                x: 0,
-	                y: -2,
-	                useHTML: true
-	    },
-	    plotOptions: {
-	                  pie: {
-	                  shadow: false,
-	                  center: ["50%", "50%"],
-	                  dataLabels: {
-	                    enabled: false
-	                  },
-	                  states: {
-	                    hover: {
-	                      enabled: false
-	                    }
-	                  },
-	                  size: "90%",
-	                  innerSize: "95%",
-	                  borderColor: null,
-	                  borderWidth: 8
-	                }
-	
-	    },
-	    tooltip: {
-	        valueSuffix: '%'
-	    },
-	    series: [{
-	        innerSize: '60%',
-	        data: [{
-	          name: 'Speed',
-	          y: 60,
-	          color: '#e3e3e3'
-	        }, {
-	          name: 'Non Prioritised',
-	          y: 40,
-	          color: '#ff6666'
-	        }]
-	    }],
-	});
-	//////////////////////////////////////////////
+    
+    
+    $("select[name='name']").change(function() {
+        func_choice("myAttendance_byCategory");
+    });
     
 }); // end of $(document).ready
 
@@ -225,30 +167,104 @@ function func_choice(searchTypeVal) {
         break;
         
         case "myAttendance_byCategory": // 과목을 선택한 경우
-
-        	$("div#lecture_container").empty();
-        	$("div.highcharts-data-table").empty();
             
             $.ajax({
                 url: "<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
-                data: {},
-                	
                 dataType: "json",
+                data: {"name" : $("select[name='name']").val()},
                 success: function(json) {
-                	
-                    console.log(JSON.stringify(json));
-                 
+
+                    console.log( $("select[name='name']").val() );
+                    // 국어학개론
                     
+                    console.log(JSON.stringify(json));
+                    // {"name":"국어학개론","attendance_rate":"14"}
+                 
+                	$("div#lecture_container").empty();
+                	$("div.highcharts-data-table").empty();
+                	
+                	let resultArr = [];
+
+                	if(json.lengh > 0){
+                		let attendanceRate = json[0].attendance_rate;
+                		
+                		
+                		resultArr.push({
+                	        name: json[i].name,
+                	        y: attendanceRate,
+                	        sliced: i === 0, // 첫 번째 항목을 강조
+                	        selected: i === 0 // 첫 번째 항목을 선택 상태로
+                	    });
+                		
+                		
+                		// 미출석률 추가
+                	    resultArr.push({
+                	        name: json[i].name + ' 미출석',
+                	        y: 0 // 미출석률을 0%로 설정
+                	    });
+                		
+                	}
+                	
+                    
+                   	//////////////////////////////////////////////
+                    // 하이차트 생성
+                    Highcharts.chart('lecture_container', {
+                        chart: {
+                            type: 'pie'
+                        },
+                        title: {
+                            text: '출석률'
+                        },
+                        plotOptions: {
+                            pie: {
+                                shadow: false,
+                                center: ["50%", "50%"],
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.name}: <b>{point.percentage:.2f}%</b>'
+                                },
+                                states: {
+                                    hover: {
+                                        enabled: false
+                                    }
+                                },
+                                size: "80%",
+                                innerSize: "50%",
+                                borderColor: null,
+                                borderWidth: 5
+                            }
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                        },
+                        series: [{
+                            name: '출석률',
+                            innerSize: '60%',
+                            data: resultArr // 출석률과 미출석률 데이터 사용
+                        }],
+                    });
+					//////////////////////////////////////////////
+					
+					
+                    // HTML 테이블 생성
+                    let v_html = "<table>";
+                    v_html += "<tr><th>수업명</th><th>퍼센티지</th></tr>";
+
+                    $.each(json, function(index, item) {
+                        v_html += "<tr>" +
+                            "<td>" + item.name + "</td>" +
+                            "<td>" + item.attendance_rate + "%" + "</td>" +
+                            "</tr>";
+                    });
+                    
+                    
+                    v_html += "</table>";
+                    $("div#table_container").html(v_html);
                 },
                 error: function(request, status, error) {
                     alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
                 }
-                 
-             });
-             break;
-
-         default:
-             break;
+            });
      } // end of switch
      
      
@@ -417,7 +433,7 @@ function fillTimetable(data) {
 				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="4" gs-y="0" gs-w="4" gs-h="5" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							<img src="<%= ctxPath%>/resources/images/attendance.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
+							<img src="<%=ctxPath%>/resources/images/attendance.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
 							<h4 style="font-weight: bold;">출석률</h4>
 						</div>
 						
@@ -425,16 +441,16 @@ function fillTimetable(data) {
 							<div style="width: 80%; margin:auto; max-height:50px;">
 								
 								<form name="searchFrm" style="margin: 20px 0 50px 0;">
-								    <select name="searchType" id="searchType" style="height: 40px;" onchange="func_choice(this.value)">
+								    <select name="name" id="searchType" style="height: 40px;" onchange="func_choice(this.value)">
 								        <option value="">수업선택</option>
-								        <c:forEach var="nameList" items="${requestScope.Curriculum_nameList}">
-								            <option value="myAttendance_byCategory">${nameList.name}</option>
-								        </c:forEach>
+									        <c:forEach var="nameList" items="${requestScope.Curriculum_nameList}">
+									            <option value="${nameList.name}">${nameList.name}</option>
+									        </c:forEach>
 								    </select>
 								</form>
 								
 							   	<div id="lecture_container"></div>
-							
+								<div id="table_container" style="margin: 40px 0 0 0;"></div>
 							</div>
 						</div>
 					</div>

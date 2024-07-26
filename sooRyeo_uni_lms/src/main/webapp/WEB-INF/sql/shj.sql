@@ -603,10 +603,13 @@ SELECT
     L.name AS name,
     R.registered_course_seq AS registered_course_seq,
     ROUND(
-        CASE 
-            WHEN total_lectures = 0 THEN 0 
-            ELSE (attended_lectures * 100.0 / total_lectures) 
-        END, 0) AS attendance_rate
+        COALESCE(
+            CASE 
+                WHEN total_lectures = 0 THEN 0 
+                ELSE (attended_lectures * 100.0 / total_lectures) 
+            END, 0
+        ), 0
+    ) AS attendance_rate
 FROM 
     tbl_registered_course R
 JOIN 
@@ -634,8 +637,7 @@ LEFT JOIN (
         A.fk_course_seq
 ) sub ON C.course_seq = sub.fk_course_seq
 WHERE 
-    R.fk_student_id = '202400005'
-
+    R.fk_student_id = '202400005' AND name = '국어학개론'
 
 
 

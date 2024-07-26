@@ -405,11 +405,23 @@ public class StudentDao_imple implements StudentDao {
 		return Curriculum_nameList;
 		
 	} // end of public List<Curriculum> Curriculum_nameList
-	
-	
-	// 학생 대쉬보드 - 수강중인 과목 출석률 
-	
 
+
+	
+	
+	// 학생 대쉬보드 - 하이차트 - 수강중인 과목 출석률 
+	@Override
+	public Map<String, Object> myAttendance_byCategoryJSON(int student_id, String name) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("student_id", String.valueOf(student_id));
+		paraMap.put("name", name);
+		
+		Map<String, Object> myAttendance_byCategoryJSON = sqlSession.selectOne("student.myAttendance_byCategoryJSON", paraMap);
+		
+		return myAttendance_byCategoryJSON;
+		
+	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
 
 
 
