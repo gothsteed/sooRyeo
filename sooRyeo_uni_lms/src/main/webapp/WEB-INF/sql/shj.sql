@@ -575,18 +575,66 @@ FROM (
     FROM dual 
 ) sub;
 
+-- 출석률
+SELECT
+     ROUND(
+        CASE 
+            WHEN total_lectures = 0 THEN 0 
+            ELSE (attended_lectures * 100.0 / total_lectures) 
+        END, 0) AS attendance_rate
+FROM (
+    SELECT
+        (SELECT COUNT(*)
+         FROM tbl_registered_course A 
+         JOIN tbl_course B ON A.fk_course_seq = B.course_seq
+         JOIN tbl_lecture E ON B.course_seq = E.fk_course_seq
+         WHERE A.fk_student_id = #{student_id} AND exist = 1 AND B.course_seq = #{course_seq}) AS total_lectures,
 
-select L.name AS name, R.registered_course_seq
-		from tbl_registered_course R
-		JOIN tbl_course C
-		ON R.fk_course_seq = C.course_seq
-		JOIN tbl_curriculum L
-		ON C.fk_curriculum_seq = L.curriculum_seq
-		where R.fk_student_id = '202400005'
+        (SELECT COUNT(*)
+         FROM tbl_lecture C 
+         JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
+         WHERE D.fk_student_id = #{student_id} AND attended_date IS NOT NULL) AS attended_lectures
+    FROM dual 
+) sub
 
 
-
-
+-- 수업명, 출석률 합침
+SELECT 
+    L.name AS name,
+    R.registered_course_seq AS registered_course_seq,
+    ROUND(
+        CASE 
+            WHEN total_lectures = 0 THEN 0 
+            ELSE (attended_lectures * 100.0 / total_lectures) 
+        END, 0) AS attendance_rate
+FROM 
+    tbl_registered_course R
+JOIN 
+    tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN 
+    tbl_curriculum L ON C.fk_curriculum_seq = L.curriculum_seq
+LEFT JOIN (
+    SELECT 
+        A.fk_course_seq,
+        COUNT(E.lecture_seq) AS total_lectures,
+        (SELECT COUNT(*)
+         FROM tbl_lecture C 
+         JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
+         WHERE D.fk_student_id = '202400005' AND attended_date IS NOT NULL
+         AND C.fk_course_seq = A.fk_course_seq) AS attended_lectures
+    FROM 
+        tbl_registered_course A 
+    JOIN 
+        tbl_course B ON A.fk_course_seq = B.course_seq
+    JOIN 
+        tbl_lecture E ON B.course_seq = E.fk_course_seq
+    WHERE 
+        A.fk_student_id = '202400005' AND exist = 1
+    GROUP BY 
+        A.fk_course_seq
+) sub ON C.course_seq = sub.fk_course_seq
+WHERE 
+    R.fk_student_id = '202400005'
 
 
 

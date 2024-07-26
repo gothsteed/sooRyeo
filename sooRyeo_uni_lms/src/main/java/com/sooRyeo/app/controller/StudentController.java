@@ -91,13 +91,6 @@ public class StudentController {
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  studentservice.getAnnouncement(currentPage);
 		
-		
-		// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
-		List<Curriculum> Curriculum_nameList = studentservice.Curriculum_nameList(student_id);
-		
-		mav.addObject("Curriculum_nameList", Curriculum_nameList);
-		
-		
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
@@ -868,7 +861,19 @@ public class StudentController {
 	
 	
 	
+
+
 	
+	// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+	// List<Curriculum> Curriculum_nameList = studentservice.Curriculum_nameList(student_id);
+	
+	// mav.addObject("Curriculum_nameList", Curriculum_nameList);
+	
+	
+	
+	
+	
+
 	/*
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	@ResponseBody
@@ -881,9 +886,6 @@ public class StudentController {
 		
 		// System.out.println("확인용 : " + student_id);
 		// 확인용 : 202400005
-		
-		
-		
 		
 		
 		List<Course> myAttendance_byCategoryJSON = service.myAttendance_byCategoryJSON(student_id);
@@ -907,7 +909,7 @@ public class StudentController {
 		return ;
 		
 	} // end of public String myAttendance_byCategoryJSON
-	*/
+*/
 	
 	
 	

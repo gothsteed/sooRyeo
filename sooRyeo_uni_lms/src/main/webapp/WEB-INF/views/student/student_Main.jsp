@@ -150,8 +150,6 @@ $(document).ready(function(){
     // 문서가 로드 되어지면 통계가 보이도록 한다.
     $("select#searchType").val("Curriculum_nameList").trigger("change");
 
-	
-
    	//////////////////////////////////////////////
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	// 전체 출석률 하이차트
@@ -218,10 +216,7 @@ $(document).ready(function(){
 // function declaration
 function func_choice(searchTypeVal) {
 	
-    // alert(searchTypeVal);
-    
-    // console.log("확인용 registered_course_seq : " + registered_course_seq);
-    
+     switch (searchTypeVal) {
     	case "": // '수업선택'을 선택한 경우
 	        
 	     	$("div#lecture_container").empty();
@@ -232,13 +227,12 @@ function func_choice(searchTypeVal) {
         case "myAttendance_byCategory": // 과목을 선택한 경우
 
         	$("div#lecture_container").empty();
-            $("div.highcharts-data-table").empty();
+        	$("div.highcharts-data-table").empty();
             
             $.ajax({
                 url: "<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
-                data: { 
-                	//"registered_course_seq" : ${requestScope.Curriculum_nameList.registered_course_seq}
-                },
+                data: {},
+                	
                 dataType: "json",
                 success: function(json) {
                 	
@@ -497,7 +491,7 @@ function fillTimetable(data) {
 				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="4" gs-w="4" gs-h="5" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							<img src="<%= ctxPath%>/resources/images/schedule.png" style="width: 40px; height: 40px; margin-right:2%; margin-bottom:3%;"/>
+							<img src="<%= ctxPath%>/resources/images/schedule.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
 							<h4 style="font-weight: bold;">시간표</h4>
 						</div>
 						<p class="card-text" style="margin-bottom: 10%;">
