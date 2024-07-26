@@ -19,16 +19,25 @@
 <script type="text/javascript">
 	$(document).ready(function() {});
 
-	function handleExamClick(schedule_seq, isAfter) {
-		if (!isAfter) {
-			alert("시험이 아직 종료되지 않았습니다.");
-			return;
+	function handleExamClick(schedule_seq, isBefore, isBetween, isAfter) {
+		if (isBefore) {
+			alert("시험이 아직 시작되지 않았습니다.");
+		} else if (isBetween) {
+			// Send exam.fk_schedule_seq via POST to take.lms
+			var form = document.createElement('form');
+			form.method = 'POST';
+			form.action = '<%=ctxPath%>/student/exam/take.lms';
+			var input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = 'schedule_seq';
+			input.value = schedule_seq;
+			form.appendChild(input);
+			document.body.appendChild(form);
+			form.submit();
+		} else if (isAfter) {
+			// Redirect to result.lms
+			location.href = "<%=ctxPath%>/student/exam/result.lms?schedule_seq=" + schedule_seq;
 		}
-		goview(schedule_seq);
-	}
-
-	function goview(schedule_seq) {
-		location.href = "<%=ctxPath%>/student/exam/result.lms?schedule_seq=" + schedule_seq;
 	}
 </script>
 
@@ -48,7 +57,10 @@
 	<c:choose>
 		<c:when test="${not empty requestScope.examList}">
 			<c:forEach var="exam" items="${requestScope.examList}" varStatus="status">
-				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}', ${exam.schedule.isAfter(currentTime)})">
+				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}',
+					${exam.schedule.isBefore(currentTime)},
+					${exam.schedule.isBetweenSchedule(currentTime)},
+					${exam.schedule.isAfter(currentTime)})">
 					<th scope="row" class="col-1" style="text-align: center">${status.count}</th>
 					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
