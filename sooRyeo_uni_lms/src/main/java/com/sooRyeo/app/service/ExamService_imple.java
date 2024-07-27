@@ -10,10 +10,10 @@ import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import com.sooRyeo.app.model.ScheduleDao;
+import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import com.sooRyeo.app.mongo.repository.StudentExamAnswerRepository;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,7 +208,7 @@ public class ExamService_imple implements ExamService {
 	                // getAnswer와 inputAnswer 비교
 	                if (String.valueOf(getAnswer).equals(inputAnswer)) {
 	                	correctCount++;
-	                	totalscore = totalscore + 
+	                	//totalscore = totalscore +
 	                } else {
 	                	wrongCount++;
 	                }
@@ -218,7 +218,7 @@ public class ExamService_imple implements ExamService {
 	        StudentAnswer sa = new StudentAnswer();
 	        
 	        
-	        examAnswerRepository.save().orElse(null);
+	        //examAnswerRepository.save().orElse(null);
 	        
 	        
 	    } else {
