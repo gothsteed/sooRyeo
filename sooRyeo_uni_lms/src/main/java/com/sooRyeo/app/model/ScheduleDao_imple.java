@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
+import com.sooRyeo.app.dto.ExamDTO;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -223,9 +225,9 @@ public class ScheduleDao_imple implements ScheduleDao {
 
 
 	@Override
-	public Exam getExam() {
+	public Exam getExam(String schedule_seq) {
 		
-		Exam examView = sqlSession.selectOne("schedule.getExam");
+		Exam examView = sqlSession.selectOne("schedule.getExam", schedule_seq);
 		
 		return examView;
 	}

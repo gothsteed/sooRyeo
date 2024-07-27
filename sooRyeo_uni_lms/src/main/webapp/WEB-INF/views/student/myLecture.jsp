@@ -222,13 +222,6 @@ $(document).ready(function(){
 	
 });// end of $(document).ready(function(){});
 
-	function goTest1(){
-		// 시험시간 받아와서  // const startTime = 시험시간 // 이런식으로 받아서
-		// 컴펌 안에 if(현재시간 < 시험시간)이런식으로 조건걸어주기
-		if(confirm("지금 시험에 응시하시겠습니까?")){
-			location.href="<%= ctxPath%>/exam/test.lms";
-		}
-	}
 
 function goExamList(course_seq){
 	location.href="<%= ctxPath%>/student/exam.lms?course_seq="+ course_seq;
