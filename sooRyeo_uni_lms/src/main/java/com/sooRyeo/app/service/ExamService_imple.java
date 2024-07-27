@@ -154,6 +154,13 @@ public class ExamService_imple implements ExamService {
         return  ResponseEntity.ok().body(jsonBuilder.toJson(scoreDto));
     }
 
+    @Override
+    public ModelAndView getWaitExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response, int scheduleSeq) {
+        mav.addObject("schedule_seq", scheduleSeq);
+        mav.setViewName("exam/wait");
+        return mav;
+    }
+
 
     @Override
 	public Exam getExam() {

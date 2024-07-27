@@ -54,7 +54,7 @@ public class ExamController {
 		return mav;
 	}
 
-	@RequireLogin(type = {Professor.class})
+	@RequireLogin(type = {Professor.class, Student.class})
 	@GetMapping("/professor/exam/resultREST.lms")
 	public ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		return examService.getExamResultData(mav, request, response);
@@ -81,6 +81,14 @@ public class ExamController {
 	@GetMapping("/student/exam/resultREST.lms")
 	public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		return examService.getStudentExamResultData(mav, request, response);
+	}
+
+	@RequireLogin(type = {Student.class})
+	@GetMapping("/student/exam/wait.lms")
+	public ModelAndView waitExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq"));
+
+		return examService.getWaitExamPage(mav, request, response, schedule_seq);
 	}
 
 

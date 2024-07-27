@@ -20,7 +20,7 @@
 	$(document).ready(function() {});
 
 	function handleExamClick(schedule_seq, isBefore, isBetween, isAfter) {
-		if (isBefore) {
+/*		if (isBefore) {
 			alert("시험이 아직 시작되지 않았습니다.");
 		} else if (isBetween) {
 			// Send exam.fk_schedule_seq via POST to take.lms
@@ -37,6 +37,13 @@
 		} else if (isAfter) {
 			// Redirect to result.lms
 			location.href = "<%=ctxPath%>/student/exam/result.lms?schedule_seq=" + schedule_seq;
+		}*/
+
+		if(isAfter) {
+			location.href = "<%=ctxPath%>/student/exam/result.lms?schedule_seq=" + schedule_seq;
+		}
+		else {
+			location.href = "<%=ctxPath%>/student/exam/wait.lms?schedule_seq=" + schedule_seq;
 		}
 	}
 </script>
