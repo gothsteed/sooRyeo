@@ -3,8 +3,8 @@ package com.sooRyeo.app.dto;
 import java.util.List;
 
 import com.sooRyeo.app.domain.Exam;
-import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 
+import com.sooRyeo.app.mongo.entity.Answer;
 import lombok.Getter;
 import lombok.Setter;
 
