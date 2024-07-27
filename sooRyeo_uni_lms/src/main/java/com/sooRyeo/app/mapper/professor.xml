@@ -476,6 +476,37 @@
 	</select>
 	
 	
+	<select id="regi_course_seq" parameterType="HashMap" resultType="int">
+		select R.registered_course_seq
+        from tbl_student S
+        join tbl_registered_course R ON S.student_id = R.fk_student_id
+        where student_id = #{student_id} and R.fk_course_seq = #{fk_course_seq}
+	</select>
+	
+	
+	<select id="mark" parameterType="HashMap" resultType="double">
+		select G.mark
+        from tbl_student S
+        join tbl_registered_course R ON S.student_id = R.fk_student_id
+        join tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+        where student_id = #{student_id} and R.registered_course_seq = #{regi_course_seq}
+	</select>
+	
+	
+	<insert id="insertGradeEnd" parameterType="HashMap">
+		<selectKey keyProperty="grade_seq" resultType="int" order="BEFORE">
+			SELECT grade_seq.nextval FROM dual
+		</selectKey>
+		insert into tbl_grade(grade_seq, fk_registered_course_seq, score, mark) 
+		values(#{grade_seq}, #{regi_course_seq}, 100, #{mark})
+	</insert>
+	
+	
+	<update id="editGradeEnd" parameterType="HashMap">
+		update tbl_grade set mark = #{mark}
+		where fk_registered_course_seq = #{regi_course_seq}
+	</update>
+	
 	
 	
 

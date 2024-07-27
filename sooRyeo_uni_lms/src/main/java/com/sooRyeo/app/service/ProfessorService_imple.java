@@ -597,6 +597,24 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public int insertGradeEnd(Map<String, Object> paraMap) {
+
+		int insertGradeEnd = dao.insertGradeEnd(paraMap);
+		
+		return insertGradeEnd;
+	}
+
+
+	@Override
+	public int editGradeEnd(Map<String, Object> paraMap) {
+		
+		int editGradeEnd = dao.editGradeEnd(paraMap); 
+		
+		return editGradeEnd;
+	}
+
+
 
 	
 

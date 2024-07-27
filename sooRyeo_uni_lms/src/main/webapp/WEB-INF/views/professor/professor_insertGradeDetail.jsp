@@ -30,28 +30,83 @@
 			url:"<%= ctxPath%>/professor/score_checkJSON.lms",
 			method: "POST",
 			data:{"student_id":"${requestScope.student_id}",
-				  "fk_course_seq":"${requestScope.fk_course_seq}"},
+				  "fk_course_seq":"${requestScope.fk_course_seq}",
+				  "name":"${requestScope.name}"},
 			dataType:"json",
 			
 			success:function(json){			
 				console.log(JSON.stringify(json));
 				
-				let v_html = ``;
-				
-				v_html += `<tr>
-			      			<td style="text-align: center; vertical-align: middle;">\${json.name}</td> 
-			      			<td style="text-align: center; vertical-align: middle;">\${json.student_id}</td> 
-			      			<td style="text-align: center; vertical-align: middle;">\${json.assignmentScore}</td>
-			      			<td style="text-align: center; vertical-align: middle;"></td>
-				            <td style="text-align: center; vertical-align: middle;"></td>
-				            <td style="text-align: center; vertical-align: middle;"></td>
-				            <td style="text-align: center; vertical-align: middle;"></td>`;
-				
-				v_html += `<input type='text' id="score" style="width: 50%"/>
-			            	<button type='button' class='btn btn-secondary mt-1' onclick='insertGrade("\${json.student_id}")'>성적입력</button>`;
+				let v_html = '';
+
+			    if ($.isEmptyObject(json) || json.length === 0) {
+			        // JSON이 비어있거나 길이가 0일 경우
+			        v_html = `<tr>
+			            <td colspan="7" style="text-align: center;">성적정보가 없습니다.</td>
+			        </tr>`;
+			    }
+			    else {
+					v_html += `<tr>
+				      			<td style="text-align: center; vertical-align: middle;">\${json.name}</td> 
+				      			<td style="text-align: center; vertical-align: middle;">\${json.student_id}</td> 
+				      			<td style="text-align: center; vertical-align: middle;">\${json.assignmentScore}</td>
+				      			<td style="text-align: center; vertical-align: middle;"></td>
+					            <td style="text-align: center; vertical-align: middle;"></td>
+					            <td style="text-align: center; vertical-align: middle;"></td>`
 					
-				v_html += `</tr>`;
-					
+					if (json.mark == null) {
+				        v_html += `<td style='text-align: center; vertical-align: middle;' id='mark'>
+				        	<select id="grade_1" name="grade_1" class="form-control">
+				        	<option value="">학점 선택1</option>
+				        	<option value="4">A</option>
+							<option value="3">B</option>
+							<option value="2">C</option>
+							<option value="1">D</option>
+							<option value="0">F</option>
+							</select>
+							<br>
+							<select id="grade_2" name="grade_2" class="form-control mb-2">
+				        	<option value="">학점 선택2</option>
+				        	<option value="0">0</option>
+							<option value="0.5">+</option>
+							</select>
+							<br>
+				            <button type='button' class='btn btn-secondary mt-1' onclick='insertGrade("\${json.student_id}", "\${json.regi_course_seq}")'>학점입력</button>
+				        </td>`;
+				    } else {
+				    	
+						let gradeDisplay = '';
+			        	
+			        	if (json.mark == 4.5) {
+			        	    gradeDisplay = 'A+';
+			        	} else if (json.mark == 4.0) {
+			        	    gradeDisplay = 'A';
+			        	} else if (json.mark == 3.5) {
+			        	    gradeDisplay = 'B+';
+			        	} else if (json.mark == 3.0) {
+			        	    gradeDisplay = 'B';
+			        	} else if (json.mark == 2.5) {
+			        	    gradeDisplay = 'C+';
+			        	} else if (json.mark == 2.0) {
+			        	    gradeDisplay = 'C';
+			        	} else if (json.mark == 1.5) {
+			        	    gradeDisplay = 'D+';
+			        	} else if (json.mark == 1.0) {
+			        	    gradeDisplay = 'D';
+			        	} else if (json.mark == 0.0) {
+			        	    gradeDisplay = 'F';
+			        	}
+				    	
+			        	v_html += `<td style='text-align: center; vertical-align: middle;' id='mark'>
+			        	    \${gradeDisplay}
+			        	    <br>
+			        	    <button type='button' class='btn btn-secondary mt-1' onclick='editGrade("\${json.regi_course_seq}")'>학점수정</button>
+			        	</td>`
+				    }            
+						
+					v_html += `</tr>`;
+			    }
+			    
 				$("table#assignCheck tbody").html(v_html);
 					
 			},
@@ -63,67 +118,126 @@
 		
 		<%-- ============== ajax로 테이블 내용물 가져오기 끝 ============== --%>
 		
-		
-		
-		
-		
 	});// end of $(document).ready(function() 
 
 	////////////////////////////////////////////////
 	// Function Declaration
-				
-<%-- 	function insertGrade(assignment_submit_seq){
+	
+	function insertGrade(student_id, regi_course_seq){// 학점 입력해주기
 		
-		const goBackURL = "${requestScope.goBackURL}";
-		const score = $("input#score").val().trim();
-		const frm = document.reviseFrm;
+		console.log($("select#grade_1").val().trim());
+		console.log($("select#grade_2").val().trim());
 		
-		if(confirm("점수를 입력하시겠습니까?")){
+		const grade = $("select#grade_1").val().trim() + $("select#grade_2").val().trim();
 		
 		
-			if(score == 0){
-				alert("점수를 입력해주세요.");
-				return;
-			}
-			else if(score > 100){
-				alert("점수는 최대 100점까지 입력해주세요.");
-				return;
-				
-			}
-			else if(score < 0){
-				alert("점수는 0 미만으로 입력할 수 없습니다.");
-				return;
-			}
-			else{
-				frm.assignment_submit_seq.value = assignment_submit_seq;
-				frm.score.value = score;
-				frm.goBackURL.value = goBackURL;
-				frm.method = "post";
-				frm.action = "<%= ctxPath%>/professor/scoreUpdate.lms";
-				frm.submit();
-				
-			}
-		} else{
-			alert("취소를 누르셨습니다.");
+		
+		
+		if(grade == ""){
+			alert("학점을 선택해주세요!");
 			return;
 		}
-			
-	}// end of function insertGrade(fk_schedule_seq_assignment)  --%>
-	
-/* 	function editScore(score, assignment_submit_seq){
 		
-		if(confirm("점수를 수정하시겠습니까?")){
+		if(regi_course_seq == null){
+			alert("학점을 입력할 수 없습니다!");
+			return;
+		}
+		else{
 			
-			const tdScore = $("td#editScore");
-			tdScore.html(`
-		            <input type='text' id='score' style='width: 50%' value='\${score}' />
-		            <button type='button' class='btn btn-secondary mt-1' onclick='insertGrade("\${assignment_submit_seq}")'>점수입력</button>
-		        `);
-	    } else {
-	        alert("취소를 누르셨습니다.");
-	        return;
-	    }
-	}// end of function editScore(score)  */
+			const grade1 = parseFloat($("select#grade_1").val().trim());
+			const grade2 = parseFloat($("select#grade_2").val().trim());
+			const mark = grade1 + grade2; 
+			
+			console.log(mark);
+			
+			const frm = document.insertFrm;
+			
+			frm.student_id.value = student_id;
+			frm.regi_course_seq.value = regi_course_seq;
+			frm.goBackURL.value = "${requestScope.goBackURL}";
+			frm.mark.value = mark; 
+			
+			frm.method = "post";
+			frm.action = "<%= ctxPath%>/professor/insertGradeEnd.lms";
+			frm.submit();
+				
+		}
+	
+	}// end of function insertGrade(student_id, regi_course_seq)
+	
+	function editGrade(regi_course_seq){
+		
+		const re_course_seq = regi_course_seq;
+		console.log("확인용 re_course_seq : ", re_course_seq);
+		
+		const markTd = $("td#mark");
+	    // 원래 내용을 데이터 속성에 저장
+	    markTd.data('original-content', markTd.html());
+	    
+	    markTd.empty();
+	    
+	    let v_html = `
+	    <td style='text-align: center; vertical-align: middle;' id='mark'>
+	        <select id="grade_1" name="grade_1" class="form-control">
+	            <option value="">학점 선택1</option>
+	            <option value="4">A</option>
+	            <option value="3">B</option>
+	            <option value="2">C</option>
+	            <option value="1">D</option>
+	            <option value="0">F</option>
+	        </select>
+	        <br>
+	        <select id="grade_2" name="grade_2" class="form-control mb-2">
+	            <option value="">학점 선택2</option>
+	            <option value="0">0</option>
+	            <option value="0.5">+</option>
+	        </select>
+	        <br>
+	        <button type='button' class='btn btn-secondary mt-1' onclick='edit(\${re_course_seq})'>학점수정</button>
+	        <button type='button' class='btn btn-secondary mt-1' onclick='cancelEdit()'>수정취소</button>
+	    </td>`;
+	    
+	    markTd.html(v_html);
+		
+		
+	}// end of function editGrade() 
+	
+	function edit(regi_course_seq){
+		
+		const grade1 = parseFloat($("select#grade_1").val().trim());
+		const grade2 = parseFloat($("select#grade_2").val().trim());
+		const mark = grade1 + grade2;
+		
+		const frm = document.insertFrm;
+		
+		console.log(regi_course_seq);
+		
+		if(regi_course_seq == null){
+			alert("실패");
+			return;
+		}
+		
+		frm.regi_course_seq.value = regi_course_seq;
+		frm.goBackURL.value = "${requestScope.goBackURL}";
+		frm.mark.value = mark; 
+		
+		frm.method = "post";
+		frm.action = "<%= ctxPath%>/professor/editGradeEnd.lms";
+		frm.submit();
+		
+	}// end of function edit(regi_course_seq) 
+	
+	
+	function cancelEdit(){
+		
+		const markTd = $("td#mark");
+	    // 저장해둔 원래 내용을 복원
+	    markTd.html(markTd.data('original-content'));
+		
+		
+	}// end of function cancelEdit() 
+	
+
 
 </script>
 
@@ -153,9 +267,9 @@
 </div>
 
 
-<form name="reviseFrm">
+<form name="insertFrm">
 	<input type="hidden" name="student_id"/>
-	<input type="hidden" name="fk_course_seq"/>
+	<input type="hidden" name="regi_course_seq"/>
 	<input type="hidden" name="goBackURL"/>
-	<input type="hidden" name="score"/>
+	<input type="hidden" name="mark"/>
 </form>
