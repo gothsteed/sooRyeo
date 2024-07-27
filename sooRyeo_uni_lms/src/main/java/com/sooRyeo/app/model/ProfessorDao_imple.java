@@ -375,17 +375,57 @@ public class ProfessorDao_imple implements ProfessorDao {
         
         int assignmentCount = sqlSession.selectOne("professor.assignmentCount", fk_course_seq); // 과제 갯수
         
-        //System.out.println("확인용 assignmentTotal : " + assignmentTotal);
-        //System.out.println("확인용 assignmentCount : " + assignmentCount);
+        int regi_course_seq = sqlSession.selectOne("professor.regi_course_seq", paraMap);
+        
+        paraMap.put("regi_course_seq", regi_course_seq);
+        
+        double mark = sqlSession.selectOne("professor.mark", paraMap);
+        
+        System.out.println("확인용 assignmentTotal : " + assignmentTotal);
+        System.out.println("확인용 assignmentCount : " + assignmentCount);
+        System.out.println("확인용 regi_course_seq : " + regi_course_seq);
         
         
-        double assignmentScore = ((double)assignmentTotal/(assignmentCount*100))*100;
+        double assignmentScore = ((double)assignmentTotal/assignmentCount);
         
-        //System.out.println("확인용 assignmentScore : " + assignmentScore);
+        // System.out.println("확인용 assignmentScore : " + assignmentScore);
 		
         ScoreMap.put("assignmentScore", assignmentScore);
+        ScoreMap.put("regi_course_seq", regi_course_seq);
+        ScoreMap.put("mark", mark);
         
 		return ScoreMap;
+	}
+
+
+	@Override
+	public int insertGradeEnd(Map<String, Object> paraMap) {
+		
+		int n = 0;
+		
+		try {
+			n = sqlSession.insert("professor.insertGradeEnd", paraMap);
+		} catch (Exception e) {
+			
+		}		
+
+		return n;
+		
+	}
+
+
+	@Override
+	public int editGradeEnd(Map<String, Object> paraMap) {
+		
+		int n = 0;
+		
+		try {
+			n = sqlSession.update("professor.editGradeEnd", paraMap);
+		} catch (Exception e) {
+			
+		}		
+
+		return n;
 	}
 
 

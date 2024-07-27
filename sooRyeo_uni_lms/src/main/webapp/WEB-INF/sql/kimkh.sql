@@ -579,6 +579,9 @@ WITH
         from tbl_exam
         -- G.score
         
+        
+        
+        
         select * 
         from tbl_student S
         join tbl_registered_course R ON S.student_id = R.fk_student_id
@@ -604,6 +607,13 @@ WITH
         
         update tbl_course set semester_date = '2024/07/07'
         commit;
+        
+        
+        select *
+        from tbl_student S
+        join tbl_registered_course R ON S.student_id = R.fk_student_id
+        join tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+        where student_id = 202400005 and R.registered_course_seq = 23
         
         
         
