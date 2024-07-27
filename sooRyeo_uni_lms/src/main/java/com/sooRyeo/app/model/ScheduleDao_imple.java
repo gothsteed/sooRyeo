@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
-import com.sooRyeo.app.dto.ExamDTO;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Consult;
-import com.sooRyeo.app.domain.Exam;
 
 @Repository
 public class ScheduleDao_imple implements ScheduleDao {
@@ -225,7 +223,7 @@ public class ScheduleDao_imple implements ScheduleDao {
 
 
 	@Override
-	public Exam getExam(String schedule_seq) {
+	public Exam getExam(int schedule_seq) {
 		
 		Exam examView = sqlSession.selectOne("schedule.getExam", schedule_seq);
 		

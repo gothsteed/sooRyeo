@@ -4,8 +4,6 @@ import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.ExamResult;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Student;
-import com.sooRyeo.app.domain.Schedule;
-import com.sooRyeo.app.dto.ExamDTO;
 import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
@@ -28,7 +26,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ExamService_imple implements ExamService {
@@ -162,22 +159,47 @@ public class ExamService_imple implements ExamService {
         mav.setViewName("exam/wait");
         return mav;
     }
+    @Override
+    public ModelAndView takeExam(ModelAndView mav, HttpServletRequest request, int schedule_seq) {
+
+        Exam examView = scheduleDao.getExamSchedule(schedule_seq);
+
+        if(examView.isBefore(LocalDateTime.now())) {
+            mav.addObject("message", "아직 시험이 시작되지 않았습니다.");
+            mav.addObject("loc", request.getContextPath() + "/student/exam/wait.lms?schedule_seq=" + schedule_seq);
+            mav.setViewName("msg");
+            return mav;
+        }
+
+        if(examView.isAfter(LocalDateTime.now())) {
+            mav.addObject("message", "이미 종료된 시험입니다.");
+            mav.addObject("loc", request.getContextPath() + "/student/exam/wait.lms?schedule_seq=" + schedule_seq);
+            mav.setViewName("msg");
+            return mav;
+        }
+
+            mav.addObject("schedule_seq", schedule_seq);
+        mav.addObject("examView", examView);
+        mav.setViewName("test");
+
+
+        return mav;
+    }
+
 
 
     @Override
-	public Exam getExam(String schedule_seq) {
+	public Exam getExam(String schedule_seq) throws NumberFormatException , NullPointerException {
 
-    	Exam examView = scheduleDao.getExam(schedule_seq);  // 스케줄 DAO로부터 Exam 객체를 가져옴
-	    
-	    return examView;  // 가져온 Exam 객체를 반환
+        return scheduleDao.getExam(Integer.parseInt(schedule_seq));  // 가져온 Exam 객체를 반환
 	}
 
 
 
 	@Override
-	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq) {
-		
-		Exam examView = scheduleDao.getExam(schedule_seq);
+	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq) throws NumberFormatException , NullPointerException {
+
+		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
 		
 	    ExamAnswer examList = examAnswerRepository.findById(examView.getAnswer_mongo_id()).orElse(null); // ExamAnswer 객체들을 가져옴
 	    // insert 할떄는 save를 사용해서 파라미터에 StudentAnswer객체를 생성해서 넣어주면 된다.

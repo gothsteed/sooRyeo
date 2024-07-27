@@ -63,4 +63,6 @@ public class Schedule {
 		return time.isAfter(getEndLocalDateTime());
 	}
 
+
+
 }

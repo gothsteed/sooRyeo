@@ -26,12 +26,13 @@ $(document).ready(function () {
 
 	  const h2_timer = $("#timer"); // 타이머를 보여줄 장소
 
-	  let time = ${requestScope.examView.end_date_seconds}; // 타이머 시간을 10분으로 지정함.
+	  let time = ${requestScope.examView.secondsTillEnd}; // 타이머 시간을 10분으로 지정함.
+    console.log(time);
 
 	  // === 타이머 함수 만들기 시작 === //
 	  const timer = function () {
 	    if (time < 0) {
-	      alert("시험시간 종료!!\n자동으로 제출됩니다.");
+	      //alert("시험시간 종료!!\n자동으로 제출됩니다.");
 
 	      clearInterval(interval_timer); // 타이머 삭제하기
 	      // interval_timer 는 중단해야할 setInterval 함수를 가리키는 것이다.

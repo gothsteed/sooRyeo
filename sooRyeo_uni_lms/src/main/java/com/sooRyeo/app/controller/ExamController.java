@@ -30,19 +30,11 @@ public class ExamController {
 
 
 	@RequireLogin(type = {Student.class})
-	@PostMapping("/exam/test.lms")
-	public ModelAndView test(ModelAndView mav, HttpServletRequest request) {
-		
-		String schedule_seq = request.getParameter("schedule_seq");
-		
-		Exam examView = examService.getExam(schedule_seq);
-		
-		mav.addObject("schedule_seq", schedule_seq);
-		mav.addObject("examView", examView);
-		mav.setViewName("test");
-		
-		return mav;
-		
+	@PostMapping("/student/exam/test.lms")
+	public ModelAndView test(ModelAndView mav, HttpServletRequest request) throws NumberFormatException , NullPointerException {
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq"));
+
+		return examService.takeExam(mav, request, schedule_seq);
 	}
 	
 	@RequireLogin(type = {Student.class})

@@ -61,6 +61,10 @@
     </div>
 </div>
 
+<form id="redirectForm" action="<%=ctxPath%>/student/exam/test.lms" method="post" style="display:none;">
+    <input type="hidden" name="schedule_seq" id="scheduleSeqInput">
+</form>
+
 <script>
     function updateServerTime() {
         const now = new Date();
@@ -92,21 +96,10 @@
         // Here you would typically redirect to the actual exam page
         // window.location.href = 'exam-page.html';
 
-        $.ajax({
-            url: '<%=ctxPath%>/student/test.lms',
-            type: 'POST',
-            data: { scheduleSeq: scheduleSeq },
-            success: function(response) {
-                alert('Server Response: ' + response);
-                // Handle successful response
-                // For example, redirect to the exam page if the response indicates success
-                // window.location.href = 'exam-page.html';
-            },
-            error: function(xhr, status, error) {
-                alert('Error: ' + error);
-                // Handle error
-            }
-        });
+        document.getElementById('scheduleSeqInput').value = scheduleSeq;
+
+        // Submit the form
+        document.getElementById('redirectForm').submit();
 
 
     });
