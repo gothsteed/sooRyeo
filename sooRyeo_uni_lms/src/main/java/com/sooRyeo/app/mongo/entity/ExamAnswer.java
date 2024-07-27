@@ -29,6 +29,10 @@ public class ExamAnswer {
         this.answers = answers;
     }
 
+    public int getQuestionAnswer(int questionNumber) {
+        return  answers.get(questionNumber - 1).getAnswer();
+    }
+
     // Inner class for Answer
     public static class Answer {
         @Id

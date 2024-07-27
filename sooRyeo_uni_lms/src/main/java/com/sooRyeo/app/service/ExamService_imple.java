@@ -3,7 +3,7 @@ package com.sooRyeo.app.service;
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.ExamResult;
 import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.domain.Schedule;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
@@ -11,26 +11,22 @@ import com.sooRyeo.app.model.ScheduleDao;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import com.sooRyeo.app.mongo.repository.StudentExamAnswerRepository;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.entity.LoginLog;
 import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExamService_imple implements ExamService {
@@ -113,10 +109,49 @@ public class ExamService_imple implements ExamService {
 
     @Override
     public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+        int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
 
-        
+        HttpSession session = request.getSession();
+        Student student = (Student) session.getAttribute("loginuser");
 
+        Exam examSchedule = scheduleDao.getExamSchedule(schedule_seq);
 
+        if(examSchedule == null) {
+            return ResponseEntity.badRequest().body("존재하지 않은 시험입니다");
+        }
+
+        if(examSchedule.isBetween(LocalDateTime.now())) {
+            return ResponseEntity.badRequest().body("아직 시험이 종료되지 않았습니다");
+        }
+
+        ExamAnswer examAnswer = examAnswerRepository.findById(examSchedule.getAnswer_mongo_id()).orElse(null);
+        if(examAnswer == null) {
+            return ResponseEntity.badRequest().body("존재하지 않은 시험입니다");
+        }
+
+        StudentAnswer studentAnswer = answerRepository.findByExamAnswersIdAndStudentId(examSchedule.getAnswer_mongo_id(), student.getStudent_id()).orElse(null);
+        if(studentAnswer == null) {
+            return ResponseEntity.badRequest().body("응시하지 않은 시험입니다");
+        }
+
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScore(studentAnswer.getScore());
+        scoreDto.setWrongSCount(studentAnswer.getWrongSCount());
+        scoreDto.setCorrectCount(studentAnswer.getCorrectCount());
+
+        List<Integer> studentAnsList = new ArrayList<>();
+        List<Integer> ExamAnsList = new ArrayList<>();
+
+        for(int i=0; i<examAnswer.getAnswers().size(); i++) {
+            studentAnsList.add(studentAnswer.getQuestionAnswer(i + 1));
+            ExamAnsList.add(examAnswer.getQuestionAnswer(i + 1));
+
+        }
+
+        scoreDto.setTestAnswers(ExamAnsList);
+        scoreDto.setStudentAnswers(studentAnsList);
+
+        return  ResponseEntity.ok().body(jsonBuilder.toJson(scoreDto));
     }
 
 
