@@ -22,6 +22,10 @@ public class StudentAnswer {
     private int wrongSCount;
 
 
+    public int getQuestionAnswer(int questionNumber) {
+        return answers.get(questionNumber-1).getAnswer();
+    }
+
 
     public static class Answer {
         @Id
