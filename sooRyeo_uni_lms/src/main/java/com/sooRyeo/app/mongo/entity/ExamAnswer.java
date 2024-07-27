@@ -11,8 +11,17 @@ public class ExamAnswer {
     @Id
     private String id;
     private List<Answer> answers;
+    private List<Answer> score;
 
-    // Getters and setters
+    public List<Answer> getScore() {
+		return score;
+	}
+
+	public void setScore(List<Answer> score) {
+		this.score = score;
+	}
+
+	// Getters and setters
     public String getId() {
         return id;
     }

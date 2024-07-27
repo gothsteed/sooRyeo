@@ -4,6 +4,8 @@ import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.ExamResult;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.domain.Schedule;
+import com.sooRyeo.app.dto.ExamDTO;
 import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
@@ -156,28 +158,69 @@ public class ExamService_imple implements ExamService {
 
 
     @Override
-	public Exam getExam() {
+	public Exam getExam(String schedule_seq) {
 
-	    Exam examView = scheduleDao.getExam();  // 스케줄 DAO로부터 Exam 객체를 가져옴
-	    
-	    List<ExamAnswer> examList = examAnswerRepository.findAllById(examView.getAnswer_mongo_id()); // ExamAnswer 객체들을 가져옴
-	    
-	    if (examList != null && !examList.isEmpty()) {
-            for (ExamAnswer exam : examList) {
-            	
-                List<Answer> answers = exam.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴
-                
-                for (Answer answer : answers) {
-                	
-                    int getAnswer = answer.getAnswer();  // 각 Answer 객체의 score를 가져옴
-                    
-                    System.out.println("확인용 getAnswer: " + getAnswer);
-                }
-            }
-        } else {
-            System.out.println("examList가 비어 있습니다.");
-        }
+    	Exam examView = scheduleDao.getExam(schedule_seq);  // 스케줄 DAO로부터 Exam 객체를 가져옴
 	    
 	    return examView;  // 가져온 Exam 객체를 반환
 	}
+
+
+
+	@Override
+	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq) {
+		
+		Exam examView = scheduleDao.getExam(schedule_seq);
+		
+	    ExamAnswer examList = examAnswerRepository.findById(examView.getAnswer_mongo_id()).orElse(null); // ExamAnswer 객체들을 가져옴
+	    // insert 할떄는 save를 사용해서 파라미터에 StudentAnswer객체를 생성해서 넣어주면 된다.
+	    
+	    List<Answer> answers = null;
+	    List<Answer> scores = null;
+	    
+	    int correctCount = 0;
+	    int wrongCount = 0;
+	    int totalscore = 0;
+	    
+	    if (examList != null) {
+	        answers = examList.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴
+	        scores = examList.getScore();
+	        
+	        // inputAnswers와 answers를 비교
+	        for (int i = 0; i < answers.size(); i++) {
+	            Answer answer = answers.get(i);
+	            int getAnswer = answer.getAnswer();  // 각 Answer 객체의 score를 가져옴
+	            
+	            Answer score = scores.get(i);
+	            int getScore = score.getScore();
+	            
+	            // inputAnswers의 해당 인덱스와 비교
+	            if (i < inputAnswers.size()) { // 인덱스 범위 체크
+	                String inputAnswer = inputAnswers.get(i); // inputAnswers에서 값 가져오기
+	                
+	                // getAnswer와 inputAnswer 비교
+	                if (String.valueOf(getAnswer).equals(inputAnswer)) {
+	                	correctCount++;
+	                	totalscore = totalscore + 
+	                } else {
+	                	wrongCount++;
+	                }
+	            }
+	        } // end of for------------------------------------------------------------
+	        
+	        StudentAnswer sa = new StudentAnswer();
+	        
+	        
+	        examAnswerRepository.save().orElse(null);
+	        
+	        
+	    } else {
+	        System.out.println("examList가 비어 있습니다.");
+	    }
+
+		
+	}
+
+
+
 }

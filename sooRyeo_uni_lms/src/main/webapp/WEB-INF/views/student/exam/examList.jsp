@@ -26,7 +26,7 @@
 			// Send exam.fk_schedule_seq via POST to take.lms
 			var form = document.createElement('form');
 			form.method = 'POST';
-			form.action = '<%=ctxPath%>/student/exam/take.lms';
+			form.action = '<%=ctxPath%>/exam/test.lms';
 			var input = document.createElement('input');
 			input.type = 'hidden';
 			input.name = 'schedule_seq';
