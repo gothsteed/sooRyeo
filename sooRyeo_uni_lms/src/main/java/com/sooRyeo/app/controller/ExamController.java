@@ -45,6 +45,8 @@ public class ExamController {
 		
 		int selCount = Integer.parseInt(request.getParameter("selCount"));
 		
+		// String course_seq = request.getParameter("course_seq");
+		
 		List<String> inputAnswers = new ArrayList<>();
 		
 		for(int i=1; i<selCount+1; i++) {
@@ -55,8 +57,11 @@ public class ExamController {
 	        }
 		}
 		
-		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq);
+		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq ,request);
 		
+		mav.addObject("message", "답안지 제출이 완료되었습니다.");
+		// mav.addObject("loc", request.getContextPath()+"/exam.lms?course_seq="+course_seq); // 여기서 course_seq를 어떻게 보내야할지 고민중. post 방시인디
+		mav.setViewName("msg");
 		/*
 		if(n == 1) {
 			mav.addObject("message", "회원 등록을 성공하였습니다.");

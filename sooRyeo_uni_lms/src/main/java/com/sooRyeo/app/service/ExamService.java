@@ -22,7 +22,8 @@ public interface ExamService {
 
     ModelAndView getWaitExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response, int scheduleSeq);
     // 제출한 답을 채점해서 몽고DB에 insert 해주는 메소드
-	void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq);
 
     ModelAndView takeExam(ModelAndView mav, HttpServletRequest request, int schedule_seq);
+
+    void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request);
 }
