@@ -11,6 +11,7 @@ import com.sooRyeo.app.mongo.entity.LoginLog;
 import com.sooRyeo.app.mongo.entity.MemberType;
 import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ExamService_imple implements ExamService {
@@ -189,6 +192,95 @@ public class ExamService_imple implements ExamService {
 	public String select_coures_name(String course_seq) {
 		String coures_name = scheduleDao.select_coures_name(course_seq);
 		return coures_name;
+	}
+
+
+
+	// 출제된 시험 정보 select 해오기
+	@Override
+	public Map<String, String> show_exam(String schedule_seq) {
+		Map<String, String> show_exam = scheduleDao.show_exam(schedule_seq);
+		return show_exam;
+	}
+
+
+	// 몽고db에서 시험 answers select 해오기 
+	@Override
+	public List<ExamAnswer> select_answers(HttpServletRequest request, HttpServletResponse response, String ANSWER_MONGO_ID) {
+		List<ExamAnswer> select_answers = examAnswerRepository.findAllById("ANSWER_MONGO_ID");
+		return select_answers;
+	}
+
+
+
+	@Override
+	public List<Answer> getExam_info(String ANSWER_MONGO_ID) {
+		
+	    List<ExamAnswer> examList = examAnswerRepository.findAllById(ANSWER_MONGO_ID); // ExamAnswer 객체들을 가져옴
+	    
+	    List<Answer> answers = null;
+	     
+	    if (examList != null && !examList.isEmpty()) {
+	    	
+            for (ExamAnswer exam : examList) {
+                answers = exam.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴
+            }
+            
+        } else {
+            System.out.println("examList가 비어 있습니다.");
+        }
+	    
+	    return answers;
+	}
+
+
+
+	@Override
+	public ExamAnswer update_examAnswer(List<Answer> answer_list, String answer_mongo_id) {
+		
+	    Optional<ExamAnswer> one_document = examAnswerRepository.findById(answer_mongo_id);
+
+	    ExamAnswer  update_ExamAnswer = null;
+	    
+	    if(one_document != null) {
+	    	
+		    ExamAnswer exam_answer = one_document.get();
+		    
+		    exam_answer.setAnswers(answer_list);
+		    
+	    	update_ExamAnswer = examAnswerRepository.save(exam_answer); 	
+	    }
+	    
+		return update_ExamAnswer;
+
+	}
+
+
+
+	// 시험 수정 시 오라클db update
+	@Override
+	public int update_exam_schedule(String schedule_seq, String test_type, String test_start_time, String test_end_time, int question_count, int total_score, ExamDTO examdto) {
+		
+		System.out.println("서비스에서 schedule_seq 확인 => " + schedule_seq);
+		
+		if(examdto.getFile_name() != null) {
+			// 시험지 변경한 경우 
+		
+			int n = scheduleDao.update_exam_schedule_file(schedule_seq, test_type, test_start_time, test_end_time, question_count, total_score, examdto);
+			return n;
+			
+		}
+		else {
+			// 시험지를 변경하지 않은 경우
+			
+			int n = scheduleDao.update_exam_schedule_nofile(schedule_seq, test_type, test_start_time, test_end_time, question_count, total_score);
+			return n;
+			
+		}
+		
+		
+		
+		
 	}
 
 

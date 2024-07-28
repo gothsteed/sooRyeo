@@ -542,8 +542,10 @@ delete
 from tbl_exam
 where fk_schedule_seq = '94';
 
+rollback;
+
 select *
-from tbl_assignment
+from tbl_exam
 
 select *
 from tbl_exam
@@ -562,7 +564,6 @@ from tbl_exam
 
 commit;
 
-66a0ea3dd35ae54a1de7ecc4
 
 
 select C.name
@@ -579,8 +580,7 @@ select *
 from tbl_course;
 
 
-
-
-15 : x = 100 
-            
-            
+select S.schedule_seq, S.TITLE, s.START_DATE, s.END_DATE, E.FILE_NAME, E.ORIGINAL_FILE_NAME, E.ANSWER_MONGO_ID
+from tbl_schedule S join tbl_exam E
+on S.schedule_seq = E.Fk_schedule_seq
+where schedule_seq  = '102';

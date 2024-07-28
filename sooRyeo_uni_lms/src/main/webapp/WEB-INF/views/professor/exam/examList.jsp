@@ -19,10 +19,8 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		
-		#("")
-		
-		
-		
+
+
 	});
 
 	function handleExamClick(schedule_seq, isAfter, isBetweenSchedule, isBefore) {
@@ -42,9 +40,27 @@
 		location.href = "<%=ctxPath%>/professor/exam/result.lms?schedule_seq=" + schedule_seq;
 	}
 	
+	var fkScheduleSeq = "";
+	
+    function setScheduleSeq(element) {
+
+        fkScheduleSeq = element.parentNode.querySelector('input[name="fk_schedule_seq"]').value;
+        
+    }
+	
+	
+	
 	function go_exam_update(schedule_seq) {
-		<%--  location.href = "<%=ctxPath%>/professor/professor_exam_update.lms?schedule_seq=" + schedule_seq; --%>
-		location.href = "<%=ctxPath%>/professor/professor_exam_update.lms?schedule_seq=" + schedule_seq + "&course_seq=" + course_seq; 
+		   
+		   console.log("fkScheduleSeq 확인용", fkScheduleSeq);
+		
+	       const frm = document.exam_update;
+	       frm.schedule_seq.value = fkScheduleSeq;
+	       frm.course_seq.value = course_seq;
+	       frm.action = "<%=ctxPath%>/professor/professor_exam_update.lms";
+	       frm.method = "post";
+	       frm.submit();
+
 		
 	}
 	
@@ -82,7 +98,7 @@
 			<c:forEach var="exam" items="${requestScope.examList}" varStatus="status">
 				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}', ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetweenSchedule(currentTime)}, ${exam.schedule.isBefore(currentTime)})">
 					<th scope="row" class="col-1" style="text-align: center">${status.count}</th>
-					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
+					<td class="col-3" id="title" style="text-align: center" onclick="setScheduleSeq(this);" >${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
 					<td class="col-3" style="text-align: center">${exam.durationInMinute}분</td>
 					<td class="col-2" style="text-align: center">
@@ -95,7 +111,7 @@
 						<c:if test="${exam.schedule.isAfter(currentTime)}">
 							완료
 						</c:if>
-						<input type="hidden" value="${exam.fk_schedule_seq}" />
+						<input type="hidden" name="fk_schedule_seq" value="${exam.fk_schedule_seq}" />
 					</td>
 					
 				</tr>
@@ -110,6 +126,12 @@
 	</tbody>
 </table>
 <div class="pagination justify-content-center">${requestScope.pageBar}</div>
+
+
+<form name="exam_update">
+		<input type="hidden" name="schedule_seq">
+		<input type="hidden" name="course_seq">
+</form>
 
 
 

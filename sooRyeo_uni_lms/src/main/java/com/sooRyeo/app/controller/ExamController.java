@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -234,21 +235,164 @@ public class ExamController {
 	
 	// 시험 수정 뷰단
 	@RequireLogin(type = {Professor.class})
-	@GetMapping(value = "/professor/professor_exam_update.lms")
-	public ModelAndView professor_exam_update(ModelAndView mav, HttpServletRequest request) {
+	@PostMapping(value = "/professor/professor_exam_update.lms")
+	public ModelAndView professor_exam_update(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		
 		String course_seq = request.getParameter("course_seq");
+		String schedule_seq = request.getParameter("schedule_seq");
+		
+		System.out.println("schedule_seq 확인용 =>" + schedule_seq);
+		System.out.println("course_seq 확인용 =>" + course_seq);
 		
 		// 시험 출제 뷰단에 과목명 보여주기
 		String  coures_name = examService.select_coures_name(course_seq);
 		
+		// 출제된 시험 정보 select 해오기
+		Map<String, String> show_exam = examService.show_exam(schedule_seq);
+		
+		String ANSWER_MONGO_ID = show_exam.get("answer_mongo_id");
+
+		List<Answer>  exam_info = examService.getExam_info(ANSWER_MONGO_ID);
+	
+        for (Answer answer : exam_info) {
+        	
+            int getAnswer = answer.getAnswer();  // 각 Answer 객체의 answer를 가져옴
+            int getScore = answer.getScore();    // 각 Answer 객체의 를 가져옴
+            
+        }
+		
+        mav.addObject("schedule_seq", schedule_seq);
+        mav.addObject("course_seq", course_seq);
+        mav.addObject("answer_mongo_id",ANSWER_MONGO_ID);
+		mav.addObject("exam_info", exam_info);
+		mav.addObject("show_exam", show_exam);
 		mav.addObject("coures_name", coures_name);
 		mav.setViewName("exam/professor_exam_update");
 
 		return mav;
+	}
+	
+	
+	
+	
+	// 수정하기 버튼 클릭 시  데이터 update
+	@PostMapping("/exam_update.lms")
+	public ModelAndView exam_update(HttpServletRequest request, ModelAndView mav, MultipartHttpServletRequest mrequest, ExamDTO examdto) throws Exception {
+		
+		
+		MultipartFile attach = examdto.getAttach();
+		
+		// 시험지를 변경한다면
+		if( !attach.isEmpty() ) {
+			
+			String orgFile = request.getParameter("file_name");
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			// System.out.println("확인용 webapp 의 절대경로 => " + root); 
+			// ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\
+								
+			String path = root+"resources"+File.separator+"files";
+			// System.out.println("확인용 path => " + path);
+			// ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\sooRyeo_uni_lms\resources\files
+			
+			
+			if(orgFile != null) {
+				// 파일 변경을 위해 기존에 올려뒀던 파일 지우기
+				fileManager.doFileDelete(orgFile, path);
+			}
+			
+		
+		String newFileName = "";
+		String originalFilename = "";
+		
+			byte[] bytes = null;
+			
+			try {
+				bytes = attach.getBytes();
+				
+				originalFilename = attach.getOriginalFilename();
+				System.out.println("확인용 originalFilename => " + originalFilename); 
+
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				System.out.println("확인용 newFileName " + newFileName);
+
+				examdto.setFile_name(newFileName);
+				examdto.setOriginal_file_name(originalFilename);
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
+
+		// === 첨부파일 업로드 끝  === //
+		
+		
+		// 몽고DB update
+		String[] arr_answer = request.getParameterValues("answer");
+		String[] arr_score = request.getParameterValues("score");
+		String[] arr_questionNumber = request.getParameterValues("questionNumber");
+		String answer_mongo_id = request.getParameter("answer_mongo_id");
+		
+		/*
+		for(int i =0; i<arr_score.length; i++) {
+			  System.out.println(arr_score[i]); 
+		}
+		*/
+		
+		// 오라클 update
+		String test_type = request.getParameter("test_type");
+		String test_start_time = request.getParameter("test_start_time");
+		String test_end_time = request.getParameter("test_end_time");
+		int question_count = request.getParameterValues("answer").length; // total 문제 수
+		String schedule_seq = request.getParameter("schedule_seq");
+		String course_seq = request.getParameter("course_seq");
+		//String test_type = request.getParameter("test_type"); // pdf 파일명
+		
+		
+		System.out.println("schedule_seq 확인 => " + schedule_seq);
+		//System.out.println("test_end_time 확인 => " + test_end_time);
+		
+		
+		List<Answer> answer_list = new ArrayList<>();
+		
+		int total_score = 0;
+		
+		for(int i=0; i<arr_answer.length; i++) {
+			
+				Answer answer =  new ExamAnswer.Answer();
+			
+				answer.setAnswer(Integer.parseInt(arr_answer[i]));
+				answer.setScore(Integer.parseInt(arr_score[i]));    
+				answer.setQuestionNumber(Integer.parseInt(arr_questionNumber[i]));
+				
+				answer_list.add(answer);
+				
+				total_score +=  Integer.parseInt(arr_score[i]);
+			
+		}
+		
+		// 몽고db  update
+		ExamAnswer update_examAnswer = examService.update_examAnswer(answer_list, answer_mongo_id);
+		
+		// 오라클 db update
+		int  n = examService.update_exam_schedule(schedule_seq, test_type, test_start_time, test_end_time, question_count, total_score, examdto);
+		
+		if(n==1) {
+
+			mav.addObject("message", "시험 수정이 완료되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/professor/courseDetail.lms?course_seq="+course_seq);
+			mav.setViewName("msg");
+		
+		}
+		
+		return mav;
+
 	}
 
 
 	
 	
 }
+

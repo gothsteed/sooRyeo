@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -21,19 +22,22 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-
-
 <title>SooRyeo Univ.</title>
-
-
 
 <script type="text/javascript">
 
 
 // 문제 수 증가, 감소
-var index = 1; // 변수 설정은 함수의 바깥에 설정!
+
+
+var index = 0; // 변수 설정은 함수의 바깥에 설정!
 
 $(function() {
+	
+	const last_status = $("input:hidden[name='last_status']").val();
+	console.log("last_status 확인용 : ", last_status);
+	
+	index = Number(last_status);
 	
 	// 시작시간, 종료시간		
 	var html="";
@@ -69,14 +73,40 @@ $(function() {
 	$("select#endMinute").html(html);
 	
 	
-	
-	
 	// 데이터피커
     $(".datepicker").datepicker({
         dateFormat: "yy-mm-dd" // 원하는 날짜 형식 설정
     });
+	
+	
+	const start_date =  "${show_exam.start_date}";
+	const end_date =  "${show_exam.end_date}";
+	const exam_date = start_date.substring(0, 10);
+	
+	const start_time_part = start_date.split(" ")[1]; // "08:00:00"
+	const end_time_part = end_date.split(" ")[1];
+	
+	const start_hours = start_time_part.split(":")[0];
+	const start_minutes = start_time_part.split(":")[1];
+	
+	console.log(start_hours);
+	
+	const end_hours = end_time_part.split(":")[0]; 
+	const end_minutes = end_time_part.split(":")[1]; 
+	
+	
+	$("input:text[name='test_date']").val(exam_date);
+	$("select#startHour").val(start_hours);
+	$("select#startMinutes").val(start_minutes);
+	$("select#endHour").val(end_hours);
+	$("select#endMinutes").val(end_minutes);
+	
+	const original_file_name =  "${show_exam.original_file_name}";
     
+    // $("input:file[name=='attach']").val(original_file_name);
     
+    const previewDiv = document.getElementById('pdfPreview');
+    previewDiv.innerHTML = `<iframe src="<%= ctxPath%>/resources/files/${show_exam.file_name}#toolbar=0&navpanes=0&scrollbar=0" style="width:800px; height:900px;" type="application/pdf"></iframe>`;
 
 
     $("button#addBtn").click(function() {
@@ -100,7 +130,7 @@ $(function() {
     	index--;
     });
     
-    $("button#ok").click(function(){
+    $("button#update").click(function(){
     	
     	set_exam();
     	
@@ -231,15 +261,7 @@ function set_exam() {
         	}
        }// end of else if---------------------------------
            
-       // pdf 파일 유효성 검사
-       var fileInput = document.getElementById("fileInput");
-       var filePath = fileInput.value;
 
-       if (!filePath) {
-           alert("파일을 선택해 주세요.");
-           return;
-       }
-       
        
        // 시험 답안 유효성 검사
        /*
@@ -265,7 +287,7 @@ function set_exam() {
        updateDateTime();
        
        const frm = document.exam;
-       frm.action = "<%=ctxPath%>/exam_write.lms";
+       frm.action = "<%=ctxPath%>/exam_update.lms";
        frm.method = "post";
        frm.submit();
 
@@ -282,7 +304,7 @@ function set_exam() {
       <div class="card" id="card-title-1">
          <div class="card-header border-0 pb-0 " style="display: flex; justify-content: space-between; ">
             <h1 class="card-title" style="color:#6e6e6e;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 수정</h1>
-            <button type="button" id="ok" class="btn btn-secondary" style="width: 150px;">출제하기</button>
+            <button type="button" id="update" class="btn btn-secondary" style="width: 150px;">수정하기</button>
          </div>
          <hr>
          <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
@@ -299,27 +321,31 @@ function set_exam() {
                      <span style="margin-left: 60px;">> 시험일자</span>
                      <span style="margin-left: 100px;">> 시험 시작 시간</span>
                      <span style="margin-left: 142px;">> 시험 종료 시간</span>
-                     <span style="margin-left: 150px;">> 시험지 등록</span>
+                     <span style="margin-left: 150px;">> 시험지 변경</span>
                   </div>
-                  <div class="con-wrap" style="display: flex;">
-                  
-                  	 <input type="hidden" value="${requestScope.course_seq}" name="course_seq" id ="course_seq" />
-					 <input type="text" id="test_type" name="test_type" class="form-control" style="width: 120px; margin-left: 46px;" />	
-                     
-                     <input type="text" class="datepicker  form-control" id="test-date" name="test_date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
-                     <select class="form-control" id="startHour" name="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
-					 <select class="form-control" id="startMinute" name="startMinute" class="form-select" style="width: 100px;"></select>&nbsp;분
-					 <select class="form-control" id="endHour" name="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
-					 <select class="form-control" id="endMinute" name="endMinute" class="schedule" style="width: 100px;"></select>&nbsp;분
-					 
-					 <input type="hidden" id="test_start_time" name="test_start_time" />
-					 <input type="hidden" id="test_end_time" name="test_end_time" />
-					 
-					 
-                     <input type="file" class="form-control" id="fileInput" name="attach" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
+                  	
+		                  <div class="con-wrap" style="display: flex;">
+		                  
+		                  	 <input type="hidden" value="${requestScope.answer_mongo_id}" name="answer_mongo_id" id ="answer_mongo_id" />
+		                  	 <input type="hidden" value="${requestScope.schedule_seq}" name="schedule_seq" id ="schedule_seq" />
+		                  	 <input type="hidden" value="${requestScope.course_seq}" name="course_seq" id ="course_seq" />
+							 <input type="text" id="test_type" name="test_type" class="form-control" style="width: 120px; margin-left: 46px;"  value="${show_exam.title}"/>	
+		                     
+		                     <input type="text" class="datepicker  form-control" id="test-date" name="test_date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
+		                     <select class="form-control" id="startHour" name="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
+							 <select class="form-control" id="startMinute" name="startMinute" class="form-select" style="width: 100px;"></select>&nbsp;분
+							 <select class="form-control" id="endHour" name="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
+							 <select class="form-control" id="endMinute" name="endMinute" class="schedule" style="width: 100px;"></select>&nbsp;분
+							 
+							 <input type="hidden" id="test_start_time" name="test_start_time" />
+							 <input type="hidden" id="test_end_time" name="test_end_time" />
+							 
+							 
+		                     <input type="file" class="form-control" id="fileInput" name="attach" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
+							 <input type="text" value="${show_exam.file_name}" name="file_name"/>
+		                  </div>
 
-					
-                  </div>
+                  
                </div>
                
                
@@ -337,15 +363,25 @@ function set_exam() {
 
 							<div id="boxWrap">
 							
+							<c:forEach var="exam_info"  items="${exam_info}" varStatus="status">
+							
 	                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
 	                                <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
-	                                <span style="width: 70px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer">
-	                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" placeholder="숫자만 입력">
+	                                <span style="width: 70px; text-align:center;">${status.count}번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer" value="${exam_info.answer}">
+	                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" value="${exam_info.score}" placeholder="숫자만 입력">
 	                             </div>
-
+	                             
+                                 <c:if test="${status.last}">
+							        <!--  <span>마지막 항목입니다: ${status.count}</span> -->
+							        <input type="hidden" name = "last_status" value="${status.count}">
+							    </c:if>
+							    
+							</c:forEach>
+							
 							</div>
 
                      </div>
+                     
                   </div>
                </div>
             </form>
@@ -353,3 +389,5 @@ function set_exam() {
       </div>
    </div>
 </div>
+
+
