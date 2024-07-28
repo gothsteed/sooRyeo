@@ -21,6 +21,7 @@ import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.domain.Time;
 import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.dto.AssignScheInsertDTO;
@@ -358,6 +359,73 @@ public class ProfessorDao_imple implements ProfessorDao {
 		}
         
 		return new ProfessorTimeTable(prof_id, courseListJson);
+	}
+
+
+	@Override
+	public Map<String, Object> score_checkJSON(int student_id, int fk_course_seq) {
+		
+		Map<String, Object> ScoreMap = new HashMap<>(); 
+		
+		Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("student_id", student_id);
+        paraMap.put("fk_course_seq", fk_course_seq);
+        
+        int assignmentTotal = sqlSession.selectOne("professor.assignmentTotal", paraMap); // 과제 총점
+        
+        int assignmentCount = sqlSession.selectOne("professor.assignmentCount", fk_course_seq); // 과제 갯수
+        
+        int regi_course_seq = sqlSession.selectOne("professor.regi_course_seq", paraMap);
+        
+        paraMap.put("regi_course_seq", regi_course_seq);
+        
+        double mark = sqlSession.selectOne("professor.mark", paraMap);
+        
+        System.out.println("확인용 assignmentTotal : " + assignmentTotal);
+        System.out.println("확인용 assignmentCount : " + assignmentCount);
+        System.out.println("확인용 regi_course_seq : " + regi_course_seq);
+        
+        
+        double assignmentScore = ((double)assignmentTotal/assignmentCount);
+        
+        // System.out.println("확인용 assignmentScore : " + assignmentScore);
+		
+        ScoreMap.put("assignmentScore", assignmentScore);
+        ScoreMap.put("regi_course_seq", regi_course_seq);
+        ScoreMap.put("mark", mark);
+        
+		return ScoreMap;
+	}
+
+
+	@Override
+	public int insertGradeEnd(Map<String, Object> paraMap) {
+		
+		int n = 0;
+		
+		try {
+			n = sqlSession.insert("professor.insertGradeEnd", paraMap);
+		} catch (Exception e) {
+			
+		}		
+
+		return n;
+		
+	}
+
+
+	@Override
+	public int editGradeEnd(Map<String, Object> paraMap) {
+		
+		int n = 0;
+		
+		try {
+			n = sqlSession.update("professor.editGradeEnd", paraMap);
+		} catch (Exception e) {
+			
+		}		
+
+		return n;
 	}
 
 

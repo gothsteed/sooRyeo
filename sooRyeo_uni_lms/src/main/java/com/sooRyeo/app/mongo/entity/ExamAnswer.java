@@ -11,8 +11,17 @@ public class ExamAnswer {
     @Id
     private String id;
     private List<Answer> answers;
+    private List<Answer> score;
 
-    // Getters and setters
+    public List<Answer> getScore() {
+		return score;
+	}
+
+	public void setScore(List<Answer> score) {
+		this.score = score;
+	}
+
+	// Getters and setters
     public String getId() {
         return id;
     }
@@ -29,8 +38,12 @@ public class ExamAnswer {
         this.answers = answers;
     }
 
+    public int getQuestionAnswer(int questionNumber) {
+        return  answers.get(questionNumber - 1).getAnswer();
+    }
+
     // Inner class for Answer
-    public static class Answer {
+/*    public static class Answer {
         @Id
         private String questionId;
         private int questionNumber;
@@ -69,5 +82,5 @@ public class ExamAnswer {
         public void setScore(int score) {
             this.score = score;
         }
-    }
+    }*/
 }

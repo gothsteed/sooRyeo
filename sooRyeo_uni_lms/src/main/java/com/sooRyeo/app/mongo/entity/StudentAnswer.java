@@ -22,8 +22,12 @@ public class StudentAnswer {
     private int wrongSCount;
 
 
+    public int getQuestionAnswer(int questionNumber) {
+        return answers.get(questionNumber-1).getAnswer();
+    }
 
-    public static class Answer {
+
+ /*   public static class Answer {
         @Id
         private ObjectId questionId;
         private int questionNumber;
@@ -63,6 +67,6 @@ public class StudentAnswer {
         public void setScore(int score) {
             this.score = score;
         }
-    }
+    }*/
 
 }
