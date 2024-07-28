@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -56,21 +57,8 @@ public class ExamController {
 		}
 		
 		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq);
-		
-		/*
-		if(n == 1) {
-			mav.addObject("message", "회원 등록을 성공하였습니다.");
-			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
-			mav.setViewName("msg");
-		}
-		else {
-			mav.addObject("message", "회원 등록을 실패하였습니다.");
-			mav.addObject("loc", request.getContextPath()+"/admin/MemberRegister.lms");
-			mav.setViewName("msg");
-		}
-		*/
+
 		return mav;
-		
 	}
 
 
@@ -126,8 +114,6 @@ public class ExamController {
 
 		return examService.getWaitExamPage(mav, request, response, schedule_seq);
 	}
-
-
 	
 	
 }
