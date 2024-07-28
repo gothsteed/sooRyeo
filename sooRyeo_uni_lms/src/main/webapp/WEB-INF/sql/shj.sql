@@ -641,3 +641,39 @@ WHERE
 
 
 
+-- 수업 성적 확인하기
+-- 03월 1학기 07월 2학기
+SELECT A.score as 점수,
+       A.mark as 학점,
+       CASE 
+           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 3 AND 6 THEN 
+               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 1학기'
+           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 7 AND 12 THEN 
+               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 2학기'
+           ELSE '기타' -- 만약 다른 달이 포함된다면
+       END as 수강년도학기,
+       D.name as 수업명
+FROM tbl_grade A
+JOIN tbl_registered_course B ON A.fk_registered_course_seq = B.registered_course_seq
+JOIN tbl_course C ON B.fk_course_seq = C.course_seq
+JOIN tbl_curriculum D ON C.fk_curriculum_seq = D.curriculum_seq
+WHERE B.fk_student_id = '202400005'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

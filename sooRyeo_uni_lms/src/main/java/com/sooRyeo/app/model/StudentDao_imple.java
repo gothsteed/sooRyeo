@@ -423,6 +423,33 @@ public class StudentDao_imple implements StudentDao {
 		
 	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
 
+	
+	
+	// 학생 - 성적 취득현황
+	@Override
+	public List<Map<String, Object>> Acquisition_status(int student_id) {
+		
+		List<Map<String, Object>> Acquisition_status = sqlSession.selectList("student.Acquisition_status", student_id);
+		
+		return Acquisition_status;
+		
+	} // end of public List<Map<String, Object>> Acquisition_status
+
+	
+	// 학생 - 성적 취득현황JSON
+	@Override
+	public List<Map<String, Object>> Acquisition_status_JSON(String semester, int student_id) {
+		
+		Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("semester_date", semester);
+        paraMap.put("student_id", student_id);		
+		
+        List<Map<String, Object>> Acquisition_status_JSON = sqlSession.selectList("student.Acquisition_status_JSON", paraMap);
+        
+		return Acquisition_status_JSON;
+		
+	} // end of public List<Map<String, Object>> Acquisition_status_JSON
+
 
 
 

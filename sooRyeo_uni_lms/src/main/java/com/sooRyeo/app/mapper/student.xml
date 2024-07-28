@@ -526,12 +526,58 @@
 
 	
 	
+	<!-- 학생 - 성적 취득현황 -->
+	<resultMap type="HashMap" id="Acquisition_statusMap">
+		<result property="score"			column="score"				javaType="String" />
+		<result property="mark"				column="mark"				javaType="String" />
+		<result property="semester_date"	column="semester_date"		javaType="String" />
+		<result property="name"				column="name"				javaType="String" />
+	</resultMap>
+	<select id="Acquisition_status" parameterType="int" resultMap="Acquisition_statusMap">
+		SELECT A.score as score,
+	       A.mark as mark,
+	       CASE 
+	           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 3 AND 6 THEN 
+	               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 1학기'
+	           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 7 AND 12 THEN 
+	               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 2학기'
+	           ELSE '기타'
+	       END as semester_date,
+	       D.name as name
+		FROM tbl_grade A
+		JOIN tbl_registered_course B ON A.fk_registered_course_seq = B.registered_course_seq
+		JOIN tbl_course C ON B.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum D ON C.fk_curriculum_seq = D.curriculum_seq
+		WHERE B.fk_student_id = #{student_id}
+	</select>
 	
 	
 	
 	
-	
-	
+	<!-- 학생 - 성적 취득현황JSON -->
+	<resultMap type="HashMap" id="Acquisition_statusJSON">
+		<result property="score"			column="score"				javaType="String" />
+		<result property="mark"				column="mark"				javaType="String" />
+		<result property="semester_date"	column="semester_date"		javaType="String" />
+		<result property="name"				column="name"				javaType="String" />
+	</resultMap>
+	<select id="Acquisition_status_JSON" parameterType="HashMap" resultMap="Acquisition_statusJSON">
+		SELECT A.score as score,
+	       A.mark as mark,
+	       CASE 
+	           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 3 AND 6 THEN 
+	               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 1학기'
+	           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 7 AND 12 THEN 
+	               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 2학기'
+	           ELSE '기타'
+	       END as semester_date,
+	       D.name as name
+		FROM tbl_grade A
+		JOIN tbl_registered_course B ON A.fk_registered_course_seq = B.registered_course_seq
+		JOIN tbl_course C ON B.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum D ON C.fk_curriculum_seq = D.curriculum_seq
+		WHERE B.fk_student_id = #{student_id} and to_char(C.semester_date, 'yyyy-MM') = #{semester_date}
+	</select>
 	
 	
 	

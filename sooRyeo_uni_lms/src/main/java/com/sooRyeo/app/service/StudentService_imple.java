@@ -813,6 +813,30 @@ public class StudentService_imple implements StudentService {
 	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
 
 
+
+	// 학생 - 성적 취득현황
+	@Override
+	public List<Map<String, Object>> Acquisition_status(int student_id) {
+		
+		List<Map<String, Object>> Acquisition_status = dao.Acquisition_status(student_id);
+		
+		return Acquisition_status;
+		
+	} // end of public List<Map<String, Object>> Acquisition_status
+
+
+
+	// 학생 - 성적 취득현황JSON
+	@Override
+	public List<Map<String, Object>> Acquisition_status_JSON(String semester, int student_id) {
+		
+		List<Map<String, Object>> Acquisition_status_JSON = dao.Acquisition_status_JSON(semester, student_id);
+		
+		return Acquisition_status_JSON;
+		
+	} // end of public List<Map<String, Object>> Acquisition_status_JSON
+
+
 	
 
 	

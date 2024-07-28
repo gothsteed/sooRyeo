@@ -867,13 +867,6 @@ public class StudentController {
 	
 	
 	
-	
-
-
-	
-	
-
-	
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
 	@ResponseBody
 	@GetMapping(value="/student/myAttendance_byCategoryJSON.lms", produces="text/plain;charset=UTF-8")
@@ -902,6 +895,65 @@ public class StudentController {
 		
 	} // end of public String myAttendance_byCategoryJSON
 
+	
+	
+	
+	// 학생 - 성적 취득현황
+	@GetMapping(value = "/student/Acquisition_status.lms", produces="text/plain;charset=UTF-8")
+	public String Acquisition_status(HttpServletRequest request) {
+
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		List<Map<String, Object>> Acquisition_status = service.Acquisition_status(student_id);
+		
+		request.setAttribute("Acquisition_status", Acquisition_status);
+		
+		return "Acquisition_status";
+		
+	} // end of public String Acquisition_status
+	
+	
+	
+	// 학생 - 성적 취득현황 JSON
+	@ResponseBody
+	@PostMapping("/student/Acquisition_status_JSON.lms")
+	public String Acquisition_status_JSON(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		String semester = request.getParameter("semester");
+		
+		System.out.println("확인용 semester : " + semester);
+		// 확인용 semester : 2024-07
+		
+		List<Map<String, Object>> Acquisition_status_JSON = service.Acquisition_status_JSON(semester, student_id);
+		
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Map<String, Object> map : Acquisition_status_JSON) {
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("name", map.get("name"));
+			jsonObj.put("semester_date", map.get("semester_date"));
+			jsonObj.put("score", map.get("score"));
+			jsonObj.put("mark", map.get("mark"));
+			
+			jsonArr.put(jsonObj);
+			
+		} // end of for
+		
+		System.out.println(jsonArr.toString());
+		// [{"score":"100","name":"국어학개론","semester_date":"2024년 2학기","mark":"3.5"}] 여기까지함
+		
+		return jsonArr.toString();
+		
+	} // end of public String Acquisition_status_JSON
+	
 	
 	
 	
