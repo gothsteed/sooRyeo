@@ -1067,4 +1067,45 @@ public class StudentController {
 		return scheduleService.getStudentConsultPage(request, mav);
 	}
 
+	
+	
+	@GetMapping("/student/cer_attending.lms")
+	public String cer_attending(HttpServletRequest request) {
+		
+		return "cer_attending";
+		
+	} // end of public String cer_attending
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

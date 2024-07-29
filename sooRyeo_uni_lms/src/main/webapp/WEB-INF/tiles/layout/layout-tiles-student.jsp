@@ -224,8 +224,8 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="groupsMenu">
                     <a class="dropdown-item" href="<%=ctxPath %>/student/chatting.lms">채팅</a>
-                    <a class="dropdown-item" href="#">내 친구</a>
-                    <a class="dropdown-item" href="#">커뮤니티</a>
+<!--                     <a class="dropdown-item" href="#">내 친구</a>
+                    <a class="dropdown-item" href="#">커뮤니티</a> -->
                     <a class="dropdown-item" href="<%=ctxPath %>/board/announcement.lms">학사공지사항</a>
                 </div>
             </li>
@@ -236,7 +236,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="certificatesDropdown">
                     <a class="dropdown-item" href="#certificate1">성적증명서</a>
-                    <a class="dropdown-item" href="#certificate2">재학증명서</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/student/cer_attending.lms">재학증명서</a>
                     <a class="dropdown-item" href="#certificate3">졸업증명서</a>
                 </div>
             </li>
