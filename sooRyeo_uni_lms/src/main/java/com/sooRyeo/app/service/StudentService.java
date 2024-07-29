@@ -10,8 +10,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Announcement;
-import com.sooRyeo.app.domain.AssignmentSubmit;
-import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
@@ -19,7 +17,6 @@ import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
-import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
 public interface StudentService {
@@ -101,10 +98,5 @@ public interface StudentService {
 	void employeeList_to_Excel(String name, Model model, HttpServletRequest request);
 
 
-
-	
-
-	
-	
-	
+    ModelAndView getCourseLecturePage(HttpServletRequest request, ModelAndView mav, String fkCourseSeq);
 }
