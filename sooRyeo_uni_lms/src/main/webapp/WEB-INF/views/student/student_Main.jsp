@@ -150,6 +150,9 @@ $(document).ready(function(){
         func_choice("myAttendance_byCategory");
     });
     
+    fetchTimeTable();
+    
+    
 }); // end of $(document).ready
 
 

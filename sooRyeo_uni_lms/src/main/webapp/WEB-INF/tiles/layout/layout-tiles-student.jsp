@@ -230,15 +230,15 @@
                 </div>
             </li>
             <li class="nav-item"><a href="<%=ctxPath%>/student/myInfo.lms" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="certificatesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="nav-item">
+                <a class="nav-link" href="<%=ctxPath%>/student/certificate/menu.lms" id="certificatesDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     <span class="icon">📜</span>증명서
                 </a>
-                <div class="dropdown-menu" aria-labelledby="certificatesDropdown">
+<%--                <div class="dropdown-menu" aria-labelledby="certificatesDropdown">
                     <a class="dropdown-item" href="#certificate1">성적증명서</a>
                     <a class="dropdown-item" href="#certificate2">재학증명서</a>
                     <a class="dropdown-item" href="#certificate3">졸업증명서</a>
-                </div>
+                </div>--%>
             </li>
             <li class="nav-item"><a href="<%=ctxPath%>/logout.lms" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
         </ul>

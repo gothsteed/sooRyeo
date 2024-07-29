@@ -50,9 +50,9 @@
 				      			<td style="text-align: center; vertical-align: middle;">\${json.name}</td> 
 				      			<td style="text-align: center; vertical-align: middle;">\${json.student_id}</td> 
 				      			<td style="text-align: center; vertical-align: middle;">\${json.assignmentScore}</td>
-				      			<td style="text-align: center; vertical-align: middle;"></td>
-					            <td style="text-align: center; vertical-align: middle;"></td>
-					            <td style="text-align: center; vertical-align: middle;"></td>`
+				      			<td style="text-align: center; vertical-align: middle;">\${json.totalExamScore}</td>
+					            <td style="text-align: center; vertical-align: middle;">\${json.attendanceRate}</td>
+					            <td style="text-align: center; vertical-align: middle;">\${json.totalScore}</td>`
 					
 					if (json.mark == null) {
 				        v_html += `<td style='text-align: center; vertical-align: middle;' id='mark'>

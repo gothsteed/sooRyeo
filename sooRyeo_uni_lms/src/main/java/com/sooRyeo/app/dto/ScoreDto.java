@@ -15,7 +15,7 @@ public class ScoreDto {
     private int score;
 
     private List<Integer> testAnswers;
-    private List<Integer> studentAnswers;
+    private List<String> studentAnswers;
 
 
 

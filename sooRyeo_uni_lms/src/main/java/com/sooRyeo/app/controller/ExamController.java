@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sooRyeo.app.dto.ExamDTO;
+import com.sooRyeo.app.mongo.entity.Answer;
+import com.sooRyeo.app.mongo.entity.ExamAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -168,10 +171,13 @@ public class ExamController {
 		
 		int course_seq = getCourse_seq.getFk_course_seq();
 		
-		List<Integer> inputAnswers = new ArrayList<>();
+		List<String> inputAnswers = new ArrayList<>();
 		
 		for(int i=1; i<selCount+1; i++) {
-			Integer selectAnswer = Integer.parseInt(request.getParameter(String.valueOf(i)));
+			
+			String input = request.getParameter(String.valueOf(i));
+			
+			String selectAnswer = input;
 			
 			if (selectAnswer != null) {
 				inputAnswers.add(selectAnswer);
@@ -220,11 +226,17 @@ public class ExamController {
 	@RequireLogin(type = {Student.class})
 	@GetMapping("/student/exam/result.lms")
 	public ModelAndView getStudentExamResult(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
-		//todo : error handler 추가하기
 		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
 		mav.addObject("schedule_seq", schedule_seq);
 		mav.setViewName("exam/examResult");
 		return mav;
+	}
+
+
+	@RequireLogin(type = {Student.class})
+	@GetMapping("/student/exam/resultREST.lms")
+	public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		return examService.getStudentExamResultData(mav, request, response);
 	}
 	
 	
