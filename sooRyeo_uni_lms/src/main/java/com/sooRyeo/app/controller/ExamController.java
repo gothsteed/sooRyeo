@@ -28,8 +28,8 @@ import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.ExamDTO;
+import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 import com.sooRyeo.app.service.ExamService;
 
 
@@ -116,7 +116,7 @@ public class ExamController {
 		
 		for(int i=0; i<arr_answer.length; i++) {
 			
-				Answer answer =  new ExamAnswer.Answer();
+				Answer answer =  new Answer();
 			
 				answer.setAnswer(Integer.parseInt(arr_answer[i]));
 				answer.setScore(Integer.parseInt(arr_score[i]));    
@@ -319,6 +319,8 @@ public class ExamController {
 		
 		MultipartFile attach = examdto.getAttach();
 		
+		System.out.println("attach 확인 =>" + attach);
+		
 		// 시험지를 변경한다면
 		if( !attach.isEmpty() ) {
 			
@@ -387,18 +389,13 @@ public class ExamController {
 		String course_seq = request.getParameter("course_seq");
 		//String test_type = request.getParameter("test_type"); // pdf 파일명
 		
-		
-		System.out.println("schedule_seq 확인 => " + schedule_seq);
-		//System.out.println("test_end_time 확인 => " + test_end_time);
-		
-		
 		List<Answer> answer_list = new ArrayList<>();
 		
 		int total_score = 0;
 		
 		for(int i=0; i<arr_answer.length; i++) {
 			
-				Answer answer =  new ExamAnswer.Answer();
+				Answer answer =  new Answer();
 			
 				answer.setAnswer(Integer.parseInt(arr_answer[i]));
 				answer.setScore(Integer.parseInt(arr_score[i]));    

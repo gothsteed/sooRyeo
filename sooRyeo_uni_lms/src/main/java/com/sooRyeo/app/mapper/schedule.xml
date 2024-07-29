@@ -628,7 +628,7 @@ where rno between #{startRno} and #{endRno}
 	<!--  시험 수정시 오라클 db update(파일변경 없는 경우) -->
 	<update id="update_exam_nofile" parameterType="HashMap">
 			update tbl_exam set  total_score = #{total_score},
-											question_count = #{question_count}
+								 question_count = #{question_count}
 		    where fk_schedule_seq = #{schedule_seq}
 	</update>
 	

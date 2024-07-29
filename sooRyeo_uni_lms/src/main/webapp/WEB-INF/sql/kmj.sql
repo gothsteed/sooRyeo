@@ -583,4 +583,12 @@ from tbl_course;
 select S.schedule_seq, S.TITLE, s.START_DATE, s.END_DATE, E.FILE_NAME, E.ORIGINAL_FILE_NAME, E.ANSWER_MONGO_ID
 from tbl_schedule S join tbl_exam E
 on S.schedule_seq = E.Fk_schedule_seq
-where schedule_seq  = '102';
+where schedule_seq  = '103';
+
+
+select *
+from tbl_assignment
+
+select to_date(start_date , 'yyyy-mm-dd hh24:mi:ss')
+from tbl_schedule
+where schedule_seq = '5'

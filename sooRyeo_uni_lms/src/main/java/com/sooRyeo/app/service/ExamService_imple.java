@@ -6,7 +6,6 @@ import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.dto.ExamDTO;
 import com.sooRyeo.app.model.ScheduleDao;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 import com.sooRyeo.app.mongo.entity.LoginLog;
 import com.sooRyeo.app.mongo.entity.MemberType;
 import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
@@ -33,6 +32,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -319,9 +319,9 @@ public class ExamService_imple implements ExamService {
 	@Override
 	public int update_exam_schedule(String schedule_seq, String test_type, String test_start_time, String test_end_time, int question_count, int total_score, ExamDTO examdto) {
 		
-		System.out.println("서비스에서 schedule_seq 확인 => " + schedule_seq);
+		MultipartFile attach = examdto.getAttach();
 		
-		if(examdto.getFile_name() != null) {
+		if(!attach.isEmpty()) {
 			// 시험지 변경한 경우 
 		
 			int n = scheduleDao.update_exam_schedule_file(schedule_seq, test_type, test_start_time, test_end_time, question_count, total_score, examdto);
@@ -336,7 +336,7 @@ public class ExamService_imple implements ExamService {
 			
 		}
 		
-		
+	}
 		
 	@Override
 	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request) throws NumberFormatException , NullPointerException {
@@ -349,8 +349,6 @@ public class ExamService_imple implements ExamService {
         HttpSession session = request.getSession();
         Student student = (Student) session.getAttribute("loginuser");
 	    
-        System.out.println("getAnswer_mongo_id " + examView.getAnswer_mongo_id()); 
-        
 	    List<Answer> answers = null;
 	    
 	    int correctCount = 0;
@@ -414,7 +412,6 @@ public class ExamService_imple implements ExamService {
 
 		
 	}
-
 
 
 }

@@ -1,5 +1,6 @@
 package com.sooRyeo.app.mongo.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,14 +14,14 @@ public class ExamAnswer {
     private List<Answer> score;
 
     public List<Answer> getScore() {
-		return score;
-	}
+      return score;
+   }
 
-	public void setScore(List<Answer> score) {
-		this.score = score;
-	}
+   public void setScore(List<Answer> score) {
+      this.score = score;
+   }
 
-	// Getters and setters
+   // Getters and setters
     public String getId() {
         return id;
     }

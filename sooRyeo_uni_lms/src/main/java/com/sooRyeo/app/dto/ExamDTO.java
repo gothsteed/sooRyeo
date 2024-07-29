@@ -89,22 +89,3 @@ public class ExamDTO {
     
 }
 
-import java.util.List;
-
-import com.sooRyeo.app.domain.Exam;
-
-import com.sooRyeo.app.mongo.entity.Answer;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class ExamDTO {
-
-	private Exam exam;
-	private List<Answer> answers;
-	private String answer_mongo_id;
-
-	
-	
-}

@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.dto.ExamDTO;
+import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 
 import java.util.List;
 import java.util.Map;
@@ -31,8 +31,6 @@ public interface ExamService {
 
     ModelAndView getExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
 
-    // 시험을 select 하는 메소드
-	Exam getExam();
     
 	ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
 
@@ -57,8 +55,6 @@ public interface ExamService {
 
     // ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
     Exam getExam(String schedule_seq);
-    
-    ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
 
     ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
 

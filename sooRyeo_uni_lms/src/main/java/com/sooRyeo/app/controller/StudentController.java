@@ -680,7 +680,7 @@ public class StudentController {
 		
 		String lecture_seq = request.getParameter("lecture_seq");
 		
-		Map<String, String> classOne = service.classPlay_One(lecture_seq);
+		Map<String, String> classOne = studentservice.classPlay_One(lecture_seq);
 		
 		mav.addObject("classOne", classOne);
 		
@@ -908,32 +908,32 @@ public class StudentController {
 		int userid = loginuser.getStudent_id();
 		
 		// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
-		String fk_lecture_seq = service.select_tbl_attendance(lecture_seq, userid);
+		String fk_lecture_seq = studentservice.select_tbl_attendance(lecture_seq, userid);
 
 		JSONObject jsonobj = new JSONObject();
 		
 		if(fk_lecture_seq == null) { // 처음 동영상을 재생한 경우
 			
-			int n = service.insert_tbl_attendance(play_time, lecture_seq, userid);
+			int n = studentservice.insert_tbl_attendance(play_time, lecture_seq, userid);
 			jsonobj.put("n", n);
 		}
 		else { // 동영상 재생 이력이 있을경우 
 			
 			// play_time 컬럼과 lecture_time 컬럼을 비교
-			int i = service.select_play_time_lecture_time(play_time, lecture_seq, userid);
+			int i = studentservice.select_play_time_lecture_time(play_time, lecture_seq, userid);
 			
 			System.out.println("확인용 입니다 => " + i);
 			
 			if(i > 0) { // 아직 출석인정 시간이 되지 않은 경우
 				
-				int n1 = service.update_tbl_attendance(play_time, lecture_seq, userid);
+				int n1 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
 				jsonobj.put("n1", n1);
 			}
 			
 			else { // 동영상재생페이지에 머무른 시간 - 동영상 시간  <= 0, 즉  출석을 완료한 경우
 				
-				int n1 = service.update_tbl_attendance(play_time, lecture_seq, userid);
-				int n2 = service.update_tbl_attendance_isAttended(lecture_seq, userid);
+				int n1 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
+				int n2 = studentservice.update_tbl_attendance_isAttended(lecture_seq, userid);
 				
 				int n3 = n1*n2;
 				jsonobj.put("n3", n3);

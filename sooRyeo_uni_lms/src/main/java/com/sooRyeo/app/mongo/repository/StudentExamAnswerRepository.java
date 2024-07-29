@@ -1,6 +1,6 @@
 package com.sooRyeo.app.mongo.repository;
 
-import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
+import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
