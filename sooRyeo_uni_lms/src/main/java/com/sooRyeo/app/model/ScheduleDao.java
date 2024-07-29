@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Exam;
-import com.sooRyeo.app.domain.Schedule;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ExamDTO;
 import org.springframework.http.ResponseEntity;
@@ -63,10 +62,10 @@ public interface ScheduleDao {
 	// 시험 출제 시 스케줄 테이블 insert
 	int insert_tbl_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score, ExamDTO examdto);
 
-	Exam getExam();
-
 	// 시험테이블 select
 	List<Map<String, String>> showExam(int userid);
+	
+	Exam getExam(int schedule_seq);
 	
     List<Exam> getExamList(int currentPage, int sizePerPage, int courseSeq);
 

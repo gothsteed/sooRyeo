@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
@@ -153,16 +155,51 @@ public class ExamController {
 
 
 	@RequireLogin(type = {Student.class})
-	@GetMapping("/exam/test.lms")
-	public ModelAndView test(ModelAndView mav, HttpServletRequest request) {
+	@PostMapping("/student/exam/test.lms")
+	public ModelAndView test(ModelAndView mav, HttpServletRequest request) throws NumberFormatException , NullPointerException {
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq"));
+
+		return examService.takeExam(mav, request, schedule_seq);
+	}
+	
+	@RequireLogin(type = {Student.class})
+	@PostMapping("/exam/SelectAnswer.lms")
+	public ModelAndView selectAnswer(ModelAndView mav, HttpServletRequest request) {
 		
-		Exam examView = examService.getExam();
+		String schedule_seq = request.getParameter("schedule_seq");
 		
-		mav.addObject("examView", examView);
-		mav.setViewName("test");
+		int selCount = Integer.parseInt(request.getParameter("selCount"));
 		
+		// String course_seq = request.getParameter("course_seq");
+		
+		List<String> inputAnswers = new ArrayList<>();
+		
+		for(int i=1; i<selCount+1; i++) {
+			String selectAnswer = request.getParameter(String.valueOf(i));
+			
+			if (selectAnswer != null) {
+				inputAnswers.add(selectAnswer);
+	        }
+		}
+		
+		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq ,request);
+		
+		mav.addObject("message", "답안지 제출이 완료되었습니다.");
+		// mav.addObject("loc", request.getContextPath()+"/exam.lms?course_seq="+course_seq); // 여기서 course_seq를 어떻게 보내야할지 고민중. post 방시인디
+		mav.setViewName("msg");
+		/*
+		if(n == 1) {
+			mav.addObject("message", "회원 등록을 성공하였습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
+			mav.setViewName("msg");
+		}
+		else {
+			mav.addObject("message", "회원 등록을 실패하였습니다.");
+			mav.addObject("loc", request.getContextPath()+"/admin/MemberRegister.lms");
+			mav.setViewName("msg");
+		}
+		*/
 		return mav;
-		
 	}
 
 
@@ -182,7 +219,7 @@ public class ExamController {
 		return mav;
 	}
 
-	@RequireLogin(type = {Professor.class})
+	@RequireLogin(type = {Professor.class, Student.class})
 	@GetMapping("/professor/exam/resultREST.lms")
 	public ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		return examService.getExamResultData(mav, request, response);
@@ -391,7 +428,13 @@ public class ExamController {
 
 	}
 
+	@RequireLogin(type = {Student.class})
+	@GetMapping("/student/exam/wait.lms")
+	public ModelAndView waitExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq"));
 
+		return examService.getWaitExamPage(mav, request, response, schedule_seq);
+	}
 	
 	
 }

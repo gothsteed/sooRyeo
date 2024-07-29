@@ -12,6 +12,8 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Exam;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -54,4 +56,16 @@ public interface ExamService {
 	// 시험 수정 시 오라클db update
 
     // ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+    Exam getExam(String schedule_seq);
+    
+    ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+
+    ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response);
+
+    ModelAndView getWaitExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response, int scheduleSeq);
+    // 제출한 답을 채점해서 몽고DB에 insert 해주는 메소드
+
+    ModelAndView takeExam(ModelAndView mav, HttpServletRequest request, int schedule_seq);
+
+    void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request);
 }

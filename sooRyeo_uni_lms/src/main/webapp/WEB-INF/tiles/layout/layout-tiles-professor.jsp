@@ -231,7 +231,7 @@
             <li class="nav-item">
                 <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
                 <div class="dropdown-menu" aria-labelledby="gradesMenu" >
-                    <a class="dropdown-item" href="#">성적 기입</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/professor/insertGradeform.lms">성적 기입</a>
                     <a class="dropdown-item" href="#">취득 현황</a>
                 </div>
             </li>

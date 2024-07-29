@@ -844,10 +844,198 @@ public class ProfessorController {
 	}
 	
 	
+	@GetMapping("/professor/insertGradeform.lms")
+	public ModelAndView professor_insertGrade(HttpServletRequest request, ModelAndView mav, Professor professor) {// 교수 점수 입력용 페이지
+		
+		HttpSession session = request.getSession();
+		Professor loginuser = (Professor)session.getAttribute("loginuser");
+		
+		int prof_id = loginuser.getProf_id();
+		
+		ProfessorTimeTable timeTable = professorService.courseList(prof_id);
+		List<Course> courseList = timeTable.getCourseList();		
 
+		if(courseList == null) {// 정보가 없다면
+			  mav.addObject("message", "담당한 강의가 없습니다.");
+	    	  mav.addObject("loc", request.getContextPath()+"/professor/dashboard.lms");
+	    	  mav.setViewName("msg");
+			return mav;
+		}
+		
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		mav.addObject("goBackURL", goBackURL);
+		mav.addObject("courseList", courseList);
+		mav.addObject("loginuser", loginuser);
+		mav.setViewName("professor_insertGradeform");
+		
+		return mav;
+	}
+	
+	@GetMapping("/professor/insertGradeList.lms")
+	public ModelAndView professor_insertGradeList(HttpServletRequest request, ModelAndView mav) {// 교수 점수 입력용 페이지 상세
+		
+		String fk_course_seq = request.getParameter("course_seq");
+		
+		// System.out.println("확인용 fk_course_seq : " + fk_course_seq);	
+		
+		// List<Map<String, String>> studentList = service.studentList(fk_course_seq);
+		
+		int currentPage = 0;
+		try {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} catch (Exception e) {
+			currentPage = 1;
+		}
+		
+		Pager<Map<String, String>> studentList = professorService.studentList(fk_course_seq, currentPage);
+
+		mav.addObject("fk_course_seq", fk_course_seq);
+		
+		mav.addObject("studentList", studentList.getObjectList());
+		mav.addObject("currentPage", studentList.getPageNumber());
+		mav.addObject("perPageSize", studentList.getPerPageSize());
+		mav.addObject("pageBar", studentList.makePageBar(request.getContextPath() + "/professor/insertGradeList.lms", "course_seq="+fk_course_seq));
+
+		mav.setViewName("professor_insertGradeList");
+		
+		return mav;
+	}
+	
+	@GetMapping("/professor/insertGradeDetail.lms")
+	public ModelAndView professor_insertGradeDetail(HttpServletRequest request, ModelAndView mav) {// 학생 점수 뷰단
+		
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		int student_id = Integer.parseInt(request.getParameter("student_id"));
+		int fk_course_seq = Integer.parseInt(request.getParameter("course_seq"));
+		String name = request.getParameter("name");
+		
+		System.out.println("확인용 student_id : " + student_id);
+		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		System.out.println("확인용 name : " + name);
+		
+		mav.addObject("student_id", student_id);
+		mav.addObject("fk_course_seq", fk_course_seq);	
+		mav.addObject("name", name);
+		mav.addObject("goBackURL", goBackURL);
+		mav.setViewName("professor_insertGradeDetail");
+		
+		return mav;
+	}
+	
+	@ResponseBody
+	@PostMapping(value="/professor/score_checkJSON.lms", produces="text/plain;charset=UTF-8")
+	public String professor_score_checkJSON(HttpServletRequest request) {// 학생 점수 가져오기
+		
+		int student_id = Integer.parseInt(request.getParameter("student_id"));
+		int fk_course_seq = Integer.parseInt(request.getParameter("fk_course_seq"));
+		String name = request.getParameter("name");
+		
+		System.out.println("확인용 json student_id : " + student_id);
+		System.out.println("확인용 json fk_course_seq : " + fk_course_seq);
+		System.out.println("확인용 json name : " + name);
+		
+		Map<String, Object> checkMap = new HashMap<>();
+		
+		try {
+			checkMap = professorService.score_checkJSON(student_id, fk_course_seq);
+		} catch (Exception e) {
+			JSONObject jsonObj = new JSONObject();
+			return jsonObj.toString();		
+		}
+		
+		double assignmentScore = (double)checkMap.get("assignmentScore");	
+		int regi_course_seq = (int)checkMap.get("regi_course_seq");
+		// System.out.println("확인용 json 넣기전 assignmentScore : " + assignmentScore);
+		
+		double mark = (double)checkMap.get("mark");
+		
+		
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("student_id", student_id);
+        jsonObj.put("name", name);
+        jsonObj.put("assignmentScore", assignmentScore);
+        jsonObj.put("regi_course_seq", regi_course_seq);
+        jsonObj.put("mark", mark);
+        
+        System.out.println(jsonObj.toString());
+        
+        return jsonObj.toString();
+	}
+	
+	@PostMapping(value="/professor/insertGradeEnd.lms", produces="text/plain;charset=UTF-8")
+	public ModelAndView insertGradeEnd(HttpServletRequest request, ModelAndView mav) {// 학생 점수 입력 끝
+		
+		String goBackURL = request.getParameter("goBackURL");
+		System.out.println("확인용 goBackURL : " + goBackURL);
+		
+		int student_id = Integer.parseInt(request.getParameter("student_id"));  
+		int regi_course_seq = Integer.parseInt(request.getParameter("regi_course_seq"));
+		double mark = Double.parseDouble(request.getParameter("mark")); 
+		
+		System.out.println("확인용 student_id : " + student_id);
+		System.out.println("확인용 regi_course_seq : " + regi_course_seq);
+		System.out.println("확인용 mark : " + mark);
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("student_id", student_id);
+		paraMap.put("regi_course_seq", regi_course_seq);
+		paraMap.put("mark", mark);
+		
+		
+		int n = professorService.insertGradeEnd(paraMap);
+	    
+	    if(n == 1) {
+	  	  mav.addObject("message", "학점이 입력되었습니다.");
+	  	  mav.addObject("loc", request.getContextPath()+goBackURL);
+	  	  mav.setViewName("msg");
+	    }
+	    else {
+	  	  mav.addObject("message", "학점 입력을 실패했습니다.");
+	  	  mav.addObject("loc", "javascript:history.back()");
+	  	  mav.setViewName("msg");
+	    }
+	
+	    return mav;
+	}
+	
+	@PostMapping(value="/professor/editGradeEnd.lms", produces="text/plain;charset=UTF-8")
+	public ModelAndView editGradeEnd(ModelAndView mav, HttpServletRequest request) {// 학생 점수 수정 끝
+		
+		String goBackURL = request.getParameter("goBackURL");
+		System.out.println("확인용 goBackURL : " + goBackURL);
+		 
+		int regi_course_seq = Integer.parseInt(request.getParameter("regi_course_seq"));
+		double mark = Double.parseDouble(request.getParameter("mark")); 
+		
+		System.out.println("확인용 regi_course_seq : " + regi_course_seq);
+		System.out.println("확인용 mark : " + mark);
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("regi_course_seq", regi_course_seq);
+		paraMap.put("mark", mark);
+		
+		
+		int n = professorService.editGradeEnd(paraMap);
+	    
+	    if(n == 1) {
+	  	  mav.addObject("message", "학점이 수정되었습니다.");
+	  	  mav.addObject("loc", request.getContextPath()+goBackURL);
+	  	  mav.setViewName("msg");
+	    }
+	    else {
+	  	  mav.addObject("message", "학점 수정을 실패했습니다.");
+	  	  mav.addObject("loc", "javascript:history.back()");
+	  	  mav.setViewName("msg");
+	    }
+	
+	    return mav;
+	}
 	
 	
-
+	
+	
 	
 	
 	

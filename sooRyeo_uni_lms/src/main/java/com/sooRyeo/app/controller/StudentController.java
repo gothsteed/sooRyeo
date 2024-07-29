@@ -53,9 +53,6 @@ import com.sooRyeo.app.service.StudentService;
 @Controller
 @RequireLogin(type = {Student.class})
 public class StudentController {
-	
-	@Autowired
-	private StudentService service;
 
 	@Autowired
 	private StudentService studentservice;
@@ -120,7 +117,7 @@ public class StudentController {
 		
 		int userid = loginuser.getStudent_id();
 		
-		StudentTimeTable timeTable = service.classList(userid);
+		StudentTimeTable timeTable = studentservice.classList(userid);
 		
 		List<Course> mapList = timeTable.getCourseList();
 	
@@ -226,12 +223,12 @@ public class StudentController {
 		 
 		String fk_course_seq = request.getParameter("course_seq");
 		
-		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
+		List<Lecture> lectureList = studentservice.getlectureList(fk_course_seq);
 		
-		List<Professor> professor_info = service.select_prof_info(fk_course_seq);
+		List<Professor> professor_info = studentservice.select_prof_info(fk_course_seq);
 		
 		// 수업 - 이번주 강의보기
-		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
+		List<Lecture> lectureList_week = studentservice.getlectureList_week(fk_course_seq);
 		
 		mav.addObject("professor_info", professor_info);
 		
@@ -257,7 +254,7 @@ public class StudentController {
 		
 		String fk_course_seq = request.getParameter("fk_course_seq");		
 		
-		List<Map<String, String>> assignment_List = service.getassignment_List(fk_course_seq, userid);
+		List<Map<String, String>> assignment_List = studentservice.getassignment_List(fk_course_seq, userid);
 		mav.addObject("assignment_List", assignment_List);
 		
 		mav.setViewName("assignment_List");
@@ -313,11 +310,11 @@ public class StudentController {
 		
 		// 스케쥴, 과제 join
 		// 수업 - 내 강의 - 과제 - 상세내용1
-		Map<String, Object> assignment_detail_1 = service.getassignment_detail_1(schedule_seq_assignment);
+		Map<String, Object> assignment_detail_1 = studentservice.getassignment_detail_1(schedule_seq_assignment);
 		
 		// 과제, 과제제출 join
 		// 수업 - 내 강의 - 과제 - 상세내용2
-		Map<String, Object> assignment_detail_2 = service.getassignment_detail_2(schedule_seq_assignment, userid);
+		Map<String, Object> assignment_detail_2 = studentservice.getassignment_detail_2(schedule_seq_assignment, userid);
 		
 		
 		mav.addObject("assignment_detail_1", assignment_detail_1);
@@ -349,7 +346,7 @@ public class StudentController {
 			
 			// 스케쥴, 과제 join
 			// 수업 - 내 강의 - 과제 - 상세내용1
-			Map<String, Object> assignment_detail_1 = service.getassignment_detail_1(schedule_seq_assignment);
+			Map<String, Object> assignment_detail_1 = studentservice.getassignment_detail_1(schedule_seq_assignment);
 			
 			
 			if(assignment_detail_1 == null || (assignment_detail_1 != null && assignment_detail_1.get("attatched_file") == null)) {
@@ -426,7 +423,7 @@ public class StudentController {
 		
 		try {
 			
-			n = service.addComment(asdto);
+			n = studentservice.addComment(asdto);
 			
 			
 		} catch (Exception e) {
@@ -455,7 +452,7 @@ public class StudentController {
 		String fk_schedule_seq_assignment = request.getParameter("fk_schedule_seq_assignment");
 		
 		
-		Map<String, Object> assignment_show = service.getreadComment(fk_schedule_seq_assignment, userid);
+		Map<String, Object> assignment_show = studentservice.getreadComment(fk_schedule_seq_assignment, userid);
 		
 
 		JSONObject jsonObj = new JSONObject();       
@@ -536,7 +533,7 @@ public class StudentController {
 		
 		try {
 			
-			n = service.addComment(asdto);
+			n = studentservice.addComment(asdto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -571,7 +568,7 @@ public class StudentController {
 		try {
 			Integer.parseInt(assignment_submit_seq);
 			
-			AssignmentSubmitDTO asdto = service.getCommentOne(assignment_submit_seq);
+			AssignmentSubmitDTO asdto = studentservice.getCommentOne(assignment_submit_seq);
 			
 			if(asdto == null || (asdto != null && asdto.getAttatched_file() == null)) {
 				
@@ -652,7 +649,7 @@ public class StudentController {
 		String start_date = request.getParameter("start_date");
 		String end_date = request.getParameter("end_date");
 		
-		int n = service.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
+		int n = studentservice.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
 		
 		JSONObject jsonobj  = new JSONObject();
 		jsonobj.put("result", n);
@@ -667,7 +664,7 @@ public class StudentController {
 		
 		String fk_course_seq = request.getParameter("course_seq");
 		
-		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
+		List<Lecture> lectureList_week = studentservice.getlectureList_week(fk_course_seq);
 		
 		mav.addObject("lectureList_week", lectureList_week);
 		
@@ -714,7 +711,7 @@ public class StudentController {
 		
 		int student_id = loginuser.getStudent_id();
 		
-		return service.student_chart_credit(student_id); 
+		return studentservice.student_chart_credit(student_id);
 	}
 	
 	
@@ -729,10 +726,10 @@ public class StudentController {
 		int userid = loginuser.getStudent_id();
 		
 		// 전체 출석현황 보기
-		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
+		List<Map<String, Object>> attendanceList = studentservice.attendanceList(userid, name);
 
 		// 검색-수업명 가져오기
-		List<Curriculum> lectureList = service.lectureList();
+		List<Curriculum> lectureList = studentservice.lectureList();
 		
 		request.setAttribute("attendanceList", attendanceList);
 		request.setAttribute("lectureList", lectureList);
@@ -793,7 +790,7 @@ public class StudentController {
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int userid = loginuser.getStudent_id();
 		
-		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
+		List<Map<String, Object>> attendanceList = studentservice.attendanceList(userid, name);
 		
 		request.setAttribute("attendanceList", attendanceList);
 		

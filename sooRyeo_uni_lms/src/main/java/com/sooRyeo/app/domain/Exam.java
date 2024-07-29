@@ -1,9 +1,12 @@
 package com.sooRyeo.app.domain;
 
+import lombok.Getter;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Getter
 public class Exam {
     private Integer fk_schedule_seq;
     private Integer fk_course_seq;
@@ -11,13 +14,14 @@ public class Exam {
     private String original_file_name;
     private String answer_mongo_id;
     private Integer question_count;
+    private Integer total_score;
     private Integer end_date_seconds;
     
 
     private Schedule schedule;
 
 
-    public Integer getEnd_date_seconds() {
+/*    public Integer getEnd_date_seconds() {
     	return end_date_seconds;
     }
 
@@ -43,11 +47,8 @@ public class Exam {
 
     public Integer getQuestion_count() {
         return question_count;
-    }
+    }*/
 
-    public Schedule getSchedule() {
-        return schedule;
-    }
 
     public LocalDateTime getStartDate() {
         return  schedule.getStartLocalDateTime();
@@ -68,5 +69,11 @@ public class Exam {
 
     public boolean isBetween(LocalDateTime time) {
         return schedule.isBetweenSchedule(time);
+    }
+
+    public long getSecondsTillEnd() {
+        LocalDateTime endDate = schedule.getEndLocalDateTime();
+        LocalDateTime now = LocalDateTime.now();
+        return Duration.between(now, endDate).toSeconds();
     }
 }

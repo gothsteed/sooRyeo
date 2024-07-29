@@ -82,6 +82,7 @@
 		<result property="original_file_name" column="original_file_name"/>
 		<result property="answer_mongo_id" column="answer_mongo_id"/>
 		<result property="question_count" column="question_count"/>
+		<result property="total_score" column="total_score"/>
 		<association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
 	</resultMap>
 
@@ -490,7 +491,7 @@ where rno between #{startRno} and #{endRno}
 		
 		from tbl_exam E
 		join tbl_schedule S on S.schedule_seq = E.fk_schedule_seq  
-		where fk_schedule_seq = 91
+		where fk_schedule_seq = #{schedule_seq}
 		
 	
 	</select>
@@ -569,7 +570,9 @@ where rno between #{startRno} and #{endRno}
 			FK_COURSE_SEQ,
 			FILE_NAME,
 			ORIGINAL_FILE_NAME,
-			ANSWER_MONGO_ID
+			ANSWER_MONGO_ID,
+			QUESTION_COUNT,
+			TOTAL_SCORE
 
 		from TBL_SCHEDULE
 				 join
