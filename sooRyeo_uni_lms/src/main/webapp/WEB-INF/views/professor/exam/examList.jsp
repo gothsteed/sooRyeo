@@ -17,11 +17,20 @@
 </style>
 
 <script type="text/javascript">
-	$(document).ready(function() {});
+	$(document).ready(function() {
+		
 
-	function handleExamClick(schedule_seq, isAfter) {
-		if (!isAfter) {
+
+	});
+
+	function handleExamClick(schedule_seq, isAfter, isBetweenSchedule, isBefore) {
+		if (isBetweenSchedule) {
 			alert("시험이 아직 종료되지 않았습니다.");
+			return;
+		}
+		
+		if(isBefore) {
+			go_exam_update(schedule_seq);
 			return;
 		}
 		goview(schedule_seq);
@@ -30,9 +39,48 @@
 	function goview(schedule_seq) {
 		location.href = "<%=ctxPath%>/professor/exam/result.lms?schedule_seq=" + schedule_seq;
 	}
+	
+	var fkScheduleSeq = "";
+	
+    function setScheduleSeq(element) {
+
+        fkScheduleSeq = element.parentNode.querySelector('input[name="fk_schedule_seq"]').value;
+        
+    }
+	
+	
+	
+	function go_exam_update(schedule_seq) {
+		   
+		   console.log("fkScheduleSeq 확인용", fkScheduleSeq);
+		
+	       const frm = document.exam_update;
+	       frm.schedule_seq.value = fkScheduleSeq;
+	       frm.course_seq.value = course_seq;
+	       frm.action = "<%=ctxPath%>/professor/professor_exam_update.lms";
+	       frm.method = "post";
+	       frm.submit();
+
+		
+	}
+	
+	
+	const course_seq = "${requestScope.course_seq}";
+	console.log(course_seq);
+	
+	function set_exam() {
+		location.href = "<%=ctxPath%>/professor/professor_exam.lms?course_seq=" + course_seq;
+	}
+
+	
+
+	
 </script>
 
-<h3 class="mt-3 mb-3" style="margin-left:10%;"><img src="<%=ctxPath%>/resources/images/test.png" style="width:3%; margin-right:2%;">시험</h3>
+<div style="display: flex; border: solid 0px red; width: 80%; height:50px; justify-content: space-between; margin-left:10%;">
+	<h3 class="mt-3 mb-3" style="border: solid 0px blue;"><img src="<%=ctxPath%>/resources/images/assignment.png" style="width:3%; margin-right:1%;">시험</h3>
+	<button type="button" class="btn btn-success" style="height: 40px; width:10%; margin-top: 1%; text-align: center;" onclick="set_exam()">출제하기</button>
+</div>
 <hr style="width:80%;">
 <table class="table" style="width:80%; margin-left:10%;">
 	<thead>
@@ -48,9 +96,9 @@
 	<c:choose>
 		<c:when test="${not empty requestScope.examList}">
 			<c:forEach var="exam" items="${requestScope.examList}" varStatus="status">
-				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}', ${exam.schedule.isAfter(currentTime)})">
+				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}', ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetweenSchedule(currentTime)}, ${exam.schedule.isBefore(currentTime)})">
 					<th scope="row" class="col-1" style="text-align: center">${status.count}</th>
-					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
+					<td class="col-3" id="title" style="text-align: center" onclick="setScheduleSeq(this);" >${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
 					<td class="col-3" style="text-align: center">${exam.durationInMinute}분</td>
 					<td class="col-2" style="text-align: center">
@@ -63,7 +111,9 @@
 						<c:if test="${exam.schedule.isAfter(currentTime)}">
 							완료
 						</c:if>
+						<input type="hidden" name="fk_schedule_seq" value="${exam.fk_schedule_seq}" />
 					</td>
+					
 				</tr>
 			</c:forEach>
 		</c:when>
@@ -76,3 +126,13 @@
 	</tbody>
 </table>
 <div class="pagination justify-content-center">${requestScope.pageBar}</div>
+
+
+<form name="exam_update">
+		<input type="hidden" name="schedule_seq">
+		<input type="hidden" name="course_seq">
+</form>
+
+
+
+

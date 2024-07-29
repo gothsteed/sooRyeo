@@ -108,6 +108,7 @@ function scrollToTarget_down() {
 
 // Function Declaration ////////////////////
 
+	
 	function goTest(){
 		location.href = "<%=ctxPath%>/professor/exam.lms?course_seq="+${fk_course_seq};
 	}// end of function goAnnouncement() 

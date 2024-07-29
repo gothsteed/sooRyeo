@@ -1,4 +1,4 @@
-package com.sooRyeo.app.controller;
+package com.sooRyeo.app.controller; 
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import com.sooRyeo.app.aop.NoView;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
@@ -52,9 +53,6 @@ import com.sooRyeo.app.service.StudentService;
 @Controller
 @RequireLogin(type = {Student.class})
 public class StudentController {
-	
-	@Autowired
-	private StudentService service;
 
 	@Autowired
 	private StudentService studentservice;
@@ -126,7 +124,7 @@ public class StudentController {
 		
 		int userid = loginuser.getStudent_id();
 		
-		StudentTimeTable timeTable = service.classList(userid);
+		StudentTimeTable timeTable = studentservice.classList(userid);
 		
 		List<Course> mapList = timeTable.getCourseList();
 	
@@ -232,12 +230,12 @@ public class StudentController {
 		 
 		String fk_course_seq = request.getParameter("course_seq");
 		
-		List<Lecture> lectureList = service.getlectureList(fk_course_seq);
+		List<Lecture> lectureList = studentservice.getlectureList(fk_course_seq);
 		
-		List<Professor> professor_info = service.select_prof_info(fk_course_seq);
+		List<Professor> professor_info = studentservice.select_prof_info(fk_course_seq);
 		
 		// 수업 - 이번주 강의보기
-		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
+		List<Lecture> lectureList_week = studentservice.getlectureList_week(fk_course_seq);
 		
 		mav.addObject("professor_info", professor_info);
 		
@@ -263,7 +261,7 @@ public class StudentController {
 		
 		String fk_course_seq = request.getParameter("fk_course_seq");		
 		
-		List<Map<String, String>> assignment_List = service.getassignment_List(fk_course_seq, userid);
+		List<Map<String, String>> assignment_List = studentservice.getassignment_List(fk_course_seq, userid);
 		mav.addObject("assignment_List", assignment_List);
 		
 		mav.setViewName("assignment_List");
@@ -319,11 +317,11 @@ public class StudentController {
 		
 		// 스케쥴, 과제 join
 		// 수업 - 내 강의 - 과제 - 상세내용1
-		Map<String, Object> assignment_detail_1 = service.getassignment_detail_1(schedule_seq_assignment);
+		Map<String, Object> assignment_detail_1 = studentservice.getassignment_detail_1(schedule_seq_assignment);
 		
 		// 과제, 과제제출 join
 		// 수업 - 내 강의 - 과제 - 상세내용2
-		Map<String, Object> assignment_detail_2 = service.getassignment_detail_2(schedule_seq_assignment, userid);
+		Map<String, Object> assignment_detail_2 = studentservice.getassignment_detail_2(schedule_seq_assignment, userid);
 		
 		
 		mav.addObject("assignment_detail_1", assignment_detail_1);
@@ -355,7 +353,7 @@ public class StudentController {
 			
 			// 스케쥴, 과제 join
 			// 수업 - 내 강의 - 과제 - 상세내용1
-			Map<String, Object> assignment_detail_1 = service.getassignment_detail_1(schedule_seq_assignment);
+			Map<String, Object> assignment_detail_1 = studentservice.getassignment_detail_1(schedule_seq_assignment);
 			
 			
 			if(assignment_detail_1 == null || (assignment_detail_1 != null && assignment_detail_1.get("attatched_file") == null)) {
@@ -432,7 +430,7 @@ public class StudentController {
 		
 		try {
 			
-			n = service.addComment(asdto);
+			n = studentservice.addComment(asdto);
 			
 			
 		} catch (Exception e) {
@@ -461,7 +459,7 @@ public class StudentController {
 		String fk_schedule_seq_assignment = request.getParameter("fk_schedule_seq_assignment");
 		
 		
-		Map<String, Object> assignment_show = service.getreadComment(fk_schedule_seq_assignment, userid);
+		Map<String, Object> assignment_show = studentservice.getreadComment(fk_schedule_seq_assignment, userid);
 		
 
 		JSONObject jsonObj = new JSONObject();       
@@ -542,7 +540,7 @@ public class StudentController {
 		
 		try {
 			
-			n = service.addComment(asdto);
+			n = studentservice.addComment(asdto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -577,7 +575,7 @@ public class StudentController {
 		try {
 			Integer.parseInt(assignment_submit_seq);
 			
-			AssignmentSubmitDTO asdto = service.getCommentOne(assignment_submit_seq);
+			AssignmentSubmitDTO asdto = studentservice.getCommentOne(assignment_submit_seq);
 			
 			if(asdto == null || (asdto != null && asdto.getAttatched_file() == null)) {
 				
@@ -658,7 +656,7 @@ public class StudentController {
 		String start_date = request.getParameter("start_date");
 		String end_date = request.getParameter("end_date");
 		
-		int n = service.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
+		int n = studentservice.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
 		
 		JSONObject jsonobj  = new JSONObject();
 		jsonobj.put("result", n);
@@ -668,12 +666,12 @@ public class StudentController {
 
 	
 	// 수업 - 내 강의 - 동영상 플레이
-	@RequestMapping(value = "/student/classPlay.lms", method = RequestMethod.GET)
+	@GetMapping("/student/classPlay.lms")
 	public ModelAndView classPlay(HttpServletRequest request, ModelAndView mav) {
 		
 		String fk_course_seq = request.getParameter("course_seq");
 		
-		List<Lecture> lectureList_week = service.getlectureList_week(fk_course_seq);
+		List<Lecture> lectureList_week = studentservice.getlectureList_week(fk_course_seq);
 		
 		mav.addObject("lectureList_week", lectureList_week);
 		
@@ -683,6 +681,24 @@ public class StudentController {
 	} // end of public String class_play()-------
 	
 	
+	
+	@GetMapping("/student/classPlay_One.lms")
+	public ModelAndView classPlay_One(HttpServletRequest request, ModelAndView mav) {
+		
+		String lecture_seq = request.getParameter("lecture_seq");
+		
+		Map<String, String> classOne = studentservice.classPlay_One(lecture_seq);
+		
+		mav.addObject("classOne", classOne);
+		
+		mav.addObject("lecture_seq", lecture_seq);
+		
+		mav.setViewName("classPlay_One");
+
+		return mav;
+	}	
+
+
 	// 메인 - 사이드바 - 성적 - 통계
 	@GetMapping("/student/Statistics.lms")
 	public String student_chart(HttpServletRequest request) {
@@ -702,7 +718,7 @@ public class StudentController {
 		
 		int student_id = loginuser.getStudent_id();
 		
-		return service.student_chart_credit(student_id); 
+		return studentservice.student_chart_credit(student_id);
 	}
 	
 	
@@ -717,10 +733,10 @@ public class StudentController {
 		int userid = loginuser.getStudent_id();
 		
 		// 전체 출석현황 보기
-		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
+		List<Map<String, Object>> attendanceList = studentservice.attendanceList(userid, name);
 
 		// 검색-수업명 가져오기
-		List<Curriculum> lectureList = service.lectureList();
+		List<Curriculum> lectureList = studentservice.lectureList();
 		
 		request.setAttribute("attendanceList", attendanceList);
 		request.setAttribute("lectureList", lectureList);
@@ -781,7 +797,7 @@ public class StudentController {
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int userid = loginuser.getStudent_id();
 		
-		List<Map<String, Object>> attendanceList = service.attendanceList(userid, name);
+		List<Map<String, Object>> attendanceList = studentservice.attendanceList(userid, name);
 		
 		request.setAttribute("attendanceList", attendanceList);
 		
@@ -975,6 +991,64 @@ public class StudentController {
 	
 	
 	
+	
+	
+	// 영상재생화면에 내가 머물렀던 시간을 이용해 출석체크 하기
+	@ResponseBody
+	@PostMapping("/student/classPlay_time.lms")
+	public String classPlay_time(HttpServletRequest request) {
+		
+		String play_time = request.getParameter("play_time");
+		String lecture_seq = request.getParameter("lecture_seq");
+
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
+		// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
+		String fk_lecture_seq = studentservice.select_tbl_attendance(lecture_seq, userid);
+
+		JSONObject jsonobj = new JSONObject();
+		
+		if(fk_lecture_seq == null) { // 처음 동영상을 재생한 경우
+			
+			int n = studentservice.insert_tbl_attendance(play_time, lecture_seq, userid);
+			jsonobj.put("n", n);
+		}
+		else { // 동영상 재생 이력이 있을경우 
+			
+			// play_time 컬럼과 lecture_time 컬럼을 비교
+			int i = studentservice.select_play_time_lecture_time(play_time, lecture_seq, userid);
+			
+			System.out.println("확인용 입니다 => " + i);
+			
+			if(i > 0) { // 아직 출석인정 시간이 되지 않은 경우
+				
+				int n1 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
+				jsonobj.put("n1", n1);
+			}
+			
+			else { // 동영상재생페이지에 머무른 시간 - 동영상 시간  <= 0, 즉  출석을 완료한 경우
+				
+				int n1 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
+				int n2 = studentservice.update_tbl_attendance_isAttended(lecture_seq, userid);
+				
+				int n3 = n1*n2;
+				jsonobj.put("n3", n3);
+			}
+		}
+		
+		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
+		return jsonobj.toString();
+	}
+
+	
+	@GetMapping("/student/test.lms")
+	public String test() {
+		
+		return "test";
+		
+	} // end of public String attendance
 	
 	
 	

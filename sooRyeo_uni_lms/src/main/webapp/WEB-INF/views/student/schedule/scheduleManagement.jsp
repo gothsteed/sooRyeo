@@ -335,6 +335,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 	                        dataType: 'json',
 	                        success: function(json) {
 	                        	
+	                        
 	                        	var events = []
 	                        	if(json.length > 0 ) {
 	                        	
@@ -347,7 +348,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 	                        			
 	                        			if(item.schedule_type == '1') {
 	                        				color = "#175F30";
-	                        				url = "<%= ctxPath%>/student/myLecture.lms?course_seq="+item.course_seq	
+	                        				url = "<%= ctxPath%>/student/assignment_List.lms?fk_course_seq="+item.course_seq	
 	                        			}
 	                        			if(item.schedule_type == '2') {
 	                        				color = "#A0D468";
@@ -462,6 +463,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 		// 시작시간, 종료시간		
 		var html="";
 		for(var i=0; i<24; i++) {
+			
 			if(i<10){
 				html+="<option value='0"+i+"'>0"+i+"</option>";
 			}

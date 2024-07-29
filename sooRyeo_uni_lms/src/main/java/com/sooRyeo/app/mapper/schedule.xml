@@ -465,6 +465,23 @@ where rno between #{startRno} and #{endRno}
 		  AND c.FK_STUDENT_ID = #{studentId} and COMPLETE = 0
 
 	</select>
+	
+	
+
+	<!-- 시험 출제 시 스케줄 테이블 insert -->
+	<insert id="insert_tbl_schedule_exam" parameterType="HashMap">
+		<selectKey keyProperty="schedule_seq" resultType="String" order="BEFORE">
+			select schedule_seq.nextval FROM dual
+		</selectKey>
+		insert into tbl_schedule(Schedule_Seq, Title, Schedule_Type, start_date, end_date)
+		values(#{schedule_seq}, #{test_type}, '2', to_date(#{test_start_time}, 'yyyy-mm-dd hh24:mi:ss'), to_date(#{test_end_time}, 'yyyy-mm-dd hh24:mi:ss'))
+	</insert>
+	
+	
+	<insert id="insert_tbl_exam" parameterType="HashMap">
+			insert into tbl_exam(FK_SCHEDULE_SEQ, FK_COURSE_SEQ, ANSWER_MONGO_ID, QUESTION_COUNT, TOTAL_SCORE, FILE_NAME, ORIGINAL_FILE_NAME)
+			values(#{schedule_seq}, #{course_seq}, #{answer_id}, #{question_count}, #{total_score}, #{file_name}, #{original_file_name})
+	</insert>
 
 	<select id="getExam" resultType="com.sooRyeo.app.domain.Exam">
 	
@@ -477,6 +494,29 @@ where rno between #{startRno} and #{endRno}
 		where fk_schedule_seq = #{schedule_seq}
 		
 	
+	</select>
+	
+	
+	<!-- 시험 테이블 select -->
+	<resultMap type="HashMap" id="examMap">
+		<result column="fk_student_id" property="fk_student_id" javaType="String" />
+		<result column="course_seq" property="course_seq" javaType="String" />
+		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+		<result column="title" property="title" javaType="String" />
+		<result column="schedule_type" property="schedule_type" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+	</resultMap>
+	
+	<select id="showExam" parameterType="Int" resultMap="examMap">
+			select fk_student_id, A.course_seq , schedule_seq, title, schedule_type, start_date, end_date
+			from tbl_schedule join tbl_exam
+			on schedule_seq = fk_schedule_seq
+			join tbl_course A
+			on course_seq = fk_course_seq
+			join tbl_registered_course B
+			on B.fk_course_seq = A.course_seq
+			where fk_student_id = #{userid}
 	</select>
 
 
@@ -541,5 +581,64 @@ where rno between #{startRno} and #{endRno}
 		where FK_SCHEDULE_SEQ = #{schedule_seq}
 
 	</select>
+	
+	
+	<select id="select_coures_name" parameterType="String" resultType="String">
+		select C.name
+		from tbl_course A join tbl_curriculum C
+		on A.fk_curriculum_seq = C.curriculum_seq
+		where A.course_seq = #{course_seq}
+	</select>
+	
+	<!--  출제된 시험 정보 select 해오기  -->
+	<resultMap type="HashMap" id="show_exam">
+		<result column="title" property="title" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+		<result column="file_name" property="file_name" javaType="String" />
+		<result column="original_file_name" property="original_file_name" javaType="String" />
+		<result column="answer_mongo_id" property="answer_mongo_id" javaType="String" />
+	</resultMap>
+	
+	<select id="show_exam" parameterType="String" resultMap="show_exam">
+			select S.title, S.start_date, S.end_date, E.file_name, E.original_file_name, E.answer_mongo_id
+			from tbl_schedule S join tbl_exam E
+			on S.schedule_seq = E.Fk_schedule_seq
+			where schedule_seq  = #{schedule_seq}
+	</select>
+	
+	
+	<!--  시험 수정시 오라클 db update(파일변경 있는 경우) -->
+	<update id="update_exam_file" parameterType="HashMap">
+			update tbl_exam set file_name = #{file_name},
+											original_file_name = #{original_file_name},
+											total_score = #{total_score},
+											question_count = #{question_count}
+		    where fk_schedule_seq = #{schedule_seq}
+	</update>
+	
+	<update id="update_schedule_file" parameterType="HashMap">
+			update tbl_schedule set title = #{test_type},
+											start_date = to_date(#{test_start_time}, 'yyyy-mm-dd hh24:mi:ss'),
+											end_date = to_date(#{test_end_time}, 'yyyy-mm-dd hh24:mi:ss')
+		    where schedule_seq = #{schedule_seq}
+	</update>
+	
+	
+	<!--  시험 수정시 오라클 db update(파일변경 없는 경우) -->
+	<update id="update_exam_nofile" parameterType="HashMap">
+			update tbl_exam set  total_score = #{total_score},
+								 question_count = #{question_count}
+		    where fk_schedule_seq = #{schedule_seq}
+	</update>
+	
+	<update id="update_schedule_nofile" parameterType="HashMap">
+			update tbl_schedule set title = #{test_type},
+											start_date = to_date(#{test_start_time}, 'yyyy-mm-dd hh24:mi:ss'),
+											end_date = to_date(#{test_end_time}, 'yyyy-mm-dd hh24:mi:ss')
+		    where schedule_seq = #{schedule_seq}
+	</update>
+	
+	
 
 </mapper>

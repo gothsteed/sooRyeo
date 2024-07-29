@@ -11,5 +11,4 @@ import org.springframework.stereotype.Repository;
 public interface ExamAnswerRepository extends MongoRepository<ExamAnswer, String> {
 
 	List<ExamAnswer> findAllById(String answer_mongo_id);
-
 }

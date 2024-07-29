@@ -66,9 +66,15 @@
 </form>
 
 <script>
-    function updateServerTime() {
-        const now = new Date();
-        document.getElementById('server-time').textContent = now.toLocaleString();
+    async function updateServerTime() {
+        try {
+            const response = await fetch('<%=ctxPath%>/timeData');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const serverTime = await response.text();
+            document.getElementById('server-time').textContent = serverTime;
+        } catch (error) {
+            console.error('Failed to fetch server time:', error);
+        }
     }
 
     function updateAgreeButton() {
@@ -92,16 +98,10 @@
         const scheduleSeq = urlParams.get('schedule_seq');
         console.log(scheduleSeq)
 
-        alert('You have agreed to the terms. Redirecting to the exam page...');
-        // Here you would typically redirect to the actual exam page
-        // window.location.href = 'exam-page.html';
-
         document.getElementById('scheduleSeqInput').value = scheduleSeq;
 
         // Submit the form
         document.getElementById('redirectForm').submit();
-
-
     });
 </script>
 </body>
