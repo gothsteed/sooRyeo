@@ -15,8 +15,10 @@ import javax.servlet.http.HttpSession;
 import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.LectureUploadDto;
 import com.sooRyeo.app.dto.ScoreDto;
+import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import com.sooRyeo.app.service.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -945,9 +947,10 @@ public class ProfessorController {
 		checkMap = professorService.score_checkJSON(student_id, fk_course_seq);
 
 		
+		
 		double assignmentScore = (double)checkMap.get("assignmentScore"); // 과제 백분율	
 		int regi_course_seq = (int)checkMap.get("regi_course_seq"); // 학생 등록 강좌 번호
-		// System.out.println("확인용 json 넣기전 assignmentScore : " + assignmentScore);
+		System.out.println("확인용 json 넣기전 assignmentScore : " + assignmentScore);
 		
 		Object mark = null; // 학점
 		
@@ -958,6 +961,33 @@ public class ProfessorController {
 		}
 		
 		// 몽고 디비에서 시험점수 가져오기
+		
+		double totalExamScore = 0;
+		
+		List<StudentAnswer> ExamResultList = examService.ExamResultList(fk_course_seq);
+		
+		
+		
+		
+		if (ExamResultList != null && !ExamResultList.isEmpty()) {
+	    	
+            for (StudentAnswer answer : ExamResultList) {
+                int score = answer.getScore();
+                int totalscore = answer.getTotalScore();
+                
+            	System.out.println("확인용 score : " + score);
+            	System.out.println("확인용 totalscore : " + totalscore);
+            	
+            	totalExamScore += ((double)score/totalscore)*100;
+                
+            }
+            
+        } else {
+            System.out.println("ExamResultList가 비어 있습니다.");
+        }
+		
+		System.out.println("확인용 totalExamScore : " + totalExamScore);
+		
 		
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("student_id", student_id);

@@ -398,10 +398,13 @@ public class ProfessorDao_imple implements ProfessorDao {
         System.out.println("확인용 assignmentCount : " + assignmentCount);
         System.out.println("확인용 regi_course_seq : " + regi_course_seq);
         
+        double assignmentScore = 0;
         
-        double assignmentScore = ((double)assignmentTotal/assignmentCount);
+        if(assignmentTotal != 0 && assignmentCount != 0) {
+        	assignmentScore = ((double)assignmentTotal/assignmentCount);
+        }
         
-        // System.out.println("확인용 assignmentScore : " + assignmentScore);
+        System.out.println("확인용 dao에서 assignmentScore : " + assignmentScore);
 		
         ScoreMap.put("assignmentScore", assignmentScore);
         ScoreMap.put("regi_course_seq", regi_course_seq);
