@@ -177,10 +177,13 @@ public class ExamController {
 		
 		int course_seq = getCourse_seq.getFk_course_seq();
 		
-		List<Integer> inputAnswers = new ArrayList<>();
+		List<String> inputAnswers = new ArrayList<>();
 		
 		for(int i=1; i<selCount+1; i++) {
-			Integer selectAnswer = Integer.parseInt(request.getParameter(String.valueOf(i)));
+			
+			String input = request.getParameter(String.valueOf(i));
+			
+			String selectAnswer = input;
 			
 			if (selectAnswer != null) {
 				inputAnswers.add(selectAnswer);
