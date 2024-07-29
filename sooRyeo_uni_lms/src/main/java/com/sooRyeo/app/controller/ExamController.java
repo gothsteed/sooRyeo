@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sooRyeo.app.dto.ExamDTO;
+import com.sooRyeo.app.mongo.entity.Answer;
+import com.sooRyeo.app.mongo.entity.ExamAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -230,13 +233,12 @@ public class ExamController {
 		return mav;
 	}
 
-/*
+
 	@RequireLogin(type = {Student.class})
 	@GetMapping("/student/exam/resultREST.lms")
 	public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		return examService.getStudentExamResultData(mav, request, response);
 	}
-*/
 	
 	
 	// 교수 시험출제 뷰단
