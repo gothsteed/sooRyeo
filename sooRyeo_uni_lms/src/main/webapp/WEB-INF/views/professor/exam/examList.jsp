@@ -81,7 +81,6 @@
 <div style="display: flex; border: solid 0px red; width: 80%; height:50px; justify-content: space-between; margin-left:10%;">
 	<h3 class="mt-3 mb-3" style="border: solid 0px blue;"><img src="<%=ctxPath%>/resources/images/assignment.png" style="width:3%; margin-right:1%;">시험</h3>
 	<button type="button" class="btn btn-success" style="height: 40px; width:10%; margin-top: 1%; text-align: center;" onclick="set_exam()">출제하기</button>
-	<button type="button" class="btn btn-success" style="height: 40px; width:10%; margin-top: 1%; text-align: center;" onclick="set_exam()">삭제하기</button>
 </div>
 <hr style="width:80%;">
 <table class="table" style="width:80%; margin-left:10%;">

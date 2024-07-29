@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
-import com.sooRyeo.app.domain.Admin;
+
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -227,14 +226,6 @@ public class ExamController {
 		mav.setViewName("exam/examResult");
 		return mav;
 	}
-
-/*
-	@RequireLogin(type = {Student.class})
-	@GetMapping("/student/exam/resultREST.lms")
-	public ResponseEntity<String> getStudentExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-		return examService.getStudentExamResultData(mav, request, response);
-	}
-*/
 	
 	
 	// 교수 시험출제 뷰단
@@ -411,6 +402,46 @@ public class ExamController {
 
 		return examService.getWaitExamPage(mav, request, response, schedule_seq);
 	}
+	
+	
+	// 시험 삭제하기
+	@PostMapping("/exam_delete.lms")
+	public ModelAndView exam_delete(HttpServletRequest request, ModelAndView mav, MultipartHttpServletRequest mrequest, ExamDTO examdto) throws Exception {
+		
+		String schedule_seq = request.getParameter("schedule_seq");
+		String mongo_id = request.getParameter("mongo_id");
+		String course_seq = request.getParameter("course_seq");
+		
+		String  getFile_name = examdto.getFile_name();
+		
+		if( !getFile_name.isEmpty() ) {
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+					
+			String path = root+"resources"+File.separator+"files";
+			
+			// 파일 변경을 위해 기존에 올려뒀던 파일 지우기
+			fileManager.doFileDelete(getFile_name, path);
+			
+		}
+		
+		// 시험 삭제 시 몽고db delete
+		examService.delete_mongDB(mongo_id);
+		
+		// 시험 삭제 시 오라클 delete
+		int n = examService.delete_exam_schedule(schedule_seq);
+		
+		if(n==1) {
+			
+			mav.addObject("message", "시험 삭제가 완료되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/professor/courseDetail.lms?course_seq="+course_seq);
+			mav.setViewName("msg");	
+		}
+		
+		return mav;
+	}
+	
 	
 	
 }

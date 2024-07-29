@@ -338,6 +338,22 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 
+	// 시험 삭제시 exam 테이블 delete
+	@Override
+	public int delete_tbl_exam(String schedule_seq) {
+		int n = sqlSession.delete("schedule.delete_tbl_exam", schedule_seq);
+		return n;
+	}
+
+	
+	// 시험 삭제시 schedule 테이블 delete
+	@Override
+	public int delete_exam_tbl_schedule(String schedule_seq) {
+		int n = sqlSession.delete("schedule.delete_exam_tbl_schedule", schedule_seq);
+		return n;
+	}
+
+
 
 
 

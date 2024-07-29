@@ -68,8 +68,6 @@ public class ExamService_imple implements ExamService {
         int course_seq = Integer.parseInt(request.getParameter("course_seq"));
         int sizePerPage = 10;
         
-        System.out.println("course_seq 확인용 => "+ course_seq);
-
         List<Exam> examPageList = scheduleDao.getExamList(currentPage, sizePerPage, course_seq);
         int examCount = scheduleDao.getExamCount(course_seq);
 
@@ -457,6 +455,30 @@ public class ExamService_imple implements ExamService {
 		
 		return answerList;
 	}
+
+
+
+	// 시험 삭제 시 몽고db delete
+	@Override
+	public void delete_mongDB(String mongo_id) {
+		examAnswerRepository.deleteById(mongo_id);
+		
+	}
+
+
+	// 시험 삭제 시 오라클 delete
+	@Override
+	public int delete_exam_schedule(String schedule_seq) {
+		
+		int n1 = scheduleDao.delete_exam_tbl_schedule(schedule_seq);
+		int n2 = scheduleDao.delete_tbl_exam(schedule_seq);
+		return n1*n2;
+	}
+
+
+
+	
+
 
 
 

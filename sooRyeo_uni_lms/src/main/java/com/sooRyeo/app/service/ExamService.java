@@ -71,4 +71,11 @@ public interface ExamService {
 	
 	// 교수가 학생 점수 가져오는 메소드
 	List<StudentAnswer> ExamResultList(int fk_course_seq);
+
+	// 시험 삭제 시 몽고db delete
+	void delete_mongDB(String mongo_id);
+
+	// 시험 삭제 시 오라클 delete
+	int delete_exam_schedule(String schedule_seq);
+
 }
