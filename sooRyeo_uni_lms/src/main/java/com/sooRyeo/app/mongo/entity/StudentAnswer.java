@@ -18,7 +18,7 @@ public class StudentAnswer {
     private Integer studentId;
     private String studentName;
     private String examAnswersId;
-    private List<Answer> answers;
+    private List<SubmitAnswer> answers;
     private Integer score;
     private Integer totalScore;
     private int correctCount;
@@ -26,7 +26,7 @@ public class StudentAnswer {
     private Integer courseSeq;
 
 
-    public int getQuestionAnswer(int questionNumber) {
+    public String getQuestionAnswer(int questionNumber) {
         return answers.get(questionNumber-1).getAnswer();
     }
 

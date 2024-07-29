@@ -32,15 +32,11 @@ $(document).ready(function () {
 	  // === 타이머 함수 만들기 시작 === //
 	  const timer = function () {
 	    if (time < 0) {
-	      //alert("시험시간 종료!!\n자동으로 제출됩니다.");
+	      alert("시험시간이 종료되었습니다.\n자동으로 제출됩니다.");
 
 	      clearInterval(interval_timer); // 타이머 삭제하기
-	      // interval_timer 는 중단해야할 setInterval 함수를 가리키는 것이다.
 
-	     // btnSubmit.attr("disabled", true); // "제출하기" 버튼 비활성화
-	      // [참고] btnSubmit.attr('disabled', false); // "제출하기" 버튼 활성화
-
-	      check(); // 채점하는 함수 호출
+	      timeoutSubmit(); // 제출하는 함수 호출
 	    } else {
 	      let minute = "";
 	      let second = "";
@@ -100,6 +96,8 @@ function goCheck() {
     
     if(confirm("정말로 제출하시겠습니까?")){
 		const frm = document.SelectAnswer
+		
+		 console.log(frm);
 
 		frm.method = "post";
 		frm.action = "<%= ctxPath%>/exam/SelectAnswer.lms";
@@ -108,6 +106,17 @@ function goCheck() {
 	else{
 		return;
 	}
+    
+};
+
+function timeoutSubmit() {
+
+		const frm = document.SelectAnswer
+		console.log(frm);
+		
+		frm.method = "post";
+		frm.action = "<%= ctxPath%>/exam/SelectAnswer.lms";
+		frm.submit();
     
 };
 
@@ -123,7 +132,7 @@ function goCheck() {
 			</div>
             <div class="card-body">
                 <p class="card-text">
-                    <iframe width="100%" height="600" src="<%= ctxPath %>/resources/exam/${examView.file_name}#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                    <iframe width="100%" height="600" src="<%= ctxPath %>/resources/exam/${examView.original_file_name}#toolbar=0&navpanes=0&scrollbar=0"></iframe>
                 </p>
             </div>
         </div>
