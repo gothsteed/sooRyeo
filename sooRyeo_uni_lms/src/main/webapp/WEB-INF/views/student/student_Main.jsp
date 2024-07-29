@@ -140,153 +140,125 @@
 $(document).ready(function(){
 	
 	showWeather();
+	
+    
+    // 문서가 로드 되어지면 통계가 보이도록 한다.
+    $("select#searchType").val("Curriculum_nameList").trigger("change");
 
-	// 전체 출석률 하이차트
-	Highcharts.chart('lecture_container', {
-	    chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-	        type: 'pie'
-	    },
-	    title: {
-	        text: '전체강의 출석[%]'
-	    },
-	    tooltip: {
-	        valueSuffix: '%'
-	    },
-	    plotOptions: {
-	        series: {
-	            allowPointSelect: true,
-	            cursor: 'pointer',
-	            dataLabels: [{
-	                enabled: true,
-	                distance: 20
-	            }, {
-	                enabled: true,
-	                distance: -40,
-	                format: '{point.percentage:.1f}%',
-	                style: {
-	                    fontSize: '1.2em',
-	                    textOutline: 'none',
-	                    opacity: 0.7
-	                },
-	                filter: {
-	                    operator: '>',
-	                    property: 'percentage',
-	                    value: 10
-	                }
-	            }]
-	        }
-	    },
-	    series: [
-	        {
-	            name: 'Percentage',
-	            colorByPoint: true,
-	            data: [
-	                {
-	                    name: 'Water',
-	                    y: 55.02
-	                },
-	                {
-	                    name: 'Fat',
-	                    sliced: true,
-	                    selected: true,
-	                    y: 26.71
-	                },
-	                {
-	                    name: 'Carbohydrates',
-	                    y: 1.09
-	                },
-	                {
-	                    name: 'Protein',
-	                    y: 15.5
-	                },
-	                {
-	                    name: 'Ash',
-	                    y: 1.68
-	                }
-	            ]
-	        }
-	    ]
-	});
-	//////////////////////////////////////////////
-	
-	
-	
-	//////////////////////////////////////////////
-	// 과제달성률 하이차트
-	Highcharts.chart('assignment_container', {
-	    chart: {
-	        type: 'pie'
-	    },
-	    title: {
-	        text: '과제달성률[%]'
-	    },
-	    tooltip: {
-	        valueSuffix: '%'
-	    },
-	    plotOptions: {
-	        series: {
-	            allowPointSelect: true,
-	            cursor: 'pointer',
-	            dataLabels: [{
-	                enabled: true,
-	                distance: 20
-	            }, {
-	                enabled: true,
-	                distance: -40,
-	                format: '{point.percentage:.1f}%',
-	                style: {
-	                    fontSize: '1.2em',
-	                    textOutline: 'none',
-	                    opacity: 0.7
-	                },
-	                filter: {
-	                    operator: '>',
-	                    property: 'percentage',
-	                    value: 10
-	                }
-	            }]
-	        }
-	    },
-	    series: [
-	        {
-	            name: 'Percentage',
-	            colorByPoint: true,
-	            data: [
-	                {
-	                    name: 'Water',
-	                    y: 55.02
-	                },
-	                {
-	                    name: 'Fat',
-	                    sliced: true,
-	                    selected: true,
-	                    y: 26.71
-	                },
-	                {
-	                    name: 'Carbohydrates',
-	                    y: 1.09
-	                },
-	                {
-	                    name: 'Protein',
-	                    y: 15.5
-	                },
-	                {
-	                    name: 'Ash',
-	                    y: 1.68
-	                }
-	            ]
-	        }
-	    ]
-	});
-	//////////////////////////////////////////////
+    
+    $("select[name='name']").change(function() {
+        func_choice("myAttendance_byCategory");
+    });
+    
+}); // end of $(document).ready
 
 
-	fetchTimeTable();
+
+// function declaration
+function func_choice(searchTypeVal) {
 	
-});
+     switch (searchTypeVal) {
+     
+        case "myAttendance_byCategory": // 과목을 선택한 경우
+            
+            $.ajax({
+                url: "<%=ctxPath%>/student/myAttendance_byCategoryJSON.lms",
+                dataType: "json",
+                data: {"name" : $("select[name='name']").val()},
+                success: function(json) {
+
+                    // console.log( $("select[name='name']").val() );
+                    // 국어학개론
+                    
+                    // console.log(JSON.stringify(json));
+                    // {"name":"국어학개론","attendance_rate":"14"}
+                 
+                	$("div#lecture_container").empty();
+                	$("div.highcharts-data-table").empty();
+                	
+                	
+                	let resultArr = [];
+
+                	if(json.attendance_rate) {	// attendance_rate가 존재하는지 확인
+                		
+                	}
+                		let attendanceRate = parseFloat(json.attendance_rate); // 문자열을 숫자로 변환
+                		
+                		resultArr.push({
+                            name: json.name,
+                            y: attendanceRate
+                		});
+                		
+                		// 미출석률 추가
+                        resultArr.push({
+                            name: json.name + ' 미출석',
+                            y: 100 - attendanceRate // 미출석률 계산
+                        });
+                            
+                   	//////////////////////////////////////////////
+                    // 하이차트 생성
+                    Highcharts.chart('lecture_container', {
+                        chart: {
+                            type: 'pie'
+                        },
+                        title: {
+                            text: '출석률'
+                        },
+                        plotOptions: {
+                            pie: {
+                                shadow: false,
+                                center: ["50%", "50%"],
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.name}: <b>{point.percentage:.2f}%</b>'
+                                },
+                                states: {
+                                    hover: {
+                                        enabled: true
+                                    }
+                                },
+                                size: "70%",
+                                innerSize: "40%",
+                                borderColor: null,
+                                borderWidth: 5
+                            }
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
+                        },
+                        series: [{
+                            name: '출석률',
+                            innerSize: '60%',
+                            data: resultArr // 출석률과 미출석률 데이터 사용
+                        }],
+                    });
+					//////////////////////////////////////////////
+					
+					
+                    // HTML 테이블 생성
+                    /* let v_html = "<table>";
+                    v_html += "<tr><th>수업명</th><th>퍼센티지</th></tr>";
+
+                    v_html += "<tr>" +
+                            "<td>" + json.name + "</td>" +
+                            "<td>" + json.attendance_rate + "%" + "</td>" +
+                            "</tr>";
+              
+                    
+                    
+                    v_html += "</table>";
+                    $("div#table_container").html(v_html); */
+                },
+                error: function(request, status, error) {
+                    alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+                }
+            });
+     } // end of switch
+     
+     
+} // end of function func_choice(searchTypeVal)
+
+
 
 function goView(announcement_seq){
 	const goBackURL = "${requestScope.goBackURL}";
@@ -340,7 +312,7 @@ function showWeather(){
 				      마치 배열의 인덱스(index)로 값(value)를 찾는 것과 같은 효과를 낸다.
 				*/
 				
-		    	console.log( $(local).text() + " stn_id:" + $(local).attr("stn_id") + " icon:" + $(local).attr("icon") + " desc:" + $(local).attr("desc") + " ta:" + $(local).attr("ta") ); 
+		    	// console.log( $(local).text() + " stn_id:" + $(local).attr("stn_id") + " icon:" + $(local).attr("icon") + " desc:" + $(local).attr("desc") + " ta:" + $(local).attr("ta") ); 
 		      //	속초 stn_id:90 icon:03 desc:구름많음 ta:-2.5
 		      //	북춘천 stn_id:93 icon:03 desc:구름많음 ta:-7.0
 		    	
@@ -446,44 +418,35 @@ function fillTimetable(data) {
 		<div class="col-sm-12 col-md-12">
 			<div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 600px;">
 				
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="4" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="4" gs-y="0" gs-w="4" gs-h="5" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							<img src="<%= ctxPath%>/resources/images/attendance.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
+							<img src="<%=ctxPath%>/resources/images/attendance.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
 							<h4 style="font-weight: bold;">출석률</h4>
 						</div>
 						
 						<div style="display: flex;">   
 							<div style="width: 80%; margin:auto; max-height:50px;">
-							
-							   <div id="lecture_container"></div>
-							   <div id="table_container" style="margin: 40px 0 0 0;"></div>
-							
+								
+								<form name="searchFrm" style="margin: 20px 0 50px 0;">
+								<span style="font-weight: bold;">수업 선택 :</span>
+								    <select name="name" id="searchType" style="height: 30px;" onchange="func_choice(this.value)">
+									        <c:forEach var="nameList" items="${requestScope.Curriculum_nameList}">
+									            <option value="${nameList.name}">${nameList.name}</option>
+									        </c:forEach>
+								    </select>
+								</form>
+								
+							   	<div id="lecture_container"></div>
+								<div id="table_container" style="margin: 40px 0 0 0;"></div>
 							</div>
 						</div>
 					</div>
 				</div>
 				
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
-					<div class="grid-stack-item-content">
-						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							<img src="<%= ctxPath%>/resources/images/tasks.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
-							<h4 style="font-weight: bold;">과제달성률</h4>
-						</div>
-						<div style="display: flex;">   
-							<div style="width: 80%; margin:auto; height:0px;">
-							
-							   <div id="assignment_container"></div>
-							   <div id="table_container" style="margin: 40px 0 0 0;"></div>
-							
-							</div>
-						</div>
-					</div>
-				</div>
-	
 
 				
-			        <div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="0" gs-w="4" gs-h="4" gs-no-resize="true">
+		<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="0" gs-w="4" gs-h="5" gs-no-resize="true">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	            <img src="<%= ctxPath%>/resources/images/sun.png" style="width: 30px; height: 40px; margin-right:3%; margin-bottom:3%;"/>
@@ -529,13 +492,13 @@ function fillTimetable(data) {
 						</c:if>
 					</div>
 				</div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="12" gs-w="8" gs-h="4" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="4" gs-w="4" gs-h="5" gs-no-resize="true">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
-							
+							<img src="<%= ctxPath%>/resources/images/schedule.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
 							<h4 style="font-weight: bold;">시간표</h4>
 						</div>
-						<p class="card-text" style="margin-bottom: 0">
+						<p class="card-text" style="margin-bottom: 10%;">
 						<table class="timetable table table-bordered">
 							<thead>
 							<tr>

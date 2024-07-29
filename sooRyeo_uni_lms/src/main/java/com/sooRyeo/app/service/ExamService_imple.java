@@ -59,8 +59,7 @@ public class ExamService_imple implements ExamService {
 
     @Autowired
     private StudentExamAnswerRepository answerRepository;
-
-
+    
 
     @Override
     public ModelAndView getExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
@@ -339,7 +338,7 @@ public class ExamService_imple implements ExamService {
 	}
 		
 	@Override
-	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request) throws NumberFormatException , NullPointerException {
+	public void insertMongoStudentExamAnswer(List<Integer> inputAnswers, String schedule_seq, HttpServletRequest request, int course_seq) throws NumberFormatException , NullPointerException {
 
 		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
 		
@@ -364,6 +363,8 @@ public class ExamService_imple implements ExamService {
 	            Answer answer = answers.get(i);
 	            int getAnswer = answer.getAnswer();  // 각 Answer 객체의 score를 가져옴
 	            
+	            answer.setAnswer(inputAnswers.get(i));
+	            
 	            int getScore = answer.getScore(); // 문제의 배점을 가져오는 것
 	           
 	            System.out.println("getScore "+getScore);
@@ -372,10 +373,10 @@ public class ExamService_imple implements ExamService {
 	            
 	            // inputAnswers의 해당 인덱스와 비교
 	            if (i < inputAnswers.size()) { // 인덱스 범위 체크
-	                String inputAnswer = inputAnswers.get(i); // inputAnswers에서 값 가져오기
+	                Integer inputAnswer = inputAnswers.get(i); // inputAnswers에서 값 가져오기
 	                
 	                // getAnswer와 inputAnswer 비교
-	                if (String.valueOf(getAnswer).equals(inputAnswer)) {
+	                if (getAnswer == inputAnswer) {
 	                	correctCount++; // 정답일 경우 corrextCount를 1씩 증가
 
 	                	score += getScore; // 정답인 경우 그 문제의 배점을 score에 쌓아두는 것
@@ -402,6 +403,7 @@ public class ExamService_imple implements ExamService {
 	        sa.setWrongSCount(wrongCount);
 	        sa.setExamAnswersId(examView.getAnswer_mongo_id());
 	        sa.setAnswers(answers);
+	        sa.setCourseSeq(course_seq);
 	        
 	        answerRepository.save(sa);
 	        
@@ -412,6 +414,50 @@ public class ExamService_imple implements ExamService {
 
 		
 	}
+
+
+
+	@Override
+	public Exam getCourse_seq(String schedule_seq) {
+		
+		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
+		
+		return examView;
+	}
+
+
+
+	@Override
+	public List<StudentAnswer> ExamResultList(int fk_course_seq) {
+		
+		Integer courseSeq = fk_course_seq;
+		
+		List<StudentAnswer> answerList = answerRepository.findAllByCourseSeq(courseSeq);
+		
+		
+		int testCount = 0;
+		
+		if (answerList != null && !answerList.isEmpty()) {
+	    	
+            for (StudentAnswer answer : answerList) {
+                int score = answer.getScore();
+                int totalscore = answer.getTotalScore();
+                
+            	System.out.println("확인용 score : " + score);
+            	System.out.println("확인용 totalscore : " + totalscore);
+                
+                testCount++;
+                
+                System.out.println("확인용 testCount : " + testCount);
+            }
+            
+        } else {
+            System.out.println("answerList가 비어 있습니다.");
+        }
+		
+		return answerList;
+	}
+
 
 
 }

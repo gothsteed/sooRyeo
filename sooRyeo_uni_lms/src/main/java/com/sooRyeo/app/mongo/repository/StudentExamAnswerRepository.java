@@ -15,4 +15,6 @@ public interface StudentExamAnswerRepository extends MongoRepository<StudentAnsw
 	List<Answer> findAllById(String aNSWER_MONGO_ID);
     
     Optional<StudentAnswer> findByExamAnswersIdAndStudentId(String answerMongoId, Integer studentId);
+
+	List<StudentAnswer> findAllByCourseSeq(int courseSeq);
 }
