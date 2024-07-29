@@ -615,6 +615,24 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public int examCount(int fk_course_seq) {
+		
+		int examCount = dao.examCount(fk_course_seq);
+		
+		return examCount;
+	}
+
+
+	@Override
+	public double attendanceRate(int student_id, int fk_course_seq) {
+		
+		double attendanceRate = dao.attendanceRate(student_id, fk_course_seq);
+		
+		return attendanceRate;
+	}
+
+
 
 	
 

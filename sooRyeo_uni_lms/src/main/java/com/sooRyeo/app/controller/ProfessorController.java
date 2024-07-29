@@ -943,13 +943,14 @@ public class ProfessorController {
 		
 		Map<String, Object> checkMap = new HashMap<>();
 		
-
+		// 학생 기본 정보와 과제 데이터 가져오기
 		checkMap = professorService.score_checkJSON(student_id, fk_course_seq);
 
 		
-		
-		double assignmentScore = (double)checkMap.get("assignmentScore"); // 과제 백분율	
+		double DassignmentScore = (double)checkMap.get("assignmentScore"); // 과제 백분율	
 		int regi_course_seq = (int)checkMap.get("regi_course_seq"); // 학생 등록 강좌 번호
+		
+		String assignmentScore = String.format("%.2f", DassignmentScore);  
 		System.out.println("확인용 json 넣기전 assignmentScore : " + assignmentScore);
 		
 		Object mark = null; // 학점
@@ -961,13 +962,15 @@ public class ProfessorController {
 		}
 		
 		// 몽고 디비에서 시험점수 가져오기
+		double DtotalExamScore = 0;
 		
-		double totalExamScore = 0;
+		// 총 시험 갯수 가져오기
+		int examCount = professorService.examCount(fk_course_seq);
+		
+		String totalExamScore = ""; 
+		 
 		
 		List<StudentAnswer> ExamResultList = examService.ExamResultList(fk_course_seq);
-		
-		
-		
 		
 		if (ExamResultList != null && !ExamResultList.isEmpty()) {
 	    	
@@ -978,23 +981,49 @@ public class ProfessorController {
             	System.out.println("확인용 score : " + score);
             	System.out.println("확인용 totalscore : " + totalscore);
             	
-            	totalExamScore += ((double)score/totalscore)*100;
-                
+            	DtotalExamScore += ((double)score/totalscore)*100/examCount;
+            	
             }
             
         } else {
             System.out.println("ExamResultList가 비어 있습니다.");
         }
 		
+		totalExamScore = String.format("%.2f", DtotalExamScore); 
 		System.out.println("확인용 totalExamScore : " + totalExamScore);
+		
+		/////////////////////////////////////////////////////////////
+		
+		// 학생 출석율 가져오기
+		double DattendanceRate = 0;
+		String attendanceRate = "0";
+		try {		
+			DattendanceRate = professorService.attendanceRate(student_id, fk_course_seq);
+			attendanceRate = String.format("%.2f", DattendanceRate);
+		} catch (Exception e) {
+			
+		}
+		
+		// System.out.println("확인용 출석율 : " + attendanceRate);
+		
+		Double DtotalScore = DassignmentScore + DtotalExamScore + DattendanceRate;
+		
+		String totalScore = String.format("%.2f", DtotalScore); 
+		System.out.println("확인용 토탈 : " + totalScore);
+		
+		
 		
 		
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("student_id", student_id);
         jsonObj.put("name", name);
         jsonObj.put("assignmentScore", assignmentScore);
+        jsonObj.put("totalExamScore", totalExamScore);
         jsonObj.put("regi_course_seq", regi_course_seq);
+        jsonObj.put("attendanceRate", attendanceRate);
+        jsonObj.put("totalScore", totalScore);
         jsonObj.put("mark", mark);
+        
         
         System.out.println(jsonObj.toString());
         
