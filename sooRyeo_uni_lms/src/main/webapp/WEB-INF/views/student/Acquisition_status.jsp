@@ -9,18 +9,15 @@
    String ctxPath = request.getContextPath();
 %>
 
-<%-- Bootstrap CSS --%>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-<%-- jQueryUI CSS 및 JS --%>
-<script type="text/javascript" src="<%= ctxPath%>/resources/js/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
-<script type="text/javascript" src="<%= ctxPath%>/resources/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script>
-
-
 <style type="text/css">
+th {
+	background-color: #ccd9ff;
 
+}
 
+tr#myScoreView > td:last-child {
+	color: red;
+}
 </style>
 
 <script type="text/javascript">
@@ -45,6 +42,8 @@ $(document).ready(function(){
 }); // end of $(document).ready
 
 
+
+
 // function declaration
 function selectCourse(year, semester){
 	
@@ -56,31 +55,56 @@ function selectCourse(year, semester){
 		return;
 	}
 
-	$("div#showList").html();
-	
 
  	$.ajax({
 		url:"<%=ctxPath%>/student/Acquisition_status_JSON.lms",
 		data:{"semester":selector},
 		type:"post",
 		success:function(json){
-			//console.log(JSON.stringify(json));
+			
+
+			// console.log(JSON.stringify(json));
+			// "[{\"score\":\"100\",\"name\":\"국어학개론\",\"semester_date\":\"2024년 2학기\",\"mark\":\"4.5\"}]"
+			
+			
+		    // JSON 문자열을 JavaScript 객체로 변환
+		    let data;
+			
+		    try {
+		        data = JSON.parse(json); // JSON.parse를 사용하여 변환
+		    } catch (e) {
+		        console.error("JSON 파싱 오류:", e);
+		        return; // 에러 발생 시 함수를 종료
+		    }
+			
 			
 			let v_html = ``;
 			
-			json.forEach(function(item, index, array) {
-				
-				v_html += `<tr>
-								<th style="text-align: center;">\${item.name}</th>
-								<th style="text-align: center;">\${item.semester_date}</th>
-								<th style="text-align: center;">\${item.score}</th>
-								<th style="text-align: center;">\${item.mark}</th>
-						   </tr>`;
-				
-				
-			}); // end of json.forEach
-			
-			$("div#showList").html(v_html);
+		    if (data === null || (typeof data === "object" && Object.keys(data).length === 0)) {
+		        v_html += `<tr id="myScoreView">
+		                       <td colspan='5' style="text-align: center;">취득현황이 없습니다.</td>
+		                   </tr>`;
+		    } else if (Array.isArray(data) && data.length > 0) {
+		        $.each(data, function(index, item) {
+		            v_html += `<tr id="myScoreView">
+		            	 		   <td style="text-align: center;">\${item.student_id}</td>
+		                           <td style="text-align: center;">\${item.name}</td>
+		                           <td style="text-align: center;">\${item.semester_date}</td>
+		                           <td style="text-align: center;">\${item.score}</td>
+		                           <td style="text-align: center;">\${item.mark}</td>
+		                       </tr>`;
+		        });
+		    } else if (typeof data === "object") {
+		        v_html += `<tr id="myScoreView">
+		        			   <td style="text-align: center;">\${item.student_id}</td>
+		                       <td style="text-align: center;">\${data.name}</td>
+		                       <td style="text-align: center;">\${data.semester_date}</td>
+		                       <td style="text-align: center;">\${data.score}</td>
+		                       <td style="text-align: center;">\${data.mark}</td>
+		                   </tr>`;
+		    }
+		    
+            $("div#showList tbody").html(v_html); // tbody에 내용 추가
 			
 			
 		},
@@ -110,7 +134,7 @@ function selectCourse(year, semester){
 	    <option value="2025">2025</option>
   	</select>
   	<br>
-  	<select id="semester" name="semester" class="form-control mb-2" style="margin-right: 20px;">
+  	<select id="semester" name="semester" class="form-control mb-2" style="margin-top: 10px; margin-right: 20px;">
 	    <option value="">--학기 선택--</option>
 	    <option value="03">1학기</option>
 	    <option value="07">2학기</option>
@@ -121,12 +145,13 @@ function selectCourse(year, semester){
 
 <hr style="margin-bottom:3%;">
 
-<div style="margin-top: 5%; width : 80%; id="showList">
+<div style="margin-top: 5%; width : 100%;"  id="showList">
 <div style="display: flex;">
 	<div class="table-container mt-3" style="margin: auto;">
 		<table class="table table-bordered" id="assignCheck" style="width: 1024px; word-wrap: break-word; table-layout: fixed;">
 			<thead>
 				<tr>
+					<th style="text-align: center;">학번</th>
 					<th style="text-align: center;">수업명</th>
 					<th style="text-align: center;">개설학기</th>
 					<th style="text-align: center;">점수</th>
@@ -134,21 +159,22 @@ function selectCourse(year, semester){
 				</tr>
 			</thead>
 			<tbody>
-			<c:if test="${requestScope.Acquisition_status == null}">
-				<tr>
-					<td colspan="4" style="text-align: center;">취득한 성적이 없습니다.</td>
-				</tr>
-			</c:if>
-			<c:if test="${requestScope.Acquisition_status != null}">
-				<c:forEach var="acquisition" items="${requestScope.Acquisition_status}">
-					<tr id="myScoreView">
-						<th style="text-align: center;">${acquisition.name}</th>
-						<th style="text-align: center;">${acquisition.semester_date}</th>
-						<th style="text-align: center;">${acquisition.score}</th>
-						<th style="text-align: center;">${acquisition.mark}</th>
-					</tr>
-				</c:forEach>
-			</c:if>		
+                   <c:if test="${requestScope.Acquisition_status == null}">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">취득한 성적이 없습니다.</td>
+                        </tr>
+                    </c:if>
+                    <c:if test="${requestScope.Acquisition_status != null}">
+                        <c:forEach var="acquisition" items="${requestScope.Acquisition_status}">
+                            <tr id="myScoreView">
+                            	<td style="text-align: center;">${acquisition.student_id}</td>
+                                <td style="text-align: center;">${acquisition.name}</td>
+                                <td style="text-align: center;">${acquisition.semester_date}</td>
+                                <td style="text-align: center;">${acquisition.score}</td>
+                                <td style="text-align: center;">${acquisition.mark}</td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>		
 			</tbody>
 		</table>
 	</div>

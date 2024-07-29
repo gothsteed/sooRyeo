@@ -918,7 +918,7 @@ public class StudentController {
 	
 	// 학생 - 성적 취득현황 JSON
 	@ResponseBody
-	@PostMapping("/student/Acquisition_status_JSON.lms")
+	@PostMapping(value = "/student/Acquisition_status_JSON.lms", produces="text/plain;charset=UTF-8")
 	public String Acquisition_status_JSON(HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
@@ -927,17 +927,31 @@ public class StudentController {
 		
 		String semester = request.getParameter("semester");
 		
-		System.out.println("확인용 semester : " + semester);
+		// System.out.println("확인용 semester : " + semester);
 		// 확인용 semester : 2024-07
 		
-		List<Map<String, Object>> Acquisition_status_JSON = service.Acquisition_status_JSON(semester, student_id);
+		List<Map<String, Object>> Acquisition_status_JSON = null;
+		
+		try {
+
+			Acquisition_status_JSON = service.Acquisition_status_JSON(semester, student_id);
+			
+		} catch (Exception e) {
+			
+			JSONArray jsonArr = new JSONArray();
+			return jsonArr.toString();
+			
+		}
+		
 		
 		
 		JSONArray jsonArr = new JSONArray();
 		
+		
 		for(Map<String, Object> map : Acquisition_status_JSON) {
 			
 			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("student_id", map.get("student_id"));
 			jsonObj.put("name", map.get("name"));
 			jsonObj.put("semester_date", map.get("semester_date"));
 			jsonObj.put("score", map.get("score"));
@@ -947,7 +961,7 @@ public class StudentController {
 			
 		} // end of for
 		
-		System.out.println(jsonArr.toString());
+		// System.out.println(jsonArr.toString());
 		// [{"score":"100","name":"국어학개론","semester_date":"2024년 2학기","mark":"3.5"}] 여기까지함
 		
 		return jsonArr.toString();
