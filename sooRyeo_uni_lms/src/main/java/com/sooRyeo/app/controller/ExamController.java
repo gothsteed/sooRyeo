@@ -229,7 +229,6 @@ public class ExamController {
 	@RequireLogin(type = {Student.class})
 	@GetMapping("/student/exam/result.lms")
 	public ModelAndView getStudentExamResult(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException {
-		//todo : error handler 추가하기
 		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq") == null? "-1" : request.getParameter("schedule_seq"));
 		mav.addObject("schedule_seq", schedule_seq);
 		mav.setViewName("exam/examResult");
