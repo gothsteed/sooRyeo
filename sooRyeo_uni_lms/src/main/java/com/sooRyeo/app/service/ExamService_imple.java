@@ -211,6 +211,8 @@ public class ExamService_imple implements ExamService {
     public ModelAndView takeExam(ModelAndView mav, HttpServletRequest request, int schedule_seq) {
 
         Exam examView = scheduleDao.getExamSchedule(schedule_seq);
+        HttpSession session = request.getSession();
+        Student student = (Student) session.getAttribute("loginuser");
 
         if(examView.isBefore(LocalDateTime.now())) {
             mav.addObject("message", "아직 시험이 시작되지 않았습니다.");
@@ -226,7 +228,16 @@ public class ExamService_imple implements ExamService {
             return mav;
         }
 
-            mav.addObject("schedule_seq", schedule_seq);
+        StudentAnswer studentAnswer = answerRepository.findByExamAnswersIdAndStudentId(examView.getAnswer_mongo_id(), student.getStudent_id()).orElse(null);
+
+        if(studentAnswer != null) {
+            mav.addObject("message", "이미 응시한 시험입니다.");
+            mav.addObject("loc", request.getContextPath() + "/student/exam/wait.lms?schedule_seq=" + schedule_seq);
+            mav.setViewName("msg");
+            return mav;
+        }
+
+        mav.addObject("schedule_seq", schedule_seq);
         mav.addObject("examView", examView);
         mav.setViewName("test");
 
