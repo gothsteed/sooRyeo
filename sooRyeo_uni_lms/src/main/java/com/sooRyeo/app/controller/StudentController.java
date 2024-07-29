@@ -3,6 +3,9 @@ package com.sooRyeo.app.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -223,6 +226,7 @@ public class StudentController {
 		 
 		String fk_course_seq = request.getParameter("course_seq");
 		
+/*
 		List<Lecture> lectureList = studentservice.getlectureList(fk_course_seq);
 		
 		List<Professor> professor_info = studentservice.select_prof_info(fk_course_seq);
@@ -237,8 +241,11 @@ public class StudentController {
 		mav.addObject("lectureList_week", lectureList_week);
 		
 		mav.setViewName("myLecture");
+*/
 
-		return mav;
+		//return mav;
+
+		return studentservice.getCourseLecturePage(request, mav, fk_course_seq);
 		
 	} // end of public String myLecture
 	
@@ -466,8 +473,13 @@ public class StudentController {
 			jsonObj.put("fk_student_id", assignment_show.get("fk_student_id")); 
 			jsonObj.put("title", assignment_show.get("title"));          
 			jsonObj.put("content", assignment_show.get("content"));     
-			jsonObj.put("attached_file", assignment_show.get("attatched_file")); 
-			jsonObj.put("submit_datetime", assignment_show.get("submit_datetime"));
+			jsonObj.put("attached_file", assignment_show.get("attatched_file"));
+
+			Date date = ((Date) assignment_show.get("submit_datetime"));
+			LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+
+			jsonObj.put("submit_datetime", localDateTime);
 		
 		}
 		else {

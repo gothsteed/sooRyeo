@@ -181,14 +181,17 @@ function goReadComment(){
 	            
 	            // 날짜 형식 변환
 	            let originalDatetime = json.submit_datetime;
+				console.log(originalDatetime)
 	            let date = new Date(originalDatetime);
 	            let year = date.getFullYear();
+				console.log(date)
 	            let month = ('0' + (date.getMonth() + 1)).slice(-2);
 	            let day = ('0' + date.getDate()).slice(-2);
 	            let hours = ('0' + date.getHours()).slice(-2);
 	            let minutes = ('0' + date.getMinutes()).slice(-2);
 	            let seconds = ('0' + date.getSeconds()).slice(-2);
 	            let formattedDatetime = `\${year}-\${month}-\${day} \${hours}:\${minutes}:\${seconds}`;
+				console.log(formattedDatetime)
 
 	            v_html += "<td class='comment'>" + formattedDatetime + "</td>";
 	            

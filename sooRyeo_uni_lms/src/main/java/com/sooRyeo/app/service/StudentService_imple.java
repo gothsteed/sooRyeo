@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.sooRyeo.app.domain.*;
+import com.sooRyeo.app.model.LectureDao;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -42,18 +44,7 @@ import com.google.gson.JsonObject;
 import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.Sha256;
-import com.sooRyeo.app.domain.Curriculum;
-import com.sooRyeo.app.domain.Announcement;
-import com.sooRyeo.app.domain.Assignment;
-import com.sooRyeo.app.domain.AssignmentSubmit;
-import com.sooRyeo.app.domain.Lecture;
-import com.sooRyeo.app.domain.Pager;
-import com.sooRyeo.app.domain.Professor;
-import com.sooRyeo.app.domain.Student;
-import com.sooRyeo.app.domain.StudentTimeTable;
-import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
-import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
 
 
@@ -62,6 +53,9 @@ public class StudentService_imple implements StudentService {
 	
 	@Autowired
 	private StudentDao dao;
+
+	@Autowired
+	private LectureDao lectureDao;
 	
     @Autowired
     private AES256 aES256;
@@ -399,6 +393,37 @@ public class StudentService_imple implements StudentService {
 		return classList;
 	}
 
+	@Override
+	public ModelAndView getCourseLecturePage(HttpServletRequest request, ModelAndView mav, String fkCourseSeq) {
+		HttpSession session =  request.getSession();
+		Student student =  (Student) session.getAttribute("loginuser");
+
+		List<Lecture> lectureList = dao.getlectureList(fkCourseSeq);
+		List<Attendance> addendenceList  = lectureDao.getAttendance(fkCourseSeq, student.getStudent_id());
+		Map<Integer, Boolean> attendanceMap = new HashMap<>();
+		for(Attendance a : addendenceList) {
+			if(a.isAttended()) {
+				attendanceMap.put(a.getLecture_seq(), true);
+			}
+		}
+
+		List<Professor> professor_info = dao.select_prof_info(fkCourseSeq);
+
+		// 수업 - 이번주 강의보기
+		List<Lecture> lectureList_week = dao.getlectureList_week(fkCourseSeq);
+
+		mav.addObject("professor_info", professor_info);
+		mav.addObject("attendanceMap", attendanceMap);
+
+		mav.addObject("lectureList", lectureList);
+		mav.addObject("fk_course_seq", fkCourseSeq);
+		mav.addObject("lectureList_week", lectureList_week);
+
+		mav.setViewName("myLecture");
+
+		return mav;
+	}
+
 
 	// 수업  - 내 강의보기
 	@Override
@@ -407,7 +432,6 @@ public class StudentService_imple implements StudentService {
 		List<Lecture> lectureList = dao.getlectureList(fk_course_seq);
 
 		return lectureList;
-		
 	} // end of public List<Lecture> getlectureList
 
 
@@ -841,12 +865,5 @@ public class StudentService_imple implements StudentService {
 		
 	} // end of public void employeeList_to_Excel
 
-	
 
-	
-	
-
-	
-	
-	
 }

@@ -315,30 +315,43 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 <div class="container" style="margin-top:5%;">
 <h3>이번주 강의</h3>
 <hr>
-<c:forEach var="lecture_week" items="${requestScope.lectureList_week}">
-	<div class="card mb-5">
-		
-		<input type="hidden" name="lecture_seq_2" value="${lecture_week.lecture_seq}" />
-		<h5 class="card-header" style="font-weight:bold;">${lecture_week.lecture_title}</h5>
-		<div class="card-body">
-			<h5 class="card-title">${lecture_week.lecture_content}</h5>
-			<hr>
-			<a class="card-link" id="classPlay"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
-			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
+	<c:forEach var="lecture_week" items="${requestScope.lectureList_week}">
+		<div class="card mb-5">
+			
+
+				<div class="card-header" style="display: flex">
+					<h5 style="font-weight:bold;">${lecture_week.lecture_title}</h5>
+					<c:if test="${requestScope.attendanceMap[lecture_week.lecture_seq]}">
+						<span class="badge badge-success d-block, ml-1" style="height: 20px;">수강완료</span>
+					</c:if>
+
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">${lecture_week.lecture_content}</h5>
+					<hr>
+					<a class="card-link" id="classPlay"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
+					<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
+					<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
+				</div>
 		</div>
-		
-	</div>
-</c:forEach>
+	</c:forEach>
 
 <h3 style="margin-top:10%;">강의 목록</h3>
 <hr>
 <c:forEach var="lecture" items="${requestScope.lectureList}">
 
 	<div class="card mb-5">
-		
-		<input type="hidden" name="lecture_seq" value="${lecture.lecture_seq}" />
-		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title}</h5>
+
+		<div class="card-header" style="display: flex">
+			<input type="hidden" name="lecture_seq" value="${lecture.lecture_seq}" />
+			<h5 style="font-weight:bold;">${lecture.lecture_title}</h5>
+			<c:if test="${requestScope.attendanceMap[lecture.lecture_seq]}">
+				<span class="badge badge-success d-block, ml-1" style="height: 20px;">수강완료</span>
+			</c:if>
+
+		</div>
+
+<%--		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title}</h5>--%>
 		<div class="card-body">
 			<h5 class="card-title">${lecture.lecture_content}</h5>
 			<hr>
