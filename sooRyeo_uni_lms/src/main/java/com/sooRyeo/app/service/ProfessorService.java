@@ -93,6 +93,9 @@ public interface ProfessorService {
 	// 학생 학점 수정하기
 	int editGradeEnd(Map<String, Object> paraMap);
 	
+	// 특정과목 총 시험 갯수 가져오기
+	int examCount(int fk_course_seq);
+	
 	
 	
 

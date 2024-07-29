@@ -445,6 +445,15 @@ public class ProfessorDao_imple implements ProfessorDao {
 	}
 
 
+	@Override
+	public int examCount(int fk_course_seq) {
+		
+		int examCount = sqlSession.selectOne("professor.examCount", fk_course_seq);
+		
+		return examCount;
+	}
+
+
 
 
 

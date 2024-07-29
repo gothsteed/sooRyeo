@@ -508,6 +508,13 @@
 	</update>
 	
 	
+	<select id="examCount" parameterType="int" resultType="int">
+		select count(*)
+ 		from tbl_exam
+ 		where fk_course_seq = #{fk_course_seq}
+	</select>
+	
+	
 	
 
 </mapper>

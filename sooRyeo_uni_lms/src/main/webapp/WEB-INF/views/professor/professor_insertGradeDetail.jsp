@@ -50,7 +50,7 @@
 				      			<td style="text-align: center; vertical-align: middle;">\${json.name}</td> 
 				      			<td style="text-align: center; vertical-align: middle;">\${json.student_id}</td> 
 				      			<td style="text-align: center; vertical-align: middle;">\${json.assignmentScore}</td>
-				      			<td style="text-align: center; vertical-align: middle;"></td>
+				      			<td style="text-align: center; vertical-align: middle;">\${json.totalExamScore}</td>
 					            <td style="text-align: center; vertical-align: middle;"></td>
 					            <td style="text-align: center; vertical-align: middle;"></td>`
 					
