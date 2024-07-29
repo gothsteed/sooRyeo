@@ -592,3 +592,6 @@ from tbl_assignment
 select to_date(start_date , 'yyyy-mm-dd hh24:mi:ss')
 from tbl_schedule
 where schedule_seq = '5'
+
+select *
+from tbl_exam

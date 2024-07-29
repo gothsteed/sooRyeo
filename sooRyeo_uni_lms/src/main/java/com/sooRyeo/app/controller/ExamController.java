@@ -74,11 +74,11 @@ public class ExamController {
 				bytes = attach.getBytes();
 				
 				originalFilename = attach.getOriginalFilename();
-				System.out.println("확인용 originalFilename => " + originalFilename); 
+				// System.out.println("확인용 originalFilename => " + originalFilename); 
 				// ~~~ 확인용 originalFilename => 2024년도 국가기술자격 검정 시행계획(대외 공고).pdf
 				
 				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-				System.out.println("확인용 newFileName " + newFileName);
+				// System.out.println("확인용 newFileName " + newFileName);
 				// 확인용 newFileName 20240714220735250112916872200.pdf
 				
 				examdto.setFile_name(newFileName);
@@ -104,11 +104,6 @@ public class ExamController {
 		int question_count = request.getParameterValues("answer").length; // total 문제 수
 		String course_seq = request.getParameter("course_seq");
 		//String test_type = request.getParameter("test_type"); // pdf 파일명
-		
-		
-		System.out.println("test_start_time 확인 => " + test_start_time);
-		System.out.println("test_end_time 확인 => " + test_end_time);
-		
 		
 		List<Answer> answer_list = new ArrayList<>();
 		
@@ -278,9 +273,6 @@ public class ExamController {
 		String course_seq = request.getParameter("course_seq");
 		String schedule_seq = request.getParameter("schedule_seq");
 		
-		System.out.println("schedule_seq 확인용 =>" + schedule_seq);
-		System.out.println("course_seq 확인용 =>" + course_seq);
-		
 		// 시험 출제 뷰단에 과목명 보여주기
 		String  coures_name = examService.select_coures_name(course_seq);
 		
@@ -319,8 +311,6 @@ public class ExamController {
 		
 		MultipartFile attach = examdto.getAttach();
 		
-		System.out.println("attach 확인 =>" + attach);
-		
 		// 시험지를 변경한다면
 		if( !attach.isEmpty() ) {
 			
@@ -351,10 +341,8 @@ public class ExamController {
 				bytes = attach.getBytes();
 				
 				originalFilename = attach.getOriginalFilename();
-				System.out.println("확인용 originalFilename => " + originalFilename); 
 
 				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-				System.out.println("확인용 newFileName " + newFileName);
 
 				examdto.setFile_name(newFileName);
 				examdto.setOriginal_file_name(originalFilename);
