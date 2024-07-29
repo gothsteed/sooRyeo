@@ -895,7 +895,7 @@ public class StudentController {
 		
 		
 		// 하이차트 - 출석률
-		Map<String, Object> myAttendance_byCategoryJSON = service.myAttendance_byCategoryJSON(student_id, name);
+		Map<String, Object> myAttendance_byCategoryJSON = studentservice.myAttendance_byCategoryJSON(student_id, name);
 		
 		
 		JSONObject jsonObj = new JSONObject();
@@ -922,7 +922,7 @@ public class StudentController {
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int student_id = loginuser.getStudent_id();
 		
-		List<Map<String, Object>> Acquisition_status = service.Acquisition_status(student_id);
+		List<Map<String, Object>> Acquisition_status = studentservice.Acquisition_status(student_id);
 		
 		request.setAttribute("Acquisition_status", Acquisition_status);
 		
@@ -950,7 +950,7 @@ public class StudentController {
 		
 		try {
 
-			Acquisition_status_JSON = service.Acquisition_status_JSON(semester, student_id);
+			Acquisition_status_JSON = studentservice.Acquisition_status_JSON(semester, student_id);
 			
 		} catch (Exception e) {
 			
