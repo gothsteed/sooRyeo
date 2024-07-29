@@ -445,6 +445,37 @@ public class ProfessorDao_imple implements ProfessorDao {
 	}
 
 
+	@Override
+	public int examCount(int fk_course_seq) {
+		
+		int examCount = sqlSession.selectOne("professor.examCount", fk_course_seq);
+		
+		return examCount;
+	}
+
+
+	@Override
+	public double attendanceRate(int student_id, int fk_course_seq) {		
+		
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("student_id", student_id);
+		paraMap.put("fk_course_seq", fk_course_seq);
+		
+		int totalLecture = sqlSession.selectOne("professor.totalLecture", fk_course_seq);
+				
+		int totalAttendance = sqlSession.selectOne("professor.totalAttendance", paraMap);
+		
+		
+        double attendanceRate = 0;
+        
+        if(totalLecture != 0 && totalAttendance != 0) {
+        	attendanceRate = ((double)totalAttendance/totalLecture)*100;
+        }
+					
+		return attendanceRate;
+	}
+
+
 
 
 

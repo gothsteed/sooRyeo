@@ -637,4 +637,28 @@ SELECT sum(SA.score) as totalscore
  join tbl_registered_course R ON S.student_id = R.fk_student_id
  join tbl_exam E ON R.fk_course_seq = E.fk_course_seq
  join tbl_schedule SC ON E.fk_schedule_seq = SC.schedule_seq
-        
+ where R.fk_course_seq = 4
+ 
+ 
+ select count(*)
+ from tbl_exam
+ where fk_course_seq = 4
+ 
+ select *
+ from tbl_attendance
+ where fk_student_id = 202400005 and attended_date IS NOT NULL;
+ 
+ SELECT *
+ FROM TBL_ATTENDANCE
+ 
+ -- 출석갯수
+ select count(*)
+ from tbl_attendance A
+ join tbl_registered_course R  ON A.fk_student_id = R.fk_student_id
+ join tbl_lecture L ON R.fk_course_seq = L.fk_course_seq and A.fk_lecture_seq = L.lecture_seq
+ where A.fk_student_id = 202400005 and R.fk_course_seq = 4 and A.attended_date IS NOT NULL;
+ 
+ -- 수강 갯수
+ select count(*)
+ from tbl_lecture
+ where fk_course_seq = 4       
