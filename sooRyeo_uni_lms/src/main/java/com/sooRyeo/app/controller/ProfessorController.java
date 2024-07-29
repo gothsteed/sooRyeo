@@ -938,19 +938,21 @@ public class ProfessorController {
 		
 		Map<String, Object> checkMap = new HashMap<>();
 		
-		try {
-			checkMap = professorService.score_checkJSON(student_id, fk_course_seq);
-		} catch (Exception e) {
-			JSONObject jsonObj = new JSONObject();
-			return jsonObj.toString();		
-		}
+
+		checkMap = professorService.score_checkJSON(student_id, fk_course_seq);
+
 		
 		double assignmentScore = (double)checkMap.get("assignmentScore");	
 		int regi_course_seq = (int)checkMap.get("regi_course_seq");
 		// System.out.println("확인용 json 넣기전 assignmentScore : " + assignmentScore);
 		
-		double mark = (double)checkMap.get("mark");
+		Object mark = null;
 		
+		try {	
+			mark = (double)checkMap.get("mark");
+		} catch (Exception e) {
+			
+		}
 		
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("student_id", student_id);

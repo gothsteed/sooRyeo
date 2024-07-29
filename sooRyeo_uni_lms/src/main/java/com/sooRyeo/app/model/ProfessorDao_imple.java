@@ -371,7 +371,13 @@ public class ProfessorDao_imple implements ProfessorDao {
         paraMap.put("student_id", student_id);
         paraMap.put("fk_course_seq", fk_course_seq);
         
-        int assignmentTotal = sqlSession.selectOne("professor.assignmentTotal", paraMap); // 과제 총점
+        int assignmentTotal = 0;
+        
+        try {
+        	assignmentTotal = sqlSession.selectOne("professor.assignmentTotal", paraMap); // 과제 총점
+		} catch (Exception e) {
+			
+		}    
         
         int assignmentCount = sqlSession.selectOne("professor.assignmentCount", fk_course_seq); // 과제 갯수
         
@@ -379,7 +385,14 @@ public class ProfessorDao_imple implements ProfessorDao {
         
         paraMap.put("regi_course_seq", regi_course_seq);
         
-        double mark = sqlSession.selectOne("professor.mark", paraMap);
+        Object mark = null;
+        
+        try {
+        	mark = (double)sqlSession.selectOne("professor.mark", paraMap);
+		} catch (Exception e) {
+
+		}
+        
         
         System.out.println("확인용 assignmentTotal : " + assignmentTotal);
         System.out.println("확인용 assignmentCount : " + assignmentCount);
