@@ -27,6 +27,7 @@ values (generate_admin_id(), '관리자', '03ac674216f3e15c761ee1a5e255f06795362
 select *
 from tbl_student;
 
+
 select *
 from tbl_professor;
 
@@ -79,11 +80,18 @@ from tbl_department;
 commit;
 
 
+select *
+from tbl_lecture
+
+
 
 alter table tbl_schedule add confirm smallint default '1' not null;
 
 
+		where lecture_seq = '28';
 
+select*
+from 
 
 select *
 from tbl_schedule;
@@ -405,13 +413,14 @@ drop table tbl_consult;
 ALTER TABLE tbl_consult CHANGE COLUMN COTENT CONTENT Nvarchar2(30);
 
 SELECT *
-FROM TBL_CONSULT;
+FROM TBL_CONSULT
+where fk_student_id = '202400009'
 
 select *
 from tbl_schedule
 where schedule_seq = '42';
 
-del
+
 
 
 select assignment_submit_seq
@@ -438,11 +447,148 @@ where schedule_seq = '59';
 
 commit;
 
-			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
-			from tbl_consult A join tbl_schedule B
-			on A.fk_schedule_seq = B.schedule_seq
-			where fk_student_id = '202400005' and confirm = '1'
+select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+from tbl_consult A join tbl_schedule B
+on A.fk_schedule_seq = B.schedule_seq
+where fk_student_id = '202400005' and confirm = '1'
+      
+      
+select lecture_title, lecture_content     
+from tbl_lecture
+where lecture_seq = '14'
             
             
+ALTER TABLE tbl_attendance ADD play_time Number(10); 
+
+select play
+from tbl_attendance
+where fk_student_id  = '202400005' and FK_LECTURE_SEQ = '14'
+
+
+ALTER TABLE tbl_attendance ADD play_time Number(10); 
+
+Alter table tbl_attendance
+    modify ( play_time Number);
+
+
+select *
+from all_sequences
+where sequence_name = 'ATTENDANCE_SEQ'
+
+select *
+from tbl_attendance;
+
+select *
+from tbl_lecture
             
             
+ 
+             
+select L.lecture_time - (A.play_time + 1) 
+from tbl_attendance A join tbl_lecture L
+on A.fk_lecture_seq  = L.lecture_seq
+where A.fk_student_id  = '202400005' and A.FK_LECTURE_SEQ = '15'
+ 
+            
+select A.play_time - L.lecture_time 
+from tbl_attendance A join tbl_lecture L
+on A.fk_lecture_seq  = L.lecture_seq
+where A.fk_student_id  = '202400005' and A.FK_LECTURE_SEQ = '15'
+
+
+select L.lecture_time - (A.play_time + #{play_time}) 
+		from tbl_attendance A join tbl_lecture L
+		on A.fk_lecture_seq  = L.lecture_seq
+		where A.fk_student_id  = #{userid} and A.FK_LECTURE_SEQ = #{lecture_seq}
+
+
+select *
+from tbl_lecture
+where lecture_seq = '15';
+
+select *
+from tbl_attendance
+where fk_lecture_seq = '15'
+
+
+update tbl_lecture set lecture_time = '3'
+where lecture_seq = '15'
+
+update tbl_attendance set ISATTENDED = '0'
+where fk_lecture_seq = '15'
+
+
+select *
+from tbl_attendance;
+
+commit;
+
+alter table tbl_exam modify ORIGINAL_FILE_NAME not null;
+
+alter table tbl_exam modify FILE_NAME not null;
+
+            select *
+            from tbl_exam
+            
+            select *
+            from tbl_schedule
+            where schedule_type = '2'
+            
+            
+            select *
+            from tbl_exam;
+
+delete
+from tbl_exam
+where fk_schedule_seq = '94';
+
+rollback;
+
+select *
+from tbl_exam
+
+select *
+from tbl_exam
+
+
+			select fk_student_id, A.course_seq , schedule_seq, title, schedule_type, start_date, end_date
+			from tbl_schedule join tbl_exam
+			on schedule_seq = fk_schedule_seq
+			join tbl_course A
+			on course_seq = fk_course_seq
+			join tbl_registered_course B
+			on B.fk_course_seq = A.course_seq
+			where fk_student_id = '202400005'
+
+
+
+commit;
+
+
+
+select C.name
+from tbl_course A join tbl_curriculum C
+on A.fk_curriculum_seq = C.curriculum_seq
+where A.course_seq = '4';
+
+
+select *
+from tbl_curriculum;
+
+
+select *
+from tbl_course;
+
+
+select S.schedule_seq, S.TITLE, s.START_DATE, s.END_DATE, E.FILE_NAME, E.ORIGINAL_FILE_NAME, E.ANSWER_MONGO_ID
+from tbl_schedule S join tbl_exam E
+on S.schedule_seq = E.Fk_schedule_seq
+where schedule_seq  = '103';
+
+
+select *
+from tbl_assignment
+
+select to_date(start_date , 'yyyy-mm-dd hh24:mi:ss')
+from tbl_schedule
+where schedule_seq = '5'

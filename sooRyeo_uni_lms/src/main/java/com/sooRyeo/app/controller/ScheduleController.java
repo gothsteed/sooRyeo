@@ -54,6 +54,7 @@ public class ScheduleController {
 		List<Map<String, String>> assignment_list = service.showAssignment(userid);
 		List<Map<String, String>> todo_list = service.showTodo(userid);
 		List<Map<String, String>> consult_list = service.showConsult(userid);
+		List<Map<String, String>> exam_list = service.showExam(userid);
 		
 		JSONArray jsonArr = new JSONArray();
 		
@@ -96,6 +97,21 @@ public class ScheduleController {
 			jsonobj.put("professor_name", schedule.get("name"));
 			
 			jsonArr.put(jsonobj);
+		}
+		
+		
+		for(Map<String, String> schedule : exam_list) {
+			JSONObject jsonobj  = new JSONObject();
+			jsonobj.put("fk_student_id", schedule.get("fk_student_id"));
+			jsonobj.put("course_seq", schedule.get("course_seq"));
+			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
+			jsonobj.put("title", schedule.get("title"));
+			jsonobj.put("schedule_type", schedule.get("schedule_type"));
+			jsonobj.put("start_date", schedule.get("start_date"));
+			jsonobj.put("end_date", schedule.get("end_date"));
+			
+			jsonArr.put(jsonobj);
+			
 		}
 		
 		return jsonArr.toString();

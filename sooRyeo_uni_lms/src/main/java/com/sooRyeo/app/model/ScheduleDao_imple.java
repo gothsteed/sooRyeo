@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
+import com.sooRyeo.app.dto.ExamDTO;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,6 +223,35 @@ public class ScheduleDao_imple implements ScheduleDao {
 	}
 
 
+	
+	// 시험 출제 시 스케줄 테이블 insert
+	@Override
+	public int insert_tbl_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score, ExamDTO examdto) {
+		
+		Map<String, String> paraMap =  new HashMap<>();
+		paraMap.put("test_type", test_type);
+		paraMap.put("test_start_time", test_start_time);
+		paraMap.put("test_end_time", test_end_time);
+		
+		sqlSession.insert("schedule.insert_tbl_schedule_exam", paraMap);
+		
+		System.out.println(paraMap.get("schedule_seq"));
+		String schedule_seq = (String) paraMap.get("schedule_seq");
+		
+		paraMap.put("schedule_seq", schedule_seq);
+		paraMap.put("question_count",  String.valueOf(question_count));
+		paraMap.put("answer_id", answer_id);
+		paraMap.put("course_seq", course_seq);
+		paraMap.put("total_score", String.valueOf(total_score));
+		paraMap.put("file_name", examdto.getFile_name());
+		paraMap.put("original_file_name", examdto.getOriginal_file_name());
+		
+		int n = sqlSession.insert("schedule.insert_tbl_exam", paraMap);
+		
+		return n;
+	}
+	
+	
 	@Override
 	public Exam getExam(int schedule_seq) {
 		
@@ -229,6 +259,86 @@ public class ScheduleDao_imple implements ScheduleDao {
 		
 		return examView;
 	}
+
+
+	@Override
+	public List<Map<String, String>> showExam(int userid) {
+		List<Map<String, String>> Schedule = sqlSession.selectList("schedule.showExam", userid);
+		return Schedule;
+	}
+
+
+	@Override
+	public String select_coures_name(String course_seq) {
+		String course_name = sqlSession.selectOne("schedule.select_coures_name", course_seq);
+		return course_name;
+	}
+
+
+	// 출제된 시험 정보 select 해오기
+	@Override
+	public Map<String, String> show_exam(String schedule_seq) {
+		Map<String, String> show_exam = sqlSession.selectOne("schedule.show_exam", schedule_seq);
+		return show_exam;
+	}
+
+
+	// 시험 변경시 오라클 db update(파일변경 있는 경우)
+	@Override
+	public int update_exam_schedule_file(String schedule_seq, String test_type, String test_start_time, String test_end_time, int question_count, int total_score, ExamDTO examdto) {
+		
+		System.out.println("dao에서 schedule_seq 확인 =>" + schedule_seq);
+		
+		Map<String, String> examMap =  new HashMap<>();
+		examMap.put("schedule_seq", schedule_seq);
+		examMap.put("question_count", String.valueOf(question_count));
+		examMap.put("total_score",  String.valueOf(total_score));
+		examMap.put("file_name",  examdto.getFile_name());
+		examMap.put("original_file_name",  examdto.getOriginal_file_name());
+		
+		int n1 = sqlSession.update("schedule.update_exam_file", examMap);
+		
+		
+		Map<String, String> scheduleMap =  new HashMap<>();
+		scheduleMap.put("schedule_seq", schedule_seq);
+		scheduleMap.put("test_type", test_type);
+		scheduleMap.put("test_start_time", test_start_time);
+		scheduleMap.put("test_end_time", test_end_time);
+		
+		int n2 = sqlSession.update("schedule.update_schedule_file", scheduleMap);
+		
+		
+		return n1*n2;
+	}
+
+
+	// 시험 변경시 오라클 db update(파일변경 없는 경우)
+	@Override
+	public int update_exam_schedule_nofile(String schedule_seq, String test_type, String test_start_time, String test_end_time, int question_count, int total_score) {
+		
+		
+		Map<String, String> examMap =  new HashMap<>();
+		examMap.put("schedule_seq", schedule_seq);
+		examMap.put("question_count", String.valueOf(question_count));
+		examMap.put("total_score",  String.valueOf(total_score));
+		
+		int n1 = sqlSession.update("schedule.update_exam_nofile", examMap);
+		
+		
+		Map<String, String> scheduleMap =  new HashMap<>();
+		scheduleMap.put("schedule_seq", schedule_seq);
+		scheduleMap.put("test_type", test_type);
+		scheduleMap.put("test_start_time", test_start_time);
+		scheduleMap.put("test_end_time", test_end_time);
+		
+		int n2 = sqlSession.update("schedule.update_schedule_nofile", scheduleMap);
+		
+		
+		return n1*n2;
+	}
+
+
+
 
 
 }

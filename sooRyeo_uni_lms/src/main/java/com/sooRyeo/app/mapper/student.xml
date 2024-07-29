@@ -269,6 +269,57 @@
 	</insert>
 	
 	
+	<!-- 수업 - 강의 한개 제목, 내용 select -->
+	
+	<resultMap type="HashMap" id="classPlay_one">
+		<result property="lecture_title" 	column="lecture_title"	    javaType="String" />
+		<result property="lecture_content" 	column="lecture_content"	javaType="String" />
+		<result property="video_file_name" 	column="video_file_name"	javaType="String" />
+	</resultMap>
+	
+	<select id="classPlay_One" parameterType="String" resultMap="classPlay_one">
+		select lecture_title, lecture_content, video_file_name   
+		from tbl_lecture
+		where lecture_seq = #{lecture_seq}
+	</select>
+	
+	
+	<!-- 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함  -->
+	<select id="select_tbl_attendance" parameterType="HashMap" resultType="String">
+		select attendance_seq
+		from tbl_attendance
+		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
+	</select>
+	
+	<!-- 처음 동영상을 재생한 경우 tbl_attendance 에 insert -->
+	<insert id="insert_tbl_attendance" parameterType="HashMap">
+		insert into tbl_attendance (attendance_seq, fk_student_id, fk_lecture_seq, play_time)
+		values (attendance_seq.nextval, #{userid}, #{lecture_seq}, #{play_time})
+	</insert>
+	
+	
+	<select id="select_play_time_lecture_time" parameterType="HashMap" resultType="int">
+		select L.lecture_time - (A.play_time + #{play_time}) 
+		from tbl_attendance A join tbl_lecture L
+		on A.fk_lecture_seq  = L.lecture_seq
+		where A.fk_student_id  = #{userid} and A.FK_LECTURE_SEQ = #{lecture_seq}
+	</select>
+	
+	<!-- 처음 동영상을 재생한 경우 tbl_attendance play_time 컬럼 update -->
+	<update id="update_tbl_attendance" parameterType="HashMap">
+		update tbl_attendance set play_time = play_time + #{play_time}
+		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
+	</update>
+	
+	
+	<!-- 출석을 완료했을 경우 isAttended 컬럼 1로 update 하기  -->
+	<update id="update_tbl_attendance_isAttended">
+		update tbl_attendance set (ISATTENDED, attended_date) = ('1', to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
+	</update>
+	
+	
+	
 	<!-- === ajax학생 수강과목 가져와서 학점 계산하기(chart) === -->
 	<resultMap type="HashMap" id="creditList_Map">
        <result property="name"    		column="name"    		javaType="String" />

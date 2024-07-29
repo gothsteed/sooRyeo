@@ -46,13 +46,13 @@ function goAssignment_List(){
 
 	// alert(${requestScope.fk_course_seq});
 
-	location.href = "<%=ctxPath%>/student/assignment_List.lms?fk_course_seq="+${requestScope.fk_course_seq};
+	location.href = "<%=ctxPath%>/student/assignment_List.lms?fk_course_seq="+ ${requestScope.fk_course_seq};
 
 }
 
 function goLectureNotice(){
 
-	location.href = "<%=ctxPath%>/board/lecture_notice.lms?fk_course_seq="+${requestScope.fk_course_seq};
+	location.href = "<%=ctxPath%>/board/lecture_notice.lms?fk_course_seq="+ ${requestScope.fk_course_seq};
 
 }
 
@@ -211,12 +211,14 @@ $(document).ready(function(){
 
 
 	$('a#classPlay').click(function(){
-
-		const courseSeq = $("input:hidden[name='fk_course_seq']").val();
-
-	 	location.href = "<%= ctxPath%>/student/classPlay.lms?course_seq=" + courseSeq;
-
-
+		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq_2"]').val();
+		location.href = "<%= ctxPath%>/student/classPlay_One.lms?lecture_seq=" + lecture_seq;
+	});
+	
+	
+	$('a#classPlay_list').click(function() {
+		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq"]').val();
+		location.href = "<%= ctxPath%>/student/classPlay_One.lms?lecture_seq=" + lecture_seq;
 	});
 
 	
@@ -313,10 +315,10 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 <div class="container" style="margin-top:5%;">
 <h3>이번주 강의</h3>
 <hr>
+<c:forEach var="lecture_week" items="${requestScope.lectureList_week}">
 	<div class="card mb-5">
-		<c:forEach var="lecture_week" items="${requestScope.lectureList_week}">
-
-
+		
+		<input type="hidden" name="lecture_seq_2" value="${lecture_week.lecture_seq}" />
 		<h5 class="card-header" style="font-weight:bold;">${lecture_week.lecture_title}</h5>
 		<div class="card-body">
 			<h5 class="card-title">${lecture_week.lecture_content}</h5>
@@ -325,25 +327,30 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
 		</div>
-		</c:forEach>
+		
 	</div>
+</c:forEach>
 
 <h3 style="margin-top:10%;">강의 목록</h3>
 <hr>
-	<c:forEach var="lecture" items="${requestScope.lectureList}">
+<c:forEach var="lecture" items="${requestScope.lectureList}">
+
 	<div class="card mb-5">
 		
+		<input type="hidden" name="lecture_seq" value="${lecture.lecture_seq}" />
 		<h5 class="card-header" style="font-weight:bold;">${lecture.lecture_title}</h5>
 		<div class="card-body">
 			<h5 class="card-title">${lecture.lecture_content}</h5>
 			<hr>
-			<a href="<%= ctxPath%>/student/classPlay.lms" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
+			<a id="classPlay_list" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
 			<!-- 영상 보는 기간 -->
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/></span>
 			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
 		</div>
+
 	</div>
-	</c:forEach>
+	
+</c:forEach>
 </div>
 <div id="target2"></div>
 

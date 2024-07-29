@@ -1,4 +1,4 @@
-package com.sooRyeo.app.controller;
+package com.sooRyeo.app.controller; 
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
 
 import com.sooRyeo.app.aop.NoView;
 import com.sooRyeo.app.aop.RequireLogin;
@@ -658,7 +659,7 @@ public class StudentController {
 
 	
 	// 수업 - 내 강의 - 동영상 플레이
-	@RequestMapping(value = "/student/classPlay.lms", method = RequestMethod.GET)
+	@GetMapping("/student/classPlay.lms")
 	public ModelAndView classPlay(HttpServletRequest request, ModelAndView mav) {
 		
 		String fk_course_seq = request.getParameter("course_seq");
@@ -673,6 +674,24 @@ public class StudentController {
 	} // end of public String class_play()-------
 	
 	
+	
+	@GetMapping("/student/classPlay_One.lms")
+	public ModelAndView classPlay_One(HttpServletRequest request, ModelAndView mav) {
+		
+		String lecture_seq = request.getParameter("lecture_seq");
+		
+		Map<String, String> classOne = studentservice.classPlay_One(lecture_seq);
+		
+		mav.addObject("classOne", classOne);
+		
+		mav.addObject("lecture_seq", lecture_seq);
+		
+		mav.setViewName("classPlay_One");
+
+		return mav;
+	}	
+
+
 	// 메인 - 사이드바 - 성적 - 통계
 	@GetMapping("/student/Statistics.lms")
 	public String student_chart(HttpServletRequest request) {
@@ -871,6 +890,68 @@ public class StudentController {
 		return "chatting";
 		// /WEB-INF/views/student/{1}.jsp
 	}
+	
+	
+	
+	
+	
+	// 영상재생화면에 내가 머물렀던 시간을 이용해 출석체크 하기
+	@ResponseBody
+	@PostMapping("/student/classPlay_time.lms")
+	public String classPlay_time(HttpServletRequest request) {
+		
+		String play_time = request.getParameter("play_time");
+		String lecture_seq = request.getParameter("lecture_seq");
+
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int userid = loginuser.getStudent_id();
+		
+		// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
+		String fk_lecture_seq = studentservice.select_tbl_attendance(lecture_seq, userid);
+
+		JSONObject jsonobj = new JSONObject();
+		
+		if(fk_lecture_seq == null) { // 처음 동영상을 재생한 경우
+			
+			int n = studentservice.insert_tbl_attendance(play_time, lecture_seq, userid);
+			jsonobj.put("n", n);
+		}
+		else { // 동영상 재생 이력이 있을경우 
+			
+			// play_time 컬럼과 lecture_time 컬럼을 비교
+			int i = studentservice.select_play_time_lecture_time(play_time, lecture_seq, userid);
+			
+			System.out.println("확인용 입니다 => " + i);
+			
+			if(i > 0) { // 아직 출석인정 시간이 되지 않은 경우
+				
+				int n1 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
+				jsonobj.put("n1", n1);
+			}
+			
+			else { // 동영상재생페이지에 머무른 시간 - 동영상 시간  <= 0, 즉  출석을 완료한 경우
+				
+				int n1 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
+				int n2 = studentservice.update_tbl_attendance_isAttended(lecture_seq, userid);
+				
+				int n3 = n1*n2;
+				jsonobj.put("n3", n3);
+			}
+		}
+		
+		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
+		return jsonobj.toString();
+	}
+
+	
+	@GetMapping("/student/test.lms")
+	public String test() {
+		
+		return "test";
+		
+	} // end of public String attendance
+	
 	
 	
 
