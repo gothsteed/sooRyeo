@@ -4,16 +4,14 @@ import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.ExamResult;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Student;
-import com.sooRyeo.app.domain.Schedule;
-import com.sooRyeo.app.dto.ExamDTO;
 import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import com.sooRyeo.app.model.ScheduleDao;
+import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import com.sooRyeo.app.mongo.repository.StudentExamAnswerRepository;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.entity.ExamAnswer.Answer;
 import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ExamService_imple implements ExamService {
@@ -162,44 +159,76 @@ public class ExamService_imple implements ExamService {
         mav.setViewName("exam/wait");
         return mav;
     }
+    @Override
+    public ModelAndView takeExam(ModelAndView mav, HttpServletRequest request, int schedule_seq) {
+
+        Exam examView = scheduleDao.getExamSchedule(schedule_seq);
+
+        if(examView.isBefore(LocalDateTime.now())) {
+            mav.addObject("message", "아직 시험이 시작되지 않았습니다.");
+            mav.addObject("loc", request.getContextPath() + "/student/exam/wait.lms?schedule_seq=" + schedule_seq);
+            mav.setViewName("msg");
+            return mav;
+        }
+
+        if(examView.isAfter(LocalDateTime.now())) {
+            mav.addObject("message", "이미 종료된 시험입니다.");
+            mav.addObject("loc", request.getContextPath() + "/student/exam/wait.lms?schedule_seq=" + schedule_seq);
+            mav.setViewName("msg");
+            return mav;
+        }
+
+            mav.addObject("schedule_seq", schedule_seq);
+        mav.addObject("examView", examView);
+        mav.setViewName("test");
+
+
+        return mav;
+    }
+
 
 
     @Override
-	public Exam getExam(String schedule_seq) {
+	public Exam getExam(String schedule_seq) throws NumberFormatException , NullPointerException {
 
-    	Exam examView = scheduleDao.getExam(schedule_seq);  // 스케줄 DAO로부터 Exam 객체를 가져옴
-	    
-	    return examView;  // 가져온 Exam 객체를 반환
+        return scheduleDao.getExam(Integer.parseInt(schedule_seq));  // 가져온 Exam 객체를 반환
 	}
 
 
 
 	@Override
-	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq) {
-		
-		Exam examView = scheduleDao.getExam(schedule_seq);
+	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request) throws NumberFormatException , NullPointerException {
+
+		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
 		
 	    ExamAnswer examList = examAnswerRepository.findById(examView.getAnswer_mongo_id()).orElse(null); // ExamAnswer 객체들을 가져옴
 	    // insert 할떄는 save를 사용해서 파라미터에 StudentAnswer객체를 생성해서 넣어주면 된다.
 	    
+        HttpSession session = request.getSession();
+        Student student = (Student) session.getAttribute("loginuser");
+	    
+        System.out.println("getAnswer_mongo_id " + examView.getAnswer_mongo_id()); 
+        
 	    List<Answer> answers = null;
-	    List<Answer> scores = null;
 	    
 	    int correctCount = 0;
 	    int wrongCount = 0;
-	    int totalscore = 0;
+	    int score = 0; // 응시자가 맞춘 문제 배점의 합
+	    int totalScore = 0; // 전체 문제 배점의 총합
 	    
 	    if (examList != null) {
-	        answers = examList.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴
-	        scores = examList.getScore();
+	        answers = examList.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴. 이 안에 answer와 score가 전부 들어있음.
 	        
 	        // inputAnswers와 answers를 비교
 	        for (int i = 0; i < answers.size(); i++) {
 	            Answer answer = answers.get(i);
 	            int getAnswer = answer.getAnswer();  // 각 Answer 객체의 score를 가져옴
 	            
-	            Answer score = scores.get(i);
-	            int getScore = score.getScore();
+	            int getScore = answer.getScore(); // 문제의 배점을 가져오는 것
+	           
+	            System.out.println("getScore "+getScore);
+	            
+	            totalScore += getScore; // 문제의 배점을 전부 더해서 totalScore에 저장 한 것
 	            
 	            // inputAnswers의 해당 인덱스와 비교
 	            if (i < inputAnswers.size()) { // 인덱스 범위 체크
@@ -207,18 +236,34 @@ public class ExamService_imple implements ExamService {
 	                
 	                // getAnswer와 inputAnswer 비교
 	                if (String.valueOf(getAnswer).equals(inputAnswer)) {
-	                	correctCount++;
-	                	totalscore = totalscore + 
+	                	correctCount++; // 정답일 경우 corrextCount를 1씩 증가
+
+	                	score += getScore; // 정답인 경우 그 문제의 배점을 score에 쌓아두는 것
+
 	                } else {
-	                	wrongCount++;
+	                	wrongCount++; // 틀렸을 경우 wrongCount를 1씩 증가
 	                }
+	                
 	            }
 	        } // end of for------------------------------------------------------------
 	        
+	        System.out.println("correctCount " + correctCount);
+	        System.out.println("score " + score);
+	        System.out.println("wrongCount " + wrongCount);
+	        System.out.println("totalScore " + totalScore);
+	        
 	        StudentAnswer sa = new StudentAnswer();
 	        
+	        sa.setStudentId(student.getStudent_id());
+	        sa.setStudentName(student.getName());
+	        sa.setScore(score); // 응시자가 맞춘 문제 배점의 합
+	        sa.setTotalScore(totalScore); // 전체 문제 배점의 총합
+	        sa.setCorrectCount(correctCount);
+	        sa.setWrongSCount(wrongCount);
+	        sa.setExamAnswersId(examView.getAnswer_mongo_id());
+	        sa.setAnswers(answers);
 	        
-	        examAnswerRepository.save().orElse(null);
+	        answerRepository.save(sa);
 	        
 	        
 	    } else {

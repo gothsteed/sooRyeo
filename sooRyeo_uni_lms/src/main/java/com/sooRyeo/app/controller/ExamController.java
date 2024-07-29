@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,19 +31,11 @@ public class ExamController {
 
 
 	@RequireLogin(type = {Student.class})
-	@PostMapping("/exam/test.lms")
-	public ModelAndView test(ModelAndView mav, HttpServletRequest request) {
-		
-		String schedule_seq = request.getParameter("schedule_seq");
-		
-		Exam examView = examService.getExam(schedule_seq);
-		
-		mav.addObject("schedule_seq", schedule_seq);
-		mav.addObject("examView", examView);
-		mav.setViewName("test");
-		
-		return mav;
-		
+	@PostMapping("/student/exam/test.lms")
+	public ModelAndView test(ModelAndView mav, HttpServletRequest request) throws NumberFormatException , NullPointerException {
+		int schedule_seq = Integer.parseInt(request.getParameter("schedule_seq"));
+
+		return examService.takeExam(mav, request, schedule_seq);
 	}
 	
 	@RequireLogin(type = {Student.class})
@@ -52,6 +45,8 @@ public class ExamController {
 		String schedule_seq = request.getParameter("schedule_seq");
 		
 		int selCount = Integer.parseInt(request.getParameter("selCount"));
+		
+		// String course_seq = request.getParameter("course_seq");
 		
 		List<String> inputAnswers = new ArrayList<>();
 		
@@ -63,8 +58,11 @@ public class ExamController {
 	        }
 		}
 		
-		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq);
+		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq ,request);
 		
+		mav.addObject("message", "답안지 제출이 완료되었습니다.");
+		// mav.addObject("loc", request.getContextPath()+"/exam.lms?course_seq="+course_seq); // 여기서 course_seq를 어떻게 보내야할지 고민중. post 방시인디
+		mav.setViewName("msg");
 		/*
 		if(n == 1) {
 			mav.addObject("message", "회원 등록을 성공하였습니다.");
@@ -78,7 +76,6 @@ public class ExamController {
 		}
 		*/
 		return mav;
-		
 	}
 
 
@@ -134,8 +131,6 @@ public class ExamController {
 
 		return examService.getWaitExamPage(mav, request, response, schedule_seq);
 	}
-
-
 	
 	
 }

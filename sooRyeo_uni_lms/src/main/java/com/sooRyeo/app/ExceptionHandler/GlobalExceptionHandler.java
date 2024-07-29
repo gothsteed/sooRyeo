@@ -4,8 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import oracle.sql.NUMBER;
 import org.apache.poi.ss.formula.functions.Mode;
 import org.json.JSONObject;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,6 +22,32 @@ import com.sooRyeo.app.domain.Student;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+	@ExceptionHandler(NumberFormatException.class)
+	@ResponseBody
+	public ResponseEntity<String> handleRestNumberFormatException(NumberFormatException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 숫자 형식입니다" + ex.getMessage());
+	}
+
+/*
+	@ExceptionHandler(NumberFormatException.class)
+	public ModelAndView handleNumberFormatExceptionForView(NumberFormatException ex, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView modelAndView = new ModelAndView("msg"); // Replace with your error view
+		modelAndView.addObject("message", "잘못된 숫자 형식입니다: " + ex.getMessage());
+		modelAndView.addObject("loc", "redic");
+
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return modelAndView;
+	}
+*/
+
+/*
+	@ExceptionHandler(NumberFormatException.class)
+	public ResponseEntity<String> handleNumberFormatExceptionREST(NumberFormatException ex, HttpServletRequest request, HttpServletResponse response) {
+		return ResponseEntity.badRequest().body("못된 숫자 형식입니다:" + ex.getMessage());
+	}
+*/
+
 	
 	@ExceptionHandler(LoginException.class) 
 	public ModelAndView handleLoginException(LoginException exception, HttpServletResponse response) {

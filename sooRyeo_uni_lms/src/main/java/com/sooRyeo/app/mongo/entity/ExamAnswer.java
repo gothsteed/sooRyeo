@@ -43,7 +43,7 @@ public class ExamAnswer {
     }
 
     // Inner class for Answer
-    public static class Answer {
+/*    public static class Answer {
         @Id
         private String questionId;
         private int questionNumber;
@@ -82,5 +82,5 @@ public class ExamAnswer {
         public void setScore(int score) {
             this.score = score;
         }
-    }
+    }*/
 }

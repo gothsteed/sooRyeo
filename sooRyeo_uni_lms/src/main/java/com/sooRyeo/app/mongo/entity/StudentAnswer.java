@@ -1,6 +1,8 @@
 package com.sooRyeo.app.mongo.entity;
 
 import lombok.Getter;
+import lombok.Setter;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Getter
+@Setter
 @Document("studentExamAnswer")
 public class StudentAnswer {
     @Id
@@ -27,7 +30,7 @@ public class StudentAnswer {
     }
 
 
-    public static class Answer {
+ /*   public static class Answer {
         @Id
         private ObjectId questionId;
         private int questionNumber;
@@ -67,6 +70,6 @@ public class StudentAnswer {
         public void setScore(int score) {
             this.score = score;
         }
-    }
+    }*/
 
 }
