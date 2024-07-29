@@ -947,8 +947,10 @@ public class ProfessorController {
 		checkMap = professorService.score_checkJSON(student_id, fk_course_seq);
 
 		
-		double assignmentScore = (double)checkMap.get("assignmentScore"); // 과제 백분율	
+		double DassignmentScore = (double)checkMap.get("assignmentScore"); // 과제 백분율	
 		int regi_course_seq = (int)checkMap.get("regi_course_seq"); // 학생 등록 강좌 번호
+		
+		String assignmentScore = String.format("%.2f", DassignmentScore);  
 		System.out.println("확인용 json 넣기전 assignmentScore : " + assignmentScore);
 		
 		Object mark = null; // 학점
@@ -993,6 +995,22 @@ public class ProfessorController {
 		/////////////////////////////////////////////////////////////
 		
 		// 학생 출석율 가져오기
+		double DattendanceRate = 0;
+		String attendanceRate = "0";
+		try {		
+			DattendanceRate = professorService.attendanceRate(student_id, fk_course_seq);
+			attendanceRate = String.format("%.2f", DattendanceRate);
+		} catch (Exception e) {
+			
+		}
+		
+		// System.out.println("확인용 출석율 : " + attendanceRate);
+		
+		Double DtotalScore = DassignmentScore + DtotalExamScore + DattendanceRate;
+		
+		String totalScore = String.format("%.2f", DtotalScore); 
+		System.out.println("확인용 토탈 : " + totalScore);
+		
 		
 		
 		
@@ -1002,6 +1020,8 @@ public class ProfessorController {
         jsonObj.put("assignmentScore", assignmentScore);
         jsonObj.put("totalExamScore", totalExamScore);
         jsonObj.put("regi_course_seq", regi_course_seq);
+        jsonObj.put("attendanceRate", attendanceRate);
+        jsonObj.put("totalScore", totalScore);
         jsonObj.put("mark", mark);
         
         

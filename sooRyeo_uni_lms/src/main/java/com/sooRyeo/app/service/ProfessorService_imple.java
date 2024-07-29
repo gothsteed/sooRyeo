@@ -624,6 +624,15 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
+	@Override
+	public double attendanceRate(int student_id, int fk_course_seq) {
+		
+		double attendanceRate = dao.attendanceRate(student_id, fk_course_seq);
+		
+		return attendanceRate;
+	}
+
+
 
 	
 

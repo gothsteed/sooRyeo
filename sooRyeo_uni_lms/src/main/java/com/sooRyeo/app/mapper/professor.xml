@@ -515,6 +515,22 @@
 	</select>
 	
 	
+	<select id="totalLecture" parameterType="int" resultType="int">
+		select count(*)
+ 		from tbl_lecture
+ 		where fk_course_seq = #{fk_course_seq} 
+	</select>
+	
+	
+	<select id="totalAttendance" parameterType="HashMap" resultType="int">
+		select count(*)
+ 		from tbl_attendance A
+ 		join tbl_registered_course R  ON A.fk_student_id = R.fk_student_id
+ 		join tbl_lecture L ON R.fk_course_seq = L.fk_course_seq and A.fk_lecture_seq = L.lecture_seq
+ 		where A.fk_student_id = #{student_id} and R.fk_course_seq = #{fk_course_seq} and A.attended_date IS NOT NULL
+	</select>
+	
+	
 	
 
 </mapper>
