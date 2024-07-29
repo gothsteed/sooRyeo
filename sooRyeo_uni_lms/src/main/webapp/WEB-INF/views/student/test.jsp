@@ -115,7 +115,7 @@ function goCheck() {
 
 
 <div class="body d-flex">
-    <div style="flex:90%; min-width: 0;">
+    <div style="flex:85%; min-width: 0;">
         <div class="card">
 			<div class="card-header d-flex">
 			    <span style="flex: 1;">시험지</span>
@@ -128,30 +128,23 @@ function goCheck() {
             </div>
         </div>
     </div>
-    <div style="flex:10%; min-width: 0;">
+    <div style="flex:15%; min-width: 0;">
         <div class="card">
-            <div class="card-header">
-                	답안지
+            <div class="card-header text-center">
+                답안지
             </div>
-            <div class="card-body">
-                <p class="card-text">
-				    <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
-				        <div>
-				        ${questionStatus.index}. 
-				        <form name="SelectAnswer">
-				        	<input name="${questionStatus.index}" type="text" style="width:50%; margin-bottom:5%" maxlength="1"/>
-				        </div>
-				    </c:forEach>
-				        	<input name="selCount" type="hidden" value="${requestScope.examView.question_count}"/>
-				        	<input name="schedule_seq" type="hidden" value="${requestScope.schedule_seq}"/>
-				        </form>
-                </p>
+            <div class="card-body text-center" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                <form name="SelectAnswer" style="flex: 1;">
+                    <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
+                        <div>${questionStatus.index}. 
+                            <input name="${questionStatus.index}" type="text" style="width:30%; margin-bottom:5%" maxlength="1"/>
+                        </div>
+                    </c:forEach>
+                    <input name="selCount" style="display: none;" value="${requestScope.examView.question_count}"/>
+                    <input name="schedule_seq" style="display: none;" value="${requestScope.schedule_seq}"/>
+                </form>
+                <button id="submit_div" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-top: 1%;" type="button" onclick="goCheck()">제출하기</button>
             </div>
         </div>
     </div>
 </div>
-
-        
-<button id="submit_div" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-top: 1%;" type="button" onclick="goCheck()">제출하기</button>
-
-		

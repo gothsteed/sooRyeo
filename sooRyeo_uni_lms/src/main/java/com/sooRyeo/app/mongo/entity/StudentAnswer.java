@@ -23,6 +23,7 @@ public class StudentAnswer {
     private Integer totalScore;
     private int correctCount;
     private int wrongSCount;
+    private Integer courseSeq;
 
 
     public int getQuestionAnswer(int questionNumber) {
