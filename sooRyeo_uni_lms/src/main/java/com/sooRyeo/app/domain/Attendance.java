@@ -7,7 +7,7 @@ public class Attendance {
     private Integer attendance_seq;
     private Integer lecture_seq;
     private Integer fk_student_id;
-    private char isAttended;
+    private Integer isAttended;
     private Date attended_date;
     private Integer play_time;
     
@@ -19,7 +19,7 @@ public class Attendance {
 	public Integer getFk_student_id() {
 		return fk_student_id;
 	}
-	public char getIsAttended() {
+	public Integer getIsAttended() {
 		return isAttended;
 	}
 	public Date getAttended_date() {
@@ -34,7 +34,10 @@ public class Attendance {
 		return play_time;
 	}
     
-    
-    
+
+	public boolean isAttended() {
+		return isAttended.equals(1);
+	}
+
 
 }
