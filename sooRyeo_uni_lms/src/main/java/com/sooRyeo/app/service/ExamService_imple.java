@@ -59,8 +59,7 @@ public class ExamService_imple implements ExamService {
 
     @Autowired
     private StudentExamAnswerRepository answerRepository;
-
-
+    
 
     @Override
     public ModelAndView getExamPage(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
@@ -424,6 +423,39 @@ public class ExamService_imple implements ExamService {
 		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
 		
 		return examView;
+	}
+
+
+
+	@Override
+	public List<StudentAnswer> ExamResultList(int fk_course_seq) {
+		
+		Integer courseSeq = fk_course_seq;
+		
+		List<StudentAnswer> answerList = answerRepository.findAllByCourseSeq(courseSeq);
+		
+		
+		int testCount = 0;
+		
+		if (answerList != null && !answerList.isEmpty()) {
+	    	
+            for (StudentAnswer answer : answerList) {
+                int score = answer.getScore();
+                int totalscore = answer.getTotalScore();
+                
+            	System.out.println("확인용 score : " + score);
+            	System.out.println("확인용 totalscore : " + totalscore);
+                
+                testCount++;
+                
+                System.out.println("확인용 testCount : " + testCount);
+            }
+            
+        } else {
+            System.out.println("answerList가 비어 있습니다.");
+        }
+		
+		return answerList;
 	}
 
 
