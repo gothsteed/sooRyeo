@@ -342,7 +342,7 @@ function set_exam() {
 							 
 							 
 		                     <input type="file" class="form-control" id="fileInput" name="attach" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
-							 <input type="text" value="${show_exam.file_name}" name="file_name"/>
+							 <input type="hidden" value="${show_exam.file_name}" name="file_name"/>
 		                  </div>
 
                   
