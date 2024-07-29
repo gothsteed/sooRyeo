@@ -89,6 +89,13 @@ public class StudentController {
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  studentservice.getAnnouncement(currentPage);
 		
+		
+		// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+		List<Curriculum> Curriculum_nameList = studentservice.Curriculum_nameList(student_id);
+		mav.addObject("Curriculum_nameList", Curriculum_nameList);
+		
+		
+		
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
@@ -814,23 +821,6 @@ public class StudentController {
 	} // end of public String attendanceListJSON
 	
 	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// 복학 신청
 	@GetMapping(value = "/student/application_status.lms")
@@ -890,6 +880,111 @@ public class StudentController {
 		return "chatting";
 		// /WEB-INF/views/student/{1}.jsp
 	}
+	
+	
+	
+	// 학생 대쉬보드 - 수강중인 과목 출석률 
+	@ResponseBody
+	@GetMapping(value="/student/myAttendance_byCategoryJSON.lms", produces="text/plain;charset=UTF-8")
+	public String myAttendance_byCategoryJSON(HttpServletRequest request, HttpServletResponse response,
+											  @RequestParam(defaultValue = "") String name) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		
+		// 하이차트 - 출석률
+		Map<String, Object> myAttendance_byCategoryJSON = studentservice.myAttendance_byCategoryJSON(student_id, name);
+		
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		if(myAttendance_byCategoryJSON != null) {
+			
+			jsonObj.put("name", myAttendance_byCategoryJSON.get("name"));
+			jsonObj.put("attendance_rate", myAttendance_byCategoryJSON.get("attendance_rate"));
+			
+		}
+		
+		return jsonObj.toString();
+		
+	} // end of public String myAttendance_byCategoryJSON
+
+	
+	
+	
+	// 학생 - 성적 취득현황
+	@GetMapping(value = "/student/Acquisition_status.lms", produces="text/plain;charset=UTF-8")
+	public String Acquisition_status(HttpServletRequest request) {
+
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		List<Map<String, Object>> Acquisition_status = studentservice.Acquisition_status(student_id);
+		
+		request.setAttribute("Acquisition_status", Acquisition_status);
+		
+		return "Acquisition_status";
+		
+	} // end of public String Acquisition_status
+	
+	
+	
+	// 학생 - 성적 취득현황 JSON
+	@ResponseBody
+	@PostMapping(value = "/student/Acquisition_status_JSON.lms", produces="text/plain;charset=UTF-8")
+	public String Acquisition_status_JSON(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		int student_id = loginuser.getStudent_id();
+		
+		String semester = request.getParameter("semester");
+		
+		// System.out.println("확인용 semester : " + semester);
+		// 확인용 semester : 2024-07
+		
+		List<Map<String, Object>> Acquisition_status_JSON = null;
+		
+		try {
+
+			Acquisition_status_JSON = studentservice.Acquisition_status_JSON(semester, student_id);
+			
+		} catch (Exception e) {
+			
+			JSONArray jsonArr = new JSONArray();
+			return jsonArr.toString();
+			
+		}
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		for(Map<String, Object> map : Acquisition_status_JSON) {
+			
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("student_id", map.get("student_id"));
+			jsonObj.put("name", map.get("name"));
+			jsonObj.put("semester_date", map.get("semester_date"));
+			jsonObj.put("score", map.get("score"));
+			jsonObj.put("mark", map.get("mark"));
+			
+			jsonArr.put(jsonObj);
+			
+		} // end of for
+		
+		// System.out.println(jsonArr.toString());
+		// [{"score":"100","name":"국어학개론","semester_date":"2024년 2학기","mark":"3.5"}] 여기까지함
+		
+		return jsonArr.toString();
+		
+	} // end of public String Acquisition_status_JSON
+	
+	
+	
+	
+	
 	
 	
 	

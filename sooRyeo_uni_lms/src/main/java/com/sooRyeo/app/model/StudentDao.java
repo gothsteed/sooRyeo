@@ -94,7 +94,6 @@ public interface StudentDao {
 
 	// 수업명 가져오기
 	List<Curriculum> lectureList();
-
 	
 	// 이수한 학점이 몇점인지 알아오는 메소드
 	int credit_point(int student_id);
@@ -115,6 +114,20 @@ public interface StudentDao {
 
 	// 학사공지사항 리스트를 select 해오는 메소드
 	Pager<Announcement> getAnnouncement(int currentPage);
+
+	// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+	List<Curriculum> Curriculum_nameList(int student_id);
+
+	// 학생 대쉬보드 - 하이차트 - 수강중인 과목 출석률 
+	Map<String, Object> myAttendance_byCategoryJSON(int student_id, String name);
+
+	// 학생 - 성적 취득현황
+	List<Map<String, Object>> Acquisition_status(int student_id);
+
+	// 학생 - 성적 취득현황JSON
+	List<Map<String, Object>> Acquisition_status_JSON(String semester, int student_id);
+
+
 	
 	// 처음 동영상을 재생한 경우 tbl_attendance 에 insert
 	int insert_tbl_attendance(String play_time, String lecture_seq, int userid);

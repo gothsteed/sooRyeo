@@ -475,6 +475,61 @@ public class StudentDao_imple implements StudentDao {
 	}
 
 
+	
+	// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+	@Override
+	public List<Curriculum> Curriculum_nameList(int student_id) {
+		
+		List<Curriculum> Curriculum_nameList = sqlSession.selectList("student.Curriculum_nameList", student_id);
+		
+		return Curriculum_nameList;
+		
+	} // end of public List<Curriculum> Curriculum_nameList
+
+
+	
+	
+	// 학생 대쉬보드 - 하이차트 - 수강중인 과목 출석률 
+	@Override
+	public Map<String, Object> myAttendance_byCategoryJSON(int student_id, String name) {
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("student_id", String.valueOf(student_id));
+		paraMap.put("name", name);
+		
+		Map<String, Object> myAttendance_byCategoryJSON = sqlSession.selectOne("student.myAttendance_byCategoryJSON", paraMap);
+		
+		return myAttendance_byCategoryJSON;
+		
+	} // end of public List<Map<String, Object>> myAttendance_byCategoryJSON
+
+	
+	
+	// 학생 - 성적 취득현황
+	@Override
+	public List<Map<String, Object>> Acquisition_status(int student_id) {
+		
+		List<Map<String, Object>> Acquisition_status = sqlSession.selectList("student.Acquisition_status", student_id);
+		
+		return Acquisition_status;
+		
+	} // end of public List<Map<String, Object>> Acquisition_status
+
+	
+	// 학생 - 성적 취득현황JSON
+	@Override
+	public List<Map<String, Object>> Acquisition_status_JSON(String semester, int student_id) {
+		
+		Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("semester_date", semester);
+        paraMap.put("student_id", student_id);		
+		
+        List<Map<String, Object>> Acquisition_status_JSON = sqlSession.selectList("student.Acquisition_status_JSON", paraMap);
+        
+		return Acquisition_status_JSON;
+		
+	} // end of public List<Map<String, Object>> Acquisition_status_JSON
+
 
 
 
