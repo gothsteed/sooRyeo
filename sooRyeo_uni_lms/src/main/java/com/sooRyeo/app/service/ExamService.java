@@ -63,5 +63,8 @@ public interface ExamService {
 
     ModelAndView takeExam(ModelAndView mav, HttpServletRequest request, int schedule_seq);
 
-    void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request);
+    void insertMongoStudentExamAnswer(List<Integer> inputAnswers, String schedule_seq, HttpServletRequest request, int course_seq);
+
+    // 강의 시퀀스를 불러오는 메소드
+	Exam getCourse_seq(String schedule_seq);
 }

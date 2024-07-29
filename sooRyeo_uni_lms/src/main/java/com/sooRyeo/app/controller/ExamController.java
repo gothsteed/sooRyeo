@@ -27,9 +27,6 @@ import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
-import com.sooRyeo.app.dto.ExamDTO;
-import com.sooRyeo.app.mongo.entity.Answer;
-import com.sooRyeo.app.mongo.entity.ExamAnswer;
 import com.sooRyeo.app.service.ExamService;
 
 
@@ -170,35 +167,26 @@ public class ExamController {
 		
 		int selCount = Integer.parseInt(request.getParameter("selCount"));
 		
-		// String course_seq = request.getParameter("course_seq");
+		Exam getCourse_seq = examService.getCourse_seq(schedule_seq); // 강의 시퀀스를 불러오는 메소드
 		
-		List<String> inputAnswers = new ArrayList<>();
+		int course_seq = getCourse_seq.getFk_course_seq();
+		
+		List<Integer> inputAnswers = new ArrayList<>();
 		
 		for(int i=1; i<selCount+1; i++) {
-			String selectAnswer = request.getParameter(String.valueOf(i));
+			Integer selectAnswer = Integer.parseInt(request.getParameter(String.valueOf(i)));
 			
 			if (selectAnswer != null) {
 				inputAnswers.add(selectAnswer);
 	        }
 		}
 		
-		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq ,request);
+		examService.insertMongoStudentExamAnswer(inputAnswers, schedule_seq , request, course_seq);
 		
 		mav.addObject("message", "답안지 제출이 완료되었습니다.");
-		// mav.addObject("loc", request.getContextPath()+"/exam.lms?course_seq="+course_seq); // 여기서 course_seq를 어떻게 보내야할지 고민중. post 방시인디
+		mav.addObject("loc", request.getContextPath()+"/student/exam.lms?course_seq="+course_seq); // 여기서 course_seq를 어떻게 보내야할지 고민중. post 방시인디
 		mav.setViewName("msg");
-		/*
-		if(n == 1) {
-			mav.addObject("message", "회원 등록을 성공하였습니다.");
-			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
-			mav.setViewName("msg");
-		}
-		else {
-			mav.addObject("message", "회원 등록을 실패하였습니다.");
-			mav.addObject("loc", request.getContextPath()+"/admin/MemberRegister.lms");
-			mav.setViewName("msg");
-		}
-		*/
+
 		return mav;
 	}
 

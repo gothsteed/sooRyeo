@@ -339,7 +339,7 @@ public class ExamService_imple implements ExamService {
 	}
 		
 	@Override
-	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request) throws NumberFormatException , NullPointerException {
+	public void insertMongoStudentExamAnswer(List<Integer> inputAnswers, String schedule_seq, HttpServletRequest request, int course_seq) throws NumberFormatException , NullPointerException {
 
 		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
 		
@@ -364,6 +364,8 @@ public class ExamService_imple implements ExamService {
 	            Answer answer = answers.get(i);
 	            int getAnswer = answer.getAnswer();  // 각 Answer 객체의 score를 가져옴
 	            
+	            answer.setAnswer(inputAnswers.get(i));
+	            
 	            int getScore = answer.getScore(); // 문제의 배점을 가져오는 것
 	           
 	            System.out.println("getScore "+getScore);
@@ -372,10 +374,10 @@ public class ExamService_imple implements ExamService {
 	            
 	            // inputAnswers의 해당 인덱스와 비교
 	            if (i < inputAnswers.size()) { // 인덱스 범위 체크
-	                String inputAnswer = inputAnswers.get(i); // inputAnswers에서 값 가져오기
+	                Integer inputAnswer = inputAnswers.get(i); // inputAnswers에서 값 가져오기
 	                
 	                // getAnswer와 inputAnswer 비교
-	                if (String.valueOf(getAnswer).equals(inputAnswer)) {
+	                if (getAnswer == inputAnswer) {
 	                	correctCount++; // 정답일 경우 corrextCount를 1씩 증가
 
 	                	score += getScore; // 정답인 경우 그 문제의 배점을 score에 쌓아두는 것
@@ -402,6 +404,7 @@ public class ExamService_imple implements ExamService {
 	        sa.setWrongSCount(wrongCount);
 	        sa.setExamAnswersId(examView.getAnswer_mongo_id());
 	        sa.setAnswers(answers);
+	        sa.setCourseSeq(course_seq);
 	        
 	        answerRepository.save(sa);
 	        
@@ -412,6 +415,17 @@ public class ExamService_imple implements ExamService {
 
 		
 	}
+
+
+
+	@Override
+	public Exam getCourse_seq(String schedule_seq) {
+		
+		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
+		
+		return examView;
+	}
+
 
 
 }
