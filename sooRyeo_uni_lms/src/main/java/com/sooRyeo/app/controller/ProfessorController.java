@@ -14,9 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.LectureUploadDto;
+import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.service.*;
-import org.apache.poi.ss.formula.functions.Mode;
-import org.checkerframework.checker.units.qual.N;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
@@ -56,7 +58,7 @@ public class ProfessorController {
 
 	@Autowired
 	private FileManager fileManager;
-
+	
 	
 	@RequestMapping(value = "/professor/dashboard.lms", method = RequestMethod.GET)
 	public ModelAndView professor(ModelAndView mav, HttpServletRequest request) {// 대시보드 뷰단
@@ -926,11 +928,12 @@ public class ProfessorController {
 	
 	@ResponseBody
 	@PostMapping(value="/professor/score_checkJSON.lms", produces="text/plain;charset=UTF-8")
-	public String professor_score_checkJSON(HttpServletRequest request) {// 학생 점수 가져오기
+	public String professor_score_checkJSON(HttpServletRequest request , HttpServletResponse response, ModelAndView mav) throws JsonMappingException, JsonProcessingException {// 학생 점수 가져오기
+			  
 		
-		int student_id = Integer.parseInt(request.getParameter("student_id"));
-		int fk_course_seq = Integer.parseInt(request.getParameter("fk_course_seq"));
-		String name = request.getParameter("name");
+		int student_id = Integer.parseInt(request.getParameter("student_id")); // 학번
+		int fk_course_seq = Integer.parseInt(request.getParameter("fk_course_seq")); // 강좌번호
+		String name = request.getParameter("name"); // 학생 이름
 		
 		System.out.println("확인용 json student_id : " + student_id);
 		System.out.println("확인용 json fk_course_seq : " + fk_course_seq);
@@ -942,17 +945,19 @@ public class ProfessorController {
 		checkMap = professorService.score_checkJSON(student_id, fk_course_seq);
 
 		
-		double assignmentScore = (double)checkMap.get("assignmentScore");	
-		int regi_course_seq = (int)checkMap.get("regi_course_seq");
+		double assignmentScore = (double)checkMap.get("assignmentScore"); // 과제 백분율	
+		int regi_course_seq = (int)checkMap.get("regi_course_seq"); // 학생 등록 강좌 번호
 		// System.out.println("확인용 json 넣기전 assignmentScore : " + assignmentScore);
 		
-		Object mark = null;
+		Object mark = null; // 학점
 		
 		try {	
 			mark = (double)checkMap.get("mark");
 		} catch (Exception e) {
 			
 		}
+		
+		// 몽고 디비에서 시험점수 가져오기
 		
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("student_id", student_id);

@@ -617,7 +617,24 @@ WITH
         
         
         
-
+SELECT sum(SA.score) as totalscore
+		FROM
+		tbl_student S
+		join tbl_assignment_submit SA ON S.student_id = SA.fk_student_id
+		join tbl_assignment A ON SA.fk_schedule_seq_assignment = A.schedule_seq_assignment
+        join tbl_course C ON A.fk_course_seq = C.course_seq
+        where course_seq = 4 and S.student_id = 202400009
         
-        
+ select *
+ from tbl_exam
+ 
+ select *
+ from tbl_schedule
+ 
+ 
+ select *
+ from tbl_student S
+ join tbl_registered_course R ON S.student_id = R.fk_student_id
+ join tbl_exam E ON R.fk_course_seq = E.fk_course_seq
+ join tbl_schedule SC ON E.fk_schedule_seq = SC.schedule_seq
         
