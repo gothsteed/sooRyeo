@@ -472,6 +472,12 @@ on C.lecture_seq = D.fk_lecture_seq
 where D.isAttended = 1 AND D.fk_student_id = '202400005'
 
 
+-- 14	4	1단원 영상	1주차 수업 자료	제 1장. 국어학개론의 이해	1) 국어학개론의 이해	24/07/07	24/07/14			3
+
+insert into tbl_attendance(attendance_seq, fk_student_id, isattended, attended_date, fk_lecture_seq, play_time) 
+values(attendance_seq.nextval, '202400005', 1, sysdate, '14', 3)
+
+
 select name
 from tbl_curriculum
 order by curriculum_seq asc;
@@ -487,22 +493,177 @@ from tbl_attendance
 order by fk_lecture_seq;
 
 
--- 14	4	1단원 영상	1주차 수업 자료	제 1장. 국어학개론의 이해	1) 국어학개론의 이해	24/07/07	24/07/14			3
+-- 학번(출석테이블), 출석날짜(출석테이블), 수업명(수업테이블), 강의명(강의테이블)
+-- tbl_attendance(fk_student_id), tbl_attendance(attended_date), tbl_curriculum(name), tbl_lecture(lecture_title)
 
-insert into tbl_attendance(attendance_seq, fk_student_id, isattended, attended_date, fk_lecture_seq, play_time) 
-values(attendance_seq.nextval, '202400005', 1, sysdate, '14', 3)
+-- 로그인한 학생이 듣는 수업명
 
-
-
-
-
-
-
-
-
-
+select L.name
+from tbl_registered_course R
+JOIN tbl_course C
+ON R.fk_course_seq = C.course_seq
+JOIN tbl_curriculum L
+ON C.fk_curriculum_seq = L.curriculum_seq
+where R.fk_student_id = 202400005
 
 
+
+
+
+
+-- 강의목록
+select *
+from tbl_lecture join tbl_course
+on tbl_lecture.fk_course_seq = tbl_course.course_seq
+where exist = 1 AND fk_course_seq = '4'
+order by lecture_seq asc 
+
+select *
+from tbl_course
+
+
+-----------------------------------------------------------
+--=== 출석률 구하기 ===--
+
+-- 1과목에 대한 전체 강의 수 : 14개(16주차에서 시험2주차 뺀)
+-- 내가 출석한 강의 수 : 1개(가정)
+-- 1/14 * 100 = 7.14%
+
+-- 수강신청 tbl_registered_course
+-- 개설수업 tbl_course
+-- 강의 tbl_lecture
+-- 출석 tbl_attendance
+
+
+
+-- 내가 듣는 수업에 대한 한 과목의 강의 수(14개 / 현재 DB에 존재하는 국어학개론의 강의 수 7개)
+select count(*)
+from tbl_registered_course A JOIN tbl_course B
+ON A.fk_course_seq = B.course_seq
+JOIN tbl_lecture E
+ON B.course_seq = E.fk_course_seq
+where A.fk_student_id = '202400005' AND exist = 1 and course_seq = '4'
+
+
+-- 내가 출석한 강의 수
+select count(*)
+from tbl_lecture C JOIN tbl_attendance D
+ON C.lecture_seq = D.fk_lecture_seq
+where D.fk_student_id = '202400005' AND attended_date is not null
+
+
+SELECT
+     ROUND(
+        CASE 
+            WHEN total_lectures = 0 THEN 0 
+            ELSE (attended_lectures * 100.0 / total_lectures) 
+        END, 0) AS attendance_rate
+FROM (
+    SELECT
+        -- 총 강의 수
+        (SELECT COUNT(*)
+         FROM tbl_registered_course A 
+         JOIN tbl_course B ON A.fk_course_seq = B.course_seq
+         JOIN tbl_lecture E ON B.course_seq = E.fk_course_seq
+         WHERE A.fk_student_id = '202400005' AND exist = 1 AND B.course_seq = '4') AS total_lectures,
+
+        -- 출석한 강의 수
+        (SELECT COUNT(*)
+         FROM tbl_lecture C 
+         JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
+         WHERE D.fk_student_id = '202400005' AND attended_date IS NOT NULL) AS attended_lectures
+    FROM dual 
+) sub;
+
+-- 출석률
+SELECT
+     ROUND(
+        CASE 
+            WHEN total_lectures = 0 THEN 0 
+            ELSE (attended_lectures * 100.0 / total_lectures) 
+        END, 0) AS attendance_rate
+FROM (
+    SELECT
+        (SELECT COUNT(*)
+         FROM tbl_registered_course A 
+         JOIN tbl_course B ON A.fk_course_seq = B.course_seq
+         JOIN tbl_lecture E ON B.course_seq = E.fk_course_seq
+         WHERE A.fk_student_id = #{student_id} AND exist = 1 AND B.course_seq = #{course_seq}) AS total_lectures,
+
+        (SELECT COUNT(*)
+         FROM tbl_lecture C 
+         JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
+         WHERE D.fk_student_id = #{student_id} AND attended_date IS NOT NULL) AS attended_lectures
+    FROM dual 
+) sub
+
+
+-- 수업명, 출석률 합침
+SELECT 
+    L.name AS name,
+    R.registered_course_seq AS registered_course_seq,
+    ROUND(
+        COALESCE(
+            CASE 
+                WHEN total_lectures = 0 THEN 0 
+                ELSE (attended_lectures * 100.0 / total_lectures) 
+            END, 0
+        ), 0
+    ) AS attendance_rate
+FROM 
+    tbl_registered_course R
+JOIN 
+    tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN 
+    tbl_curriculum L ON C.fk_curriculum_seq = L.curriculum_seq
+LEFT JOIN (
+    SELECT 
+        A.fk_course_seq,
+        COUNT(E.lecture_seq) AS total_lectures,
+        (SELECT COUNT(*)
+         FROM tbl_lecture C 
+         JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
+         WHERE D.fk_student_id = '202400005' AND attended_date IS NOT NULL
+         AND C.fk_course_seq = A.fk_course_seq) AS attended_lectures
+    FROM 
+        tbl_registered_course A 
+    JOIN 
+        tbl_course B ON A.fk_course_seq = B.course_seq
+    JOIN 
+        tbl_lecture E ON B.course_seq = E.fk_course_seq
+    WHERE 
+        A.fk_student_id = '202400005' AND exist = 1
+    GROUP BY 
+        A.fk_course_seq
+) sub ON C.course_seq = sub.fk_course_seq
+WHERE 
+    R.fk_student_id = '202400005' AND name = '국어학개론'
+
+
+
+-- 수업 성적 확인하기
+-- 03월 1학기 07월 2학기
+SELECT B.fk_student_id as 학번,
+        A.score as 점수,
+       A.mark as 학점,
+       CASE 
+           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 3 AND 6 THEN 
+               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 1학기'
+           WHEN EXTRACT(MONTH FROM C.semester_date) BETWEEN 7 AND 12 THEN 
+               TO_CHAR(EXTRACT(YEAR FROM C.semester_date)) || '년 2학기'
+           ELSE '기타' -- 만약 다른 달이 포함된다면
+       END as 수강년도학기,
+       D.name as 수업명
+FROM tbl_grade A
+JOIN tbl_registered_course B ON A.fk_registered_course_seq = B.registered_course_seq
+JOIN tbl_course C ON B.fk_course_seq = C.course_seq
+JOIN tbl_curriculum D ON C.fk_curriculum_seq = D.curriculum_seq
+WHERE B.fk_student_id = '202400009'
+
+
+
+select *
+from tbl_grade
 
 
 

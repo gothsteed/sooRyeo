@@ -116,6 +116,21 @@ public interface StudentService {
 	// 출석 현황 조회 - Excel
 	void employeeList_to_Excel(String name, Model model, HttpServletRequest request);
 
+	//하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
+	List<Curriculum> Curriculum_nameList(int student_id);
+
+	// 학생 대쉬보드 - 하이차트 - 수강중인 과목 출석률 
+	Map<String, Object> myAttendance_byCategoryJSON(int student_id, String name);
+
+	// 학생 - 성적 취득현황
+	List<Map<String, Object>> Acquisition_status(int student_id);
+
+	// 학생 - 성적 취득현황JSON
+	List<Map<String, Object>> Acquisition_status_JSON(String semester, int student_id);
+
+	
+	
+	
 
     ModelAndView getCourseLecturePage(HttpServletRequest request, ModelAndView mav, String fkCourseSeq);
 }

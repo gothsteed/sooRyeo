@@ -6,6 +6,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.dto.ExamDTO;
 import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
+import com.sooRyeo.app.mongo.entity.StudentAnswer;
 
 import java.util.List;
 import java.util.Map;
@@ -67,4 +68,7 @@ public interface ExamService {
 
     // 강의 시퀀스를 불러오는 메소드
 	Exam getCourse_seq(String schedule_seq);
+	
+	// 교수가 학생 점수 가져오는 메소드
+	List<StudentAnswer> ExamResultList(int fk_course_seq);
 }

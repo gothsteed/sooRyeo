@@ -159,7 +159,9 @@ function goReadComment(){
 	    dataType: "json",
 	    success: function (json) {
 	    	
-	    	console.log(JSON.stringify(json));
+	    	//console.log(JSON.stringify(json));
+	    	
+	    	//console.log(json.submit_datetime);
 	    	
 	        let v_html = "";
 	        
@@ -196,6 +198,9 @@ function goReadComment(){
 	            v_html += "<td class='comment'>" + formattedDatetime + "</td>";
 	            
 	            v_html += "</tr>";
+	            
+	            
+	           // console.log(formattedDatetime);
 	            
 	        } 
 	        else {
