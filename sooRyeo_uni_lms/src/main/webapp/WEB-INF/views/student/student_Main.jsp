@@ -148,7 +148,12 @@ $(document).ready(function(){
     
     $("select[name='name']").change(function() {
         func_choice("myAttendance_byCategory");
-    });
+    }); 
+    
+    // 첫 번째 옵션의 값으로 하이차트를 자동으로 표시
+    var firstOptionValue = $("select[name='name'] option:first").val();
+    $("select[name='name']").val(firstOptionValue).change(); // 이 부분이 호출되어야 합니다.
+    
     
     fetchTimeTable();
     
@@ -159,7 +164,7 @@ $(document).ready(function(){
 
 // function declaration
 function func_choice(searchTypeVal) {
-	
+
      switch (searchTypeVal) {
      
         case "myAttendance_byCategory": // 과목을 선택한 경우

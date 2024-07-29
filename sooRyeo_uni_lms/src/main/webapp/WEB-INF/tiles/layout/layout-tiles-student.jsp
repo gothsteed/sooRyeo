@@ -204,9 +204,9 @@
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#" id="scheduleMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu">
-                    <a class="dropdown-item" href="<%=ctxPath%>/student/lectureList.lms">시간표</a>
+                    <%-- <a class="dropdown-item" href="<%=ctxPath%>/student/lectureList.lms">시간표</a>
                     <a class="dropdown-item" href="#">과제</a>
-                    <a class="dropdown-item" href="#">시험</a>
+                    <a class="dropdown-item" href="#">시험</a> --%>
                     <a class="dropdown-item" href="<%=ctxPath%>/student/scheduleManagement.lms">캘린더</a>
                     <a class="dropdown-item" href="<%=ctxPath%>/student/consult.lms">상담</a>
                 </div>
