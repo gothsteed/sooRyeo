@@ -27,6 +27,9 @@ import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.ExamDTO;
+import com.sooRyeo.app.mongo.entity.Answer;
+import com.sooRyeo.app.mongo.entity.ExamAnswer;
 import com.sooRyeo.app.service.ExamService;
 
 

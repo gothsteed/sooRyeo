@@ -959,10 +959,7 @@ public class StudentController {
 			
 		}
 		
-		
-		
 		JSONArray jsonArr = new JSONArray();
-		
 		
 		for(Map<String, Object> map : Acquisition_status_JSON) {
 			
