@@ -8,10 +8,10 @@
 
 	<select id="selectAdmin"
 		resultType="String"
-		parameterType="HashMap">  <!-- VO에 있는 필드명과 select 해온 컬럼명은 같아야한다!! -->
+		parameterType="HashMap"> 
 		SELECT *
 		FROM tbl_search
-		WHERE status = #{status}
+		WHERE status = #{status} and lower(menu_name) like '%'|| lower(#{searchWord}) ||'%'
 	</select>
 
 </mapper>

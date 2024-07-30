@@ -258,11 +258,17 @@ $(document).ready(function(){
 			    }
 			});
 		}
+	
 	}
-		}
+		
+	<%-- #121. 검색어 입력시 자동글 완성하기 8 --%>
+	$(document).on("click", "span.result", function(e){
+		const word = $(this).text();
+		$("input[name='searchWord']").val(word.menu_url); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
+		$("div#displayList").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
+		goSearch(); // 클릭하자마자 바로 검색해주기 위해 검색 함수를 호출한 것
 		
 	});
-	
 });
 </script>
 
