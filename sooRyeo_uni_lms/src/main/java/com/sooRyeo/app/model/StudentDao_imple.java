@@ -260,14 +260,34 @@ public class StudentDao_imple implements StudentDao {
 
 	/////////////////////////////////////////////////////////////////////////////
 	// 통계용 총 학점 가져오기
-	// 전공필수
+	
+	// 자학과전공필수
 	@Override
-	public Map<String, String> student_RequiredCredit(int student_id) {
+	public Map<String, String> student_myRequiredCredit(int student_id, int department_seq) {
 		
-		Map<String, String> student_RequiredCredit = sqlSession.selectOne("student.student_RequiredCredit", student_id);
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("student_id", student_id);
+		paraMap.put("department_seq", department_seq);
 		
-		return student_RequiredCredit;
+		Map<String, String> student_myRequiredCredit = sqlSession.selectOne("student.student_myRequiredCredit", paraMap);
+		
+		return student_myRequiredCredit;
 	}
+	
+	// 타학과전공필수
+	@Override
+	public Map<String, String> student_yourRequiredCredit(int student_id, int department_seq) {
+
+		Map<String, Object> paraMap = new HashMap<>();
+		paraMap.put("student_id", student_id);
+		paraMap.put("department_seq", department_seq);
+		
+		Map<String, String> student_yourRequiredCredit = sqlSession.selectOne("student.student_yourRequiredCredit", paraMap);
+		
+		return student_yourRequiredCredit;
+		
+	}
+
 	// 전공선택
 	@Override
 	public Map<String, String> student_UnrequiredCredit(int student_id) {
@@ -529,6 +549,8 @@ public class StudentDao_imple implements StudentDao {
 		return Acquisition_status_JSON;
 		
 	} // end of public List<Map<String, Object>> Acquisition_status_JSON
+
+
 
 
 

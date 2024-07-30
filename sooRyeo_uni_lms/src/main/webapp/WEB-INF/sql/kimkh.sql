@@ -662,3 +662,28 @@ SELECT sum(SA.score) as totalscore
  select count(*)
  from tbl_lecture
  where fk_course_seq = 4       
+ 
+ 
+ select*
+ from tbl_department
+        
+        
+        -- 전공필수(자학과) 가져오기
+        select  NVL(SUM(CU.credit), 0) AS total_myRequired_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = 202400005 and CU.fk_department_seq is not null
+        and CU.fk_department_seq = 2 and CU.required = 1 and R.pass_status = 1 
+        
+        -- 전공필수(타학과) 가져오기
+        select  NVL(SUM(CU.credit), 0) AS total_yourRequired_credit
+		FROM
+		tbl_student S 
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = 202400005 and CU.fk_department_seq is not null 
+        and CU.fk_department_seq != 2 and CU.required = 1 and R.pass_status = 1 
