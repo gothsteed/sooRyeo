@@ -480,9 +480,15 @@ public class ExamService_imple implements ExamService {
 	@Override
 	public int delete_exam_schedule(String schedule_seq) {
 		
-		int n1 = scheduleDao.delete_exam_tbl_schedule(schedule_seq);
-		int n2 = scheduleDao.delete_tbl_exam(schedule_seq);
-		return n1*n2;
+		int n1 = scheduleDao.delete_tbl_exam(schedule_seq);
+		
+		int n2 = 0;
+		
+		if(n1 == 1) {
+			n2 = scheduleDao.delete_exam_tbl_schedule(schedule_seq);
+		}
+		
+		return n2;
 	}
 
 

@@ -591,10 +591,12 @@ from tbl_assignment
 
 select *
 from tbl_schedule
-where schedule_seq ='103'
+where schedule_seq ='98'
 
 select *
 from tbl_exam
-where fk_schedule_seq ='103'
+where fk_schedule_seq ='108'
 
-66a6fb58a9da235244655056
+select *
+from tbl_lecture
+where lecture_seq = '16'

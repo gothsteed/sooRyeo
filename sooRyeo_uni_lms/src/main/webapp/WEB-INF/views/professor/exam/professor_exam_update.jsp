@@ -89,7 +89,7 @@ $(function() {
 	const start_hours = start_time_part.split(":")[0];
 	const start_minutes = start_time_part.split(":")[1];
 	
-	console.log(start_hours);
+	console.log(start_minutes);
 	
 	const end_hours = end_time_part.split(":")[0]; 
 	const end_minutes = end_time_part.split(":")[1]; 
@@ -97,9 +97,9 @@ $(function() {
 	
 	$("input:text[name='test_date']").val(exam_date);
 	$("select#startHour").val(start_hours);
-	$("select#startMinutes").val(start_minutes);
+	$("select#startMinute").val(start_minutes);
 	$("select#endHour").val(end_hours);
-	$("select#endMinutes").val(end_minutes);
+	$("select#endMinute").val(end_minutes);
 	
 	const original_file_name =  "${show_exam.original_file_name}";
     
@@ -308,6 +308,7 @@ function delete_exam() {
         frm.schedule_seq.value = $("input:hidden[name='schedule_seq']").val();
         frm.mongo_id.value = $("input:hidden[name='answer_mongo_id']").val();
         frm.file_name.value = $("input:hidden[name='file_name']").val();
+        frm.course_seq.value = $("input:hidden[name='course_seq']").val();
         frm.action = "<%=ctxPath%>/exam_delete.lms";
         frm.method = "post";
         frm.submit();
@@ -419,4 +420,5 @@ function delete_exam() {
 	<input type="hidden" name="schedule_seq"/>
 	<input type="hidden" name="mongo_id"/>
 	<input type="hidden" name="file_name"/>
+	<input type="hidden" name="course_seq"/>
 </form>
