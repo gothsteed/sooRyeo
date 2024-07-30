@@ -236,7 +236,7 @@
                 </a>
 <%--                <div class="dropdown-menu" aria-labelledby="certificatesDropdown">
                     <a class="dropdown-item" href="#certificate1">성적증명서</a>
-                    <a class="dropdown-item" href="<%=ctxPath %>/student/cer_attending.lms">재학증명서</a>
+                    <a class="dropdown-item" href="#certificate2">재학증명서</a>
                     <a class="dropdown-item" href="#certificate3">졸업증명서</a>
                 </div>--%>
             </li>
