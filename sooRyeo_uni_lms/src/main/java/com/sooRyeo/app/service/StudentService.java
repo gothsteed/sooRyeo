@@ -66,7 +66,7 @@ public interface StudentService {
 	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
 	
 	// ajax학생 수강과목 가져와서 학점 계산하기(chart)
-	String student_chart_credit(int student_id);
+	String student_chart_credit(int student_id, int department_seq);
 
 	// 과제 제출 내용보기
 	Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid);

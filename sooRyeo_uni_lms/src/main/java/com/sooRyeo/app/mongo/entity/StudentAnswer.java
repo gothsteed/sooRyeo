@@ -1,6 +1,8 @@
 package com.sooRyeo.app.mongo.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import org.bson.types.ObjectId;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Document("studentExamAnswer")
 public class StudentAnswer {
     @Id
@@ -25,6 +28,17 @@ public class StudentAnswer {
     private int wrongSCount;
     private Integer courseSeq;
 
+    public StudentAnswer(Integer studentId, String studentName, String examAnswersId, List<SubmitAnswer> answers, Integer score, Integer totalScore, int correctCount, int wrongSCount, Integer courseSeq) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.examAnswersId = examAnswersId;
+        this.answers = answers;
+        this.score = score;
+        this.totalScore = totalScore;
+        this.correctCount = correctCount;
+        this.wrongSCount = wrongSCount;
+        this.courseSeq = courseSeq;
+    }
 
     public String getQuestionAnswer(int questionNumber) {
         return answers.get(questionNumber-1).getAnswer();

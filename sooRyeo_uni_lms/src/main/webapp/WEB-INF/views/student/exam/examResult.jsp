@@ -32,13 +32,12 @@
         }
         .card-header {
             background-color: #d1e0e0;
-            color: white;
         }
     </style>
 </head>
 <body>
 <div class="container mt-5">
-    <h1 class="mb-4 text-center">시험 결과</h1>
+    <h1 class="mb-4 text-center" style="font-weight: bold">시험 결과</h1>
 
     <div class="row mb-4">
         <div class="col-lg-6 mb-4">
@@ -57,7 +56,23 @@
                             <canvas id="scoreChart"></canvas>
                         </div>
                     </div>
+
+                    <div class="table-responsive" id="stats">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>평균 점수</th>
+                                <th>최고 점수</th>
+                                <th>최저 점수</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
             </div>
         </div>
         <div class="col-lg-6 mb-4">
@@ -119,9 +134,27 @@
         var url = '<%= ctxPath %>/professor/exam/resultREST.lms?schedule_seq=' + scheduleSeq;
 
         $.getJSON(url, function(data) {
-            renderNormalDistributionChart(data.studuentScoreList);
+            renderScoreDistributionChart(data.studuentScoreList);
+            populateStats([{
+                averageScore: data.averageScore,
+                highestScore: data.highestScore,
+                lowestScore: data.lowestScore
+            }]);
         });
     });
+
+    function populateStats(stats) {
+        var statsTable = $("#stats tbody");
+        statsTable.empty();
+        $.each(stats, function(index, stat) {
+            var row = "<tr>" +
+                "<td>" + stat.averageScore + "</td>" +
+                "<td>" + stat.highestScore + "</td>" +
+                "<td>" + stat.lowestScore + "</td>" +
+                "</tr>";
+            statsTable.append(row);
+        });
+    }
 
     function populateScoreSummary(data) {
         $('#totalScore').text(data.score);
@@ -161,7 +194,7 @@
 
         data.testAnswers.forEach((answer, index) => {
             const studentAnswer = data.studentAnswers[index];
-            const isCorrect = answer === studentAnswer;
+            const isCorrect = (answer ===  parseInt(studentAnswer));
 
             const row = `
                 <tr>
@@ -179,46 +212,74 @@
         });
     }
 
-    function renderNormalDistributionChart(results) {
+
+    function renderScoreDistributionChart(results) {
         var scores = results.map(function(result) {
             return result.score;
         });
 
-        Highcharts.chart('class-result-container', {
-            title: {
-                text: '성적 정규분포'
-            },
-            xAxis: [{
-                title: { text: 'Data' },
-                alignTicks: false
-            }, {
-                title: { text: 'Histogram' },
-                alignTicks: false,
-                opposite: true
-            }],
-            yAxis: [{
-                title: { text: 'Data' }
-            }, {
-                title: { text: 'Histogram' },
-                opposite: true
-            }],
-            series: [{
-                name: 'Histogram',
-                type: 'histogram',
-                xAxis: 1,
-                yAxis: 1,
-                baseSeries: 's1',
-                zIndex: -1
-            }, {
-                name: 'Data',
-                type: 'scatter',
-                data: scores,
-                id: 's1',
-                marker: {
-                    radius: 1.5
-                }
-            }]
+        // Calculate the frequency of each score
+        var scoreFrequency = {};
+        scores.forEach(function(score) {
+            scoreFrequency[score] = (scoreFrequency[score] || 0) + 1;
         });
+
+        // Convert the frequency object to an array of [score, frequency] pairs
+        var seriesData = Object.entries(scoreFrequency).map(function([score, frequency]) {
+            return [parseFloat(score), frequency];
+        });
+
+        // Sort the data by score
+        seriesData.sort(function(a, b) {
+            return a[0] - b[0];
+        });
+
+        Highcharts.chart('class-result-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '성적 분포'
+            },
+            xAxis: {
+                title: {
+                    text: '점수 '
+                },
+                categories: seriesData.map(function(item) {
+                    return item[0];
+                })
+            },
+            yAxis: {
+                title: {
+                    text: '학생 수'
+                }
+            },
+            series: [{
+                name: 'Students',
+                data: seriesData.map(function(item) {
+                    return item[1];
+                })
+            }],
+            tooltip: {
+                formatter: function() {
+                    return 'Score: ' + this.x + '<br>Students: ' + this.y;
+                }
+            },
+            plotOptions: {
+                column: {
+                    zones: [{
+                        value: 5,
+                        color: '#FF9800'
+                    }, {
+                        value: 10,
+                        color: '#4CAF50'
+                    }, {
+                        color: '#2196F3'
+                    }]
+                }
+            }
+        });
+
     }
 </script>
 </body>

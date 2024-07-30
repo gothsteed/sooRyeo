@@ -239,5 +239,10 @@
 		WHERE FK_COURSE_SEQ = #{course_seq} and fk_student_id = #{student_id}
 	</delete>
 
+	<select id="courseRegisterationList" parameterType="int" resultType="com.sooRyeo.app.domain.RegisteredCourse">
+		select *
+		from TBL_REGISTERED_COURSE
+		where FK_COURSE_SEQ = #{fkCourseSeq}
+	</select>
 
 </mapper>

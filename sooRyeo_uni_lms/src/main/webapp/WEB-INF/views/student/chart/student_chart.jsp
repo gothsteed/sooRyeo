@@ -116,17 +116,16 @@
 					
 			case "credit": // 학생 학점 통계 를 선택한 경우 
 				
-			
 				$.ajax({
 				    url:"<%= ctxPath%>/student/chart/credit.lms",
+				    data:{"department_seq":"${requestScope.department_seq}"},
 				    dataType:"json",
 				    success:function(json){
 				        var data = json[0];
-
 				        var totalCredit = parseInt(data.total_Liberal_credit) + 
-				                          parseInt(data.total_Required_credit) + 
+				                          parseInt(data.total_myRequired_credit) + 
+				                          parseInt(data.total_yourRequired_credit) +
 				                          parseInt(data.total_Unrequired_credit);
-
 				        Highcharts.chart('chart_container', {
 				            chart: {
 				                type: 'column'
@@ -136,7 +135,7 @@
 				                align: 'left'
 				            },
 				            xAxis: {
-				                categories: ['교양', '전공필수', '전공선택', '총학점']
+				                categories: ['교양', '자학과전필', '타학과전필', '전공선택', '총학점']
 				            },
 				            yAxis: {
 				                min: 0,
@@ -177,13 +176,16 @@
 				            },
 				            series: [{
 				                name: '교양',
-				                data: [parseInt(data.total_Liberal_credit), 0, 0, parseInt(data.total_Liberal_credit)]
+				                data: [parseInt(data.total_Liberal_credit), 0, 0, 0, parseInt(data.total_Liberal_credit)]
 				            }, {
-				                name: '전공필수',
-				                data: [0, parseInt(data.total_Required_credit), 0, parseInt(data.total_Required_credit)]
+				                name: '자학과전필',
+				                data: [0, parseInt(data.total_myRequired_credit), 0, 0, parseInt(data.total_myRequired_credit)]
+				            }, {
+				                name: '타학과전필',
+				                data: [0, 0, parseInt(data.total_yourRequired_credit), 0, parseInt(data.total_yourRequired_credit)]
 				            }, {
 				                name: '전공선택',
-				                data: [0, 0, parseInt(data.total_Unrequired_credit), parseInt(data.total_Unrequired_credit)]
+				                data: [0, 0, 0, parseInt(data.total_Unrequired_credit), parseInt(data.total_Unrequired_credit)]
 				            }]
 				        });
 				    },

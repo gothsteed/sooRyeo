@@ -611,15 +611,17 @@ public class StudentService_imple implements StudentService {
 
 	// 통계용 총 학점 가져오기
 	@Override
-	public String student_chart_credit(int student_id) {
+	public String student_chart_credit(int student_id, int department_seq) {
 		
-		Map<String, String> RequiredCredit = dao.student_RequiredCredit(student_id);
+		Map<String, String> myRequiredCredit = dao.student_myRequiredCredit(student_id, department_seq);
+		Map<String, String> yourRequiredCredit = dao.student_yourRequiredCredit(student_id, department_seq);
 		Map<String, String> UnrequiredCredit = dao.student_UnrequiredCredit(student_id);
 		Map<String, String> LiberalCredit = dao.student_LiberalCredit(student_id);
 		
 		JsonArray jsonArr = new JsonArray();	
 		JsonObject jsonObj = new JsonObject();
-		jsonObj.addProperty("total_Required_credit", RequiredCredit.get("total_Required_credit"));
+		jsonObj.addProperty("total_myRequired_credit", myRequiredCredit.get("total_myRequired_credit"));
+		jsonObj.addProperty("total_yourRequired_credit", yourRequiredCredit.get("total_yourRequired_credit"));
 		jsonObj.addProperty("total_Unrequired_credit", UnrequiredCredit.get("total_Unrequired_credit"));
 		jsonObj.addProperty("total_Liberal_credit", LiberalCredit.get("total_Liberal_credit"));
 		
