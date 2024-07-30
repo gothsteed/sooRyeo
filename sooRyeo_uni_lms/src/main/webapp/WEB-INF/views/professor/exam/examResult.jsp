@@ -41,7 +41,7 @@
                     highestScore: data.highestScore,
                     lowestScore: data.lowestScore
                 }]);
-                renderNormalDistributionChart(data.studuentScoreList);
+                renderScoreDistributionChart(data.studuentScoreList);
 
             });
 
@@ -75,48 +75,73 @@
         });
 
 
-        function renderNormalDistributionChart(results) {
+        function renderScoreDistributionChart(results) {
             var scores = results.map(function(result) {
                 return result.score;
             });
 
-            Highcharts.chart('container', {
-                title: {
-                    text: '성적 정규분포'
-                },
-                xAxis: [{
-                    title: { text: 'Data' },
-                    alignTicks: false
-                }, {
-                    title: { text: 'Histogram' },
-                    alignTicks: false,
-                    opposite: true
-                }],
-
-                yAxis: [{
-                    title: { text: 'Data' }
-                }, {
-                    title: { text: 'Histogram' },
-                    opposite: true
-                }],
-
-                series: [{
-                    name: 'Histogram',
-                    type: 'histogram',
-                    xAxis: 1,
-                    yAxis: 1,
-                    baseSeries: 's1',
-                    zIndex: -1
-                }, {
-                    name: 'Data',
-                    type: 'scatter',
-                    data: scores,
-                    id: 's1',
-                    marker: {
-                        radius: 1.5
-                    }
-                }]
+            // Calculate the frequency of each score
+            var scoreFrequency = {};
+            scores.forEach(function(score) {
+                scoreFrequency[score] = (scoreFrequency[score] || 0) + 1;
             });
+
+            // Convert the frequency object to an array of [score, frequency] pairs
+            var seriesData = Object.entries(scoreFrequency).map(function([score, frequency]) {
+                return [parseFloat(score), frequency];
+            });
+
+            // Sort the data by score
+            seriesData.sort(function(a, b) {
+                return a[0] - b[0];
+            });
+
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Score Distribution'
+                },
+                xAxis: {
+                    title: {
+                        text: 'Score'
+                    },
+                    categories: seriesData.map(function(item) {
+                        return item[0];
+                    })
+                },
+                yAxis: {
+                    title: {
+                        text: 'Number of Students'
+                    }
+                },
+                series: [{
+                    name: 'Students',
+                    data: seriesData.map(function(item) {
+                        return item[1];
+                    })
+                }],
+                tooltip: {
+                    formatter: function() {
+                        return 'Score: ' + this.x + '<br>Students: ' + this.y;
+                    }
+                },
+                plotOptions: {
+                    column: {
+                        zones: [{
+                            value: 5,
+                            color: '#FF9800'
+                        }, {
+                            value: 10,
+                            color: '#4CAF50'
+                        }, {
+                            color: '#2196F3'
+                        }]
+                    }
+                }
+            });
+
         }
     </script>
 </head>
