@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.domain.Department;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.CurriculumRequestDto;
@@ -36,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.common.AES256;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Admin;
 
@@ -53,6 +55,9 @@ public class AdminController {
 	
 	@Autowired
 	private FileManager fileManager;
+	
+	@Autowired
+	private AES256 as;
 
 	@RequestMapping(value = "/admin/dashboard.lms", method = RequestMethod.GET)
 	public String admin_Main() {
@@ -68,6 +73,28 @@ public class AdminController {
 		
 		mav.addObject("application_status_student", application_status_student);
 		mav.setViewName("MemberCheck");
+		
+		return mav;
+	}
+	
+	@RequestMapping(value = "/admin/MemberList.lms", method = RequestMethod.GET)
+	public ModelAndView MemberList(HttpServletRequest request ,ModelAndView mav) {
+		
+		// 회원들을 전부 불러오는 메소드
+		List<Student> studentList = adminService.getStudenList();
+		List<Professor> professorList = adminService.getProfessorList();
+		
+        // 이메일 복호화
+        for (Student student : studentList) {
+            student.setDecodedEmail(as); // 이메일 복호화
+        }
+        for (Professor professor : professorList) {
+        	professor.setDecodedEmail(as); // 이메일 복호화
+        }
+		
+		mav.addObject("studentList", studentList);
+		mav.addObject("professorList", professorList);
+		mav.setViewName("MemberList");
 		
 		return mav;
 	}
@@ -166,12 +193,12 @@ public class AdminController {
 		
 		if(n == 1) {
 			mav.addObject("message", "회원 등록을 성공하였습니다.");
-			mav.addObject("loc", request.getContextPath()+"/admin/MemberCheck.lms");
+			mav.addObject("loc", request.getContextPath()+"/admin/MemberList.lms");
 			mav.setViewName("msg");
 		}
 		else {
 			mav.addObject("message", "회원 등록을 실패하였습니다.");
-			mav.addObject("loc", request.getContextPath()+"/admin/MemberRegister.lms");
+			mav.addObject("loc", request.getContextPath()+"/admin/MemberList.lms");
 			mav.setViewName("msg");
 		}
 		
