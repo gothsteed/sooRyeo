@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
-import com.sooRyeo.app.domain.Admin;
+
 import com.sooRyeo.app.domain.Exam;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -77,11 +76,11 @@ public class ExamController {
 				bytes = attach.getBytes();
 				
 				originalFilename = attach.getOriginalFilename();
-				System.out.println("확인용 originalFilename => " + originalFilename); 
+				// System.out.println("확인용 originalFilename => " + originalFilename); 
 				// ~~~ 확인용 originalFilename => 2024년도 국가기술자격 검정 시행계획(대외 공고).pdf
 				
 				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-				System.out.println("확인용 newFileName " + newFileName);
+				// System.out.println("확인용 newFileName " + newFileName);
 				// 확인용 newFileName 20240714220735250112916872200.pdf
 				
 				examdto.setFile_name(newFileName);
@@ -107,11 +106,6 @@ public class ExamController {
 		int question_count = request.getParameterValues("answer").length; // total 문제 수
 		String course_seq = request.getParameter("course_seq");
 		//String test_type = request.getParameter("test_type"); // pdf 파일명
-		
-		
-		System.out.println("test_start_time 확인 => " + test_start_time);
-		System.out.println("test_end_time 확인 => " + test_end_time);
-		
 		
 		List<Answer> answer_list = new ArrayList<>();
 		
@@ -177,10 +171,13 @@ public class ExamController {
 		
 		int course_seq = getCourse_seq.getFk_course_seq();
 		
-		List<Integer> inputAnswers = new ArrayList<>();
+		List<String> inputAnswers = new ArrayList<>();
 		
 		for(int i=1; i<selCount+1; i++) {
-			Integer selectAnswer = Integer.parseInt(request.getParameter(String.valueOf(i)));
+			
+			String input = request.getParameter(String.valueOf(i));
+			
+			String selectAnswer = input;
 			
 			if (selectAnswer != null) {
 				inputAnswers.add(selectAnswer);
@@ -270,9 +267,6 @@ public class ExamController {
 		String course_seq = request.getParameter("course_seq");
 		String schedule_seq = request.getParameter("schedule_seq");
 		
-		System.out.println("schedule_seq 확인용 =>" + schedule_seq);
-		System.out.println("course_seq 확인용 =>" + course_seq);
-		
 		// 시험 출제 뷰단에 과목명 보여주기
 		String  coures_name = examService.select_coures_name(course_seq);
 		
@@ -311,8 +305,6 @@ public class ExamController {
 		
 		MultipartFile attach = examdto.getAttach();
 		
-		System.out.println("attach 확인 =>" + attach);
-		
 		// 시험지를 변경한다면
 		if( !attach.isEmpty() ) {
 			
@@ -343,10 +335,8 @@ public class ExamController {
 				bytes = attach.getBytes();
 				
 				originalFilename = attach.getOriginalFilename();
-				System.out.println("확인용 originalFilename => " + originalFilename); 
 
 				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
-				System.out.println("확인용 newFileName " + newFileName);
 
 				examdto.setFile_name(newFileName);
 				examdto.setOriginal_file_name(originalFilename);
@@ -424,6 +414,48 @@ public class ExamController {
 
 		return examService.getWaitExamPage(mav, request, response, schedule_seq);
 	}
+	
+	
+	// 시험 삭제하기
+	@PostMapping("/exam_delete.lms")
+	public ModelAndView exam_delete(HttpServletRequest request, ModelAndView mav, MultipartHttpServletRequest mrequest, ExamDTO examdto) throws Exception {
+		
+		String schedule_seq = request.getParameter("schedule_seq");
+		String mongo_id = request.getParameter("mongo_id");
+		String course_seq = request.getParameter("course_seq");
+		
+		System.out.println("course_seq 확인용 => " + course_seq);
+		
+		String  getFile_name = examdto.getFile_name();
+		
+		if( !getFile_name.isEmpty() ) {
+			
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+					
+			String path = root+"resources"+File.separator+"files";
+			
+			// 파일 변경을 위해 기존에 올려뒀던 파일 지우기
+			fileManager.doFileDelete(getFile_name, path);
+			
+		}
+		
+		// 시험 삭제 시 몽고db delete
+		examService.delete_mongDB(mongo_id);
+		
+		// 시험 삭제 시 오라클 delete
+		int n = examService.delete_exam_schedule(schedule_seq);
+		
+		if(n==1) {
+			
+			mav.addObject("message", "시험 삭제가 완료되었습니다.");
+			mav.addObject("loc", request.getContextPath()+"/professor/courseDetail.lms?course_seq="+course_seq);
+			mav.setViewName("msg");	
+		}
+		
+		return mav;
+	}
+	
 	
 	
 }

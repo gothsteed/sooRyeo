@@ -64,11 +64,18 @@ public interface ExamService {
 
     ModelAndView takeExam(ModelAndView mav, HttpServletRequest request, int schedule_seq);
 
-    void insertMongoStudentExamAnswer(List<Integer> inputAnswers, String schedule_seq, HttpServletRequest request, int course_seq);
+    void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request, int course_seq);
 
     // 강의 시퀀스를 불러오는 메소드
 	Exam getCourse_seq(String schedule_seq);
 	
 	// 교수가 학생 점수 가져오는 메소드
 	List<StudentAnswer> ExamResultList(int fk_course_seq);
+
+	// 시험 삭제 시 몽고db delete
+	void delete_mongDB(String mongo_id);
+
+	// 시험 삭제 시 오라클 delete
+	int delete_exam_schedule(String schedule_seq);
+
 }

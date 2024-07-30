@@ -152,10 +152,15 @@ function updateDateTime() {
         // 결합하여 새로운 값 생성 (형식: yyyy-mm-dd hh:mm:ss - hh:mm:ss)
         var startDateTime = date + " " + startHour.padStart(2, '0') + ":" + startMinute.padStart(2, '0') + ":00";
         var endDateTime = date + " " + endHour.padStart(2, '0') + ":" + endMinute.padStart(2, '0') + ":00";
+        
+        console.log("startDateTime 확인용", startDateTime);
+        console.log("endDateTime 확인용", endDateTime);
 
         // test_date_time input의 value 속성에 설정
-        document.getElementById('test_start_time').value = startDateTime;
-        document.getElementById('test_end_time').value = endDateTime;
+        $("input:hidden[name='test_start_time']").val(startDateTime);
+        $("input:hidden[name='test_end_time']").val(startDateTime);
+        // document.getElementById('test_start_time').value = startDateTime;
+        // document.getElementById('test_end_time').value = endDateTime;
     }
 }
 
@@ -178,7 +183,7 @@ function set_exam() {
           var startDate = new Date(startDate);    
           
        	  var startHour= $("select#startHour").val();
-     	  var endHour = $("select#endHour").val();
+     	  var endHour = $("select#endHour").val(); 
      	  var startMinute= $("select#startMinute").val();
      	  var endMinute= $("select#endMinute").val();
      	

@@ -89,7 +89,7 @@ $(function() {
 	const start_hours = start_time_part.split(":")[0];
 	const start_minutes = start_time_part.split(":")[1];
 	
-	console.log(start_hours);
+	console.log(start_minutes);
 	
 	const end_hours = end_time_part.split(":")[0]; 
 	const end_minutes = end_time_part.split(":")[1]; 
@@ -97,9 +97,9 @@ $(function() {
 	
 	$("input:text[name='test_date']").val(exam_date);
 	$("select#startHour").val(start_hours);
-	$("select#startMinutes").val(start_minutes);
+	$("select#startMinute").val(start_minutes);
 	$("select#endHour").val(end_hours);
-	$("select#endMinutes").val(end_minutes);
+	$("select#endMinute").val(end_minutes);
 	
 	const original_file_name =  "${show_exam.original_file_name}";
     
@@ -131,9 +131,12 @@ $(function() {
     });
     
     $("button#update").click(function(){
-    	
-    	set_exam();
-    	
+    	update_exam();
+    });
+    
+    
+    $("button#delete").click(function(){
+    	delete_exam();
     });
     
     
@@ -190,8 +193,8 @@ function updateDateTime() {
 }
 
 
-// 출제하기 버튼
-function set_exam() {
+// 수정하기 버튼
+function update_exam() {
 	
 
 		 // 시험 구분 유효성 검사
@@ -294,6 +297,26 @@ function set_exam() {
 }
 
 
+// 삭제하기 버튼
+function delete_exam() {
+	
+    const userConfirmed = confirm("시험을 삭제 하시겠습니까?");
+    
+    if (userConfirmed) {
+    	
+        const frm = document.exam_del;
+        frm.schedule_seq.value = $("input:hidden[name='schedule_seq']").val();
+        frm.mongo_id.value = $("input:hidden[name='answer_mongo_id']").val();
+        frm.file_name.value = $("input:hidden[name='file_name']").val();
+        frm.course_seq.value = $("input:hidden[name='course_seq']").val();
+        frm.action = "<%=ctxPath%>/exam_delete.lms";
+        frm.method = "post";
+        frm.submit();
+    }
+	
+}
+
+
 </script>
 
 
@@ -304,7 +327,10 @@ function set_exam() {
       <div class="card" id="card-title-1">
          <div class="card-header border-0 pb-0 " style="display: flex; justify-content: space-between; ">
             <h1 class="card-title" style="color:#6e6e6e;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 수정</h1>
-            <button type="button" id="update" class="btn btn-secondary" style="width: 150px;">수정하기</button>
+            <div style="display: flex;">
+	            <button type="button" id="update" class="btn btn-secondary" style="width: 150px; margin-right: 3%;">수정하기</button>
+	            <button type="button" id="delete" class="btn btn-primary" style="width: 150px;" onclick="delete_exam();">삭제하기</button>
+            </div>
          </div>
          <hr>
          <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
@@ -363,20 +389,20 @@ function set_exam() {
 
 							<div id="boxWrap">
 							
-							<c:forEach var="exam_info"  items="${exam_info}" varStatus="status">
-							
-	                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
-	                                <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
-	                                <span style="width: 70px; text-align:center;">${status.count}번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer" value="${exam_info.answer}">
-	                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" value="${exam_info.score}" placeholder="숫자만 입력">
-	                             </div>
-	                             
-                                 <c:if test="${status.last}">
-							        <!--  <span>마지막 항목입니다: ${status.count}</span> -->
-							        <input type="hidden" name = "last_status" value="${status.count}">
-							    </c:if>
-							    
-							</c:forEach>
+								<c:forEach var="exam_info"  items="${exam_info}" varStatus="status">
+								
+		                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
+		                                <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
+		                                <span style="width: 70px; text-align:center;">${status.count}번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer" value="${exam_info.answer}">
+		                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" value="${exam_info.score}" placeholder="숫자만 입력">
+		                             </div>
+		                             
+	                                 <c:if test="${status.last}">
+								        <!--  <span>마지막 항목입니다: ${status.count}</span> -->
+								        <input type="hidden" name = "last_status" value="${status.count}">
+								    </c:if>
+								    
+								</c:forEach>
 							
 							</div>
 
@@ -390,4 +416,9 @@ function set_exam() {
    </div>
 </div>
 
-
+<form name="exam_del" enctype="multipart/form-data">
+	<input type="hidden" name="schedule_seq"/>
+	<input type="hidden" name="mongo_id"/>
+	<input type="hidden" name="file_name"/>
+	<input type="hidden" name="course_seq"/>
+</form>

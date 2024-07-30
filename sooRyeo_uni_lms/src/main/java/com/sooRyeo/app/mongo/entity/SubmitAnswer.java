@@ -6,11 +6,11 @@ import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
-public class Answer {
+public class SubmitAnswer {
 	@Id
     private String questionId;
     private Integer questionNumber;
-    private Integer answer;
+    private String answer;
     private Integer score;
 
 }

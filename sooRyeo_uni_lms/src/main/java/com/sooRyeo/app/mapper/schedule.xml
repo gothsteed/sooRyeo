@@ -634,10 +634,22 @@ where rno between #{startRno} and #{endRno}
 	
 	<update id="update_schedule_nofile" parameterType="HashMap">
 			update tbl_schedule set title = #{test_type},
-											start_date = to_date(#{test_start_time}, 'yyyy-mm-dd hh24:mi:ss'),
-											end_date = to_date(#{test_end_time}, 'yyyy-mm-dd hh24:mi:ss')
+									start_date = to_date(#{test_start_time}, 'yyyy-mm-dd hh24:mi:ss'),
+									end_date = to_date(#{test_end_time}, 'yyyy-mm-dd hh24:mi:ss')
 		    where schedule_seq = #{schedule_seq}
 	</update>
+	
+	
+	<!-- 시험 삭제시 exam 테이블 delete -->
+	<delete id="delete_tbl_exam" parameterType="String">
+		delete from tbl_exam where fk_schedule_seq = #{schedule_seq}
+	</delete>
+	
+	
+	<!-- 시험 삭제시 schedule 테이블 delete -->
+	<delete id="delete_exam_tbl_schedule" parameterType="String">
+		delete from tbl_schedule where schedule_seq = #{schedule_seq}
+	</delete>
 	
 	
 

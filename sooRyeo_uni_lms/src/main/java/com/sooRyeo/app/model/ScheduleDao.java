@@ -85,5 +85,11 @@ public interface ScheduleDao {
 	// 시험지 수정시 스케줄 테이블 update (파일변경 없는 경우)
 	int update_exam_schedule_nofile(String schedule_seq, String test_type, String test_start_time, String test_end_time, int question_count, int total_score);
 
+	// 시험 삭제시 exam 테이블 delete
+	int delete_tbl_exam(String schedule_seq);
+
+	// 시험 삭제시 schedule 테이블 delete
+	int delete_exam_tbl_schedule(String schedule_seq);
+
 	
 }

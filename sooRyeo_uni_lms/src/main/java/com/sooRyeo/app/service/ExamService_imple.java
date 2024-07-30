@@ -22,6 +22,7 @@ import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import com.sooRyeo.app.model.ScheduleDao;
 import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
+import com.sooRyeo.app.mongo.entity.SubmitAnswer;
 import com.sooRyeo.app.mongo.repository.StudentExamAnswerRepository;
 
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
@@ -68,8 +69,6 @@ public class ExamService_imple implements ExamService {
         int course_seq = Integer.parseInt(request.getParameter("course_seq"));
         int sizePerPage = 10;
         
-        System.out.println("course_seq 확인용 => "+ course_seq);
-
         List<Exam> examPageList = scheduleDao.getExamList(currentPage, sizePerPage, course_seq);
         int examCount = scheduleDao.getExamCount(course_seq);
 
@@ -186,7 +185,7 @@ public class ExamService_imple implements ExamService {
         scoreDto.setWrongSCount(studentAnswer.getWrongSCount());
         scoreDto.setCorrectCount(studentAnswer.getCorrectCount());
 
-        List<Integer> studentAnsList = new ArrayList<>();
+        List<String> studentAnsList = new ArrayList<>();
         List<Integer> ExamAnsList = new ArrayList<>();
 
         for(int i=0; i<examAnswer.getAnswers().size(); i++) {
@@ -349,7 +348,7 @@ public class ExamService_imple implements ExamService {
 	}
 		
 	@Override
-	public void insertMongoStudentExamAnswer(List<Integer> inputAnswers, String schedule_seq, HttpServletRequest request, int course_seq) throws NumberFormatException , NullPointerException {
+	public void insertMongoStudentExamAnswer(List<String> inputAnswers, String schedule_seq, HttpServletRequest request, int course_seq) throws NumberFormatException , NullPointerException {
 
 		Exam examView = scheduleDao.getExam(Integer.parseInt(schedule_seq));
 		
@@ -358,72 +357,70 @@ public class ExamService_imple implements ExamService {
 	    
         HttpSession session = request.getSession();
         Student student = (Student) session.getAttribute("loginuser");
-	    
-	    List<Answer> answers = null;
+	   
 	    
 	    int correctCount = 0;
 	    int wrongCount = 0;
 	    int score = 0; // 응시자가 맞춘 문제 배점의 합
 	    int totalScore = 0; // 전체 문제 배점의 총합
 	    
-	    if (examList != null) {
-	        answers = examList.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴. 이 안에 answer와 score가 전부 들어있음.
-	        
-	        // inputAnswers와 answers를 비교
-	        for (int i = 0; i < answers.size(); i++) {
-	            Answer answer = answers.get(i);
-	            int getAnswer = answer.getAnswer();  // 각 Answer 객체의 score를 가져옴
-	            
-	            answer.setAnswer(inputAnswers.get(i));
-	            
-	            int getScore = answer.getScore(); // 문제의 배점을 가져오는 것
-	           
-	            System.out.println("getScore "+getScore);
-	            
-	            totalScore += getScore; // 문제의 배점을 전부 더해서 totalScore에 저장 한 것
-	            
-	            // inputAnswers의 해당 인덱스와 비교
-	            if (i < inputAnswers.size()) { // 인덱스 범위 체크
-	                Integer inputAnswer = inputAnswers.get(i); // inputAnswers에서 값 가져오기
-	                
-	                // getAnswer와 inputAnswer 비교
-	                if (getAnswer == inputAnswer) {
-	                	correctCount++; // 정답일 경우 corrextCount를 1씩 증가
-
-	                	score += getScore; // 정답인 경우 그 문제의 배점을 score에 쌓아두는 것
-
-	                } else {
-	                	wrongCount++; // 틀렸을 경우 wrongCount를 1씩 증가
-	                }
-	                
-	            }
-	        } // end of for------------------------------------------------------------
-	        
-	        System.out.println("correctCount " + correctCount);
-	        System.out.println("score " + score);
-	        System.out.println("wrongCount " + wrongCount);
-	        System.out.println("totalScore " + totalScore);
-	        
-	        StudentAnswer sa = new StudentAnswer();
-	        
-	        sa.setStudentId(student.getStudent_id());
-	        sa.setStudentName(student.getName());
-	        sa.setScore(score); // 응시자가 맞춘 문제 배점의 합
-	        sa.setTotalScore(totalScore); // 전체 문제 배점의 총합
-	        sa.setCorrectCount(correctCount);
-	        sa.setWrongSCount(wrongCount);
-	        sa.setExamAnswersId(examView.getAnswer_mongo_id());
-	        sa.setAnswers(answers);
-	        sa.setCourseSeq(course_seq);
-	        
-	        answerRepository.save(sa);
-	        
-	        
-	    } else {
-	        System.out.println("examList가 비어 있습니다.");
+	    if (examList == null) {
+	    	System.out.println("examList가 비어 있습니다.");
+	    	return;
 	    }
-
-		
+	    	
+    	List<Answer> TestAnswers = examList.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴. 이 안에 answer와 score가 전부 들어있음.
+    	List<SubmitAnswer> answers = new ArrayList<SubmitAnswer>();
+    	
+        // inputAnswers와 answers를 비교
+        for (int i = 0; i < TestAnswers.size(); i++) {
+            
+        	Answer testAnswer = TestAnswers.get(i);
+        			
+            int getAnswer = testAnswer.getAnswer(); // 각 Answer 객체의 Answer를 가져옴
+            int getScore = testAnswer.getScore(); // 문제의 배점을 가져오는 것
+           
+            totalScore += getScore; // 문제의 배점을 전부 더해서 totalScore에 저장 한 것
+            
+            String inputAnswer = inputAnswers.get(i); // inputAnswers에서 값 가져오기
+            
+            // getAnswer와 inputAnswer 비교
+            try {
+            	if (getAnswer == Integer.parseInt(inputAnswer)) {
+            		correctCount++; // 정답일 경우 corrextCount를 1씩 증가
+            		
+            		score += getScore; // 정답인 경우 그 문제의 배점을 score에 쌓아두는 것
+            		
+            	} else {
+            		wrongCount++; // 틀렸을 경우 wrongCount를 1씩 증가
+            	}
+			} catch (Exception e) {
+				wrongCount++; // 틀렸을 경우 wrongCount를 1씩 증가
+			}
+            
+            
+            SubmitAnswer submitAnswer = new SubmitAnswer();
+            submitAnswer.setAnswer(inputAnswer);
+            submitAnswer.setQuestionNumber(testAnswer.getQuestionNumber());
+            submitAnswer.setScore(getScore);
+            answers.add(submitAnswer);
+            
+        } // end of for------------------------------------------------------------
+        
+        StudentAnswer sa = new StudentAnswer();
+        
+        sa.setStudentId(student.getStudent_id());
+        sa.setStudentName(student.getName());
+        sa.setScore(score); // 응시자가 맞춘 문제 배점의 합
+        sa.setTotalScore(totalScore); // 전체 문제 배점의 총합
+        sa.setCorrectCount(correctCount);
+        sa.setWrongSCount(wrongCount);
+        sa.setExamAnswersId(examView.getAnswer_mongo_id());
+        sa.setAnswers(answers);
+        sa.setCourseSeq(course_seq);
+        
+        answerRepository.save(sa);
+	   
 	}
 
 
@@ -468,6 +465,36 @@ public class ExamService_imple implements ExamService {
 		
 		return answerList;
 	}
+
+
+
+	// 시험 삭제 시 몽고db delete
+	@Override
+	public void delete_mongDB(String mongo_id) {
+		examAnswerRepository.deleteById(mongo_id);
+		
+	}
+
+
+	// 시험 삭제 시 오라클 delete
+	@Override
+	public int delete_exam_schedule(String schedule_seq) {
+		
+		int n1 = scheduleDao.delete_tbl_exam(schedule_seq);
+		
+		int n2 = 0;
+		
+		if(n1 == 1) {
+			n2 = scheduleDao.delete_exam_tbl_schedule(schedule_seq);
+		}
+		
+		return n2;
+	}
+
+
+
+	
+
 
 
 

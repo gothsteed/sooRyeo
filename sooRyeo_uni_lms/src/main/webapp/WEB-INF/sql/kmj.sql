@@ -589,6 +589,14 @@ where schedule_seq  = '103';
 select *
 from tbl_assignment
 
-select to_date(start_date , 'yyyy-mm-dd hh24:mi:ss')
+select *
 from tbl_schedule
-where schedule_seq = '5'
+where schedule_seq ='98'
+
+select *
+from tbl_exam
+where fk_schedule_seq ='108'
+
+select *
+from tbl_lecture
+where lecture_seq = '16'

@@ -40,6 +40,7 @@
 		location.href = "<%=ctxPath%>/professor/exam/result.lms?schedule_seq=" + schedule_seq;
 	}
 	
+	<%--
 	var fkScheduleSeq = "";
 	
     function setScheduleSeq(element) {
@@ -47,21 +48,21 @@
         fkScheduleSeq = element.parentNode.querySelector('input[name="fk_schedule_seq"]').value;
         
     }
+    --%>
 	
 	
 	
 	function go_exam_update(schedule_seq) {
-		   
-		   console.log("fkScheduleSeq 확인용", fkScheduleSeq);
+		
+		console.log("schedule_seq:", schedule_seq);
 		
 	       const frm = document.exam_update;
-	       frm.schedule_seq.value = fkScheduleSeq;
+	       frm.schedule_seq.value = schedule_seq;
 	       frm.course_seq.value = course_seq;
 	       frm.action = "<%=ctxPath%>/professor/professor_exam_update.lms";
 	       frm.method = "post";
 	       frm.submit();
 
-		
 	}
 	
 	
@@ -96,9 +97,9 @@
 	<c:choose>
 		<c:when test="${not empty requestScope.examList}">
 			<c:forEach var="exam" items="${requestScope.examList}" varStatus="status">
-				<tr class="row" onclick="handleExamClick('${exam.fk_schedule_seq}', ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetweenSchedule(currentTime)}, ${exam.schedule.isBefore(currentTime)})">
+				<tr class="row" onclick="handleExamClick(${exam.fk_schedule_seq}, ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetweenSchedule(currentTime)}, ${exam.schedule.isBefore(currentTime)});">
 					<th scope="row" class="col-1" style="text-align: center">${status.count}</th>
-					<td class="col-3" id="title" style="text-align: center" onclick="setScheduleSeq(this);" >${exam.schedule.title}</td>
+					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
 					<td class="col-3" style="text-align: center">${exam.durationInMinute}분</td>
 					<td class="col-2" style="text-align: center">
@@ -113,7 +114,6 @@
 						</c:if>
 						<input type="hidden" name="fk_schedule_seq" value="${exam.fk_schedule_seq}" />
 					</td>
-					
 				</tr>
 			</c:forEach>
 		</c:when>
