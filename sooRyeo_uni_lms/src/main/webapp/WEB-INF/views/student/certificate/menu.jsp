@@ -37,6 +37,16 @@
 	 
 	}
 
+    function goEnrollment(){
+
+        const frm = document.generateCertificate;
+        frm.method = "post";
+        frm.action = "<%= ctxPath %>/student/certificate/enrollment.lms";
+        frm.submit();
+
+
+    }
+
 
 </script>
 
@@ -68,7 +78,7 @@
                     </div>
                     <form action="generateCertificate" method="post" class="mt-3">
                         <input type="hidden" name="certificateType" value="Participation">
-                        <button type="submit" class="btn btn-success w-100">바로가기</button>
+                        <button type="button" class="btn btn-success w-100" onclick="goEnrollment()">바로가기</button>
                     </form>
                 </div>
             </div>
