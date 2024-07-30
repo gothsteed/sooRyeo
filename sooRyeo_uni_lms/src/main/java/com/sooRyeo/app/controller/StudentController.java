@@ -713,9 +713,14 @@ public class StudentController {
 
 	// 메인 - 사이드바 - 성적 - 통계
 	@GetMapping("/student/Statistics.lms")
-	public String student_chart(HttpServletRequest request) {
-       
-       return "chart/student_chart";
+	public ModelAndView student_chart(HttpServletRequest request, ModelAndView mav) {
+		
+		int department_seq = Integer.parseInt(request.getParameter("department_seq"));
+		System.out.println("확인용 department_seq : " + department_seq);
+		
+		mav.addObject("department_seq", department_seq);
+		mav.setViewName("chart/student_chart");
+       return mav;
 	}
 	
 	
@@ -730,7 +735,9 @@ public class StudentController {
 		
 		int student_id = loginuser.getStudent_id();
 		
-		return studentservice.student_chart_credit(student_id);
+		int department_seq = Integer.parseInt(request.getParameter("department_seq"));
+		
+		return studentservice.student_chart_credit(student_id, department_seq);
 	}
 	
 	

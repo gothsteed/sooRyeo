@@ -75,8 +75,10 @@ public interface StudentDao {
 	int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid);
 	
 	// ajax학생 수강과목 가져와서 학점 계산하기(chart) ///////////////////////////////
-	// 총 전공필수 학점 
-	Map<String, String> student_RequiredCredit(int student_id);
+	// 자학과전공필수 학점 
+	Map<String, String> student_myRequiredCredit(int student_id, int department_seq);
+	// 타학과전공필수 학점 
+	Map<String, String> student_yourRequiredCredit(int student_id, int department_seq);
 	// 총 전공선택 학점
 	Map<String, String> student_UnrequiredCredit(int student_id);
 	// 총 교양 학점
@@ -140,5 +142,7 @@ public interface StudentDao {
 	
 	// 출석을 완료했을 경우 isAttended 컬럼 1로 update 하기
 	int update_tbl_attendance_isAttended(String lecture_seq, int userid);
+
+	
 
 }
