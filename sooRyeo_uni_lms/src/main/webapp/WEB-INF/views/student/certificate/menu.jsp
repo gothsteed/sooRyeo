@@ -52,7 +52,7 @@
                         <i class="fas fa-award card-icon text-primary"></i>
                         <h5 class="card-title">성적증명서</h5>
                     </div>
-                    <form action="generateCertificate" method="post" class="mt-3">
+                    <form action="generateCertificate" name = "generateCertificate" method="post" class="mt-3">
                         <input type="hidden" name="certificateType" value="Achievement">
                         <button type="submit" class="btn btn-primary w-100" onclick="goGrade()">바로가기</button>
                     </form>
