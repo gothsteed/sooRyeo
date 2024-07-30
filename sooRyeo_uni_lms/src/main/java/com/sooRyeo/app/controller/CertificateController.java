@@ -16,7 +16,11 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Tab;
+import com.itextpdf.layout.element.TabStop;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TabAlignment;
+import com.itextpdf.layout.property.TextAlignment;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.CertificateService;
@@ -36,8 +40,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 @RequireLogin(type = {Student.class})
 @Controller
@@ -59,6 +68,33 @@ public class CertificateController {
         ServletContext context = request.getServletContext();
         String imgPath = context.getRealPath("/resources/images/mainlogo.png");
         
+        // 오늘 날짜 불러오기
+        Date now = new Date(); // 현재시각
+        SimpleDateFormat sdmt = new SimpleDateFormat("yyyyMMdd");
+        String str_now = sdmt.format(now); // "20231018"
+        
+        String Year = str_now.substring(0, 4);    
+        String Month = str_now.substring(4, 6);        
+        String Day = str_now.substring(6);
+        
+        System.out.println("확인용 Year : " + Year);
+        System.out.println("확인용 Month : " + Month);
+        System.out.println("확인용 Day : " + Day);
+        
+        
+        // db 데이터 불러오기 시작
+        HttpSession session = request.getSession(); 
+        Student loginuser = (Student) session.getAttribute("loginuser");
+        
+        String name = loginuser.getName();
+        String student_id = String.valueOf(loginuser.getStudent_id());
+        
+        String department_name = loginuser.getDepartment_name();
+        
+        
+        
+        // db 데이터 불러오기 끝
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
@@ -70,8 +106,10 @@ public class CertificateController {
         Image image = new Image(data);
         
         // 이미지 크기 조정 (페이지 크기에 맞게)
-        float pageWidth = pdf.getDefaultPageSize().getWidth();
-        float pageHeight = pdf.getDefaultPageSize().getHeight();
+        float pageWidth = 500;
+        // pdf.getDefaultPageSize().getWidth();
+        float pageHeight = 500;
+        // pdf.getDefaultPageSize().getHeight();
         image.scaleToFit(pageWidth, pageHeight);
 
         // 배경 이미지 이벤트 핸들러 생성 및 등록
@@ -87,15 +125,15 @@ public class CertificateController {
         
         // 테이블에 데이터 추가
         table.addCell(new Cell().add(new Paragraph("이름").setFont(font)));
-        table.addCell(new Cell().add(new Paragraph("홍길동").setFont(font)));
+        table.addCell(new Cell().add(new Paragraph(name).setFont(font)));
         table.addCell(new Cell().add(new Paragraph("학번").setFont(font)));
-        table.addCell(new Cell().add(new Paragraph("20230001").setFont(font)));
+        table.addCell(new Cell().add(new Paragraph(student_id).setFont(font)));
         table.addCell(new Cell().add(new Paragraph("학과").setFont(font)));
-        table.addCell(new Cell().add(new Paragraph("컴퓨터공학과").setFont(font)));
+        table.addCell(new Cell().add(new Paragraph(department_name).setFont(font)));
 
         // 중첩 테이블 생성 (성적 정보)
         Table gradeTable = new Table(new float[]{50f, 100f, 50f});
-        gradeTable.addCell(new Cell().add(new Paragraph("과목").setFont(font)));
+        gradeTable.addCell(new Cell().add(new Paragraph("과목코드").setFont(font)));
         gradeTable.addCell(new Cell().add(new Paragraph("과목명").setFont(font)));
         gradeTable.addCell(new Cell().add(new Paragraph("학점").setFont(font)));
 
@@ -112,6 +150,23 @@ public class CertificateController {
         document.add(table);
         document.add(new Paragraph("\n")); // 간격 추가
         document.add(gradeTable);
+        
+        // 문서 맺음말 추가
+        document.add(new Paragraph("위의 내용은 사실과 같음을 증명합니다.").setFont(font).setFontSize(16).setTextAlignment(TextAlignment.CENTER));
+        
+        // 탭 설정       
+        Paragraph paragraph = new Paragraph();
+        paragraph.setFont(font).setFontSize(16);
+        paragraph.setTextAlignment(TextAlignment.CENTER);
+        
+        paragraph.add(Year+"년")
+                .add(" ")
+                .add(Month+"월")
+                .add(" ")
+                .add(Day+"일");     
+        document.add(paragraph);
+        document.add(new Paragraph("\n")); // 간격 추가
+        document.add(new Paragraph("수 려 대 학 교  총 장").setFont(font).setFontSize(24).setBold().setTextAlignment(TextAlignment.CENTER));
 
         document.close();
 
