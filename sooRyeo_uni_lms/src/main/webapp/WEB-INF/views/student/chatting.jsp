@@ -116,16 +116,18 @@
 				if (message.senderId == senderId && message.senderType == senderType) {
 					$("#chatMessage").append(`
                     <div style='display: flex; justify-content: flex-end; margin-bottom: 10px;'>
+						<div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt; float: left'>\${currentTime}</div>
                         <div style='background-color: #ffff80; display: inline-block; max-width: 80%; padding: 7px; border-radius: 10px; word-break: break-all;'>
                             \${message.content}
                         </div>
-                        <div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt; float: left'>\${currentTime}</div>
+
                     </div>
                 `);
 				} else {
 					$("#chatMessage").append(`
+					<div> <strong>\${message.name}:</strong></div>
                     <div style='display: flex; justify-content: flex-start; margin-bottom: 10px;'>
-						<div> <strong>\${message.name}:</strong></div>
+
                         <div style='background-color: #e0e0e0; display: inline-block; max-width: 80%; padding: 7px; border-radius: 10px; word-break: break-all;'>
                              \${message.content}
                         </div>
@@ -214,10 +216,11 @@
 
 				$("#chatMessage").append(`
                     <div style='display: flex; justify-content: flex-end; margin-bottom: 10px;'>
+						<div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt; float: left'>\${currentTime}</div>
                         <div style='background-color: #ffff80; display: inline-block; max-width: 80%; padding: 7px; border-radius: 10px; word-break: break-all;'>
-                            \${messageVal}
+                            \${message.content}
                         </div>
-                        <div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt; float: left'>\${currentTime}</div>
+
                     </div>
                 `);
 
