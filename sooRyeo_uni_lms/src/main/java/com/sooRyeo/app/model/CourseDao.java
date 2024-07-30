@@ -2,10 +2,7 @@ package com.sooRyeo.app.model;
 
 import java.util.List;
 
-import com.sooRyeo.app.domain.Course;
-import com.sooRyeo.app.domain.CourseJoinProfessor;
-import com.sooRyeo.app.domain.StudentTimeTable;
-import com.sooRyeo.app.domain.TimeTable;
+import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 
 public interface CourseDao {
@@ -32,4 +29,5 @@ public interface CourseDao {
 
 	int deleteRegisteredCourse(int course_seq, int student_id);
 
+    List<RegisteredCourse> courseRegisterationList(Integer fkCourseSeq);
 }

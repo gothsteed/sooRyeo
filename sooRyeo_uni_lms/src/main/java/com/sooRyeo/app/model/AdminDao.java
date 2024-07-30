@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.LoginDTO;
 import com.sooRyeo.app.dto.RegisterDTO;
@@ -29,6 +31,9 @@ public interface AdminDao {
 
 	// 관리자가 승인을 해주면 학생의 학적 상태를 업데이트 해주는 메소드
 	int updateStudentStatus(String student_id, String change_status);
+
+	List<Student> getStudenList();
+	List<Professor> getProfessorList();
 
 
 }

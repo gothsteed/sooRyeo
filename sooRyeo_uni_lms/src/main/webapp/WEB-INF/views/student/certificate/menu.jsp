@@ -37,6 +37,16 @@
 	 
 	}
 
+	
+	function goAttending(){
+		
+		const frm = document.generateCertificate2;
+		frm.method = "post";
+		frm.action = "<%= ctxPath %>/certificate/attending.lms";
+		frm.submit(); 
+		
+	}
+	
 
 </script>
 
@@ -66,9 +76,9 @@
                         <i class="fas fa-users card-icon text-success"></i>
                         <h5 class="card-title">재학 증명서</h5>
                     </div>
-                    <form action="generateCertificate" method="post" class="mt-3">
+                    <form action="generateCertificate" name="generateCertificate2" method="post" class="mt-3">
                         <input type="hidden" name="certificateType" value="Participation">
-                        <button type="submit" class="btn btn-success w-100">바로가기</button>
+                        <button type="submit" class="btn btn-success w-100" onclick="goAttending()">바로가기</button>
                     </form>
                 </div>
             </div>

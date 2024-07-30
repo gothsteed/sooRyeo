@@ -50,30 +50,30 @@ span.error {
                      <span class="error">숫자/문자/특수문자 포함 형태의 8~15자리로 입력해주세요.</span> 
                      <input type="password" id="profPwd" name="pwd" class="form-control"/>
                    	         <%-- 비밀번호중복체크 --%>
-                             <span id="pwdcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">비밀번호 중복확인</button></span><br>
+                             <span id="pwdcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3 mb-4">비밀번호 중복확인</button></span><br>
                              <span id="pwdCheckResult"></span>
                   </div>
                   <div class="col-sm-6 m-b30 mb-3">
                      <label class="form-label">학과</label> 
                      <input type="text" id="profDepart" disabled name="department_name" class="form-control" value="${requestScope.professor.department.department_name}">
                   </div>
-                  <div class="col-sm-6 m-b30">
+                  <div class="col-sm-6 mb-3">
                      <label class="form-label">연락처</label>
                      <span class="error">010으로 시작하는 연락처를 입력해주세요.</span>
                      <input type="text" id="profTel" name="tel" class="form-control" value="${requestScope.professor.tel}">
                              <%-- 연락처중복체크 --%>
-                             <span id="telcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">연락처 중복확인</button></span><br>
+                             <span id="telcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3 mb-4">연락처 중복확인</button></span><br>
                              <span id="telCheckResult"></span>
                   </div>
-                  <div class="col-sm-6 m-b30">
+                  <div class="col-sm-6 mb-3">
                      <label class="form-label">이메일</label> 
                      <span class="error">이메일 형식에 맞지 않습니다.</span>
                      <input type="text" id="profEmail" name="email" class="form-control" value="${requestScope.professor.email}">
                              <%-- 이메일중복체크 --%>
-                             <span id="emailcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3">이메일 중복확인</button></span><br>
+                             <span id="emailcheck"><button type="button" class="btn btn-outline-success btn-sm mt-3 mb-4">이메일 중복확인</button></span><br>
                              <span id="emailCheckResult"></span>
                   </div>
-                  <div class="col-sm-6 m-b30">
+                  <div class="col-sm-6 mb-3">
                      <label class="form-label">연구실 주소</label> 
                      <span class="error">주소를 입력하세요.</span>
                      <input type="text" id="postcode" name="postcode" class="form-control w-25 mb-1" />
