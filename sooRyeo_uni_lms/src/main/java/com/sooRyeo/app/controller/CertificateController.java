@@ -216,7 +216,7 @@ public class CertificateController {
         pdf.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
 
         // 문서 제목 추가 (중앙 정렬)
-        Paragraph title = new Paragraph("재학증명서")
+        Paragraph title = new Paragraph("재학 증명서")
                 .setFont(font)
                 .setFontSize(24)
                 .setBold()
@@ -242,7 +242,11 @@ public class CertificateController {
                 .setFont(font)
                 .setTextAlignment(TextAlignment.CENTER)
                 .setMultipliedLeading(1.5f));  // 줄 간격 조정
-
+        
+        document.add(new Paragraph("생년월일 : 1997년 2월 13일")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
 
         document.add(new Paragraph("학과 : 화학공학과")
                 .setFont(font)
@@ -256,31 +260,27 @@ public class CertificateController {
                 .setMultipliedLeading(1.5f));  // 줄 간격 조정
         
         
-        document.add(new Paragraph("생년월일 : 1997년 2월 13일")
-                .setFont(font)
-                .setTextAlignment(TextAlignment.CENTER)
-                .setMultipliedLeading(1.5f));  // 줄 간격 조정
-        
         // 추가 여백 조정
-        document.add(new Paragraph("\n\n\n\n\n\n")); // 내용 아래 여백 추가
+        document.add(new Paragraph("\n\n\n\n\n")); // 내용 아래 여백 추가
         
         
         document.add(new Paragraph("위의 사실을 증명함.")
                 .setFont(font)
+                .setFontSize(16)
                 .setTextAlignment(TextAlignment.CENTER)
                 .setMultipliedLeading(1.5f));  // 줄 간격 조정
         
         
-        document.add(new Paragraph("\n")); // 일정한 간격 추가
+        document.add(new Paragraph("\n\n\n\n\n\n")); // 일정한 간격 추가
         
         
         document.add(new Paragraph("2024년 07월 30일")
                 .setFont(font)
+                .setFontSize(16)
                 .setTextAlignment(TextAlignment.CENTER)
                 .setMultipliedLeading(1.5f));  // 줄 간격 조정
         
-        document.add(new Paragraph("\n\n\n\n\n")); // 일정한 간격 추가
-        
+        document.add(new Paragraph("\n\n")); // 일정한 간격 추가
         
         document.add(new Paragraph("수 려 대 학 교 총 장")
                 .setFont(font)
@@ -294,7 +294,7 @@ public class CertificateController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         
-        String filename = "재학증명서.pdf";
+        String filename = "재학 증명서.pdf";
         String encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
         headers.setContentDisposition(ContentDisposition.builder("attachment")
                 .filename(encodedFilename)
@@ -314,7 +314,124 @@ public class CertificateController {
         canvas.setLineWidth(1);
         canvas.rectangle(rect);
         canvas.stroke();
-    }
+    } // end of private void addPageBorder
+    
+    
+    
+    // 졸업 증명서
+    @PostMapping(value="/certificate/graduate.lms", produces="text/plain;charset=UTF-8")
+    public ResponseEntity<byte[]> download_graduatePdf(HttpServletRequest request) throws Exception {
+        
+       	ServletContext context = request.getServletContext();
+        String imgPath = context.getRealPath("/resources/images/mainlogo.png");
+        
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = new PdfWriter(baos);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.A4);
+        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
+        
+        // 이미지 로드
+        ImageData data = ImageDataFactory.create(imgPath);
+        Image image = new Image(data);
+        
+        // 이미지 크기 조정
+        image.scaleToFit(500, 500);
+        
+        // 배경 이미지 이벤트 핸들러 생성 및 등록
+        BackgroundImageEventHandler handler = new BackgroundImageEventHandler(image);
+        pdf.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
+
+        // 문서 제목 추가 (중앙 정렬)
+        Paragraph title = new Paragraph("졸업 증명서")
+                .setFont(font)
+                .setFontSize(24)
+                .setBold()
+                .setTextAlignment(TextAlignment.CENTER);
+       
+        document.add(new Paragraph("\n"));
+        document.add(title);
+        
+        
+        // 테두리 추가
+        addPageBorder(pdf); // 테두리 추가 메소드 호출
+        
+        document.add(new Paragraph("\n\n\n\n\n\n")); // 상단 여백을 위한 빈 문단 추가
+        
+        
+        // 내용 추가
+        document.add(new Paragraph("이름 : 손혜정")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+
+        document.add(new Paragraph("생년월일 : 1997년 2월 13일")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        document.add(new Paragraph("학번 : 202400009")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+
+        document.add(new Paragraph("학과 : 화학공학과")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        document.add(new Paragraph("졸업년도 : 2024년 02월 27일")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        
+        
+        // 추가 여백 조정
+        document.add(new Paragraph("\n\n\n\n\n")); // 내용 아래 여백 추가
+        
+        
+        document.add(new Paragraph("위의 사실을 증명함.")
+                .setFont(font)
+                .setFontSize(16)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+
+        document.add(new Paragraph("\n\n\n\n\n\n")); // 일정한 간격 추가
+        
+        
+        document.add(new Paragraph("2024년 07월 30일")
+                .setFont(font)
+                .setFontSize(16)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+
+        document.add(new Paragraph("\n\n")); // 일정한 간격 추가
+        
+        document.add(new Paragraph("수 려 대 학 교 총 장")
+                .setFont(font)
+                .setFontSize(24)
+                .setBold()
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        document.close();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        
+        String filename = "졸업 증명서.pdf";
+        String encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+        headers.setContentDisposition(ContentDisposition.builder("attachment")
+                .filename(encodedFilename)
+                .build());
+        
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        
+        return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
+    
+    } // end of public ResponseEntity<byte[]> download_attendingPdf
     
     
 	

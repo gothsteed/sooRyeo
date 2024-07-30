@@ -27,6 +27,7 @@
     
 <script type="text/javascript">
 
+	// 성적 증명서 발급
 	function goGrade(){
 	
 		const frm = document.generateCertificate;
@@ -37,12 +38,22 @@
 	 
 	}
 
-	
+	// 재학 증명서 발급
 	function goAttending(){
 		
 		const frm = document.generateCertificate2;
 		frm.method = "post";
 		frm.action = "<%= ctxPath %>/certificate/attending.lms";
+		frm.submit(); 
+		
+	}
+	
+	// 졸업 증명서 발급
+	function gograduate(){
+		
+		const frm = document.generateCertificate3;
+		frm.method = "post";
+		frm.action = "<%= ctxPath %>/certificate/graduate.lms";
 		frm.submit(); 
 		
 	}
@@ -90,9 +101,9 @@
                         <i class="fas fa-trophy card-icon text-danger"></i>
                         <h5 class="card-title">졸업 증명서</h5>
                     </div>
-                    <form action="generateCertificate" method="post" class="mt-3">
+                    <form action="generateCertificate" name="generateCertificate3" method="post" class="mt-3">
                         <input type="hidden" name="certificateType" value="Excellence">
-                        <button type="submit" class="btn btn-danger w-100">바로가기</button>
+                        <button type="submit" class="btn btn-danger w-100" onclick="gograduate()">바로가기</button>
                     </form>
                 </div>
             </div>
