@@ -1,17 +1,5 @@
 package com.sooRyeo.app.controller;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfDocument;
-import com.itextpdf.text.pdf.PdfGState;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.events.Event;
@@ -29,9 +17,15 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.CertificateService;
+
+import oracle.ucp.routing.Chunk;
+
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 
@@ -49,6 +43,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import java.awt.Font;
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
 
@@ -67,9 +63,11 @@ public class CertificateController {
     }
     
     
+    // 성적증명서
     @PostMapping(value="/certificate/grade.lms", produces="application/pdf")
     public ResponseEntity<byte[]> downloadGradePDF(HttpServletRequest request) throws Exception {
-        ServletContext context = request.getServletContext();
+        
+    	ServletContext context = request.getServletContext();
         String imgPath = context.getRealPath("/resources/images/mainlogo.png");
         
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -190,45 +188,106 @@ public class CertificateController {
 
 
     
-    
+    // 재학증명서
     @PostMapping(value="/certificate/attending.lms", produces="text/plain;charset=UTF-8")
-    public ResponseEntity<byte[]> download_attendingPdf() throws Exception {
+    public ResponseEntity<byte[]> download_attendingPdf(HttpServletRequest request) throws Exception {
         
-    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Document document = new Document(PageSize.A4);
-        PdfWriter writer = PdfWriter.getInstance(document, baos);
-        document.open();
+       	ServletContext context = request.getServletContext();
+        String imgPath = context.getRealPath("/resources/images/mainlogo.png");
         
-        BaseFont baseFont = BaseFont.createFont("c:/windows/fonts/malgun.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        Font font = new Font(baseFont, 16);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = new PdfWriter(baos);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf, PageSize.A4);
+        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
         
-        // 제목
-        Chunk chunk = new Chunk("재학증명서", font);
-        document.add(chunk);
+        // 이미지 로드
+        ImageData data = ImageDataFactory.create(imgPath);
+        Image image = new Image(data);
         
-        // 이미지
-        String imagePath = "c:/git/sooRyeo/sooRyeo_uni_lms/src/main/webapp/resources/images/mainlogo.png";
-        Image image = Image.getInstance(imagePath);
+        // 이미지 크기 조정
         image.scaleToFit(500, 500);
         
-        // 이미지 중앙 정렬을 위해 위치 조정
-        image.setAlignment(Image.ALIGN_CENTER);
-        image.setAbsolutePosition((PageSize.A4.getWidth() - image.getScaledWidth()) / 2, 
-        						  (PageSize.A4.getHeight() - image.getScaledHeight()) / 2 - 50); // -50은 제목과의 간격 조정
-     
-        // 투명도 설정
-        PdfContentByte cb = writer.getDirectContent();
-        PdfGState gState = new PdfGState();
-        gState.setFillOpacity(0.5f); // 투명도 설정 (0.0f ~ 1.0f 범위)
-        
-        cb.saveState(); // 현재 상태 저장
-        cb.setGState(gState); // 그래픽 상태 설정
-        cb.addImage(image); // 이미지 추가
-        cb.restoreState(); // 상태 복원
+        // 배경 이미지 이벤트 핸들러 생성 및 등록
+        BackgroundImageEventHandler handler = new BackgroundImageEventHandler(image);
+        pdf.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
+
+        // 문서 제목 추가 (중앙 정렬)
+        Paragraph title = new Paragraph("재학증명서")
+                .setFont(font)
+                .setFontSize(24)
+                .setBold()
+                .setTextAlignment(TextAlignment.CENTER);
        
+        document.add(new Paragraph("\n"));
+        document.add(title);
+        
+        
+        // 테두리 추가
+        addPageBorder(pdf); // 테두리 추가 메소드 호출
+        
+        document.add(new Paragraph("\n\n\n\n\n\n")); // 상단 여백을 위한 빈 문단 추가
+        
+        
+        // 내용 추가
+        document.add(new Paragraph("이름 : 손혜정")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+
+        document.add(new Paragraph("학번 : 202400009")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+
+
+        document.add(new Paragraph("학과 : 화학공학과")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+
+        
+        document.add(new Paragraph("학년 : 2학년")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        
+        document.add(new Paragraph("생년월일 : 1997년 2월 13일")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        // 추가 여백 조정
+        document.add(new Paragraph("\n\n\n\n\n\n")); // 내용 아래 여백 추가
+        
+        
+        document.add(new Paragraph("위의 사실을 증명함.")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        
+        document.add(new Paragraph("\n")); // 일정한 간격 추가
+        
+        
+        document.add(new Paragraph("2024년 07월 30일")
+                .setFont(font)
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+        
+        document.add(new Paragraph("\n\n\n\n\n")); // 일정한 간격 추가
+        
+        
+        document.add(new Paragraph("수 려 대 학 교 총 장")
+                .setFont(font)
+                .setFontSize(24)
+                .setBold()
+                .setTextAlignment(TextAlignment.CENTER)
+                .setMultipliedLeading(1.5f));  // 줄 간격 조정
         
         document.close();
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         
@@ -239,15 +298,20 @@ public class CertificateController {
                 .build());
         
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-   
-        
         
         return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
-        
+    
+    } // end of public ResponseEntity<byte[]> download_attendingPdf
+    
+    
+    // 페이지 테두리를 추가하는 메소드
+    private void addPageBorder(PdfDocument pdf) {
+        PdfCanvas canvas = new PdfCanvas(pdf.getFirstPage());
+        Rectangle rect = new Rectangle(36, 36, PageSize.A4.getWidth() - 72, PageSize.A4.getHeight() - 72); // 페이지 여백을 고려한 사각형
+        canvas.setLineWidth(1);
+        canvas.rectangle(rect);
+        canvas.stroke();
     }
-    
-    
-    
     
     
 	
