@@ -484,36 +484,59 @@
 		</dependency>
 	
 		<!-- itext 관련 jar 시작 -->
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
-			<version>5.5.13.3</version>
-		</dependency>
-		
-		<dependency>
-	      <groupId>com.itextpdf</groupId>
-	      <artifactId>itext-pdfa</artifactId>
-	      <version>5.5.13</version>
-	      <scope>test</scope>
-	  	</dependency>
-	  	
-	  	<dependency>
-	      <groupId>com.itextpdf</groupId>
-	      <artifactId>itext-xtra</artifactId>
-	      <version>5.5.13</version>
-	  	</dependency>
-	  	
-	  	<dependency>
-	      <groupId>com.itextpdf.tool</groupId>
-	      <artifactId>xmlworker</artifactId>
-	      <version>5.5.13</version>
-	  	</dependency>
-	  	
-	  	<dependency>
-	      <groupId>com.itextpdf</groupId>
-	      <artifactId>itext-asian</artifactId>
-	      <version>5.2.0</version>
-	  	</dependency>
+		<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>kernel</artifactId>         
+         	<version>7.0.2</version>     
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>io</artifactId>         
+         	<version>7.0.2</version>     
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>layout</artifactId>         
+         	<version>7.0.2</version>
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>forms</artifactId>         
+         	<version>7.0.2</version>    
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>pdfa</artifactId>         
+         	<version>7.0.2</version>     
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>sign</artifactId>         
+         	<version>7.0.2</version>     
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>barcodes</artifactId>         
+         	<version>7.0.2</version>     
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>font-asian</artifactId>         
+         	<version>7.0.2</version>     
+      	</dependency>  
+      
+      	<dependency>         
+         	<groupId>com.itextpdf</groupId>         
+         	<artifactId>hyph</artifactId>         
+         	<version>7.0.2</version>    
+      	</dependency> 
 		<!-- itext 관련 jar 끝 -->
 		
 	</dependencies>
