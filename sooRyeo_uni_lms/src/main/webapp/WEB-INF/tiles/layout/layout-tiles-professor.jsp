@@ -225,7 +225,7 @@
                 <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/approveConsult.lms">상담 승인</a>
-                    <a class="dropdown-item" href="<%=ctxPath %>/professor/consult.lms">상담일정</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/professor/consult.lms">상담 일정</a>
                 </div>
             </li>
             <li class="nav-item">

@@ -426,7 +426,7 @@ function fillTimetable(data) {
 		<div class="col-sm-12 col-md-12">
 			<div class="grid-stack gs-12 gs-id-0 ui-droppable ui-droppable-over grid-stack-animate" gs-current-row="7" style="height: 600px;">
 				
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="4" gs-y="0" gs-w="4" gs-h="5" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="4" gs-y="0" gs-w="4" gs-h="5" gs-no-resize="false">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 							<img src="<%=ctxPath%>/resources/images/attendance.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
@@ -454,7 +454,7 @@ function fillTimetable(data) {
 				
 
 				
-		<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="0" gs-w="4" gs-h="5" gs-no-resize="true">
+		<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="0" gs-w="4" gs-h="5" gs-no-resize="false">
           <div class="grid-stack-item-content">
             <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 	            <img src="<%= ctxPath%>/resources/images/sun.png" style="width: 30px; height: 40px; margin-right:3%; margin-bottom:3%;"/>
@@ -463,7 +463,7 @@ function fillTimetable(data) {
             <div id="displayWeather" style="min-width: 90%; max-height: 500px; overflow-y: scroll; margin-top: 40px; margin-bottom: 70px; padding-left: 10px; padding-right: 10px;"></div>
           </div>
         </div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="2" gs-w="4" gs-h="4" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="0" gs-y="2" gs-w="4" gs-h="4" gs-no-resize="false">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 							<img src="<%= ctxPath%>/resources/images/class2.png" style="width: 30px; height: 40px; margin-right:3%; margin-bottom:3%;"/>
@@ -500,7 +500,7 @@ function fillTimetable(data) {
 						</c:if>
 					</div>
 				</div>
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="4" gs-w="4" gs-h="5" gs-no-resize="true">
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" gs-x="8" gs-y="4" gs-w="4" gs-h="5" gs-no-resize="false">
 					<div class="grid-stack-item-content">
 						<div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">
 							<img src="<%= ctxPath%>/resources/images/schedule.png" style="width: 30px; height: 30px; margin-right:3%; margin-bottom:3%;"/>
@@ -591,7 +591,7 @@ function fillTimetable(data) {
 				
 				
 				
-				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" id="announcement" gs-x="8" gs-y="0" gs-w="8" gs-h="4" gs-no-resize="true" >
+				<div class="grid-stack-item ui-draggable-disabled ui-resizable-disabled" id="announcement" gs-x="8" gs-y="0" gs-w="8" gs-h="4" gs-no-resize="false" >
 					<div class="grid-stack-item-content" >
 						
 					         <div class="card-text d-flex justify-content-start" style="margin-top: 10px; margin-bottom: 0;">

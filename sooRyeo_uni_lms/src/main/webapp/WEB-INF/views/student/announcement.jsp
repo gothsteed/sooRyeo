@@ -8,7 +8,7 @@
 <style type="text/css">
 
 .a_title:hover {
-    color: #d1e0e0;
+    color: #86acac;
     cursor: pointer; /* 마우스를 올렸을 때 포인터 모양으로 변경 */
 }
 
