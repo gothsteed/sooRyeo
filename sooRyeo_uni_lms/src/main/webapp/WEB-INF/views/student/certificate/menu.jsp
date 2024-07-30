@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+
 <!DOCTYPE html>
+<% String ctxPath = request.getContextPath(); %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,6 +24,22 @@
             margin-bottom: 1rem;
         }
     </style>
+    
+<script type="text/javascript">
+
+	function goGrade(){
+	
+		const frm = document.generateCertificate;
+		frm.method = "post";
+		frm.action = "<%= ctxPath %>/certificate/grade.lms";
+		frm.submit(); 
+		
+	 
+	}
+
+
+</script>
+
 </head>
 <body>
 <div class="container py-5">
@@ -35,7 +54,7 @@
                     </div>
                     <form action="generateCertificate" method="post" class="mt-3">
                         <input type="hidden" name="certificateType" value="Achievement">
-                        <button type="submit" class="btn btn-primary w-100">바로가기</button>
+                        <button type="submit" class="btn btn-primary w-100" onclick="goGrade()">바로가기</button>
                     </form>
                 </div>
             </div>
