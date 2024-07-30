@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -702,14 +703,33 @@ public class StudentController {
 		
 		Map<String, String> classOne = studentservice.classPlay_One(lecture_seq);
 		
-		mav.addObject("classOne", classOne);
-		
-		mav.addObject("lecture_seq", lecture_seq);
-		mav.addObject("course_seq", course_seq);
-		
-		mav.setViewName("classPlay_One");
+		String start_date = classOne.get("start_date");
+		String end_date = classOne.get("end_date");
+        String currentDateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")); // 현재 날짜
 
-		return mav;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+      
+        LocalDateTime startDate = LocalDateTime.parse(start_date, formatter);
+        LocalDateTime endDate = LocalDateTime.parse(end_date, formatter);
+        LocalDateTime currentDate = LocalDateTime.parse(currentDateString, formatter);
+
+        // 날짜 비교
+        if (currentDate.isBefore(startDate) || currentDate.isAfter(endDate)) {
+        	
+			mav.addObject("message", "수업을 들을 수 있는 기간이 아닙니다.");
+      	    mav.addObject("loc", request.getContextPath()+ "/student/myLecture.lms?course_seq="+course_seq);
+      	    mav.setViewName("msg");
+        }
+        else {
+    		mav.addObject("classOne", classOne);
+    		mav.addObject("lecture_seq", lecture_seq);
+    		mav.addObject("course_seq", course_seq);
+    		
+    		mav.setViewName("classPlay_One");
+        }
+        
+        return mav;
 	}	
 
 
@@ -1074,6 +1094,19 @@ public class StudentController {
 	@GetMapping("/student/consult.lms")
 	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
 		return scheduleService.getStudentConsultPage(request, mav);
+	}
+	
+	
+	// 수업 클릭 시 시청 기간이 아니라면 alert 띄우기
+	@ResponseBody
+	@PostMapping("/student/time_compare_ajax.lms")
+	public String time_compare_ajax(HttpServletRequest request) {
+		
+		String lecture_seq = request.getParameter("lecture_seq");
+		
+		// 수업 기간 읽어오기
+		
+		return "";
 	}
 
 	

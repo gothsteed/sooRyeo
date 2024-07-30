@@ -210,16 +210,15 @@ $(document).ready(function(){
 
 
 
-	$('a#classPlay').click(function(){
-		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq"]').val();
-		<%-- location.href = "<%= ctxPath%>/student/classPlay_One.lms?lecture_seq=" + lecture_seq; --%>
-		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq + "&course_seq=" + ${requestScope.fk_course_seq};
+	$('a#classPlay').click(function(){		
+		const lecture_seq_class = $(this).parent().parent().find('input[name="lecture_seq_2"]').val();
+		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq_class + "&course_seq=" + ${requestScope.fk_course_seq};
 	});
 	
 	
 	$('a#classPlay_list').click(function() {
-		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq"]').val();
-		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq + "&course_seq=" + ${requestScope.fk_course_seq};
+		const lecture_seq_1 = $(this).parent().parent().find('input[name="lecture_seq"]').val();
+		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq_1 + "&course_seq=" + ${requestScope.fk_course_seq};
 	});
 
 	
@@ -321,7 +320,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			
 
 				<div class="card-header" style="display: flex">
-					<input type="hidden" name="lecture_seq" value="${lecture.lecture_seq}" />
+					<input type="hidden" name="lecture_seq_2" value="${lecture_week.lecture_seq}" />
 					<h5 style="font-weight:bold;">${lecture_week.lecture_title}</h5>
 					<c:if test="${requestScope.attendanceMap[lecture_week.lecture_seq]}">
 						<span class="badge badge-success d-block, ml-1" style="height: 20px;">수강완료</span>

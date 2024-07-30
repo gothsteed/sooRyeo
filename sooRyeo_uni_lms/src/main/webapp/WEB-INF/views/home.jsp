@@ -154,6 +154,22 @@ function handleLogin() {
         }
     });
 }
+
+$("input#spinner").spinner( {
+    spin: function(event, ui) {
+       if(ui.value > 100) {
+          $(this).spinner("value", 100);
+          return false;
+       }
+       else if(ui.value < 1) {
+          $(this).spinner("value", 1);
+          return false;
+       }
+    }
+} );// end of $("input#spinner").spinner({});----------------
+ 
+ 
+
 </script>
 </head>
 
