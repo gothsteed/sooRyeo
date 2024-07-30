@@ -83,6 +83,25 @@ body {
     transform: translateY(0);
   }
 }
+
+
+   /* -- CSS 로딩화면 구현 시작(bootstrap 에서 가져옴) 시작 -- */    
+   div.loader {
+   /* border: 16px solid #f3f3f3; */
+     border: 12px solid #f3f3f3;
+     border-radius: 50%;
+   /* border-top: 16px solid #3498db; */
+      border-top: 12px dotted blue;
+      border-right: 12px dotted green;
+      border-bottom: 12px dotted red;
+      border-left: 12px dotted pink;
+      
+     width: 120px;
+     height: 120px;
+     -webkit-animation: spin 2s linear infinite; /* Safari */
+     animation: spin 2s linear infinite;
+   }
+   
 </style>	
 
 <script type="text/javascript">
@@ -204,7 +223,8 @@ function handleLogin() {
 						</div>
                     </div>
                 </div>
-            </section>
+              </div>
+          </section>
 
 		<footer class="g-brd-top-only g-color-white g-pb-40 g-pt-20 g-bg-white" style="border-color: #ffffff !important; margin-top: 3%;">
         	<!-- 주소 -->
@@ -228,5 +248,12 @@ function handleLogin() {
         </footer>
     </div>
   </div>
+  
+  
+   <%-- CSS 로딩화면 구현한 것--%>
+   <div style="display: flex; position: absolute; top: 30%; left: 37%; border: solid 0px blue;">
+      <div class="loader" style="margin: auto"></div>
+   </div>
+   
 </body>
 </html>

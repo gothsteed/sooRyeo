@@ -698,12 +698,14 @@ public class StudentController {
 	public ModelAndView classPlay_One(HttpServletRequest request, ModelAndView mav) {
 		
 		String lecture_seq = request.getParameter("lecture_seq");
+		String course_seq = request.getParameter("course_seq");
 		
 		Map<String, String> classOne = studentservice.classPlay_One(lecture_seq);
 		
 		mav.addObject("classOne", classOne);
 		
 		mav.addObject("lecture_seq", lecture_seq);
+		mav.addObject("course_seq", course_seq);
 		
 		mav.setViewName("classPlay_One");
 

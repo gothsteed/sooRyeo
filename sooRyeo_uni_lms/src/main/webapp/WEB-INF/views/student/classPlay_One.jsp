@@ -70,9 +70,10 @@ video {
 						return;
 					}
 					
-					if( json.n4 == 1) {
+					if( json.n4 == 1) { 
 						alert("출석이 완료되었습니다.");
-						window.history.back();
+						location.href="<%= ctxPath%>/student/myLecture.lms?course_seq="+ ${requestScope.course_seq};
+						/* window.history.back(); */
 						return;
 					}
 				
