@@ -4,17 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sooRyeo.app.domain.*;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.sooRyeo.app.domain.Course;
-import com.sooRyeo.app.domain.CourseJoinProfessor;
-import com.sooRyeo.app.domain.ProfessorTimeTable;
-import com.sooRyeo.app.domain.StudentTimeTable;
-import com.sooRyeo.app.domain.Time;
-import com.sooRyeo.app.domain.TimeTable;
 import com.sooRyeo.app.dto.CourseUpdateRequestDto;
 import com.sooRyeo.app.dto.TimeDto;
 
@@ -175,6 +170,11 @@ public class CourseDao_imple implements CourseDao {
 		map.put("student_id", student_id);
 		
 		return sqlsession.delete("course.deleteRegisteredCourse", map);
+	}
+
+	@Override
+	public List<RegisteredCourse> courseRegisterationList(Integer fkCourseSeq) {
+		return sqlsession.selectList("course.courseRegisterationList", fkCourseSeq);
 	}
 
 }

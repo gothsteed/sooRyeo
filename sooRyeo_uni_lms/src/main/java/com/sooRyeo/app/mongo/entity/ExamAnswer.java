@@ -33,7 +33,14 @@ public class ExamAnswer {
     public int getQuestionAnswer(int questionNumber) {
         return  answers.get(questionNumber - 1).getAnswer();
     }
-
+    public int getQuestionScore(int questionNumber) {return  answers.get(questionNumber - 1).getScore();}
+    public int getQuestionScoreSum() {
+        int sum = 0;
+        for(Answer answer: answers) {
+            sum += answer.getScore();
+        }
+        return sum;
+    }
     // Inner class for Answer
 /*    public static class Answer {
         @Id
