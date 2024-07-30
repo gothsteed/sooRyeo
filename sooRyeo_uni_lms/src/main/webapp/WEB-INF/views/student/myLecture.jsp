@@ -26,6 +26,11 @@
 
 <script type="text/javascript">
 
+$(document).ready(function(){
+	
+	location.reload(); // 페이지 새로고침
+});
+
 
 function scrollToTarget_up() {
 

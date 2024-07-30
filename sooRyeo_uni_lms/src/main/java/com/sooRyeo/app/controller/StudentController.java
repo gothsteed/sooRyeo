@@ -1029,7 +1029,7 @@ public class StudentController {
 			// play_time 컬럼과 lecture_time 컬럼을 비교
 			int i = studentservice.select_play_time_lecture_time(play_time, lecture_seq, userid);
 			
-			System.out.println("확인용 입니다 => " + i);
+			System.out.println(" i 확인용 입니다 => " + i); // 동영상 시간  - 내가 본 시간   을 했을 때 음수면 내가 본 시간이 더 많다는 것 즉 출석인정되어야함
 			
 			if(i > 0) { // 아직 출석인정 시간이 되지 않은 경우
 				
@@ -1039,11 +1039,11 @@ public class StudentController {
 			
 			else { // 동영상재생페이지에 머무른 시간 - 동영상 시간  <= 0, 즉  출석을 완료한 경우
 				
-				int n1 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
-				int n2 = studentservice.update_tbl_attendance_isAttended(lecture_seq, userid);
+				int n2 = studentservice.update_tbl_attendance(play_time, lecture_seq, userid);
+				int n3 = studentservice.update_tbl_attendance_isAttended(lecture_seq, userid);
 				
-				int n3 = n1*n2;
-				jsonobj.put("n3", n3);
+				int n4 = n2*n3;
+				jsonobj.put("n4", n4);
 			}
 		}
 		
