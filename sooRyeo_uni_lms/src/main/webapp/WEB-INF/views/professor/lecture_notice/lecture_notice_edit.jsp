@@ -83,8 +83,8 @@
   <div style="margin: auto; padding-left: 3%;">
        <h2 style="margin-bottom: 30px;">글쓰기</h2>
        <form name="addFrm">
-       <input type="text" name="fk_course_seq" value="${requestScope.fk_course_seq}">
-       <input type="text" name="seq" value="${requestScope.bdto.seq}">
+       <input type="hidden" name="fk_course_seq" value="${requestScope.fk_course_seq}">
+       <input type="hidden" name="seq" value="${requestScope.bdto.seq}">
         <table style="width: 1024px" class="table table-bordered">
          <tr>
             <th style="width: 15%; background-color: #DDDDDD;">제목</th>

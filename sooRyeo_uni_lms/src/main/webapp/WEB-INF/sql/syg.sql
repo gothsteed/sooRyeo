@@ -363,7 +363,11 @@ FROM
     where schedule_seq = 91;
 
 select *
-from tbl_exam;
+from tbl_professor;
+
+
+select *
+from tbl_announcement;
 
 update tbl_exam set question_count = 5;
 
@@ -376,4 +380,48 @@ commit;
 		from tbl_exam E
 		join tbl_schedule S on S.schedule_seq = E.fk_schedule_seq  
 		where fk_course_seq = 4
+
+CREATE TABLE tbl_menu
+( 
+    menu_url nvarchar2(100) NOT NULL primary key,
+    menu_name              nvarchar2(50)
+);
+
+ALTER TABLE tbl_menu ADD status number not null;
+
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/classList.lms', '내 수업', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/courseRegister.lms', '수강신청', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/attendance.lms', '출석현황', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/scheduleManagement.lms', '캘린더', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/consult.lms', '상담', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/Statistics.lms?department_seq=${sessionScope.loginuser.fk_department_seq}', '학점 통계', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/Acquisition_status.lms', '취득 현황', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/chatting.lms', '채팅', 1);
+
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/board/announcement.lms', '학사공지사항', 4);
+
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/myInfo.lms', '내정보', 1);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/student/certificate/menu.lms', '증명서', 1);
+
+commit;
+
+select *
+from tbl_menu;
+
+
+
+
+
+
 
