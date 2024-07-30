@@ -209,6 +209,7 @@ body {
 
 			<li class="nav-item dropdown"><a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>회원관리</a>
 				<div class="dropdown-menu" aria-labelledby="classesMenu">
+					<a class="dropdown-item" href="<%=ctxPath%>/admin/MemberList.lms">회원조회</a> 
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/MemberCheck.lms">학적승인</a> 
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/MemberRegister.lms">학생등록</a>
 					<a class="dropdown-item" href="<%=ctxPath%>/admin/ProfessorRegister.lms">교수등록</a>
