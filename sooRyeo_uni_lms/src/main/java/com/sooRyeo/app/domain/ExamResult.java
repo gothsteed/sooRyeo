@@ -7,6 +7,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class ExamResult {
+
     private List<StudentAnswer> studentAnswers;
 
 
