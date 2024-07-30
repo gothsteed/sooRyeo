@@ -70,7 +70,7 @@ video {
 						return;
 					}
 					
-					if( json.n3 == 1) {
+					if( json.n4 == 1) {
 						alert("출석이 완료되었습니다.");
 						window.history.back();
 						return;

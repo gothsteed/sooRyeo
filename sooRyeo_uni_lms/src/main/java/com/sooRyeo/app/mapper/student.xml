@@ -314,7 +314,7 @@
 	
 	<!-- 출석을 완료했을 경우 isAttended 컬럼 1로 update 하기  -->
 	<update id="update_tbl_attendance_isAttended">
-		update tbl_attendance set (ISATTENDED, attended_date) = ('1', to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+		update tbl_attendance set ISATTENDED = '1', attended_date = to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
 		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
 	</update>
 	

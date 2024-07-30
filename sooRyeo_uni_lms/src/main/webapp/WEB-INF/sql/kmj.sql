@@ -597,6 +597,16 @@ select *
 from tbl_exam
 where fk_schedule_seq ='108'
 
+
+
+delete
+from tbl_exam
+where fk_schedule_seq = '58'
+
+delete
+from tbl_schedule
+where schedule_seq = '58'
+
 select *
 from tbl_lecture
 where lecture_seq = '16'
