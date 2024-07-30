@@ -56,7 +56,23 @@
                             <canvas id="scoreChart"></canvas>
                         </div>
                     </div>
+
+                    <div class="table-responsive" id="stats">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>평균 점수</th>
+                                <th>최고 점수</th>
+                                <th>최저 점수</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
             </div>
         </div>
         <div class="col-lg-6 mb-4">
@@ -119,8 +135,26 @@
 
         $.getJSON(url, function(data) {
             renderScoreDistributionChart(data.studuentScoreList);
+            populateStats([{
+                averageScore: data.averageScore,
+                highestScore: data.highestScore,
+                lowestScore: data.lowestScore
+            }]);
         });
     });
+
+    function populateStats(stats) {
+        var statsTable = $("#stats tbody");
+        statsTable.empty();
+        $.each(stats, function(index, stat) {
+            var row = "<tr>" +
+                "<td>" + stat.averageScore + "</td>" +
+                "<td>" + stat.highestScore + "</td>" +
+                "<td>" + stat.lowestScore + "</td>" +
+                "</tr>";
+            statsTable.append(row);
+        });
+    }
 
     function populateScoreSummary(data) {
         $('#totalScore').text(data.score);
@@ -205,11 +239,11 @@
                 type: 'column'
             },
             title: {
-                text: 'Score Distribution'
+                text: '성적 분포'
             },
             xAxis: {
                 title: {
-                    text: 'Score'
+                    text: '점수 '
                 },
                 categories: seriesData.map(function(item) {
                     return item[0];
@@ -217,7 +251,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Number of Students'
+                    text: '학생 수'
                 }
             },
             series: [{
