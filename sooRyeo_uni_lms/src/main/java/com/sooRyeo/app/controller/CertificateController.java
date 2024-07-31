@@ -251,6 +251,31 @@ public class CertificateController {
        	ServletContext context = request.getServletContext();
         String imgPath = context.getRealPath("/resources/images/mainlogo.png");
         
+        // 오늘 날짜 불러오기
+        Date now = new Date(); // 현재시각
+        SimpleDateFormat sdmt = new SimpleDateFormat("yyyyMMdd");
+        String str_now = sdmt.format(now); // "20231018"
+        
+        String Year = str_now.substring(0, 4);    
+        String Month = str_now.substring(4, 6);        
+        String Day = str_now.substring(6);
+        
+        //System.out.println("확인용 Year : " + Year);
+        //System.out.println("확인용 Month : " + Month);
+        //System.out.println("확인용 Day : " + Day);
+        
+        
+        // db 데이터 불러오기 시작 (필요 데이터 : 이름, 학번, 생년월일, 학과, 학년)
+        HttpSession session = request.getSession(); 
+        Student loginuser = (Student) session.getAttribute("loginuser");
+        
+        String name = loginuser.getName();
+        String student_id = String.valueOf(loginuser.getStudent_id());
+        String department_name = loginuser.getDepartment_name();
+        // db 데이터 불러오기 끝
+        
+        
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
@@ -313,34 +338,38 @@ public class CertificateController {
                 .setMultipliedLeading(1.5f));  // 줄 간격 조정
         
         
-        // 추가 여백 조정
-        document.add(new Paragraph("\n\n\n\n\n")); // 내용 아래 여백 추가
+        // 문서 맺음말 추가
+        Paragraph endParagraph = new Paragraph("위의 내용은 사실과 같음을 증명합니다.")
+        		.setFont(font)
+        		.setFontSize(16)
+        		.setTextAlignment(TextAlignment.CENTER);
         
+        Div endDiv = new Div()
+                .add(endParagraph)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 300, 1000); // x, y, width를 의미한다.
         
-        document.add(new Paragraph("위의 사실을 증명함.")
+        Paragraph dateParagraph = new Paragraph(Year + "년 " + Month + "월 " + Day + "일")
                 .setFont(font)
                 .setFontSize(16)
-                .setTextAlignment(TextAlignment.CENTER)
-                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+                .setTextAlignment(TextAlignment.CENTER);
         
+        Div dateDiv = new Div()
+                .add(dateParagraph)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 150, 1000); // 페이지 하단 150 포인트 위
         
-        document.add(new Paragraph("\n\n\n\n\n\n")); // 일정한 간격 추가
-        
-        
-        document.add(new Paragraph("2024년 07월 30일")
-                .setFont(font)
-                .setFontSize(16)
-                .setTextAlignment(TextAlignment.CENTER)
-                .setMultipliedLeading(1.5f));  // 줄 간격 조정
-        
-        document.add(new Paragraph("\n\n")); // 일정한 간격 추가
-        
-        document.add(new Paragraph("수 려 대 학 교 총 장")
+        Paragraph signatureParagraph = new Paragraph("수 려 대 학 교  총 장")
                 .setFont(font)
                 .setFontSize(24)
                 .setBold()
-                .setTextAlignment(TextAlignment.CENTER)
-                .setMultipliedLeading(1.5f));  // 줄 간격 조정
+                .setTextAlignment(TextAlignment.CENTER);
+        
+        Div signatureDiv = new Div()
+                .add(signatureParagraph)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 50, 1000); // 페이지 하단 50 포인트 위
+        
+        document.add(endDiv);
+        document.add(dateDiv);
+        document.add(signatureDiv);
         
         document.close();
 
