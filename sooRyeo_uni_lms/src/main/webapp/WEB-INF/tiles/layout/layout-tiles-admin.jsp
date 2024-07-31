@@ -167,17 +167,27 @@ body {
 	font-size: 25px;
 	cursor: pointer;
 }
+
 #displayList {
     width: 100%;
-    max-width: 400px; /* Match the search bar's maximum width */
-    max-height: 100px; /* Set a height for the example */
-    background-color: #ddd; /* Just for visibility */
-    margin-left: 50px; /* Space between search bar and #dd */
-    height: 100px;
-    box-sizing: border-box; /* Include padding and border in the width */
- 			position: absolute; /* Position absolute to overlap the header */
-    z-index: 10000; /* Higher than .header */
-    overflow:auto;
+    max-width: 600px; /* 검색 바의 최대 너비에 맞춤 */
+    max-height: 100px; /* 최대 높이 설정 */
+    background-color: #fff; /* 배경색을 흰색으로 변경 */
+    margin-left: 50px; /* 검색 바와의 간격 */
+    height: auto; /* 내용에 따라 자동 높이 조정 */
+    box-sizing: border-box; /* 패딩과 경계를 너비에 포함 */
+    position: absolute; /* 헤더와 겹치도록 절대 위치 설정 */
+    z-index: 10000; /* .header보다 높은 z-index */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤 추가 */
+    border: 1px solid #ccc; /* 부드러운 경계선 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    padding: 10px; /* 내부 여백 추가 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+    transition: box-shadow 0.3s; /* 마우스 오버 시 효과를 위한 전환 */
+}
+
+#displayList:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 마우스 오버 시 그림자 강조 */
 }
 
 /*         .grid-stack-item-content {
