@@ -3,6 +3,8 @@ package com.sooRyeo.app.mongo.controller;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.jsonBuilder.JsonBuilder;
+import com.sooRyeo.app.mongo.repository.ChatRoomRepository;
 import com.sooRyeo.app.mongo.service.ChatService;
 import org.apache.poi.ss.formula.functions.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,12 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private JsonBuilder jsonBuilder;
 
     @PostMapping(value = "/chat/start.lms", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> startChat(HttpServletRequest request, HttpServletResponse response, @RequestParam Integer schedule_seq) {
@@ -47,9 +55,6 @@ public class ChatController {
     @GetMapping(value = "/chat.lms")
     public ModelAndView chattingPage(HttpServletRequest request, ModelAndView mav) {
 
-
-        mav.addObject("roomId", request.getParameter("roomId"));
-        mav.setViewName("chatting");
         return chatService.getChatPage(request, mav);
     }
 

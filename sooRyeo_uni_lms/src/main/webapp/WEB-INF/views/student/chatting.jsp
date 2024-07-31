@@ -4,6 +4,8 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	<%-- Font Awesome 6 Icons --%>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -55,31 +57,6 @@
 			// alert("웹소켓연결됨");
 			$("div#chatStatus").text("정보: 웹소켓에 연결이 성공됨!!");
 
-			/*		{};
-
-                    /!*
-                    messageObj.message = "채팅방에 <span style='color: red;'>입장</span> 했습니다.";
-                    messageObj.type = "all"; // messageObj.type = "all"; 은 "1 대 다" 채팅을 뜻하는 것이고, messageObj.type = "one"; 은 "1 대 1" 채팅을 뜻하는 것으로 하겠다.
-                    messageObj.to = "all";   // messageObj.to = "all"; 은 수신자는 모두를 뜻하는 것이고, messageObj.to = "eomjh"; 이라면  eomjh 인 사람과 1대1 채팅(귓속말)을 뜻하는 것으로 하겠다.
-                    *!/
-                 // 또는
-                   messageObj = {message : "채팅방에 <span style='color: red;'>입장</span> 했습니다."
-                                   ,type : "all"
-                                   ,to : "all"}; // 자바스크립트에서 객체의 데이터값 초기화
-                    messageObj = {content : "채팅방에 <span style='color: red;'>입장</span> 했습니다."
-                        ,type : "all"
-                        ,to : "all"}; // 자바스크립트에서 객체의 데이터값 초기화
-
-                   websocket.send(JSON.stringify(messageObj));
-                                  // JSON.stringify(자바스크립트객체) 는 자바스크립트객체를 JSON 표기법의 문자열(string)로 변환한다
-                                  // JSON.parse(JSON 표기법의 문자열) 는 JSON 표기법의 문자열(string)을 자바스크립트객체(object)로 변환해준다.
-                    /!*
-                      JSON.stringify({});                  // '{}'
-                      JSON.stringify(true);                // 'true'
-                      JSON.stringify('foo');               // '"foo"'
-                      JSON.stringify([1, 'false', false]); // '[1,"false",false]'
-                      JSON.stringify({ x: 5 });            // '{"x":5}'
-                    *!/*/
 		};
 
 		// === 메시지 수신시 콜백함수 정의하기 === //
@@ -112,31 +89,65 @@
 
 			const currentTime = ampm + hours + ":" + minutes;
 
-			if (message.messageType === "CHAT") {
+			if (message.msgType === "CHAT") {
 				if (message.senderId == senderId && message.senderType == senderType) {
-					$("#chatMessage").append(`
-                    <div style='display: flex; justify-content: flex-end; margin-bottom: 10px;'>
+
+					let html = `
+						<div style='display: flex; justify-content: flex-end; margin-bottom: 10px;' class="myMsg">
+					`
+					if(2- message.readStatus.length > 0) {
+						html += `<p>   \${2- message.readStatus.length}</p>`
+					}
+
+					html += `
 						<div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt; float: left'>\${currentTime}</div>
                         <div style='background-color: #ffff80; display: inline-block; max-width: 80%; padding: 7px; border-radius: 10px; word-break: break-all;'>
                             \${message.content}
                         </div>
-
                     </div>
-                `);
+					`
+
+					$("#chatMessage").append(html);
 				} else {
-					$("#chatMessage").append(`
-					<div> <strong>\${message.name}:</strong></div>
+
+					let html = `
+					<div class ="opponentMsg"> <strong>\${message.name}:</strong></div>
                     <div style='display: flex; justify-content: flex-start; margin-bottom: 10px;'>
 
                         <div style='background-color: #e0e0e0; display: inline-block; max-width: 80%; padding: 7px; border-radius: 10px; word-break: break-all;'>
                              \${message.content}
                         </div>
                         <div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt;  float: right;'>\${currentTime}</div>
-                    </div>
-                `);
+					`
+
+					if(2- message.readStatus.length > 0) {
+						html += `<p>   \${2- message.readStatus.length}</p>`
+					}
+
+					html += `</div>`;
+
+
+
+					$("#chatMessage").append(html);
 				}
-			} else if (message.messageType === "ALERT") {
+			} else if (message.msgType === "EXIT") {
 				$("#chatMessage").append(`<div style='text-align: center; background-color: rgba(245, 245, 220, 0.8); border-radius: 10px; margin: 10px 0;'>\${message.content}</div>`);
+
+
+			}
+			else if(message.msgType === "ENTER") {
+				$("#chatMessage").append(`<div style='text-align: center; background-color: rgba(245, 245, 220, 0.8); border-radius: 10px; margin: 10px 0;'>\${message.content}</div>`);
+
+				$(".myMsg p").each(function() {
+					let currentCount = parseInt($(this).text().trim());
+					if(currentCount - 1 <=  0) {
+						$(this).remove();
+					}
+					else {
+						$(this).text(currentCount - 1);
+					}
+
+				});
 			}
 
 			$("div#chatMessage").scrollTop(99999999);
@@ -163,10 +174,6 @@
 
 			if( $("input#message").val().trim() != "" ) {
 
-				// ==== 자바스크립트에서 replace를 replaceAll 처럼 사용하기 ====
-				// 자바스크립트에서 replaceAll 은 없다.
-				// 정규식을 이용하여 대상 문자열에서 모든 부분을 수정해 줄 수 있다.
-				// 수정할 부분의 앞뒤에 슬래시를 하고 뒤에 gi 를 붙이면 replaceAll 과 같은 결과를 볼 수 있다.
 
 				let messageVal = $("input#message").val();
 				messageVal = messageVal.replace(/<script/gi, "&lt;script");
@@ -180,51 +187,52 @@
 				// 또는
 				messageObj = {}; // 자바스크립트 객체 생성함.
 				messageObj.content = messageVal;
-				messageObj.messageType = "CHAT";
+				messageObj.msgType = "CHAT";
+				messageObj.senderType = senderType;
+				messageObj.senderId = senderId;
 
-
+				console.log(messageObj)
 				websocket.send(JSON.stringify(messageObj));
 				// JSON.stringify() 는 값을 그 값을 나타내는 JSON 표기법의 문자열로 변환한다
 
 				// 위에서 자신이 보낸 메시지를 웹소켓으로 보낸 다음에 자신이 보낸 메시지 내용을 웹페이지에 보여지도록 한다.
 
-				const now = new Date();
-				let ampm = "오전 ";
-				let hours = now.getHours();
+				/*	const now = new Date();
+                    let ampm = "오전 ";
+                    let hours = now.getHours();
 
-				if(hours > 12) {
-					hours = hours - 12;
-					ampm = "오후 ";
-				}
+                    if(hours > 12) {
+                        hours = hours - 12;
+                        ampm = "오후 ";
+                    }
 
-				if(hours == 0) {
-					hours = 12;
-				}
+                    if(hours == 0) {
+                        hours = 12;
+                    }
 
-				if(hours == 12) {
-					ampm = "오후 ";
-				}
+                    if(hours == 12) {
+                        ampm = "오후 ";
+                    }
 
-				let minutes = now.getMinutes();
-				if(minutes < 10) {
-					minutes = "0"+minutes;
-				}
+                    let minutes = now.getMinutes();
+                    if(minutes < 10) {
+                        minutes = "0"+minutes;
+                    }
 
-				const currentTime = ampm + hours + ":" + minutes;
+                    const currentTime = ampm + hours + ":" + minutes;
 
-				$("div#chatMessage").append("<div style='background-color: #ffff80; display: inline-block; max-width: 60%; float: right; padding: 7px; border-radius: 15%; word-break: break-all;'>" + messageVal + "</div> <div style='display: inline-block; float: right; padding: 20px 5px 0 0; font-size: 7pt;'>"+currentTime+"</div> <div style='clear: both;'>&nbsp;</div>");
+                    //$("div#chatMessage").append("<div style='background-color: #ffff80; display: inline-block; max-width: 60%; float: right; padding: 7px; border-radius: 15%; word-break: break-all;'>" + messageVal + "</div> <div style='display: inline-block; float: right; padding: 20px 5px 0 0; font-size: 7pt;'>"+currentTime+"</div> <div style='clear: both;'>&nbsp;</div>");
 
-				$("#chatMessage").append(`
-                    <div style='display: flex; justify-content: flex-end; margin-bottom: 10px;'>
-						<div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt; float: left'>\${currentTime}</div>
-                        <div style='background-color: #ffff80; display: inline-block; max-width: 80%; padding: 7px; border-radius: 10px; word-break: break-all;'>
-                            \${message.content}
+                    $("#chatMessage").append(`
+                        <div style='display: flex; justify-content: flex-end; margin-bottom: 10px;'>
+                            <i class="fa-solid fa-check"></i>
+                            <div style='display: inline-block; padding: 20px 5px 0 0; font-size: 7pt; float: left'>\${currentTime}</div>
+                            <div style='background-color: #ffff80; display: inline-block; max-width: 80%; padding: 7px; border-radius: 10px; word-break: break-all;'>
+                                \${messageVal}
+                            </div>
                         </div>
-
-                    </div>
-                `);
-
-
+                    `);
+    */
 				$("div#chatMessage").scrollTop(99999999);
 
 				$("input#message").val("");
