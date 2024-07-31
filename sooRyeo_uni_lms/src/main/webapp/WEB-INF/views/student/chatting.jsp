@@ -138,16 +138,19 @@
 			else if(message.msgType === "ENTER") {
 				$("#chatMessage").append(`<div style='text-align: center; background-color: rgba(245, 245, 220, 0.8); border-radius: 10px; margin: 10px 0;'>\${message.content}</div>`);
 
-				$(".myMsg p").each(function() {
-					let currentCount = parseInt($(this).text().trim());
-					if(currentCount - 1 <=  0) {
-						$(this).remove();
-					}
-					else {
-						$(this).text(currentCount - 1);
-					}
+				if(message.senderId != senderId || message.senderType != senderType) {
+					$(".myMsg p").each(function() {
+						let currentCount = parseInt($(this).text().trim());
+						if(currentCount - 1 <=  0) {
+							$(this).remove();
+						}
+						else {
+							$(this).text(currentCount - 1);
+						}
 
-				});
+					});
+				}
+
 			}
 
 			$("div#chatMessage").scrollTop(99999999);
