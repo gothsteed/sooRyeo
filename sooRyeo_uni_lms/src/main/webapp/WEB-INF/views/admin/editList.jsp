@@ -83,16 +83,16 @@
   <div style="margin: auto; padding-left: 3%;">
        <h2 style="margin-bottom: 30px;">글쓰기</h2>
        <form name="addFrm">
-       <input type="text" name="seq" value="${requestScope.an.announcement_seq}">
+       <input type="hidden" name="seq" value="${requestScope.an.announcement_seq}">
         <table style="width: 1024px" class="table table-bordered">
          <tr>
-            <th style="width: 15%; background-color: #DDDDDD;">제목</th>
+            <th style="width: 15%; background-color: #d1e0e0;">제목</th>
             <td>
                 <input type="text" name="title" size="100" maxlength="200" value="${requestScope.an.a_title}"/>
             </td>
          </tr>
          <tr>
-            <th style="width: 15%; background-color: #DDDDDD;">내용</th> 
+            <th style="width: 15%; background-color: #d1e0e0;">내용</th> 
             <td>
                 <textarea style="width: 100%; height: 612px;" name="content" id="content">${requestScope.an.a_content}</textarea>
             </td>
