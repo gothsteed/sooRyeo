@@ -48,5 +48,15 @@ public class LectureDao_imple implements LectureDao {
         return sqlSession.selectList("attendance.getAttendance", paramMap);
     }
 
+	@Override
+	public List<Integer> getStudentOfLecture(Integer course_seq) {
+		return sqlSession.selectList("lecture.getStudentOfLecture", course_seq);
+	}
+
+	@Override
+	public String getLectureName(Integer course_seq) {
+		return sqlSession.selectOne("lecture.getLectureName", course_seq);
+	}
+
 
 }
