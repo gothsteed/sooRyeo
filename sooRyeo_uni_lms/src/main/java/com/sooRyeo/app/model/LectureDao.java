@@ -17,4 +17,8 @@ public interface LectureDao {
     int deleteLecture(int lectureSeq);
 
     List<Attendance> getAttendance(String fkCourseSeq, Integer studentId);
+
+	List<Integer> getStudentOfLecture(Integer course_seq);
+
+	String getLectureName(Integer course_seq);
 }
