@@ -26,6 +26,7 @@ import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Student;
+import com.sooRyeo.app.dto.CertificateGradeDTO;
 import com.sooRyeo.app.service.CertificateService;
 
 import oracle.ucp.routing.Chunk;
@@ -59,6 +60,8 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RequireLogin(type = {Student.class})
 @Controller
@@ -91,9 +94,9 @@ public class CertificateController {
         String Month = str_now.substring(4, 6);        
         String Day = str_now.substring(6);
         
-        System.out.println("확인용 Year : " + Year);
-        System.out.println("확인용 Month : " + Month);
-        System.out.println("확인용 Day : " + Day);
+        // System.out.println("확인용 Year : " + Year);
+        // System.out.println("확인용 Month : " + Month);
+        // System.out.println("확인용 Day : " + Day);
         
         
         // db 데이터 불러오기 시작
@@ -101,10 +104,11 @@ public class CertificateController {
         Student loginuser = (Student) session.getAttribute("loginuser");
         
         String name = loginuser.getName();
-        String student_id = String.valueOf(loginuser.getStudent_id());
-        
+        String student_id = String.valueOf(loginuser.getStudent_id()); 
         String department_name = loginuser.getDepartment_name();
         
+        List<CertificateGradeDTO> semesterDateList = certificateService.semesterdateList(student_id); // 학생 등록 학기 가져오기
+           
         // db 데이터 불러오기 끝
         
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -153,19 +157,106 @@ public class CertificateController {
         Table gradeTable = new Table(new float[]{150f, 150f, 50f});
         gradeTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
         
-        // 테이블에 데이터 추가(리스트로 담을 것)
-        gradeTable.addCell(new Cell().add(new Paragraph("과목코드").setFont(font)));
-        gradeTable.addCell(new Cell().add(new Paragraph("과목명").setFont(font)));
-        gradeTable.addCell(new Cell().add(new Paragraph("학점").setFont(font)));
+        Float total_mark = 0.0f;
+        
+        // 학기별로 성적처리하기
+        if(semesterDateList != null) {
+	        for(CertificateGradeDTO dto1 : semesterDateList) {
+	        	
+	        	String semesterdate =  dto1.getSemesterdate(); 
+	        	
+	        	String semeyear = semesterdate.substring(0,4);
+	        	String sememonth = semesterdate.substring(5,7);
+	        	String semester = "";
+	        	if(sememonth.equals("07")) {
+	        		semester = "2학기";
+	        	}
+	        	else {
+	        		semester = "1학기";
+	        	}
+	        	
+	        	// System.out.println("확인용 coursenumber : " + coursenumber);
+	        	// System.out.println("확인용 coursename : " + coursename);
+	        	// System.out.println("확인용 semesterdate : " + semesterdate);
+	        	// System.out.println("확인용 mark : " + mark);
+	        	
+	            // 1행
+	            gradeTable.addCell(new Cell(1,3).add(new Paragraph(semeyear+"년"+" "+semester).setFont(font)));
+	            
+	            // 테이블에 데이터 추가(리스트로 담을 것)
+	            gradeTable.addCell(new Cell().add(new Paragraph("과목코드").setFont(font)));
+	            gradeTable.addCell(new Cell().add(new Paragraph("과목명").setFont(font)));
+	            gradeTable.addCell(new Cell().add(new Paragraph("학점").setFont(font)));
 
-        // 성적 정보 추가 (예시)
-        gradeTable.addCell(new Cell().add(new Paragraph("CS101").setFont(font)));
-        gradeTable.addCell(new Cell().add(new Paragraph("프로그래밍 기초").setFont(font)));
-        gradeTable.addCell(new Cell().add(new Paragraph("A+").setFont(font)));
-
-        gradeTable.addCell(new Cell().add(new Paragraph("CS102").setFont(font)));
-        gradeTable.addCell(new Cell().add(new Paragraph("자료구조").setFont(font)));
-        gradeTable.addCell(new Cell().add(new Paragraph("A").setFont(font)));
+	            // 성적 정보 추가 (예시)
+	            
+	            List<CertificateGradeDTO> gradeList = certificateService.gradeList(student_id, semesterdate); // 해당학기 수강내역
+	            
+	            for(CertificateGradeDTO dto : gradeList) {
+	            	
+	            	String coursename = dto.getCoursename();
+	            	String str_coursenumber = String.valueOf(dto.getCoursenumber());
+	            	
+	            	Float mark = dto.getMark();
+	            	if (mark == null) {
+	                    mark = 0.0f;
+	                }
+	            	
+	            	System.out.println("확인용 coursename : " + coursename);
+	            	System.out.println("확인용 str_coursenumber : " + str_coursenumber);
+	            	System.out.println("확인용 mark : " + mark);
+	            	         	
+	            	String str_mark = "";
+	            	
+	            	if(mark == 4.5) {
+	            		str_mark = "A+";
+	            	}
+	            	else if(mark == 4.0) {
+	            		str_mark = "A0";
+	            	}
+	            	else if(mark == 3.5) {
+	            		str_mark = "B+";
+	            	}
+	            	else if(mark == 3.0) {
+	            		str_mark = "B0";
+	            	}
+	            	else if(mark == 2.5) {
+	            		str_mark = "C+";
+	            	}
+	            	else if(mark == 2.0) {
+	            		str_mark = "C0";
+	            	}
+	            	else if(mark == 1.5) {
+	            		str_mark = "D+";
+	            	}
+	            	else if(mark == 1.0) {
+	            		str_mark = "D0";
+	            	}
+	            	else if(mark == 0.0) {
+	            		str_mark = "F";
+	            	}
+	            	
+	            	gradeTable.addCell(new Cell().add(new Paragraph(str_coursenumber).setFont(font)));
+	                gradeTable.addCell(new Cell().add(new Paragraph(coursename).setFont(font)));
+	                gradeTable.addCell(new Cell().add(new Paragraph(str_mark).setFont(font)));	            	
+	            	
+	                total_mark += mark;
+	                
+	            }// end of for(CertificateGradeDTO dto2 : gradeList)
+	            
+	            System.out.println("확인용 total_mark : "+total_mark);
+	            
+	            int count = gradeList.size();
+	            System.out.println("확인용 count : "+count);
+	            Float average = total_mark/count;
+	            System.out.println("확인용 average : "+average);
+	            String formattedAverage = String.format("%.2f", average);
+	            gradeTable.addCell(new Cell(1,3).add(new Paragraph("평균 : "+formattedAverage).setFont(font)));
+	        	  	
+	        }//end for(CertificateGradeDTO dto1 : semesterDateList)
+  
+        }// end of if(gradeList != null)  
+               
         
         // 테이블을 문서에 추가
         document.add(table);
@@ -183,7 +274,7 @@ public class CertificateController {
         
         Div endDiv = new Div()
                 .add(endParagraph)
-                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 300, 1000); // x, y, width를 의미한다.
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 200, 1000); // x, y, width를 의미한다.
         
         Paragraph dateParagraph = new Paragraph(Year + "년 " + Month + "월 " + Day + "일")
                 .setFont(font)
@@ -224,7 +315,8 @@ public class CertificateController {
         return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
     }
 
-    // 배경 이미지를 처리하는 이벤트 핸들러 클래스
+
+	// 배경 이미지를 처리하는 이벤트 핸들러 클래스
     private static class BackgroundImageEventHandler implements IEventHandler {
         private Image image;
 

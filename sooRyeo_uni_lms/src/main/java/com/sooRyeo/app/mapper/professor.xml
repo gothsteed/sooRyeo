@@ -458,6 +458,13 @@
 	</select>
 	
 	
+	<select id="Student_pic" parameterType="int" resultType="String">
+		select img_name
+		from tbl_student
+		where student_id = #{student_id}
+	</select>
+	
+	
 	<select id="assignmentTotal" parameterType="HashMap" resultType="int">
 		SELECT sum(SA.score) as totalscore
 		FROM

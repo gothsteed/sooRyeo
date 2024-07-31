@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="certificate">
+
+	<select id="semesterdateList" parameterType="String" resultType="com.sooRyeo.app.dto.CertificateGradeDTO">
+		SELECT semesterdate
+		FROM (
+    	SELECT TO_CHAR(C.semester_date, 'YYYY-MM') AS semesterdate
+    	FROM tbl_student S
+    	JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+    	LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+    	JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+    	JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+    	WHERE S.student_id = #{student_id}
+		)
+		GROUP BY semesterdate
+		ORDER BY semesterdate asc
+	</select>
+	
+
+	<select id="gradeList" parameterType="HashMap" resultType="com.sooRyeo.app.dto.CertificateGradeDTO">
+		SELECT  TO_CHAR(C.semester_date, 'YYYY-MM-DD') AS semesterdate, CU.name AS coursename, CU.curriculum_seq AS coursenumber, G.mark AS mark
+		FROM tbl_student S
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = #{student_id} and TO_CHAR(C.semester_date, 'YYYY-MM') = #{semesterdate} 
+		ORDER BY C.semester_date asc, CU.name asc
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
