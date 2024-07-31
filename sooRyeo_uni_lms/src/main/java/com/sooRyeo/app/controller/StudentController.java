@@ -843,7 +843,7 @@ public class StudentController {
 	
 	
 	
-	// 복학 신청
+	// 졸업 외 학적 변경 신청
 	@GetMapping(value = "/student/application_status.lms")
 	public ModelAndView application_status(  HttpServletRequest request, ModelAndView mav) {
 		
@@ -1076,36 +1076,6 @@ public class StudentController {
 		return scheduleService.getStudentConsultPage(request, mav);
 	}
 
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

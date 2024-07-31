@@ -102,7 +102,7 @@
 	set status = 2
 	</if>
 	<if test="change_status == 3">
-	set status = 3
+	set status = 3, finish_date = SYSDATE
 	</if>
 	<if test="change_status == 4">
 	set status = 4
