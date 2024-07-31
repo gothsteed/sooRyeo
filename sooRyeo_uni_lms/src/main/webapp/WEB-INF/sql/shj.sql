@@ -34,6 +34,19 @@ add extraAddress Nvarchar2(200);
 
 -- Table TBL_STUDENT이(가) 변경되었습니다.
 
+alter table tbl_student
+add finish_date DATE;
+
+select *
+from tbl_student
+
+commit;
+
+
+
+update tbl_lecture set lecture_time = 5
+where lecture_seq = 26;
+
 
 update tbl_student set postcode = '03217'
 update tbl_student set detailaddress = '3층 G클래스'
@@ -681,6 +694,30 @@ from tbl_attendance
 
 update tbl_attendance set ISATTENDED = '1', attended_date = sysdate
 where fk_student_id = '202400009' and fk_lecture_seq = '14'
+
+
+select *
+from tbl_student
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
