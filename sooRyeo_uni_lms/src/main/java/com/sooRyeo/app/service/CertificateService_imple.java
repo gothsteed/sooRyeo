@@ -37,6 +37,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,8 +57,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.sooRyeo.app.dto.CertificateGradeDTO;
+import com.sooRyeo.app.model.CertificateDao;
+
 @Service
 public class CertificateService_imple implements CertificateService {
+	
+	@Autowired
+	private CertificateDao certificateDao;
+	
 
 	
 	// 배경 이미지를 처리하는 이벤트 핸들러 클래스
@@ -388,4 +398,24 @@ public class CertificateService_imple implements CertificateService {
 		
 	} // end of public ResponseEntity<byte[]> download_graduatePdf
 
+	@Override
+	public List<CertificateGradeDTO> semesterdateList(String student_id) {
+		
+		List<CertificateGradeDTO> semesterdateList = certificateDao.semesterdateList(student_id); 
+		
+		return semesterdateList;
+	}
+	
+	
+	@Override
+	public List<CertificateGradeDTO> gradeList(String student_id, String semesterdate) {
+		
+		List<CertificateGradeDTO> gradeList =  certificateDao.gradeList(student_id, semesterdate);
+		
+		return gradeList;
+	}
+
+
+
+	
 }

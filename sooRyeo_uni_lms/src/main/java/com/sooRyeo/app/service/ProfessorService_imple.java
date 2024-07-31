@@ -586,7 +586,15 @@ public class ProfessorService_imple implements ProfessorService {
 		
 		return courseListJson;
 	}
-
+	
+	@Override
+	public String Student_pic(int student_id) {
+		
+		String Student_pic = dao.Student_pic(student_id);
+		
+		return Student_pic;
+	}
+	
 
 	@Override
 	public Map<String, Object> score_checkJSON(int student_id, int fk_course_seq) {
@@ -631,6 +639,9 @@ public class ProfessorService_imple implements ProfessorService {
 		
 		return attendanceRate;
 	}
+
+
+
 
 
 

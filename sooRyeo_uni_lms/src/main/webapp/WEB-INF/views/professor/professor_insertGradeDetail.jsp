@@ -242,7 +242,7 @@
 </script>
 
 <div style="display: flex; justify-content: center;" >
-	<img src="<%= ctxPath%>/resources/images/good.jpg" style=""/>
+	<img src="<%= ctxPath%>/resources/files/${requestScope.Student_pic}" alt="Profile Picture"/>
 </div>
 
 <div style="display: flex;">
