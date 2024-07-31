@@ -1,10 +1,18 @@
 package com.sooRyeo.app.mongo.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Document("messages")
 public class Message {
     @Id
@@ -12,54 +20,32 @@ public class Message {
     private String msgType;
     private String senderType;
     private Integer senderId;
-    private String sender;
+    private String name;
     private String content;
     private String roomId;
     private LocalDateTime timestamp;
+    private Set<String> readStatus;
 
-    public Message() {
-    }
-
-    public Message(String msgType, String senderType, Integer senderId, String sender, String content, String roomId, LocalDateTime timestamp) {
+    public Message(String msgType, String senderType, Integer senderId, String name, String content, String roomId, LocalDateTime timestamp, Set<String> readStatus) {
         this.msgType = msgType;
         this.senderType = senderType;
         this.senderId = senderId;
-        this.sender = sender;
+        this.name = name;
         this.content = content;
         this.roomId = roomId;
         this.timestamp = timestamp;
+        this.readStatus = readStatus;
+    }
+
+    public boolean hasRead(String key) {
+        return readStatus.contains(key);
+    }
+
+    public void read(String key) {
+        readStatus.add(key);
     }
 
 
-    public String getId() {
-        return id;
-    }
 
-    public String getMsgType() {
-        return msgType;
-    }
 
-    public String getSenderType() {
-        return senderType;
-    }
-
-    public Integer getSenderId() {
-        return senderId;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
 }
