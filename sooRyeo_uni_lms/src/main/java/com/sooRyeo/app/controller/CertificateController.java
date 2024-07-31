@@ -14,10 +14,17 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Tab;
+import com.itextpdf.layout.element.TabStop;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.TabAlignment;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.UnitValue;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.CertificateService;
@@ -35,8 +42,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+
+import java.awt.Font;
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 @RequireLogin(type = {Student.class})
 @Controller
@@ -60,6 +74,31 @@ public class CertificateController {
     	ServletContext context = request.getServletContext();
         String imgPath = context.getRealPath("/resources/images/mainlogo.png");
         
+        // 오늘 날짜 불러오기
+        Date now = new Date(); // 현재시각
+        SimpleDateFormat sdmt = new SimpleDateFormat("yyyyMMdd");
+        String str_now = sdmt.format(now); // "20231018"
+        
+        String Year = str_now.substring(0, 4);    
+        String Month = str_now.substring(4, 6);        
+        String Day = str_now.substring(6);
+        
+        System.out.println("확인용 Year : " + Year);
+        System.out.println("확인용 Month : " + Month);
+        System.out.println("확인용 Day : " + Day);
+        
+        
+        // db 데이터 불러오기 시작
+        HttpSession session = request.getSession(); 
+        Student loginuser = (Student) session.getAttribute("loginuser");
+        
+        String name = loginuser.getName();
+        String student_id = String.valueOf(loginuser.getStudent_id());
+        
+        String department_name = loginuser.getDepartment_name();
+        
+        // db 데이터 불러오기 끝
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
@@ -71,8 +110,10 @@ public class CertificateController {
         Image image = new Image(data);
         
         // 이미지 크기 조정 (페이지 크기에 맞게)
-        float pageWidth = pdf.getDefaultPageSize().getWidth();
-        float pageHeight = pdf.getDefaultPageSize().getHeight();
+        float pageWidth = 500;
+        // pdf.getDefaultPageSize().getWidth();
+        float pageHeight = 500;
+        // pdf.getDefaultPageSize().getHeight();
         image.scaleToFit(pageWidth, pageHeight);
 
         // 배경 이미지 이벤트 핸들러 생성 및 등록
@@ -80,23 +121,32 @@ public class CertificateController {
         pdf.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
 
         // 문서 제목 추가
-        document.add(new Paragraph("성적증명서").setFont(font).setFontSize(24).setBold());
-
+        document.add(new Paragraph("성적증명서").setFont(font).setFontSize(24).setBold().setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph("\n"));
+        
+        // 테두리 추가
+        addPageBorder(pdf); // 테두리 추가 메소드 호출
+        
         // 테이블 생성
-        float[] pointColumnWidths = {150f, 150f};
+        float[] pointColumnWidths = {100f, 100f};
         Table table = new Table(pointColumnWidths);
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
         
         // 테이블에 데이터 추가
         table.addCell(new Cell().add(new Paragraph("이름").setFont(font)));
-        table.addCell(new Cell().add(new Paragraph("홍길동").setFont(font)));
+        table.addCell(new Cell().add(new Paragraph(name).setFont(font)));
         table.addCell(new Cell().add(new Paragraph("학번").setFont(font)));
-        table.addCell(new Cell().add(new Paragraph("20230001").setFont(font)));
+        table.addCell(new Cell().add(new Paragraph(student_id).setFont(font)));
         table.addCell(new Cell().add(new Paragraph("학과").setFont(font)));
-        table.addCell(new Cell().add(new Paragraph("컴퓨터공학과").setFont(font)));
-
+        table.addCell(new Cell().add(new Paragraph(department_name).setFont(font)));
+        
+        
         // 중첩 테이블 생성 (성적 정보)
-        Table gradeTable = new Table(new float[]{50f, 100f, 50f});
-        gradeTable.addCell(new Cell().add(new Paragraph("과목").setFont(font)));
+        Table gradeTable = new Table(new float[]{150f, 150f, 50f});
+        gradeTable.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        
+        // 테이블에 데이터 추가(리스트로 담을 것)
+        gradeTable.addCell(new Cell().add(new Paragraph("과목코드").setFont(font)));
         gradeTable.addCell(new Cell().add(new Paragraph("과목명").setFont(font)));
         gradeTable.addCell(new Cell().add(new Paragraph("학점").setFont(font)));
 
@@ -108,11 +158,47 @@ public class CertificateController {
         gradeTable.addCell(new Cell().add(new Paragraph("CS102").setFont(font)));
         gradeTable.addCell(new Cell().add(new Paragraph("자료구조").setFont(font)));
         gradeTable.addCell(new Cell().add(new Paragraph("A").setFont(font)));
-
+        
         // 테이블을 문서에 추가
         document.add(table);
-        document.add(new Paragraph("\n")); // 간격 추가
-        document.add(gradeTable);
+        document.add(new Paragraph("\n"));
+        document.add(gradeTable); 
+
+        
+        // 날짜와 서명 부분을 특정 위치에 추가 (setFixedPosition 사용)   
+        
+        // 문서 맺음말 추가
+        Paragraph endParagraph = new Paragraph("위의 내용은 사실과 같음을 증명합니다.")
+        		.setFont(font)
+        		.setFontSize(16)
+        		.setTextAlignment(TextAlignment.CENTER);
+        
+        Div endDiv = new Div()
+                .add(endParagraph)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 300, 1000); // x, y, width를 의미한다.
+        
+        Paragraph dateParagraph = new Paragraph(Year + "년 " + Month + "월 " + Day + "일")
+                .setFont(font)
+                .setFontSize(16)
+                .setTextAlignment(TextAlignment.CENTER);
+        
+        Div dateDiv = new Div()
+                .add(dateParagraph)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 150, 1000); // 페이지 하단 150 포인트 위
+        
+        Paragraph signatureParagraph = new Paragraph("수 려 대 학 교  총 장")
+                .setFont(font)
+                .setFontSize(24)
+                .setBold()
+                .setTextAlignment(TextAlignment.CENTER);
+        
+        Div signatureDiv = new Div()
+                .add(signatureParagraph)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 50, 1000); // 페이지 하단 50 포인트 위
+        
+        document.add(endDiv);
+        document.add(dateDiv);
+        document.add(signatureDiv);
 
         document.close();
 
@@ -155,28 +241,8 @@ public class CertificateController {
             canvas.close();
         }
     }
+  
     
-	/*
-	 * @PostMapping("/certificate/grade.lms") public ModelAndView grade(ModelAndView
-	 * mav, HttpServletRequest request) {
-	 * 
-	 * int n = 0;
-	 * 
-	 * n = certificateService.getGrade();
-	 * 
-	 * 
-	 * 
-	 * if(n==1) { mav.addObject("message", "증명서가 발급되었습니다."); mav.addObject("loc",
-	 * request.getContextPath()+"/student/certificate/menu.lms"); } else {
-	 * mav.addObject("message", "오류가 발생하여 증명서를 발급하지 못했습니다."); mav.addObject("loc",
-	 * "javascript:history.back()"); }
-	 * 
-	 * mav.setViewName("msg");
-	 * 
-	 * return mav; }
-	 */
-
-
     
     // 재학증명서
     @PostMapping(value="/certificate/attending.lms", produces="text/plain;charset=UTF-8")
