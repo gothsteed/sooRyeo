@@ -40,8 +40,10 @@ import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Menu;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -1077,6 +1079,28 @@ public class StudentController {
 	@GetMapping("/student/consult.lms")
 	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
 		return scheduleService.getStudentConsultPage(request, mav);
+	}
+	
+	
+	
+	@ResponseBody
+	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
+	public String alertLecture() {
+		
+		List<String> wordList = studentservice.getAlertLecture(); // 이제 이렇게 서비스로 넘겨서 몽고로 받아오자...
+		
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(wordList != null) {
+			for(Menu word : wordList) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				jsonObj.put("name", word.getMenu_name() + ","+ word.getMenu_url());
+				
+				jsonArr.put(jsonObj); // [{},{},{}]
+			}// end of for ----------------------------------
+		}
+		
+		return jsonArr.toString(); 
 	}
 
 	

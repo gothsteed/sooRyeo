@@ -196,6 +196,25 @@
 
 $(document).ready(function(){
 	
+
+	$.ajax({
+		  url: "<%= ctxPath%>/student/alertLecture.lms",
+		  method: 'GET',
+		  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
+		  success: function(response) {
+		    // 성공적으로 데이터를 받았을 때 처리할 코드
+			  if(response == null){
+			    $("span#bell").val("🔔");
+			  }
+			  else{
+			    $("span#bell").val("★");
+			  }
+		  },
+		  error: function(request, status, error){
+	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		  }
+	});
+	
 	$("div#displayList").hide();
 	
 	$("input[name='searchWord']").keyup(function(){
@@ -286,6 +305,11 @@ $(document).ready(function(){
 		
 	});
 });
+
+function alertLecture (){
+	
+	
+}
 </script>
     
     <div class="sidebar">
@@ -364,7 +388,7 @@ $(document).ready(function(){
             </div>
             <div class="icons">
                 <span class="icon">📫</span>
-                <span class="icon">🔔</span>
+                <span class="icon" id="bell">🔔</span>
                 <span class="icon">❔</span>
             </div>
         </div>
