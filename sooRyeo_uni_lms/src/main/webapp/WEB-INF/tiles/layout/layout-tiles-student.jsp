@@ -186,6 +186,12 @@
         
     </style>
 
+</head>
+<body>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    
 <script type="text/javascript">
 
 $(document).ready(function(){
@@ -215,7 +221,12 @@ $(document).ready(function(){
 						let v_html = ``;
 						
 						$.each(json, function(index, item){
-							const word = item.word;
+							
+							const urlIdx = item.name.indexOf(",");
+							
+							const name = item.name.substring(0,urlIdx);
+							const url = item.name.substring(urlIdx+1);
+							
 							// word ==> javascript 는 재미가 있어요
 							// word ==> 그러면 javaScript  는 뭔가요? ==> 대문자 포함됨
 							
@@ -223,7 +234,7 @@ $(document).ready(function(){
 							// word ==> javascript 는 재미가 있어요
 							// word ==> 그러면 javascript  는 뭔가요? ==> 대문자 사라짐
 							
-							const idx = word.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+							const idx = name.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
 							// 만약에 검색어가 JavA 같이 적었다면
 							/*
 								그러면 javascript  는 뭔가요?   는 idx 가 4 이다.
@@ -240,9 +251,9 @@ $(document).ready(function(){
 								console.log("~~~~~ 끝 ~~~~~");
 							*/
 							
-							const result = word.substring(0,idx) + "<span style='color:purple;'>"+word.substring(idx,idx + len)+"</span>" + word.substring(idx + len);
+							const result = name.substring(0,idx) + "<span style='color:purple;'>"+name.substring(idx,idx + len)+"</span>" + name.substring(idx + len);
 							
-							v_html += `<span style='cursor:pointer;' class='result'>\${result}<br></span>`;
+							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
 						
 						const input_width = $("input[name='searchWord']").css("width"); // 검색어 input 태그 width 값 알아오기
@@ -250,34 +261,32 @@ $(document).ready(function(){
 						$("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
 						
 						$("div#displayList").html(v_html);
+						
 						$("div#displayList").show();
 					}
 				},
 				error: function(request, status, error){
 		          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			    }
-			});
+			});// ajax------------------------------
 		}
 	
-	}
+	}); // $("input[name='searchWord']").keyup(function(){})-------------------------------
 		
 	<%-- #121. 검색어 입력시 자동글 완성하기 8 --%>
 	$(document).on("click", "span.result", function(e){
-		const word = $(this).text();
-		$("input[name='searchWord']").val(word.menu_url); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
+		
+		const url = $(this).data('custom');
+		const name = $(this).text();
+		
+		$("input[name='searchWord']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
 		$("div#displayList").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
-		goSearch(); // 클릭하자마자 바로 검색해주기 위해 검색 함수를 호출한 것
+		
+		location.href = `<%=ctxPath%>\${url}`;
 		
 	});
 });
 </script>
-
-</head>
-<body>
-	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    
     
     <div class="sidebar">
         <div class="profile">        
@@ -349,9 +358,9 @@ $(document).ready(function(){
             <div style="width:100%;">
 	            <div class="search-bar">
 	                <span class="icon">🔎</span>
-	                <input type="text" name="searchWord" placeholder="메뉴검색">
+	                <input type="text" name="searchWord" placeholder="메뉴검색" autocomplete='off'>
 	            </div>
-	            <div id="displayList">여기에 자동완성 검색이 들어갑니다.</div>
+	            <div id="displayList"></div>
             </div>
             <div class="icons">
                 <span class="icon">📫</span>

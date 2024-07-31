@@ -6,12 +6,12 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="search">
 
-	<select id="selectAdmin"
-		resultType="String"
+	<select id="wordSearchShow"
+		resultType="com.sooRyeo.app.domain.Menu"
 		parameterType="HashMap"> 
-		SELECT *
-		FROM tbl_search
-		WHERE status = #{status} and lower(menu_name) like '%'|| lower(#{searchWord}) ||'%'
+		SELECT menu_url, menu_name, status
+		FROM tbl_menu
+		WHERE status in(#{status},4) and menu_name like '%'|| #{searchWord} ||'%'
 	</select>
 
 </mapper>
