@@ -89,6 +89,9 @@ public interface ProfessorDao {
 	// 학기 별 개강과목
 	ProfessorTimeTable courseListJson(String semester, int prof_id);
 	
+	// 특정 학생 사진 가져오기
+	String Student_pic(int student_id);
+	
 	// 특정학생 과목 점수들 가져오기
 	Map<String, Object> score_checkJSON(int student_id, int fk_course_seq);
 	
@@ -103,6 +106,8 @@ public interface ProfessorDao {
 	
 	// 학생 출석률 가져오기
 	double attendanceRate(int student_id, int fk_course_seq);
+	
+
 
 
 	

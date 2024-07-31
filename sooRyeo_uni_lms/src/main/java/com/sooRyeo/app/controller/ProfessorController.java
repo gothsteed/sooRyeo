@@ -910,10 +910,11 @@ public class ProfessorController {
 	public ModelAndView professor_insertGradeDetail(HttpServletRequest request, ModelAndView mav) {// 학생 점수 뷰단
 		
 		String goBackURL = MyUtil.getCurrentURL(request);
-		
 		int student_id = Integer.parseInt(request.getParameter("student_id"));
 		int fk_course_seq = Integer.parseInt(request.getParameter("course_seq"));
 		String name = request.getParameter("name");
+		
+		String Student_pic = professorService.Student_pic(student_id);
 		
 		System.out.println("확인용 student_id : " + student_id);
 		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
@@ -922,6 +923,7 @@ public class ProfessorController {
 		mav.addObject("student_id", student_id);
 		mav.addObject("fk_course_seq", fk_course_seq);	
 		mav.addObject("name", name);
+		mav.addObject("Student_pic", Student_pic);
 		mav.addObject("goBackURL", goBackURL);
 		mav.setViewName("professor_insertGradeDetail");
 		

@@ -687,3 +687,75 @@ SELECT sum(SA.score) as totalscore
 		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
 		WHERE S.student_id = 202400005 and CU.fk_department_seq is not null 
         and CU.fk_department_seq != 2 and CU.required = 1 and R.pass_status = 1 
+        
+        
+        
+SELECT  TO_CHAR(C.semester_date, 'YYYY-MM-DD') AS semesterdate, CU.name AS coursename, CU.curriculum_seq AS coursenumber, G.mark AS mark
+		FROM tbl_student S
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = 202400005
+		ORDER BY C.semester_date asc, CU.name asc
+        
+        
+SELECT COUNT(DISTINCT TO_CHAR(C.semester_date, 'YYYY-MM')) AS unique_semesterdate_count
+FROM tbl_student S
+JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+WHERE S.student_id = 202400005
+
+
+SELECT semesterdate
+FROM (
+    SELECT TO_CHAR(C.semester_date, 'YYYY-MM') AS semesterdate
+    FROM tbl_student S
+    JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+    LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+    JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+    JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+    WHERE S.student_id = 202400005
+)
+GROUP BY semesterdate
+ORDER BY semesterdate asc;
+
+
+SELECT  TO_CHAR(C.semester_date, 'YYYY-MM-DD') AS semesterdate, CU.name AS coursename, CU.curriculum_seq AS coursenumber, G.mark AS mark
+		FROM tbl_student S
+		JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+		LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+		JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+		JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+		WHERE S.student_id = 202400005 and TO_CHAR(C.semester_date, 'YYYY-MM') = '2024-07' 
+		ORDER BY C.semester_date asc, CU.name asc
+
+
+
+
+
+
+
+SELECT TO_CHAR(C.semester_date, 'YYYY-MM') AS semesterdate
+    FROM tbl_student S
+    JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+    LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+    JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+    JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+    WHERE S.student_id = 202400005
+
+
+SELECT *
+FROM tbl_student S
+JOIN tbl_registered_course R ON S.student_id = R.fk_student_id
+LEFT JOIN tbl_grade G ON R.registered_course_seq = G.fk_registered_course_seq
+JOIN tbl_course C ON R.fk_course_seq = C.course_seq
+JOIN tbl_curriculum CU ON C.fk_curriculum_seq = CU.curriculum_seq
+WHERE S.student_id = 202400005
+
+
+
+SELECT *
+FROM tbl_registered_course
