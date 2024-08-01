@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
@@ -47,27 +48,42 @@ public class LogService_imple implements LogService {
 		int AdminCount = 0;
 	    int ProCount = 0;
 	    int StudCount = 0;
-		
+		int TotalMonthCount = 0;
+	    
         List<LoginLog> countAdminList = loginLogRepository.findAllByMemberType(MemberType.ADMIN.toString());
         List<LoginLog> countProList = loginLogRepository.findAllByMemberType(MemberType.PROFESSOR.toString());
         List<LoginLog> countStudList = loginLogRepository.findAllByMemberType(MemberType.STUDENT.toString());       	
 		
-        ZoneId zoneId = ZoneId.systemDefault(); // 시스템 기본 시간대 사용
-
+        ZoneId zoneId = ZoneId.of("Asia/Seoul"); // KMT 사용
+        
+        // 하루 총 시간
         LocalDate today = LocalDate.now(zoneId);
-        LocalDateTime startOfDay = today.atStartOfDay(); // 오늘 00:00:00
+        LocalDateTime startOfDay = today.atStartOfDay(); // 오늘 00:00:00        
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // 오늘 23:59:59.999999999
-        
-        //System.out.println("확인용 today : " + today);
-        //LocalDateTime rightnow = LocalDateTime.now();
-        //System.out.println("확인용 rightnow : " + rightnow);
-        // 확인용 rightnow : 2024-07-25T10:33:07.605369100
-        
-        Instant startOfDayInstant = startOfDay.atZone(zoneId).toInstant();
-        Instant endOfDayInstant = endOfDay.atZone(zoneId).toInstant();
+ 
 
-        //System.out.println("Start of day: " + startOfDayInstant);
-        //System.out.println("End of day: " + endOfDayInstant);
+
+        // LocalDateTime을 Instant로 변환 (UTC 기준으로 변환)
+        Instant insStartDay = startOfDay.atZone(zoneId).toInstant();
+        Instant insEndDay = endOfDay.atZone(zoneId).toInstant();
+
+
+        // Instant를 ZonedDateTime으로 변환 (한국 시간대 기준)
+        ZonedDateTime zonedStartTime = insStartDay.atZone(zoneId);
+        ZonedDateTime zonedEndTime = insEndDay.atZone(zoneId);
+
+        // ZonedDateTime에 9시간 추가
+        ZonedDateTime adjustedzonedStartTime = zonedStartTime.plusHours(9);
+        ZonedDateTime adjustedzonedEndTime = zonedEndTime.plusHours(9);
+
+
+        // 조정된 ZonedDateTime을 다시 Instant로 변환
+        Instant startOfDayInstant = adjustedzonedStartTime.toInstant();
+        Instant endOfDayInstant = adjustedzonedEndTime.toInstant();
+
+
+        System.out.println("startOfDayInstant: " + startOfDayInstant);
+        System.out.println("endOfDayInstant: " + endOfDayInstant);
         
         Instant oneDayBefore = startOfDayInstant.minus(1, ChronoUnit.DAYS); 		// 하루 전
         Instant twoDayBefore = startOfDayInstant.minus(2, ChronoUnit.DAYS); 		// 이틀 전
@@ -75,15 +91,33 @@ public class LogService_imple implements LogService {
         Instant fourDayBefore = startOfDayInstant.minus(4, ChronoUnit.DAYS); 	// 4일 전
         Instant fiveDayBefore = startOfDayInstant.minus(5, ChronoUnit.DAYS); 	// 5일 전
         Instant sixDayBefore = startOfDayInstant.minus(6, ChronoUnit.DAYS); 		// 6일 전
-        Instant sevenDayBefore = startOfDayInstant.minus(7, ChronoUnit.DAYS); 		// 7일 전
+        
+        // System.out.println("확인용 endOfDay : " + endOfDay);
+        // System.out.println("확인용 startOfDay : " + startOfDay);
+        System.out.println("확인용 oneDayBefore : " + oneDayBefore);
+        System.out.println("확인용 twoDayBefore : " + oneDayBefore);
         
         
+        // 이번 달의 첫 날과 마지막 날 계산
+        LocalDate firstDayOfMonth = today.withDayOfMonth(1); // 이번 달의 첫 날
+        LocalDate lastDayOfMonth = today.withDayOfMonth(today.lengthOfMonth()); // 이번 달의 마지막 날
 
-        //System.out.println("확인용 endOfDay : " + endOfDay);
-        //System.out.println("확인용 startOfDay : " + startOfDay);
-        //System.out.println("확인용 oneDayBefore : " + oneDayBefore);
-
+        // LocalDateTime 변환
+        LocalDateTime startOfMonth = firstDayOfMonth.atStartOfDay(); // 첫 날 00:00:00
+        LocalDateTime endOfMonth = lastDayOfMonth.atTime(LocalTime.MAX); // 마지막 날 23:59:59.999999999  
+              
+        
+        System.out.println("확인용 startOfMonth : " + startOfMonth);
+        System.out.println("확인용 endOfMonth : " + endOfMonth);
+        
+        // Instant 변환
+        Instant startOfMonthInstant = startOfMonth.atZone(zoneId).toInstant();
+        Instant endOfMonthInstant = endOfMonth.atZone(zoneId).toInstant();
+        
+        // 오늘부터 6일전까지 계산
         List<LoginLog> countDateList = loginLogRepository.findByTimestampBetween(startOfDayInstant.minus(7, ChronoUnit.DAYS), endOfDayInstant);
+        // 오늘 기준 한달 계산
+        List<LoginLog> countMonthList = loginLogRepository.findByTimestampBetween(startOfMonthInstant, endOfMonthInstant);     
         
         Map<String, Integer> dailyCountMap = new HashMap<>();
         	dailyCountMap.put("day1", 0);
@@ -97,54 +131,84 @@ public class LogService_imple implements LogService {
         		
         if(countDateList.size() != 0) {
             for(LoginLog loginlog : countDateList) {
-            	
-            	LocalDate logDate = loginlog.getTimestamp().toLocalDate();
-            	//System.out.println("확인용 logDate : " + logDate);
-            	
-            	LocalDateTime localDateTime = loginlog.getTimestamp();          	
-            	
-            	Instant logTimestamp = localDateTime.atZone(zoneId).toInstant();
+            	          	
+				/*
+				 * LocalDateTime localDateTime = loginlog.getTimestamp();
+				 * System.out.println("확인용 localDateTime : " + localDateTime);
+				 * 
+				 * Instant logTimestamp = localDateTime.atZone(zoneId).toInstant();
+				 * 
+				 * System.out.println("확인용 logTimestamp : " + logTimestamp);
+				 */
                 
-                //System.out.println("확인용 logTimestamp : " + logTimestamp);
+             // LocalDateTime 생성 (예: 현재 한국 시간)
+                LocalDateTime localDateTime = loginlog.getTimestamp();
+                // System.out.println("Original LocalDateTime: " + localDateTime);
+
+                // LocalDateTime을 Instant로 변환 (UTC 기준으로 변환)
+                Instant instant = localDateTime.atZone(zoneId).toInstant();
+                // System.out.println("Original Instant (UTC): " + instant);
+
+                // Instant를 ZonedDateTime으로 변환 (한국 시간대 기준)
+                ZonedDateTime zonedDateTime = instant.atZone(zoneId);
+
+                // ZonedDateTime에 9시간 추가
+                ZonedDateTime adjustedZonedDateTime = zonedDateTime.plusHours(9);
+                // System.out.println("Adjusted ZonedDateTime (Asia/Seoul): " + adjustedZonedDateTime);
+
+                // 조정된 ZonedDateTime을 다시 Instant로 변환
+                Instant logTimestamp = adjustedZonedDateTime.toInstant();
+                System.out.println("logTimestamp (UTC): " + logTimestamp);
                 
                 
-                if (logTimestamp.isAfter(oneDayBefore) && !logTimestamp.isAfter(endOfDayInstant)) {
+                if (logTimestamp.isAfter(startOfDayInstant) && !logTimestamp.isAfter(endOfDayInstant)) {
                 	
                     dailyCountMap.put("day1", dailyCountMap.get("day1") + 1);
                     
-                } else if (logTimestamp.isAfter(twoDayBefore) && !logTimestamp.isAfter(oneDayBefore)) {
+                } else if (logTimestamp.isAfter(oneDayBefore) && !logTimestamp.isAfter(startOfDayInstant)) {
                 	
                     dailyCountMap.put("day2", dailyCountMap.get("day2") + 1);
                     
-                } else if (logTimestamp.isAfter(threeDayBefore) && !logTimestamp.isAfter(twoDayBefore)) {
+                } else if (logTimestamp.isAfter(twoDayBefore) && !logTimestamp.isAfter(oneDayBefore)) {
                 	
                     dailyCountMap.put("day3", dailyCountMap.get("day3") + 1);
                     
-                } else if (logTimestamp.isAfter(fourDayBefore) && !logTimestamp.isAfter(threeDayBefore)) {
+                } else if (logTimestamp.isAfter(threeDayBefore) && !logTimestamp.isAfter(twoDayBefore)) {
                 	
                     dailyCountMap.put("day4", dailyCountMap.get("day4") + 1);
                     
-                } else if (logTimestamp.isAfter(fiveDayBefore) && !logTimestamp.isAfter(fourDayBefore)) {
+                } else if (logTimestamp.isAfter(fourDayBefore) && !logTimestamp.isAfter(threeDayBefore)) {
                 	
                     dailyCountMap.put("day5", dailyCountMap.get("day5") + 1);
                     
-                } else if (logTimestamp.isAfter(sixDayBefore) && !logTimestamp.isAfter(fiveDayBefore)) {
+                } else if (logTimestamp.isAfter(fiveDayBefore) && !logTimestamp.isAfter(fourDayBefore)) {
                 	
                     dailyCountMap.put("day6", dailyCountMap.get("day6") + 1);
                     
-                } else if (logTimestamp.isAfter(sevenDayBefore) && !logTimestamp.isAfter(sixDayBefore)) {
+                } else if (logTimestamp.isAfter(sixDayBefore) && !logTimestamp.isAfter(fiveDayBefore)) {
                 	
                     dailyCountMap.put("day7", dailyCountMap.get("day7") + 1);
                 
             	} 
                             
-                if (logDate.getMonth() == today.getMonth() && logDate.getYear() == today.getYear()) {
-                    dailyCountMap.put("totalday", dailyCountMap.get("totalday") + 1);
-                }
+				/*// 7일간 방문자수
+				 * if (logDate.getMonth() == today.getMonth() && logDate.getYear() ==
+				 * today.getYear()) { dailyCountMap.put("totalday",
+				 * dailyCountMap.get("totalday") + 1); }
+				 */
                 
                 
             }// end of for(LoginLog loginlog : countDateList) 
         }// end of if(countDateList.size() != 0)
+        
+        
+        if(countMonthList.size() != 0) {
+        	for(LoginLog loginlog : countMonthList) {
+        		
+        		TotalMonthCount++;
+        	}
+        	
+        }
         
        
         if(countAdminList.size() != 0) {
@@ -166,9 +230,7 @@ public class LogService_imple implements LogService {
         	}
         }
         
-        for (Map.Entry<String, Integer> entry : dailyCountMap.entrySet()) {
-            //System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
+        dailyCountMap.put("totalday", TotalMonthCount);
         
         
         //System.out.println("확인용 AdminCount : " + AdminCount);
