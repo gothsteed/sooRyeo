@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -6,6 +7,7 @@
     String ctxPath = request.getContextPath();
     //     /sooRyeo
 %>
+
 
 <%-- Bootstrap CSS --%>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -120,8 +122,8 @@ $(document).ready(function(){
 	  	const semester = $("select#semester").val();
 		  
 	  	// 선택된 값을 출력하거나 다른 함수에서 사용
-	  	console.log('선택된 년도:', year);
-	  	console.log('선택된 학기:', semester);
+	  	//console.log('선택된 년도:', year);
+	  	//console.log('선택된 학기:', semester);
 		  
 	  	// 선택된 값을 함수에 전달
 	  	selectCourse(year, semester);
@@ -145,7 +147,7 @@ $(document).ready(function(){
 function selectCourse(year, semester){
 	
 	const selector = year+'-'+semester;
-	console.log(selector);
+	//console.log(selector);
 	
 	if(year.trim() == "" || semester.trim() == ""){
 		alert("년도와 학기를 입력해주세요.");
@@ -161,10 +163,42 @@ function selectCourse(year, semester){
 		dataType:"json",
 		success:function(json){
 			console.log(JSON.stringify(json));
+			// [] 또는 [{"curriculum_seq":1,"department_seq":3,"course_seq":4,"professorName":"홍길동","className":"국어학개론","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":1,"prof_id":202400002},{"curriculum_seq":51,"department_seq":3,"course_seq":66,"professorName":"조앤롤링","className":"고전문학","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":1,"prof_id":202400013},{"curriculum_seq":78,"course_seq":22,"professorName":"홍길동","className":"영화로 보는 동유럽","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":0,"prof_id":202400002}]
+	
+			let v_html = ``;
 			
-	
-	           
-	
+	         
+	         json.forEach(function(item, index, array){
+	             v_html += `<div id="select">
+	                         <div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
+	                             <input type="hidden" name="course_seq" value="\${item.course_seq}"/>
+	                             <div style="display: flex;">
+	                                 <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>`;
+
+	             if (item.fk_department_seq != null && item.required == 1) {
+	                 v_html += `<div class="majorO rounded">전공필수</div>`;
+	             } else if (item.fk_department_seq != null && item.required == 0) {
+	                 v_html += `<div class="majorX rounded">전공선택</div>`;
+	             } else if (item.fk_department_seq == null && item.required == 1) {
+	                 v_html += `<div class="no-majorO rounded">교양필수</div>`;
+	             } else {
+	                 v_html += `<div class="no-majorX rounded">교양선택</div>`;
+	             }
+
+	             v_html += `<div style="width: 80%; margin-left: 3%; margin-top: 1%; margin-bottom: 1%;">
+	                             <div style="font-size: 20pt; color: black;">\${item.name}&nbsp;&nbsp;<span style="font-size: 16pt;">\${item.credit}학점</span></div>
+	                             <div style="font-size: 12pt; color: black;">\${item.prof_name}&nbsp;&nbsp;</div>
+	                         </div>
+	                         <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
+	                         </div>
+	                         </div>
+	                     </div>`;
+	         });
+	         
+	         $("div#showCourse").html(v_html);
+	         
+
+			
 		},
 		error: function(request, status, error){
 			alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -174,11 +208,6 @@ function selectCourse(year, semester){
 
 
 } // end of function selectCourse
-
-
-
-
-
 
 
 </script>
@@ -209,9 +238,7 @@ function selectCourse(year, semester){
 		
 		
 		<c:if test="${empty requestScope.mapList}">
-		
 			<span style="margin-left:10%; font-weight:bold; color:red; font-size:18pt;">수강중인 수업이 없습니다.</span>
-		
 		</c:if>
 		
 		<c:if test="${not empty requestScope.mapList}">

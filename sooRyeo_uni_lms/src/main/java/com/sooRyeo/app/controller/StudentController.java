@@ -122,23 +122,30 @@ public class StudentController {
 	@GetMapping(value="/student/classList.lms")
 	public ModelAndView classList(HttpServletRequest request, ModelAndView mav) {
 		
-		HttpSession session = request.getSession();
-		
+		HttpSession session = request.getSession();		
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		
 		int userid = loginuser.getStudent_id();
 		
 		StudentTimeTable timeTable = studentservice.classList(userid);
-		
 		List<Course> mapList = timeTable.getCourseList();
 	
+		if(mapList == null) {// 정보가 없다면
+			  mav.addObject("message", "신청한 수업이 없습니다.");
+	    	  mav.addObject("loc", request.getContextPath()+"/student/dashboard.lms");
+	    	  mav.setViewName("msg");
+			return mav;
+		}
 
-
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		mav.addObject("goBackURL", goBackURL);
+		mav.addObject("loginuser", loginuser);
 		mav.addObject("mapList", mapList);
 		mav.setViewName("classList");
 		
 		return mav;
-		// /WEB-INF/views/student/{1}.jsp
+		
 	}
 	
 	
@@ -1125,7 +1132,7 @@ public class StudentController {
 		
 		String semester = request.getParameter("semester");
 		
-		System.out.println("확인용 semester : " + semester);
+		// System.out.println("확인용 semester : " + semester);
 		
 		
 		StudentTimeTable timeTable = studentservice.classListJSON(semester, student_id);
@@ -1140,16 +1147,14 @@ public class StudentController {
            
            JSONObject jsonObj = new JSONObject();
        	
-			/*
-			  c.required AS required, v.course_seq
-			 * AS course_seq, v.semester_date as semester_date
-			 */
            jsonObj.put("prof_id", course.getProfessor().getProf_id());  
            jsonObj.put("professorName", course.getProfessor().getName());
            jsonObj.put("curriculum_seq", course.getCurriculum_seq());
            jsonObj.put("className", course.getCurriculum().getName());
            jsonObj.put("department_seq", course.getCurriculum().getFk_department_seq());
            jsonObj.put("required", course.getCurriculum().getRequired());    
+           jsonObj.put("course_seq", course.getCourse_seq());
+           jsonObj.put("semester_date", course.getSemester_date());
            
            
            jsonArr.put(jsonObj);
@@ -1157,7 +1162,7 @@ public class StudentController {
         }
 		
 
-		return "";
+		return jsonArr.toString();
 		
 	} // end of public String classListJSON
 	
