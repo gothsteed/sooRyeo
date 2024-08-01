@@ -696,18 +696,53 @@ update tbl_attendance set ISATTENDED = '1', attended_date = sysdate
 where fk_student_id = '202400009' and fk_lecture_seq = '14'
 
 
+
+SELECT student_id, name, email, register_year, status
+FROM tbl_student
+order by student_id desc
+
 select *
 from tbl_student
 
 
 
+select *
+from tbl_menu
+
+update tbl_menu set menu_name = '내 정보'
+where menu_url = '/student/myInfo.lms'
+
+commit;
 
 
-
-
-
-
-
+	    WITH
+	    P AS (
+	        SELECT name, prof_id 
+	        FROM tbl_professor
+	    ),
+	    C AS (
+	        SELECT curriculum_seq, name, fk_department_seq, required
+	        FROM tbl_curriculum
+	    ),
+	    V AS (
+	        SELECT course_seq, fk_curriculum_seq, fk_professor_id, fk_student_id, 
+	        semester_date
+	        FROM tbl_course JOIN tbl_registered_course
+	        ON course_seq = fk_course_seq
+	    )
+	    
+	    SELECT p.prof_id,
+	           p.name AS professorName,
+	           c.curriculum_seq,
+	           c.name AS className,
+	           c.fk_department_seq AS department_seq,
+	           c.required AS required,
+	           v.course_seq AS course_seq,
+	           v.semester_date as semester_date
+	    FROM P 
+	    JOIN V ON V.fk_professor_id = P.prof_id
+	    JOIN C ON V.fk_curriculum_seq = C.curriculum_seq
+	    WHERE V.fk_student_id = '202400009' and to_char(semester_date, 'yy-MM') = '24-07'
 
 
 

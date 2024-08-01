@@ -150,6 +150,7 @@
             border-radius: 20px;
             width: 100%;
             max-width: 500px;
+            position: relative;
         }
 
         .header .search-bar input {
@@ -171,17 +172,44 @@
             font-size: 25px;
             cursor: pointer;
         }
-    	#displayList {
+
+		#displayList {
+		    max-height: 250px; /* 최대 높이 설정 */
+		    background-color: #f4f4f4; /* 배경색 변경 */
+		    margin-left: 50px; /* 검색 바와의 간격 */
+		    height: auto; /* 내용에 따라 자동 높이 조정 */
+		    box-sizing: border-box; /* 패딩과 경계를 너비에 포함 */
+		    position: absolute; /* 헤더와 겹치도록 절대 위치 설정 */
+		    z-index: 10000; /* .header보다 높은 z-index */
+		    overflow: auto; /* 내용이 넘칠 경우 스크롤 추가 */
+		    border-radius: 0 0 20px 20px; /* 모서리 둥글게 */
+		    padding: 10px; /* 내부 여백 추가 */
+		    padding-left: 20px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+		    transition: box-shadow 0.3s; /* 마우스 오버 시 효과를 위한 전환 */
+		    opacity: 0.9;
+		    border: none;
+		    margin-left:2.5%;
 		    width: 100%;
-		    max-width: 400px; /* Match the search bar's maximum width */
-		    max-height: 100px; /* Set a height for the example */
+		}
+		
+		span.result:hover {
+			color: purple;
+			font-weight: bold;
+		
+		}
+
+    	#alertLecture {
+		    width: 80%;
+		    max-width: 200px; /* Match the search bar's maximum width */
+		    max-height: 500px; /* Set a height for the example */
 		    background-color: #ddd; /* Just for visibility */
-		    margin-left: 50px; /* Space between search bar and #dd */
 		    height: 100px;
 		    box-sizing: border-box; /* Include padding and border in the width */
    			position: absolute; /* Position absolute to overlap the header */
 		    z-index: 10000; /* Higher than .header */
 		    overflow:auto;
+		    border-radius: 10px;
 		}
         
     </style>
@@ -195,6 +223,27 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+	
+	$("div#alertLecture").hide();
+	
+	$.ajax({
+		  url: "<%= ctxPath%>/student/alertLecture.lms",
+		  method: 'GET',
+		  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
+		  success: function(response) {
+		    // 성공적으로 데이터를 받았을 때 처리할 코드
+			  if(response == ""){ // 데이터가 없을때
+			    $("span#bell").text("X");
+			  
+			  }
+			  else{ // 데이터가 있을때 
+			    $("span#bell").text("🔔");
+			  }// else---------------------------------
+		  },
+		  error: function(request, status, error){
+	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		  }
+	});
 	
 	$("div#displayList").hide();
 	
@@ -250,10 +299,13 @@ $(document).ready(function(){
 								console.log(word.substring(idx + len));     // 검색어 이후 나머지  ==> 에 대해서 궁금해요~~
 								console.log("~~~~~ 끝 ~~~~~");
 							*/
+							const result = `<img src='<%=ctxPath%>/resources/images/glass.png' style='width:15px; height:15px; margin-right:4%; vertical-align: middle;'>` 
+											+ "<span style='vertical-align: middle;'>" + name.substring(0, idx) + "</span>" 
+											+ "<span style='color:purple; font-weight:bold; vertical-align: middle;'>" + name.substring(idx, idx + len) + "</span>" 
+											+ "<span style='vertical-align: middle;'>" + name.substring(idx + len) + "</span>";
+				               	
 							
-							const result = name.substring(0,idx) + "<span style='color:purple;'>"+name.substring(idx,idx + len)+"</span>" + name.substring(idx + len);
-							
-							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
+							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'><br>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
 						
 						const input_width = $("input[name='searchWord']").css("width"); // 검색어 input 태그 width 값 알아오기
@@ -284,8 +336,94 @@ $(document).ready(function(){
 		
 		location.href = `<%=ctxPath%>\${url}`;
 		
+	}); // end of $(document).on("click", "span.result", function(e)
+			
+	
+	// 마우스로 다른 곳을 클릭 시 검색 결과 리스트 숨기기
+	$(document).click(function(e) {
+		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='searchWord']")) {
+			$("div#displayList").hide();
+		}
 	});
+	
+	
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('alertLecture');
+        const messageDiv = document.getElementById('lectureAlertSpan');
+        if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
 });
+
+function alertLecture(){
+	
+	$("div#alertLecture").hide();
+	
+	$.ajax({
+		  url: "<%= ctxPath%>/student/alertLecture.lms",
+		  method: 'GET',
+		  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
+		  success: function(response) {
+
+		    let v_html = ``;
+		    
+		    if(response != ""){
+			  	$.each(response, function(index, item){
+	
+					const lecName = item.Lname;
+					const profName = item.Pname;
+					const lId = item.LId;
+					const id = item.Id;
+			  		
+					const result ="<span id='lectureAlertSpan' style='color:purple;'>"+ profName + "교수님의 " + lecName +"수업이 추가되었습니다."+"</span>";
+					
+					v_html += `<span style='cursor:pointer;' data-custom="\${lId}" data-role="\${id}" class='result2'>\${result}<br></span>`
+					
+				}); // end of $.each(json, function(index, item){})------------------------------------
+			  	
+				$("div#alertLecture").html(v_html);
+				
+				$("div#alertLecture").show();
+		    }
+		  },
+		  error: function(request, status, error){
+	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		  }
+	});
+	
+	$(document).on("click", "span.result2", function(e){
+		
+		const url = $(this).data('custom');
+		const id = $(this).data('role');
+		
+		$("div#alertLecture").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
+		
+		$.ajax({
+			  url: "<%= ctxPath%>/student/alertLectureDel.lms",
+			  method: 'GET',
+			  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
+		      data: {id: id},
+			  success: function(response) {
+
+				 alert(response.alertLecture); // undefined
+				  
+				if(response.alertLecture == null){
+					location.href = `<%=ctxPath%>/student/myLecture.lms?course_seq=\${url}`;
+				}
+				else{
+					alert("오류발생");
+				}
+			  },
+			  error: function(request, status, error){
+		          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			  }
+		});
+	});
+}
+function alertLecture1(){
+	$("div#alertLecture").hide();
+}
 </script>
     
     <div class="sidebar">
@@ -339,7 +477,7 @@ $(document).ready(function(){
                     <a class="dropdown-item" href="<%=ctxPath %>/board/announcement.lms">학사공지사항</a>
                 </div>
             </li>
-            <li class="nav-item"><a href="<%=ctxPath%>/student/myInfo.lms" class="nav-link"><span class="icon">⚙️</span>내정보</a></li>
+            <li class="nav-item"><a href="<%=ctxPath%>/student/myInfo.lms" class="nav-link"><span class="icon">⚙️</span>내 정보</a></li>
             <li class="nav-item">
                 <a class="nav-link" href="<%=ctxPath%>/student/certificate/menu.lms" id="certificatesDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     <span class="icon">📜</span>증명서
@@ -362,10 +500,14 @@ $(document).ready(function(){
 	            </div>
 	            <div id="displayList"></div>
             </div>
-            <div class="icons">
-                <span class="icon">📫</span>
-                <span class="icon">🔔</span>
-                <span class="icon">❔</span>
+            <div>
+	            <div class="icons">
+	                <span class="icon">📫</span>
+	                <span class="icon" id="bell" onclick="alertLecture()" ></span>
+	                <span class="icon">❔</span>
+	            </div>
+	            <div class="dropdown" id="alertLecture">
+	            </div>
             </div>
         </div>
         

@@ -291,30 +291,32 @@
 </script>
     <div class="content">
         <div class="main-content">
-            <div class="justify-content-center">
+            <div class="justify-content-center" style="display: flex;">
 
-                <div class="card" style="width:50%;">
+                <div class="card" style="width:45%; margin-right:5%;">
                   <h5 class="card-header">
-                    	학과별 인원 차트
+                    	1. 학과별 인원 차트
                   </h5>
                   <div class="card-body">
-                    <h5 class="card-title">학과 별 인원 통계</h5>
+                    <h5 class="card-title"><학과별 인원 통계></h5>
                     <p class="card-text" id="columStackedBar">
-                    <div style="display:flex;">
+                    <div>
                    		<div id="chart_container"></div>
 						<div id="table_container" style="margin: 40px 0 0 0;"></div>
                     </div>
                   </div>
                 </div>
                 
-                <div class="card" style="width:50%;">
+                
+                
+                <div class="card" style="width:45%;">
                   <h5 class="card-header">
-                    	방문자 차트
+                    	2. 방문자 차트
                   </h5>
                   <div class="card-body">
-                    <h5 class="card-title">교수 학생 방문 통계</h5>
+                    <h5 class="card-title"><교수 / 학생 방문 통계></h5>
                     <p class="card-text" id="columStackedBar">
-                    <div style="display:flex;">
+                    <div style="display:flex; margin-top:3%;">
                    		<div id="count_container"></div>
                    		<div id="table_count_container" style="margin: 40px 0 0 0;"></div>
                     </div>

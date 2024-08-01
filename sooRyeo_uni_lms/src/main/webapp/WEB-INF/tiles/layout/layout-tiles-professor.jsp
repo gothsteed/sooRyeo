@@ -151,6 +151,7 @@
             border-radius: 20px;
             width: 100%;
             max-width: 500px;
+            position: relative;
         }
 
         .header .search-bar input {
@@ -191,19 +192,33 @@
             transform: translateY(-5px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         } */
-           	#displayList {
-		    width: 100%;
-		    max-width: 400px; /* Match the search bar's maximum width */
-		    max-height: 100px; /* Set a height for the example */
-		    background-color: #ddd; /* Just for visibility */
-		    margin-left: 50px; /* Space between search bar and #dd */
-		    height: 100px;
-		    box-sizing: border-box; /* Include padding and border in the width */
-   			position: absolute; /* Position absolute to overlap the header */
-		    z-index: 10000; /* Higher than .header */
-		    overflow:auto;
-		}
         
+        
+		#displayList {
+		    max-height: 250px; /* 최대 높이 설정 */
+		    background-color: #f4f4f4; /* 배경색 변경 */
+		    margin-left: 50px; /* 검색 바와의 간격 */
+		    height: auto; /* 내용에 따라 자동 높이 조정 */
+		    box-sizing: border-box; /* 패딩과 경계를 너비에 포함 */
+		    position: absolute; /* 헤더와 겹치도록 절대 위치 설정 */
+		    z-index: 10000; /* .header보다 높은 z-index */
+		    overflow: auto; /* 내용이 넘칠 경우 스크롤 추가 */
+		    border-radius: 0 0 20px 20px; /* 모서리 둥글게 */
+		    padding: 10px; /* 내부 여백 추가 */
+		    padding-left: 20px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+		    transition: box-shadow 0.3s; /* 마우스 오버 시 효과를 위한 전환 */
+		    opacity: 0.9;
+		    border: none;
+		    margin-left:2.5%;
+		    width: 100%;
+		}
+		
+		span.result:hover {
+			color: purple;
+			font-weight: bold;
+		
+		}
 		
     </style>
 </head>
@@ -216,7 +231,63 @@
 
 $(document).ready(function(){
 	
-	$("div#displayList").hide();
+	$("div#displayList").hide()
+
+    fetch('<%=ctxPath%>/professor/chatAlertREST.lms', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            console.log(response);
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data received:', data);
+            // Process and display the data as needed
+            let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value, 0);
+            //let totalUnreadCount =45;
+            console.log(totalUnreadCount)
+
+            document.getElementById('message').innerHTML += `
+
+                <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+                    \${totalUnreadCount}
+                </div>
+
+                `;
+
+
+            const mailDropdown = document.getElementById('mailDropdown');
+            mailDropdown.innerHTML = ''; // Clear any existing content
+
+            Object.entries(data).forEach(([key, value]) => {
+                const item = document.createElement('div');
+                item.textContent = `ID: \${key}, Value: \${value}`;
+                item.style.padding = '10px';
+                item.style.borderBottom = '1px solid #ccc';
+                mailDropdown.appendChild(item);
+            });
+
+            document.getElementById('message').addEventListener('click', function() {
+                const dropdown = document.getElementById('mailDropdown');
+                if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                    dropdown.style.display = 'block';
+                } else {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
 	
 	$("input[name='searchWord']").keyup(function(){
 		
@@ -271,7 +342,10 @@ $(document).ready(function(){
 								console.log("~~~~~ 끝 ~~~~~");
 							*/
 							
-							const result = name.substring(0,idx) + "<span style='color:purple;'>"+name.substring(idx,idx + len)+"</span>" + name.substring(idx + len);
+							const result = `<img src='<%=ctxPath%>/resources/images/glass.png' style='width:15px; height:15px; margin-right:4%; vertical-align: middle;'>` 
+									 	 + "<span style='vertical-align: middle;'>" + name.substring(0, idx) + "</span>" 
+										 + "<span style='color:purple; font-weight:bold; vertical-align: middle;'>" + name.substring(idx, idx + len) + "</span>" 
+										 + "<span style='vertical-align: middle;'>" + name.substring(idx + len) + "</span>";
 							
 							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
@@ -305,6 +379,15 @@ $(document).ready(function(){
 		location.href = `<%=ctxPath%>\${url}`;
 		
 	});
+	
+	
+	// 마우스로 다른 곳을 클릭 시 검색 결과 리스트 숨기기
+	$(document).click(function(e) {
+		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='searchWord']")) {
+			$("div#displayList").hide();
+		}
+	});
+	
 });
 </script>	
 	
@@ -365,7 +448,10 @@ $(document).ready(function(){
 	            <div id="displayList"></div>
             </div>
             <div class="icons">
-                <span class="icon">📫</span>
+                <span id="message" class="icon" style="position: relative">
+                    📫
+                    <div class="dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></div>
+                </span>
                 <span class="icon">🔔</span>
                 <span class="icon">❔</span>
             </div>

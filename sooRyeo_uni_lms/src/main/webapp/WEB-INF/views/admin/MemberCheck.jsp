@@ -63,7 +63,7 @@
   </c:if>
 </table>
 <c:if test="${requestScope.application_status_student == '[]'}">
-	<div style="text-align: center; font-size: 30pt">현재 학적 변경 신청한 학생이 없습니다.</div>
+	<div style="text-align: center; font-size: 20pt">현재 학적 변경을 신청한 학생이 없습니다.</div>
 </c:if>
 
 </body>

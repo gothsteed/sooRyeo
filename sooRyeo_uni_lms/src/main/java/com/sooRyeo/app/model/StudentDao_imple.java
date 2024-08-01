@@ -550,6 +550,29 @@ public class StudentDao_imple implements StudentDao {
 		
 	} // end of public List<Map<String, Object>> Acquisition_status_JSON
 
+	
+	// 학기 별 개강과목JSON
+	@Override
+	public StudentTimeTable classListJSON(String semester, int student_id) {
+		
+		Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("semester_date", semester);
+        paraMap.put("student_id", student_id);	
+		
+        List<Course> classListJSON = sqlSession.selectList("student.classListJSON", paraMap);
+		
+        for(Course course : classListJSON) {
+        	
+        	int course_seq = course.getCourse_seq();
+        	List<Time> times = sqlSession.selectList("student.classListTimeJSON", course_seq);
+        	course.setTimeList(times);
+        	
+        } // end of for
+        
+		return new StudentTimeTable(student_id, classListJSON);
+		
+	} // end of public StudentTimeTable classListJSON
+
 
 
 

@@ -143,6 +143,9 @@ public interface StudentDao {
 	// 출석을 완료했을 경우 isAttended 컬럼 1로 update 하기
 	int update_tbl_attendance_isAttended(String lecture_seq, int userid);
 
+	// 학기 별 개강과목JSON
+	StudentTimeTable classListJSON(String semester, int student_id);
+
 	
 
 }

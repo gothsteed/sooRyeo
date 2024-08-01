@@ -41,8 +41,10 @@ import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Menu;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -51,6 +53,7 @@ import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.mongo.entity.AlertLecture;
 import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
 
@@ -122,23 +125,30 @@ public class StudentController {
 	@GetMapping(value="/student/classList.lms")
 	public ModelAndView classList(HttpServletRequest request, ModelAndView mav) {
 		
-		HttpSession session = request.getSession();
-		
+		HttpSession session = request.getSession();		
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		
 		int userid = loginuser.getStudent_id();
 		
 		StudentTimeTable timeTable = studentservice.classList(userid);
-		
 		List<Course> mapList = timeTable.getCourseList();
 	
+		if(mapList == null) {// 정보가 없다면
+			  mav.addObject("message", "신청한 수업이 없습니다.");
+	    	  mav.addObject("loc", request.getContextPath()+"/student/dashboard.lms");
+	    	  mav.setViewName("msg");
+			return mav;
+		}
 
-
+		String goBackURL = MyUtil.getCurrentURL(request);
+		
+		mav.addObject("goBackURL", goBackURL);
+		mav.addObject("loginuser", loginuser);
 		mav.addObject("mapList", mapList);
 		mav.setViewName("classList");
 		
 		return mav;
-		// /WEB-INF/views/student/{1}.jsp
+		
 	}
 	
 	
@@ -1111,7 +1121,97 @@ public class StudentController {
 		
 		return "";
 	}
+	
+	@ResponseBody
+	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
+	public String alertLecture(HttpServletRequest request) {
+		
+		List<AlertLecture> alertLecture = studentservice.getAlertLecture(request); 
 
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(alertLecture != null) {
+			for(AlertLecture alertLectureData : alertLecture) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				jsonObj.put("Lname", alertLectureData.getLectureName());
+				jsonObj.put("Pname", alertLectureData.getProfessorName());
+				jsonObj.put("LId", alertLectureData.getLectureId());
+				jsonObj.put("Id", alertLectureData.getId());
+				
+				jsonArr.put(jsonObj); // [{},{},{}]
+			}// end of for ----------------------------------
+		}
+		return jsonArr.toString(); 
+	}
+
+	
+	@ResponseBody
+	@GetMapping(value="/student/alertLectureDel.lms", produces="text/plain;charset=UTF-8")
+	public String alertLectureDel(HttpServletRequest request) {
+		
+		String id = (String)request.getParameter("id");
+		
+		AlertLecture alertLecture = studentservice.deleteAlertLecture(id);
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("alertLecture", alertLecture);
+				
+		return jsonObj.toString(); 
+	}
+	
+	
+	// 수업 - 년도, 학기 조회해서 보여주기
+	@ResponseBody
+	@PostMapping("/student/classListJSON.lms")
+	public String classListJSON(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		int student_id = loginuser.getStudent_id();
+		
+		String semester = request.getParameter("semester");
+		
+		// System.out.println("확인용 semester : " + semester);
+		
+		
+		StudentTimeTable timeTable = studentservice.classListJSON(semester, student_id);
+		
+		// 해당학기 수업 리스트
+		List<Course> classListJSON = timeTable.getCourseList();
+	
+
+		JSONArray jsonArr = new JSONArray();
+        
+        for(Course course : classListJSON) {
+           
+           JSONObject jsonObj = new JSONObject();
+       	
+           jsonObj.put("prof_id", course.getProfessor().getProf_id());  
+           jsonObj.put("professorName", course.getProfessor().getName());
+           jsonObj.put("curriculum_seq", course.getCurriculum_seq());
+           jsonObj.put("className", course.getCurriculum().getName());
+           jsonObj.put("department_seq", course.getCurriculum().getFk_department_seq());
+           jsonObj.put("required", course.getCurriculum().getRequired());    
+           jsonObj.put("course_seq", course.getCourse_seq());
+           jsonObj.put("semester_date", course.getSemester_date());
+           
+           
+           jsonArr.put(jsonObj);
+		
+        }
+		
+
+		return jsonArr.toString();
+		
+	} // end of public String classListJSON
+	
+
+	
+	
+	
+	
+	
 	
 	
 	
