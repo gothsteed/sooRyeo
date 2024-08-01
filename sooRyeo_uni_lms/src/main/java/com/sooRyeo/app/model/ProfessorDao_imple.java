@@ -360,7 +360,16 @@ public class ProfessorDao_imple implements ProfessorDao {
         
 		return new ProfessorTimeTable(prof_id, courseListJson);
 	}
-
+	
+	
+	@Override
+	public String Student_pic(int student_id) {
+		
+		String Student_pic = sqlSession.selectOne("professor.Student_pic", student_id);
+		
+		return Student_pic;
+	}
+	
 
 	@Override
 	public Map<String, Object> score_checkJSON(int student_id, int fk_course_seq) {
@@ -474,6 +483,9 @@ public class ProfessorDao_imple implements ProfessorDao {
 					
 		return attendanceRate;
 	}
+
+
+
 
 
 

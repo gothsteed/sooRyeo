@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.sooRyeo.app.domain.Admin;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.domain.StudentStatusChange;
 import com.sooRyeo.app.dto.LoginDTO;
@@ -75,6 +76,20 @@ public class AdminDao_imple implements AdminDao {
 		
 		int n = sqlSession.update("admin.updateStudentStatus", paraMap);
 		return n;
+	}
+
+
+	@Override
+	public List<Student> getStudenList() {
+		List<Student> studenList = sqlSession.selectList("admin.getStudenList");
+		return studenList;
+	}
+
+
+	@Override
+	public List<Professor> getProfessorList() {
+		List<Professor> professor = sqlSession.selectList("admin.getProfessorList");
+		return professor;
 	}
 
 

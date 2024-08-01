@@ -98,7 +98,7 @@
 	   });
 	   
 	   // 문서가 로드 되어지면 "부서별 인원통계" 페이지가 보이도록 한다.
-	   $("select#searchType").val("deptname").trigger("change"); 
+	   $("select#searchType").val("credit").trigger("change"); 
 	   
    });// end of $(document).ready(funciton(){})-------------
    

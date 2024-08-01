@@ -10,6 +10,9 @@ import com.sooRyeo.app.dto.LectureUpdateDto;
 import com.sooRyeo.app.dto.LectureUploadDto;
 import com.sooRyeo.app.model.CourseDao;
 import com.sooRyeo.app.model.LectureDao;
+import com.sooRyeo.app.mongo.entity.AlertLecture;
+import com.sooRyeo.app.mongo.repository.AlertLectureRepository;
+
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class LectureService_imple implements LectureService{
@@ -40,6 +44,9 @@ public class LectureService_imple implements LectureService{
     @Autowired
     private FFprobe ffprobe;
 
+    @Autowired
+    private AlertLectureRepository alertLectureRepository;
+    
 
     private boolean checkLectureAuth(HttpServletRequest request, int lecture_seq) {
         HttpSession session = request.getSession();
@@ -92,8 +99,31 @@ public class LectureService_imple implements LectureService{
         if(result != 1) {
             return ResponseEntity.internalServerError().body("강의등록에 실패하였습니다");
         }
-
-
+        
+        
+        
+        // 강의를 듣는 학생들을 전부 불러오는 메소드
+        List<Integer> studentOfLecture = lectureDao.getStudentOfLecture(lectureUploadDto.getCourse_seq());
+       
+        // 수업명 불러오는 메소드
+        String lectureName = lectureDao.getLectureName(lectureUploadDto.getCourse_seq());
+        
+        // 교수 이름 가져오는 것
+        HttpSession session = request.getSession();
+        Professor loginuser = (Professor) session.getAttribute("loginuser");
+        
+        for(int i=0; i<studentOfLecture.size(); i++) {
+        	AlertLecture al = new AlertLecture();
+        	
+        	al.setLectureId(lectureUploadDto.getCourse_seq());
+        	al.setLectureName(lectureName);
+        	al.setStudentId(studentOfLecture.get(i));
+        	al.setProfessorName(loginuser.getName());
+        	
+        	alertLectureRepository.save(al);
+        }
+        
+        
         return ResponseEntity.ok("강의가 등록되었습니다.");
     }
 

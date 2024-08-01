@@ -224,6 +224,18 @@ public class AdminService_imple implements AdminService {
 		return n;
 	}
 
+	@Override
+	public List<Student> getStudenList() {
+		List<Student> studenList = admindao.getStudenList();
+	    return studenList;
+	}
+
+	@Override
+	public List<Professor> getProfessorList() {
+		List<Professor> professorList = admindao.getProfessorList();
+	    return professorList;
+	}
+
 
 
 

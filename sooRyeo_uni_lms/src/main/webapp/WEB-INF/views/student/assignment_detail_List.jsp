@@ -56,6 +56,21 @@ function goaddWriteFrm(){
 } // end of function goaddWriteFrm
 	
 	
+// 과제목록 버튼 누를 시 새로고침된 전페이지로 돌아가기
+function goRe()	{
+	
+    /* alert(${requestScope.assignment_detail_1.fk_course_seq}); */
+	
+	location.href = "<%=ctxPath%>/student/assignment_List.lms?fk_course_seq="+${requestScope.assignment_detail_1.fk_course_seq};
+	
+			
+			
+} // end of function goRe
+	
+	
+	
+	
+	
 // 과제제출하기
 function goAddWrite(){
 	
@@ -296,7 +311,7 @@ function goReadComment(){
 	   	  </tr>
 	   	</table>
 	 <div class="mt-5">
-	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="history.back()">과제 목록</button> 
+	 	<button type="button" class="btn btn-success btn-sm mr-3" onclick="goRe()">과제 목록</button> 
 		<c:if test="${requestScope.assignment_detail_2.submit_datetime == null}">
 			<button type="button" name="submit" class="btn btn-success btn-sm ml-3" onclick="goaddWriteFrm()">과제 제출</button>
 		</c:if>

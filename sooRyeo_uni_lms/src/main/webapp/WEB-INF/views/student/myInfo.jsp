@@ -157,17 +157,20 @@ form.profile-form img#profile  {
 				</div>
 				<div class="card-footer d-flex">
 				    <div class="mr-auto">
-				    <c:if test="${requestScope.member_student.status != 1 && requestScope.application_status != 1}">
+				    <c:if test="${requestScope.member_student.status != 3 && requestScope.member_student.status != 1 && requestScope.application_status != 1}">
 				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_status.lms?num=1'">복학신청</button>
 					</c:if>
-				    <c:if test="${requestScope.member_student.status != 2 && requestScope.application_status != 2}">
+				    <c:if test="${requestScope.member_student.status != 3 && requestScope.member_student.status != 2 && requestScope.application_status != 2}">
 				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_status.lms?num=2'">휴학신청</button>
 					</c:if>
 				    <c:if test="${requestScope.member_student.status != 3 && requestScope.application_status != 3}">
 				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_graduation.lms'">졸업신청</button>
 					</c:if>
-				    <c:if test="${requestScope.member_student.status != 4 && requestScope.application_status != 4}">
+				    <c:if test="${requestScope.member_student.status != 3 && requestScope.member_student.status != 4 && requestScope.application_status != 4}">
 				        <button type="button" class="btn btn-primary" id="updateBtn" onclick="location.href='${pageContext.request.contextPath}/student/application_status.lms?num=4'">자퇴신청</button>
+					</c:if>
+				    <c:if test="${requestScope.member_student.status == 3}">
+				        졸업한 학생은 학적변경이 불가합니다.
 					</c:if>
 				    </div>
 				    <div> 

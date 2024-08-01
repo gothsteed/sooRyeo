@@ -30,9 +30,14 @@ public class Student {
     private Integer fk_department_seq;
     private String department_name;
     private String img_name;
+    private int finish_date;
 
     
-    private String birthday; 		// 생년월일
+    public int getFinish_date() {
+		return finish_date;
+	}
+
+	private String birthday; 		// 생년월일
 
 	private Department department;
 

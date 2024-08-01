@@ -16,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.lang.reflect.Member;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -37,6 +38,37 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final Map<String, List<WebSocketSession>> roomSessions = new HashMap<>();
 
 
+    private void sendPreviousMessage(WebSocketSession session, List<Message> previousMessages, String idKey) throws IOException {
+
+        for (Message message : previousMessages) {
+            if(!message.hasRead(idKey)) {
+                message.read(idKey);
+                messageRepository.save(message);
+            }
+            session.sendMessage(new TextMessage(jsonBuilder.toJson(message)));
+        }
+
+    }
+
+    private Set<String> makeReadStatus(String roomId) {
+        Set<String> readStatus = new HashSet<>();
+
+        for(WebSocketSession connected : roomSessions.get(roomId)) {
+            if(connected.getAttributes().get("loginuser") instanceof Student) {
+                Student loginuser = ((Student) connected.getAttributes().get("loginuser"));
+                readStatus.add(MemberType.STUDENT.toString() + loginuser.getStudent_id());
+
+            }
+            else if (connected.getAttributes().get("loginuser") instanceof Professor) {
+                Professor loginuser = ((Professor) connected.getAttributes().get("loginuser"));
+                readStatus.add(MemberType.PROFESSOR.toString() + loginuser.getProf_id());
+
+            }
+        }
+
+        return readStatus;
+    }
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -52,94 +84,92 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
         List<Message> previousMessages = messageRepository.findAllByRoomId(roomId);
 
-        for (Message previousMessage : previousMessages) {
-            MessageDto messageDto = new MessageDto();
-            messageDto.setMessageType(previousMessage.getMsgType());
-            messageDto.setContent(previousMessage.getContent());
-            messageDto.setName(previousMessage.getSender());
-            messageDto.setSenderId(previousMessage.getSenderId());
-            messageDto.setTimestamp(previousMessage.getTimestamp().toString());
-            messageDto.setSenderType(previousMessage.getSenderType());
-            session.sendMessage(new TextMessage(jsonBuilder.toJson(messageDto)));
-        }
 
-        MessageDto messageDto = null;
+        Message enterMessage = new Message();
 
         if(session.getAttributes().get("loginuser") instanceof Student) {
             Student loginuser = ((Student) session.getAttributes().get("loginuser"));
-            messageDto = new MessageDto();
-            messageDto.setMessageType(MessageType.ALERT.toString());
-            messageDto.setContent(loginuser.getName() + " 학생님이 입장하였습니다");
-            messageDto.setTimestamp(LocalDateTime.now().toString());
+            sendPreviousMessage(session, previousMessages, MemberType.STUDENT.toString() + loginuser.getStudent_id());
 
-        }else if (session.getAttributes().get("loginuser") instanceof Professor) {
+            enterMessage.setSenderId(loginuser.getStudent_id());
+            enterMessage.setName(loginuser.getName());
+            enterMessage.setSenderType(MemberType.STUDENT.toString());
+            enterMessage.setMsgType(MessageType.ENTER.toString());
+            enterMessage.setContent(loginuser.getName() + " 학생님이 입장하였습니다");
+            enterMessage.setTimestamp(LocalDateTime.now());
+
+        }
+        else if (session.getAttributes().get("loginuser") instanceof Professor) {
             Professor loginuser = ((Professor) session.getAttributes().get("loginuser"));
-            messageDto = new MessageDto();
-            messageDto.setMessageType(MessageType.ALERT.toString());
-            messageDto.setContent(loginuser.getName() + " 교수님이 입장하였습니다");
-            messageDto.setTimestamp(LocalDateTime.now().toString());
+            sendPreviousMessage(session, previousMessages, MemberType.PROFESSOR.toString() + loginuser.getProf_id());
+
+            enterMessage.setSenderId(loginuser.getProf_id());
+            enterMessage.setName(loginuser.getName());
+            enterMessage.setSenderType(MemberType.PROFESSOR.toString());
+            enterMessage.setMsgType(MessageType.ENTER.toString());
+            enterMessage.setContent(loginuser.getName() + " 교수님이 입장하였습니다");
+            enterMessage.setTimestamp(LocalDateTime.now());
 
         }
 
-        if(messageDto == null) {
-            return;
-        }
+        Set<String> readStatus = makeReadStatus(roomId);
 
+        enterMessage.setReadStatus(readStatus);
+        enterMessage.setTimestamp(LocalDateTime.now());
+        enterMessage.setRoomId(roomId);
         for(WebSocketSession connected : roomSessions.get(roomId)) {
-            connected.sendMessage(new TextMessage(jsonBuilder.toJson(messageDto)));
+            connected.sendMessage(new TextMessage(jsonBuilder.toJson(enterMessage)));
         }
 
-        messageRepository.save(new Message(MessageType.ALERT.toString(),
-               null,
-                null,
-                null,
-                messageDto.getContent(),
-                roomId,
-                LocalDateTime.now()));
+        messageRepository.save(enterMessage);
     }
 
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String roomId = (String) session.getAttributes().get("roomId");
-        MessageDto messageDto = jsonBuilder.fromJson(message.getPayload(), MessageDto.class);
+        //MessageDto messageDto = jsonBuilder.fromJson(message.getPayload(), MessageDto.class);
 
+
+        MessageDto sendMessage = jsonBuilder.fromJson(message.getPayload(), MessageDto.class);
+        Set<String> readStatus = makeReadStatus(roomId);
+
+
+        Message newMessage = null;
         if(session.getAttributes().get("loginuser") instanceof Student) {
             Student loginuser = ((Student) session.getAttributes().get("loginuser"));
-            messageRepository.save(new Message(messageDto.getMessageType(),
-                    MemberType.STUDENT.toString(),
-                    loginuser.getStudent_id(),
+            newMessage = new Message(
+                    sendMessage.getMsgType(),
+                    sendMessage.getSenderType(),
+                    sendMessage.getSenderId(),
                     loginuser.getName(),
-                    messageDto.getContent(),
+                    sendMessage.getContent(),
                     roomId,
-                    LocalDateTime.now()));
-
-            messageDto.setSenderId(loginuser.getStudent_id());
-            messageDto.setName(loginuser.getName());
-            messageDto.setTimestamp(LocalDate.now().toString());
-            messageDto.setSenderType("STUDENT");
+                    LocalDateTime.now(),
+                    readStatus
+            );
+            messageRepository.save(newMessage);
         }else if (session.getAttributes().get("loginuser") instanceof Professor) {
             Professor loginuser = ((Professor) session.getAttributes().get("loginuser"));
-            messageRepository.save(new Message(messageDto.getMessageType(),
-                    MemberType.PROFESSOR.toString(),
-                    loginuser.getProf_id(),
+            newMessage = new Message(
+                    sendMessage.getMsgType(),
+                    sendMessage.getSenderType(),
+                    sendMessage.getSenderId(),
                     loginuser.getName(),
-                    messageDto.getContent(),
+                    sendMessage.getContent(),
                     roomId,
-                    LocalDateTime.now()));
-
-            messageDto.setSenderId(loginuser.getProf_id());
-            messageDto.setName(loginuser.getName());
-            messageDto.setTimestamp(LocalDate.now().toString());
-            messageDto.setSenderType("PROFESSOR");
+                    LocalDateTime.now(),
+                    readStatus
+            );
+            messageRepository.save(newMessage);
         }
 
 
         for(WebSocketSession connected : roomSessions.get(roomId)) {
-            if(connected.getId().equals(session.getId())) {
+/*            if(connected.getId().equals(session.getId())) {
                 continue;
-            }
-            connected.sendMessage(message);
+            }*/
+            connected.sendMessage(new TextMessage(jsonBuilder.toJson(newMessage)));
         }
 
     }
@@ -148,34 +178,35 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         String roomId = (String) session.getAttributes().get("roomId");
-        MessageDto messageDto = null;
 
+        String content = null;
         if(session.getAttributes().get("loginuser") instanceof Student) {
             Student loginuser = ((Student) session.getAttributes().get("loginuser"));
-            messageDto = new MessageDto();
 
-            messageDto.setMessageType(MessageType.ALERT.toString());
-            messageDto.setContent(loginuser.getName() + "님이 퇴장하였습니다");
-            messageDto.setName(loginuser.getName());
+            content = loginuser.getName() + "학생이 퇴장하였습니다";
 
 
         }else if (session.getAttributes().get("loginuser") instanceof Professor) {
             Professor loginuser = ((Professor) session.getAttributes().get("loginuser"));
-            messageDto = new MessageDto();
-            messageDto.setMessageType(MessageType.ALERT.toString());
-            messageDto.setContent(loginuser.getName() + "님이 퇴장하였습니다");
-            messageDto.setName(loginuser.getName());
+
+            content = loginuser.getName() + "교수가 퇴장하였습니다";
         }
 
-        if(messageDto == null) {
-            return;
-        }
+        Set<String> readStatus = makeReadStatus(roomId);
+        Message msgEntity = messageRepository.save(new Message(MessageType.EXIT.toString(),
+                null,
+                null,
+                null,
+                content,
+                roomId,
+                LocalDateTime.now(),
+                readStatus));
 
         for(WebSocketSession connected : roomSessions.get(roomId)) {
             if(connected.getId().equals(session.getId())) {
                 continue;
             }
-            connected.sendMessage(new TextMessage(jsonBuilder.toJson(messageDto)));
+            connected.sendMessage(new TextMessage(jsonBuilder.toJson(msgEntity)));
         }
 
         List<WebSocketSession> sessions = roomSessions.get(roomId);
@@ -186,15 +217,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 roomSessions.remove(roomId);
             }
         }
-
-
-        messageRepository.save(new Message(MessageType.ALERT.toString(),
-                null,
-                null,
-                null,
-                messageDto.getContent(),
-                roomId,
-                LocalDateTime.now()));
 
     }
 

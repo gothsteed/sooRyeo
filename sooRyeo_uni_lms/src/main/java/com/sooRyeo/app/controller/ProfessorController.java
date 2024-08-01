@@ -14,11 +14,9 @@ import javax.servlet.http.HttpSession;
 
 import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.LectureUploadDto;
-import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import com.sooRyeo.app.service.*;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.common.MyUtil;
@@ -910,10 +907,11 @@ public class ProfessorController {
 	public ModelAndView professor_insertGradeDetail(HttpServletRequest request, ModelAndView mav) {// 학생 점수 뷰단
 		
 		String goBackURL = MyUtil.getCurrentURL(request);
-		
 		int student_id = Integer.parseInt(request.getParameter("student_id"));
 		int fk_course_seq = Integer.parseInt(request.getParameter("course_seq"));
 		String name = request.getParameter("name");
+		
+		String Student_pic = professorService.Student_pic(student_id);
 		
 		System.out.println("확인용 student_id : " + student_id);
 		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
@@ -922,6 +920,7 @@ public class ProfessorController {
 		mav.addObject("student_id", student_id);
 		mav.addObject("fk_course_seq", fk_course_seq);	
 		mav.addObject("name", name);
+		mav.addObject("Student_pic", Student_pic);
 		mav.addObject("goBackURL", goBackURL);
 		mav.setViewName("professor_insertGradeDetail");
 		

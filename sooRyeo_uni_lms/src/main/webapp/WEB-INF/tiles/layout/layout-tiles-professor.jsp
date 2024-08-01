@@ -191,7 +191,19 @@
             transform: translateY(-5px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         } */
-       
+           	#displayList {
+		    width: 100%;
+		    max-width: 400px; /* Match the search bar's maximum width */
+		    max-height: 100px; /* Set a height for the example */
+		    background-color: #ddd; /* Just for visibility */
+		    margin-left: 50px; /* Space between search bar and #dd */
+		    height: 100px;
+		    box-sizing: border-box; /* Include padding and border in the width */
+   			position: absolute; /* Position absolute to overlap the header */
+		    z-index: 10000; /* Higher than .header */
+		    overflow:auto;
+		}
+        
 		
     </style>
 </head>
@@ -199,6 +211,103 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+	
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+	$("div#displayList").hide();
+	
+	$("input[name='searchWord']").keyup(function(){
+		
+		const wordLength = $(this).val().trim().length;
+		// 검색어에서 공백을 제외한 길이를 알아온다.
+		
+		if(wordLength == 0){
+			$("div#displayList").hide();
+			// 검색어가 공백이거나 검색어 입력후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다.
+		}
+		else{
+			$.ajax({
+				url:"<%= ctxPath%>/student/wordSearchShow.lms",
+				type:"get",
+				data:{"searchWord":$("input[name='searchWord']").val()},
+				dataType:"json",
+				success:function(json){
+					<%-- #120. 검색어 입력시 자동글 완성하기 7 --%>
+					if(json.length > 0){
+						// 검색된 데이터가 있는 경우임.
+						
+						let v_html = ``;
+						
+						$.each(json, function(index, item){
+							
+							const urlIdx = item.name.indexOf(",");
+							
+							const name = item.name.substring(0,urlIdx);
+							const url = item.name.substring(urlIdx+1);
+							
+							// word ==> javascript 는 재미가 있어요
+							// word ==> 그러면 javaScript  는 뭔가요? ==> 대문자 포함됨
+							
+							// word.toLowerCase() 은 word 를 모두 소문자로 변경하는 것이다.
+							// word ==> javascript 는 재미가 있어요
+							// word ==> 그러면 javascript  는 뭔가요? ==> 대문자 사라짐
+							
+							const idx = name.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+							// 만약에 검색어가 JavA 같이 적었다면
+							/*
+								그러면 javascript  는 뭔가요?   는 idx 가 4 이다.
+								javascript 는 재미가 있어요             는 idx 가 0 이다.
+							*/
+							
+							const len = $("input[name='searchWord']").val().length;
+							// 검색어(JavA)의 길이 len은 4가 된다.
+							/*
+								console.log("~~~~~ 시작 ~~~~~");
+								console.log(word.substring(0,idx));         // 검색어 전까지         ==> 저는
+								console.log(word.substring(idx,idx + len)); // 검색어                   ==> java
+								console.log(word.substring(idx + len));     // 검색어 이후 나머지  ==> 에 대해서 궁금해요~~
+								console.log("~~~~~ 끝 ~~~~~");
+							*/
+							
+							const result = name.substring(0,idx) + "<span style='color:purple;'>"+name.substring(idx,idx + len)+"</span>" + name.substring(idx + len);
+							
+							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
+						}); // end of $.each(json, function(index, item){})------------------------------------
+						
+						const input_width = $("input[name='searchWord']").css("width"); // 검색어 input 태그 width 값 알아오기
+						
+						$("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
+						
+						$("div#displayList").html(v_html);
+						
+						$("div#displayList").show();
+					}
+				},
+				error: function(request, status, error){
+		          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			    }
+			});// ajax------------------------------
+		}
+	
+	}); // $("input[name='searchWord']").keyup(function(){})-------------------------------
+		
+	<%-- #121. 검색어 입력시 자동글 완성하기 8 --%>
+	$(document).on("click", "span.result", function(e){
+		
+		const url = $(this).data('custom');
+		const name = $(this).text();
+		
+		$("input[name='searchWord']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
+		$("div#displayList").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
+		
+		location.href = `<%=ctxPath%>\${url}`;
+		
+	});
+});
+</script>	
+	
 	
     <div class="sidebar">
         <div class="profile">
@@ -225,7 +334,7 @@
                 <a href="#schedule" class="nav-link dropdown-toggle" id="scheduleMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📅</span>스케줄</a>
                 <div class="dropdown-menu" aria-labelledby="scheduleMenu" >
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/approveConsult.lms">상담 승인</a>
-                    <a class="dropdown-item" href="<%=ctxPath %>/professor/consult.lms">상담일정</a>
+                    <a class="dropdown-item" href="<%=ctxPath %>/professor/consult.lms">상담 일정</a>
                 </div>
             </li>
             <li class="nav-item">
@@ -248,16 +357,12 @@
     </div>
     <div class="content">
         <div class="header sticky-top">
-            <div class="search-bar">
-                <span class="icon">🔎</span>
-                <input type="text" placeholder="메뉴검색">
-            </div>
-            <div>
-            	<c:if test="${empty sessionScope.loginuser.name}">
-            	</c:if>
-            	<c:if test="${not empty sessionScope.loginuser.name}">
-            		<span style="font-size:16pt; font-weight:bold;">환영합니다!&nbsp;${sessionScope.loginuser.name}교수님!</span>
-            	</c:if>
+            <div style="width:100%;">
+	            <div class="search-bar">
+	                <span class="icon">🔎</span>
+	                <input type="text" name="searchWord" placeholder="메뉴검색" autocomplete='off'>
+	            </div>
+	            <div id="displayList"></div>
             </div>
             <div class="icons">
                 <span class="icon">📫</span>

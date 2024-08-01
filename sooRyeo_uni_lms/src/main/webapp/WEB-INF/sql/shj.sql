@@ -34,6 +34,19 @@ add extraAddress Nvarchar2(200);
 
 -- Table TBL_STUDENT이(가) 변경되었습니다.
 
+alter table tbl_student
+add finish_date DATE;
+
+select *
+from tbl_student
+
+commit;
+
+
+
+update tbl_lecture set lecture_time = 5
+where lecture_seq = 26;
+
 
 update tbl_student set postcode = '03217'
 update tbl_student set detailaddress = '3층 G클래스'
@@ -588,12 +601,12 @@ FROM (
          FROM tbl_registered_course A 
          JOIN tbl_course B ON A.fk_course_seq = B.course_seq
          JOIN tbl_lecture E ON B.course_seq = E.fk_course_seq
-         WHERE A.fk_student_id = #{student_id} AND exist = 1 AND B.course_seq = #{course_seq}) AS total_lectures,
+         WHERE A.fk_student_id = '202400005' AND exist = 1 AND B.course_seq = '4') AS total_lectures,
 
         (SELECT COUNT(*)
          FROM tbl_lecture C 
          JOIN tbl_attendance D ON C.lecture_seq = D.fk_lecture_seq
-         WHERE D.fk_student_id = #{student_id} AND attended_date IS NOT NULL) AS attended_lectures
+         WHERE D.fk_student_id = '202400005' AND attended_date IS NOT NULL) AS attended_lectures
     FROM dual 
 ) sub
 
@@ -663,7 +676,35 @@ WHERE B.fk_student_id = '202400009'
 
 
 select *
-from tbl_grade
+from tbl_assignment_submit
+where fk_student_id = '202400009'
+
+
+delete from tbl_assignment_submit
+where assignment_submit_seq = '33'
+
+commit;
+
+
+to_char(attended_date, 'yyyy-mm-dd hh24:mi:ss')
+
+select fk_student_id, fk_lecture_seq, to_char(attended_date, 'yyyy-mm-dd hh24:mi:ss')
+from tbl_attendance
+
+
+update tbl_attendance set ISATTENDED = '1', attended_date = sysdate
+where fk_student_id = '202400009' and fk_lecture_seq = '14'
+
+
+select *
+from tbl_student
+
+
+
+
+
+
+
 
 
 

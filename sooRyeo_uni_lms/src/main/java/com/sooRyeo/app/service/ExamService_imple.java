@@ -1,10 +1,10 @@
 package com.sooRyeo.app.service;
 
-import com.sooRyeo.app.domain.Exam;
-import com.sooRyeo.app.domain.ExamResult;
-import com.sooRyeo.app.domain.Pager;
+import com.sooRyeo.app.domain.*;
 import com.sooRyeo.app.dto.ExamDTO;
+import com.sooRyeo.app.model.CourseDao;
 import com.sooRyeo.app.model.ScheduleDao;
+import com.sooRyeo.app.model.StudentDao;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
 import com.sooRyeo.app.mongo.entity.LoginLog;
 import com.sooRyeo.app.mongo.entity.MemberType;
@@ -14,8 +14,6 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import com.sooRyeo.app.domain.Schedule;
-import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
@@ -59,6 +57,12 @@ public class ExamService_imple implements ExamService {
     private ExamAnswerRepository examAnswerRepository;
 
     @Autowired
+    private StudentDao studentDao;
+
+    @Autowired
+    private CourseDao courseDao;
+
+    @Autowired
     private StudentExamAnswerRepository answerRepository;
     
 
@@ -89,7 +93,6 @@ public class ExamService_imple implements ExamService {
     }
 
 
-
     @Override
     public ResponseEntity<String>  getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 
@@ -105,7 +108,27 @@ public class ExamService_imple implements ExamService {
             return ResponseEntity.badRequest().body("아직 시험이 종료되지 않았습니다");
         }
 
-        ExamResult examResult = new ExamResult(answerRepository.findAllByExamAnswersId(examSchedule.getAnswer_mongo_id()));
+        ExamAnswer examAnswer = examAnswerRepository.findById(examSchedule.getAnswer_mongo_id()).orElse(null);
+        if(examAnswer == null) {
+            return ResponseEntity.badRequest().body("존재하지 않은 시험입니다");
+        }
+
+
+        List<RegisteredCourse> registeredCourseList = courseDao.courseRegisterationList(examSchedule.getFk_course_seq());
+
+        List<StudentAnswer> studentAnswers = new ArrayList<>();
+        for(RegisteredCourse registeredCourse : registeredCourseList) {
+            Student student = studentDao.getStudentById(registeredCourse.getFk_student_id());
+            StudentAnswer studentAnswer = answerRepository.findByExamAnswersIdAndStudentId(examSchedule.getAnswer_mongo_id(), registeredCourse.getFk_student_id())
+                    .orElseGet(() -> {
+                        StudentAnswer empty = makeEmptyStudentAnswer(student, examAnswer, examSchedule);
+                        return answerRepository.save(empty);
+                    });
+
+            studentAnswers.add(studentAnswer);
+        }
+
+        ExamResult examResult = new ExamResult(studentAnswers);
 
         ExamResultDto examResultDto = new ExamResultDto();
 
@@ -146,10 +169,27 @@ public class ExamService_imple implements ExamService {
 	@Override
 	public int insert_exam_schedule(String test_type, String test_start_time, String test_end_time, int question_count, String answer_id, String course_seq, int total_score, ExamDTO examdto) {
 
-		int n =scheduleDao.insert_tbl_schedule(test_type, test_start_time, test_end_time, question_count, answer_id, course_seq, total_score, examdto);
-		
-		return n;
+        return scheduleDao.insert_tbl_schedule(test_type, test_start_time, test_end_time, question_count, answer_id, course_seq, total_score, examdto);
 	}
+
+    private StudentAnswer makeEmptyStudentAnswer(Student student, ExamAnswer examAnswer, Exam examSchedule) {
+        List<SubmitAnswer> submitAnswers = new ArrayList<>();
+        for(int i=0; i<examSchedule.getQuestion_count(); i++) {
+            submitAnswers.add(new SubmitAnswer(i + 1, " ", examAnswer.getQuestionScore(i+1)));
+        }
+
+        return new StudentAnswer(
+                student.getStudent_id(),
+                student.getName(),
+                examSchedule.getAnswer_mongo_id(),
+                submitAnswers,
+                0,
+                examAnswer.getQuestionScoreSum(),
+                0,
+                examSchedule.getQuestion_count(),
+                examSchedule.getFk_course_seq()
+        );
+    }
     
     
 
@@ -175,10 +215,11 @@ public class ExamService_imple implements ExamService {
             return ResponseEntity.badRequest().body("존재하지 않은 시험입니다");
         }
 
-        StudentAnswer studentAnswer = answerRepository.findByExamAnswersIdAndStudentId(examSchedule.getAnswer_mongo_id(), student.getStudent_id()).orElse(null);
-        if(studentAnswer == null) {
-            return ResponseEntity.badRequest().body("응시하지 않은 시험입니다");
-        }
+        StudentAnswer studentAnswer = answerRepository.findByExamAnswersIdAndStudentId(examSchedule.getAnswer_mongo_id(), student.getStudent_id())
+                .orElseGet(() -> {
+                    StudentAnswer emptyStudentAnswer = makeEmptyStudentAnswer(student, examAnswer, examSchedule);
+                    return answerRepository.save(emptyStudentAnswer);
+                });
 
         ScoreDto scoreDto = new ScoreDto();
         scoreDto.setScore(studentAnswer.getScore());

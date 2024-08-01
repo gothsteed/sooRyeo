@@ -99,8 +99,8 @@
           <option value="1">고정글</option>
       </select>
        <form name="addFrm" enctype="multipart/form-data">
-        <input type="text" id="fk_course_seq" name="fk_course_seq" value="${requestScope.fk_course_seq}"/>
-        <input type="text" id="Listtype" name="Listtype"/>
+        <input type="hidden" id="fk_course_seq" name="fk_course_seq" value="${requestScope.fk_course_seq}"/>
+        <input type="hidden" id="Listtype" name="Listtype"/>
         <table style="width: 1024px" class="table table-bordered">
          <tr>
             <th style="width: 15%; background-color: #DDDDDD;">제목</th>

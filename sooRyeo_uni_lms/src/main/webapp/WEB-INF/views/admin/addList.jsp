@@ -64,6 +64,17 @@
     	 }
     	 
     	 // 글내용 유효성 검사(스마트에디터를 사용할 경우)
+    	 let title_val = $("input[name='title']").val().trim(); <%-- name 값은 컬럼명과 같아야 한다. --%>
+    	 // <p>&nbsp;&nbsp;&nbsp;</p> 이라고 나온다.
+    	 
+    	 title_val = title_val.replace(/&nbsp;/gi, "");   // 공백(&nbsp;)을 "" 으로 변환한다. ==> 정규표현식
+
+    	 if(title_val.trim().length == 0){
+    		 alert("글제목은 필수 항목입니다.");
+    		 return; // 종료
+    	 }
+    	 
+    	 // 글내용 유효성 검사(스마트에디터를 사용할 경우)
     	 let content_val = $("textarea[name='content']").val().trim(); <%-- name 값은 컬럼명과 같아야 한다. --%>
     	 // <p>&nbsp;&nbsp;&nbsp;</p> 이라고 나온다.
     	 
@@ -102,20 +113,20 @@
        <input type="hidden" id="Listtype" name="Listtype"/>
         <table style="width: 1024px" class="table table-bordered">
          <tr>
-            <th style="width: 15%; background-color: #DDDDDD;">제목</th>
+            <th style="width: 15%; background-color: #d1e0e0;">제목</th>
             <td>
                 <input type="text" name="title" size="100" maxlength="200" />
             </td>
          </tr>
          <tr>
-            <th style="width: 15%; background-color: #DDDDDD;">내용</th> 
+            <th style="width: 15%; background-color: #d1e0e0;">내용</th> 
             <td>
                 <textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
             </td>
          </tr>
           <%-- === #170. 파일첨부 타입 추가하기 --%>
          <tr>
-            <th style="width: 15%; background-color: #DDDDDD;">파일첨부</th>  
+            <th style="width: 15%; background-color: #d1e0e0;">파일첨부</th>  
             <td>
                 <input type="file" name="attach" /> <!-- name이 attach이기에 제출되면 boardvo에 set 되어진다 -->
             </td>
