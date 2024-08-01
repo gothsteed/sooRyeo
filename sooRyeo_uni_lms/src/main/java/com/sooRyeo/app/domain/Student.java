@@ -2,6 +2,7 @@ package com.sooRyeo.app.domain;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 
@@ -30,13 +31,14 @@ public class Student {
     private Integer fk_department_seq;
     private String department_name;
     private String img_name;
-    private int finish_date;
+    private Date finish_date;
 
     
-    public int getFinish_date() {
+
+	public Date getFinish_date() {
 		return finish_date;
 	}
-
+	
 	private String birthday; 		// 생년월일
 
 	private Department department;
