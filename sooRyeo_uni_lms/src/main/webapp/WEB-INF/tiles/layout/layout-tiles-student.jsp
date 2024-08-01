@@ -285,6 +285,12 @@ $(document).ready(function(){
 		location.href = `<%=ctxPath%>\${url}`;
 		
 	});
+
+
+
+
+
+
 });
 </script>
     

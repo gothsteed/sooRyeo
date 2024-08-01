@@ -14,4 +14,8 @@ public interface ChatService {
     ResponseEntity<String> deleteChatRoom(HttpServletRequest request, HttpServletResponse response);
 
     ModelAndView getChatPage(HttpServletRequest request, ModelAndView mav);
+
+    ResponseEntity<String> getStudentUnreadMessageCount(HttpServletRequest request, HttpServletResponse response);
+
+    ResponseEntity<String> getProfessorUnreadMessageCount(HttpServletRequest request, HttpServletResponse response);
 }
