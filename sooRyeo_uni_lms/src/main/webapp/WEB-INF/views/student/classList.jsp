@@ -162,8 +162,8 @@ function selectCourse(year, semester){
 		success:function(json){
 			console.log(JSON.stringify(json));
 			
-		
-			
+	
+	           
 	
 		},
 		error: function(request, status, error){
