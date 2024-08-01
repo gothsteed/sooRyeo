@@ -917,8 +917,21 @@ public class StudentService_imple implements StudentService {
 	} // end of public List<Map<String, Object>> Acquisition_status_JSON
 
 
-	
 
+
+	// 학기 별 개강과목JSON
+	@Override
+	public StudentTimeTable classListJSON(String semester, int student_id) {
+		
+		StudentTimeTable classListJSON = dao.classListJSON(semester, student_id);
+		
+		return classListJSON;
+		
+	} // end of public StudentTimeTable classListJSON
+
+
+	
+	
 	
 	
 	

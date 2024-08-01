@@ -105,6 +105,11 @@ label, button {
   align-items: center;
 }
 
+.border:hover {
+	background-color: #e9ecef; /* Hover state for table rows */
+	cursor: pointer; /* Indicate row is clickable */
+}
+
 </style>
 
 
@@ -128,18 +133,12 @@ $(document).ready(function(){
 	}); // end of $("button#submitButton").click(function(e) 
 
 	
-	$(document).on("click", "div.arrow", function(e){ // 화살표 클릭시 상세로 이동
+	$("div.border").click(function(e){ // 클릭시 수업 상세로 이동
 		// alert($(this).find("input[name='course_seq']").val());
 		location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq="+$(this).parent().parent().find("input[name='course_seq']").val(); 
 	});		
 			
-<%--	
-	$("div.arrow").click(function(e){
-		
-		
-		
-	}); // end of $("div.border").click(function(e){})
---%>	
+
 			
 }); // end of $(document).ready(function(){})
 
@@ -227,8 +226,8 @@ function selectCourse(year, semester){
 <div style="display: flex; width : 100%;" class="row">
 
 
-	<div style="margin-top: 5%; width : 80%; border: solid 0px green;" id="showCourse">
-	<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>내 수업 목록</h3>
+	<div style="margin-top: 2%; width : 80%; border: solid 0px green;" id="showCourse">
+	<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>수업 목록</h3>
 		<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
 			<div id="select">
 			<div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
@@ -275,10 +274,10 @@ function selectCourse(year, semester){
 	
 	
 	<div style="width: 20%; height: 200px; border-left:solid 2px #DEE2E6; height: 800px;">
-		<div class="border border1">· 공지사항</div>
+<!-- 		<div class="border border1">· 공지사항</div>
 		<div class="border border2">등록된 게시글이 없습니다.</div>
 		<div class="border border1">· 예정된 할일(03-03 ~ 03-24)</div>
-		<div class="border border2">계획된 일정이 없습니다.</div>
+		<div class="border border2">계획된 일정이 없습니다.</div> -->
 		<br>
 		<div style="align-items: center;" class="form-group ml-1">
 		  <label for="year" style="margin-right: 10px;"><span>년도 선택</span></label>

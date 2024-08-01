@@ -655,10 +655,68 @@
 	
 	
 	
+	<!-- 학기 별 개강과목JSON -->
+	<resultMap id="classListMap" type="com.sooRyeo.app.domain.Course">
+	    <id property="course_seq" column="course_seq" />
+	    <result property="semester_date" column="semester_date" />
+	    <association property="professor" javaType="com.sooRyeo.app.domain.Professor">
+	        <id property="prof_id" column="prof_id" />            
+	        <result property="name" column="professorName" />
+	    </association>
+	    <association property="curriculum" javaType="com.sooRyeo.app.domain.Curriculum">
+	        <id property="curriculum_seq" column="curriculum_seq" />
+	        <result property="fk_department_seq" column="department_seq" />
+	        <result property="name" column="className" />
+	        <result property="required" column="required" />
+	    </association>
+	</resultMap>
 	
+	<select id="classListJSON" parameterType="HashMap" resultMap="classListMap">
+	    WITH
+	    P AS (
+	        SELECT name, prof_id 
+	        FROM tbl_professor
+	    ),
+	    C AS (
+	        SELECT curriculum_seq, name, fk_department_seq, required
+	        FROM tbl_curriculum
+	    ),
+	    V AS (
+	        SELECT course_seq, fk_curriculum_seq, fk_professor_id, fk_student_id, 
+	        semester_date
+	        FROM tbl_course JOIN tbl_registered_course
+	        ON course_seq = fk_course_seq
+	    )
+	    
+	    SELECT p.prof_id,
+	           p.name AS professorName,
+	           c.curriculum_seq,
+	           c.name AS className,
+	           c.fk_department_seq AS department_seq,
+	           c.required AS required,
+	           v.course_seq AS course_seq,
+	           v.semester_date as semester_date
+	    FROM P 
+	    JOIN V ON V.fk_professor_id = P.prof_id
+	    JOIN C ON V.fk_curriculum_seq = C.curriculum_seq
+	    WHERE V.fk_student_id = #{student_id} and to_char(semester_date, 'yy-MM') = #{semester_date}
+	    <choose>
+	        <when test="sysdate >= '24-07'">
+	            AND '24-03' &lt; to_char(semester_date, 'yy-MM') 
+	            AND to_char(semester_date, 'yy-MM') &lt;= #{sysdate}
+	        </when>
+	        <otherwise>
+	            AND '24-03' &lt;= to_char(semester_date, 'yy-MM') 
+	            AND to_char(semester_date, 'yy-MM') &lt; '24-07'
+	        </otherwise>
+	    </choose>
+	</select>
 	
-	
-	
+	<select id="classListTimeJSON" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
+		select time_seq, day_of_week, fk_course_seq, start_period, end_period
+		from tbl_time
+		where fk_course_seq = ${course_seq}
+	</select>
 	
 	
 	

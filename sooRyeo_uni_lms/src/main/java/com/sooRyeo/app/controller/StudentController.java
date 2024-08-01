@@ -1113,6 +1113,61 @@ public class StudentController {
 	}
 
 	
+	// 수업 - 년도, 학기 조회해서 보여주기
+	@ResponseBody
+	@PostMapping("/student/classListJSON.lms")
+	public String classListJSON(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student)session.getAttribute("loginuser");
+		
+		int student_id = loginuser.getStudent_id();
+		
+		String semester = request.getParameter("semester");
+		
+		System.out.println("확인용 semester : " + semester);
+		
+		
+		StudentTimeTable timeTable = studentservice.classListJSON(semester, student_id);
+		
+		// 해당학기 수업 리스트
+		List<Course> classListJSON = timeTable.getCourseList();
+	
+
+		JSONArray jsonArr = new JSONArray();
+        
+        for(Course course : classListJSON) {
+           
+           JSONObject jsonObj = new JSONObject();
+       	
+			/*
+			  c.required AS required, v.course_seq
+			 * AS course_seq, v.semester_date as semester_date
+			 */
+           jsonObj.put("prof_id", course.getProfessor().getProf_id());  
+           jsonObj.put("professorName", course.getProfessor().getName());
+           jsonObj.put("curriculum_seq", course.getCurriculum_seq());
+           jsonObj.put("className", course.getCurriculum().getName());
+           jsonObj.put("department_seq", course.getCurriculum().getFk_department_seq());
+           jsonObj.put("required", course.getCurriculum().getRequired());    
+           
+           
+           jsonArr.put(jsonObj);
+		
+        }
+		
+
+		return "";
+		
+	} // end of public String classListJSON
+	
+
+	
+	
+	
+	
+	
+	
 	
 	
 }
