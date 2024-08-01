@@ -124,11 +124,6 @@ $(document).ready(function(){
 
     	var endHour = String((startHour + 2) % 24).padStart(2, '0');
     	var endMinute = startMinute;
-    	
-     	console.log("startHour" ,startHour);
-     	console.log("endHour" ,endHour);
-     	console.log("startMinute" ,startMinute);
-     
 
      	// 조회기간 시작일자가 종료일자 보다 크면 경고
         if (Number(startDate) - Number(sysdate) < 0) {
@@ -174,9 +169,6 @@ $(document).ready(function(){
         var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
         var hour = String(parseInt($("select#startHour").val())).padStart(2, '0');
         var edate = startDate+endHour+$("select#startMinute").val()+"00";
-
-        console.log("sdate", sdate);
-        console.log("edate", edate);
 
         const prof_id = $("input[name='prof_id']").val();
 
