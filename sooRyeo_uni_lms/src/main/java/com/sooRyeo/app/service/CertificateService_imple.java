@@ -13,12 +13,16 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Tab;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.sooRyeo.app.domain.Student;
 import com.itextpdf.kernel.font.PdfFont;
@@ -86,6 +90,8 @@ public class CertificateService_imple implements CertificateService {
 		ServletContext context = request.getServletContext();
         String imgPath = context.getRealPath("/resources/images/mainlogo.png");
         
+        String signPath = context.getRealPath("/resources/images/sooRyeo_signature.png");
+        
         // 오늘 날짜 불러오기
         Date now = new Date(); // 현재시각
         SimpleDateFormat sdmt = new SimpleDateFormat("yyyyMMdd");
@@ -122,12 +128,22 @@ public class CertificateService_imple implements CertificateService {
         ImageData data = ImageDataFactory.create(imgPath);
         Image image = new Image(data);
         
+        ImageData signdata = ImageDataFactory.create(signPath);
+        Image signimage = new Image(signdata);
+        
         // 이미지 크기 조정 (페이지 크기에 맞게)
         float pageWidth = 500;
         // pdf.getDefaultPageSize().getWidth();
         float pageHeight = 500;
         // pdf.getDefaultPageSize().getHeight();
         image.scaleToFit(pageWidth, pageHeight);
+        
+        // 이미지 크기 조정 (페이지 크기에 맞게)
+        float signWidth = 100;
+        // pdf.getDefaultPageSize().getWidth();
+        float signHeight = 100;
+        // pdf.getDefaultPageSize().getHeight();
+        signimage.scaleToFit(signWidth, signHeight);
 
         // 배경 이미지 이벤트 핸들러 생성 및 등록
         BackgroundImageEventHandler handler = new BackgroundImageEventHandler(image);
@@ -239,7 +255,7 @@ public class CertificateService_imple implements CertificateService {
 	            	
 	            	gradeTable.addCell(new Cell().add(new Paragraph(str_coursenumber).setFont(font)));
 	                gradeTable.addCell(new Cell().add(new Paragraph(coursename).setFont(font)));
-	                gradeTable.addCell(new Cell().add(new Paragraph(str_mark).setFont(font)));	            	
+	                gradeTable.addCell(new Cell().add(new Paragraph(str_mark).setFont(font).setTextAlignment(TextAlignment.CENTER)));	            	
 	            	
 	                total_mark += mark;
 	                
@@ -286,19 +302,43 @@ public class CertificateService_imple implements CertificateService {
                 .add(dateParagraph)
                 .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 150, 1000); // 페이지 하단 150 포인트 위
         
+
+		/*
+		 * // 텍스트와 이미지를 포함하는 테이블 생성 Table signatureTable = new Table(new float[]{1, 1});
+		 * signatureTable.setWidth(UnitValue.createPercentValue(100));
+		 * signatureTable.setTextAlignment(TextAlignment.CENTER);
+		 * 
+		 * signatureTable.addCell(new Cell().add(new
+		 * Paragraph("수 려 대 학 교  총 장").setFont(font).setFontSize(24).setBold().
+		 * setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER));
+		 * signatureTable.addCell(new
+		 * Cell().add(signimage).setBorder(Border.NO_BORDER));
+		 * 
+		 * Div signatureDiv = new Div() .add(signatureTable)
+		 * .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 500) / 2, 50, 500);
+		 * // 페이지 하단 50 포인트 위
+		 */
+        
+        // 서명 텍스트는 위치를 변경하지 않음
         Paragraph signatureParagraph = new Paragraph("수 려 대 학 교  총 장")
                 .setFont(font)
                 .setFontSize(24)
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER);
         
-        Div signatureDiv = new Div()
-                .add(signatureParagraph)
-                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 50, 1000); // 페이지 하단 50 포인트 위
+        Div signatureDiv = new Div() .add(signatureParagraph)
+       		 	.setFixedPosition((pdf.getDefaultPageSize().getWidth() - 500) / 2, 100, 500);
+        		
+
+        // 이미지를 특정 위치에 배치하기 위해 div 사용
+        Div imageDiv = new Div()
+                .add(signimage)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() / 2) + 70, 75, signWidth); // 여기서 70은 y좌표
         
         document.add(endDiv);
         document.add(dateDiv);
         document.add(signatureDiv);
+        document.add(imageDiv);
 
         document.close();
 
@@ -323,7 +363,9 @@ public class CertificateService_imple implements CertificateService {
 		
        	ServletContext context = request.getServletContext();
         String imgPath = context.getRealPath("/resources/images/mainlogo.png");
-       
+        
+        String signPath = context.getRealPath("/resources/images/sooRyeo_signature.png");
+        
         // 오늘 날짜 불러오기
         Date now = new Date(); // 현재시각
         SimpleDateFormat sdmt = new SimpleDateFormat("yyyyMMdd");
@@ -358,8 +400,23 @@ public class CertificateService_imple implements CertificateService {
         ImageData data = ImageDataFactory.create(imgPath);
         Image image = new Image(data);
         
-        // 이미지 크기 조정
-        image.scaleToFit(500, 500);
+        ImageData signdata = ImageDataFactory.create(signPath);
+        Image signimage = new Image(signdata);
+        
+        // 이미지 크기 조정 (페이지 크기에 맞게)
+        float pageWidth = 500;
+        // pdf.getDefaultPageSize().getWidth();
+        float pageHeight = 500;
+        // pdf.getDefaultPageSize().getHeight();
+        image.scaleToFit(pageWidth, pageHeight);
+        
+        // 이미지 크기 조정 (페이지 크기에 맞게)
+        float signWidth = 100;
+        // pdf.getDefaultPageSize().getWidth();
+        float signHeight = 100;
+        // pdf.getDefaultPageSize().getHeight();
+        signimage.scaleToFit(signWidth, signHeight);
+ 
         
         // 배경 이미지 이벤트 핸들러 생성 및 등록
         BackgroundImageEventHandler handler = new BackgroundImageEventHandler(image);
@@ -429,19 +486,26 @@ public class CertificateService_imple implements CertificateService {
                 .add(dateParagraph)
                 .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 150, 1000); // 페이지 하단 150 포인트 위
         
+        // 서명 텍스트는 위치를 변경하지 않음
         Paragraph signatureParagraph = new Paragraph("수 려 대 학 교  총 장")
                 .setFont(font)
                 .setFontSize(24)
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER);
         
-        Div signatureDiv = new Div()
-                .add(signatureParagraph)
-                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 50, 1000); // 페이지 하단 50 포인트 위
+        Div signatureDiv = new Div() .add(signatureParagraph)
+       		 	.setFixedPosition((pdf.getDefaultPageSize().getWidth() - 500) / 2, 100, 500);
+        		
+
+        // 이미지를 특정 위치에 배치하기 위해 div 사용
+        Div imageDiv = new Div()
+                .add(signimage)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() / 2) + 70, 75, signWidth); // 여기서 70은 y좌표
         
         document.add(endDiv);
         document.add(dateDiv);
         document.add(signatureDiv);
+        document.add(imageDiv);
         
         document.close();
 
@@ -482,6 +546,8 @@ public class CertificateService_imple implements CertificateService {
        	ServletContext context = request.getServletContext();
         String imgPath = context.getRealPath("/resources/images/mainlogo.png");
         
+        String signPath = context.getRealPath("/resources/images/sooRyeo_signature.png");
+        
         // 오늘 날짜 불러오기
         Date now = new Date(); // 현재시각
         SimpleDateFormat sdmt = new SimpleDateFormat("yyyyMMdd");
@@ -514,6 +580,23 @@ public class CertificateService_imple implements CertificateService {
         // 이미지 로드
         ImageData data = ImageDataFactory.create(imgPath);
         Image image = new Image(data);
+        
+        ImageData signdata = ImageDataFactory.create(signPath);
+        Image signimage = new Image(signdata);
+        
+        // 이미지 크기 조정 (페이지 크기에 맞게)
+        float pageWidth = 500;
+        // pdf.getDefaultPageSize().getWidth();
+        float pageHeight = 500;
+        // pdf.getDefaultPageSize().getHeight();
+        image.scaleToFit(pageWidth, pageHeight);
+        
+        // 이미지 크기 조정 (페이지 크기에 맞게)
+        float signWidth = 100;
+        // pdf.getDefaultPageSize().getWidth();
+        float signHeight = 100;
+        // pdf.getDefaultPageSize().getHeight();
+        signimage.scaleToFit(signWidth, signHeight);
         
         // 이미지 크기 조정
         image.scaleToFit(500, 500);
@@ -586,19 +669,26 @@ public class CertificateService_imple implements CertificateService {
                 .add(dateParagraph)
                 .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 150, 1000); // 페이지 하단 150 포인트 위
         
+        // 서명 텍스트는 위치를 변경하지 않음
         Paragraph signatureParagraph = new Paragraph("수 려 대 학 교  총 장")
                 .setFont(font)
                 .setFontSize(24)
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER);
         
-        Div signatureDiv = new Div()
-                .add(signatureParagraph)
-                .setFixedPosition((pdf.getDefaultPageSize().getWidth() - 1000) / 2, 50, 1000); // 페이지 하단 50 포인트 위
+        Div signatureDiv = new Div() .add(signatureParagraph)
+       		 	.setFixedPosition((pdf.getDefaultPageSize().getWidth() - 500) / 2, 100, 500);
+        		
+
+        // 이미지를 특정 위치에 배치하기 위해 div 사용
+        Div imageDiv = new Div()
+                .add(signimage)
+                .setFixedPosition((pdf.getDefaultPageSize().getWidth() / 2) + 70, 75, signWidth); // 여기서 70은 y좌표
         
         document.add(endDiv);
         document.add(dateDiv);
         document.add(signatureDiv);
+        document.add(imageDiv);
         
         document.close();
 
