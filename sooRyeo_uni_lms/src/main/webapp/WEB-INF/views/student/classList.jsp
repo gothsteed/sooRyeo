@@ -175,19 +175,19 @@ function selectCourse(year, semester){
 	                             <div style="display: flex;">
 	                                 <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>`;
 
-	             if (item.fk_department_seq != null && item.required == 1) {
+	             if (item.department_seq != null && item.required == 1) {
 	                 v_html += `<div class="majorO rounded">전공필수</div>`;
-	             } else if (item.fk_department_seq != null && item.required == 0) {
+	             } else if (item.department_seq != null && item.required == 0) {
 	                 v_html += `<div class="majorX rounded">전공선택</div>`;
-	             } else if (item.fk_department_seq == null && item.required == 1) {
+	             } else if (item.department_seq == null && item.required == 1) {
 	                 v_html += `<div class="no-majorO rounded">교양필수</div>`;
 	             } else {
 	                 v_html += `<div class="no-majorX rounded">교양선택</div>`;
 	             }
 
 	             v_html += `<div style="width: 80%; margin-left: 3%; margin-top: 1%; margin-bottom: 1%;">
-	                             <div style="font-size: 20pt; color: black;">\${item.name}&nbsp;&nbsp;<span style="font-size: 16pt;">\${item.credit}학점</span></div>
-	                             <div style="font-size: 12pt; color: black;">\${item.prof_name}&nbsp;&nbsp;</div>
+	                             <div style="font-size: 20pt; color: black;">\${item.className}</div>
+	                             <div style="font-size: 12pt; color: black;">\${item.professorName}</div>
 	                         </div>
 	                         <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
 	                         </div>
@@ -236,7 +236,7 @@ function selectCourse(year, semester){
 		  <button id="submitButton" class="btn btn-success" style="width:8%; height:40px;"><span>확인</span></button>
 		</div>
 		
-		
+		<div style="margin-top: 2%; width : 80%; border: solid 0px green;" id="showCourse">
 		<c:if test="${empty requestScope.mapList}">
 			<span style="margin-left:10%; font-weight:bold; color:red; font-size:18pt;">수강중인 수업이 없습니다.</span>
 		</c:if>
@@ -270,7 +270,7 @@ function selectCourse(year, semester){
 			</c:forEach>
 		
 		</c:if>
-		
+		</div>
 	</div>
 </div>
 	

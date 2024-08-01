@@ -699,7 +699,7 @@
 	    FROM P 
 	    JOIN V ON V.fk_professor_id = P.prof_id
 	    JOIN C ON V.fk_curriculum_seq = C.curriculum_seq
-	    WHERE V.fk_student_id = #{student_id} and to_char(semester_date, 'yy-MM') = #{semester_date}
+	    WHERE V.fk_student_id = #{student_id} and to_char(V.semester_date, 'yy-MM') = #{semester_date}
 	</select>
 	
 	<select id="classListTimeJSON" parameterType="int" resultType="com.sooRyeo.app.domain.Time">
