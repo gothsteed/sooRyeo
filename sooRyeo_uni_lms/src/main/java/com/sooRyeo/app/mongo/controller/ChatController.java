@@ -3,16 +3,12 @@ package com.sooRyeo.app.mongo.controller;
 
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Student;
-import com.sooRyeo.app.jsonBuilder.JsonBuilder;
-import com.sooRyeo.app.mongo.repository.ChatRoomRepository;
 import com.sooRyeo.app.mongo.service.ChatService;
-import org.apache.poi.ss.formula.functions.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,12 +21,6 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
-
-    @Autowired
-    private ChatRoomRepository chatRoomRepository;
-
-    @Autowired
-    private JsonBuilder jsonBuilder;
 
     @PostMapping(value = "/chat/start.lms", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> startChat(HttpServletRequest request, HttpServletResponse response, @RequestParam Integer schedule_seq) {
@@ -57,5 +47,17 @@ public class ChatController {
 
         return chatService.getChatPage(request, mav);
     }
+
+    @GetMapping(value = "/student/chatAlertREST.lms")
+    public ResponseEntity<String> getStudentUnreadMessageCount(HttpServletRequest request, HttpServletResponse response) {
+        return chatService.getStudentUnreadMessageCount(request, response);
+    }
+
+    @GetMapping(value = "/professor/chatAlertREST.lms")
+    public ResponseEntity<String> getProfessorUnreadMessageCount(HttpServletRequest request, HttpServletResponse response) {
+        return chatService.getProfessorUnreadMessageCount(request, response);
+    }
+
+
 
 }

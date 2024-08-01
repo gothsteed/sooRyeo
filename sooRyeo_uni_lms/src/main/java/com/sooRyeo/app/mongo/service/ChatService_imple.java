@@ -11,6 +11,8 @@ import com.sooRyeo.app.mongo.entity.ChatRoom;
 import com.sooRyeo.app.mongo.entity.MemberType;
 import com.sooRyeo.app.mongo.entity.Message;
 import com.sooRyeo.app.mongo.repository.ChatRoomRepository;
+import com.sooRyeo.app.mongo.repository.MessageAggregationRepository;
+import com.sooRyeo.app.mongo.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChatService_imple implements ChatService {
@@ -40,6 +43,9 @@ public class ChatService_imple implements ChatService {
 
     @Autowired
     private JsonBuilder jsonBuilder;
+
+    @Autowired
+    private MessageAggregationRepository messageAggregationRepository;
 
     @Override
     @Transactional
@@ -111,5 +117,29 @@ public class ChatService_imple implements ChatService {
         mav.setViewName("chatting");
 
         return mav;
+    }
+
+    @Override
+    public ResponseEntity<String> getStudentUnreadMessageCount(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        Student student = (Student) session.getAttribute("loginuser");
+
+        //String memberKey = "STUDENT" + student.getStudent_id();
+        //long totalCount = messageRepository.countTotalUnreadMessages(memberKey);
+
+        Map<String, Map<String, Object>>  unreadCountPerRoom = messageAggregationRepository.getUnreadCountPerRoom(MemberType.STUDENT, student.getStudent_id());
+        //String json = jsonBuilder.toJson(totalCount);
+        return ResponseEntity.ok().body(jsonBuilder.toJson(unreadCountPerRoom));
+    }
+
+    @Override
+    public ResponseEntity<String> getProfessorUnreadMessageCount(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        Professor professor = (Professor) session.getAttribute("loginuser");
+
+        //String memberKey = "PROFESSOR" + professor.getProf_id();
+        Map<String, Map<String, Object>> unreadCountPerRoom = messageAggregationRepository.getUnreadCountPerRoom(MemberType.PROFESSOR, professor.getProf_id());
+        //String json = jsonBuilder.toJson(totalCount);
+        return ResponseEntity.ok().body(jsonBuilder.toJson(unreadCountPerRoom));
     }
 }

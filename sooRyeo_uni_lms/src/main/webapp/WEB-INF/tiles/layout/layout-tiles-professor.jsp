@@ -216,7 +216,63 @@
 
 $(document).ready(function(){
 	
-	$("div#displayList").hide();
+	$("div#displayList").hide()
+
+    fetch('<%=ctxPath%>/professor/chatAlertREST.lms', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            console.log(response);
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data received:', data);
+            // Process and display the data as needed
+            let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value, 0);
+            //let totalUnreadCount =45;
+            console.log(totalUnreadCount)
+
+            document.getElementById('message').innerHTML += `
+
+                <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+                    \${totalUnreadCount}
+                </div>
+
+                `;
+
+
+            const mailDropdown = document.getElementById('mailDropdown');
+            mailDropdown.innerHTML = ''; // Clear any existing content
+
+            Object.entries(data).forEach(([key, value]) => {
+                const item = document.createElement('div');
+                item.textContent = `ID: \${key}, Value: \${value}`;
+                item.style.padding = '10px';
+                item.style.borderBottom = '1px solid #ccc';
+                mailDropdown.appendChild(item);
+            });
+
+            document.getElementById('message').addEventListener('click', function() {
+                const dropdown = document.getElementById('mailDropdown');
+                if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                    dropdown.style.display = 'block';
+                } else {
+                    dropdown.style.display = 'none';
+                }
+            });
+
+
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
 	
 	$("input[name='searchWord']").keyup(function(){
 		
@@ -305,6 +361,9 @@ $(document).ready(function(){
 		location.href = `<%=ctxPath%>\${url}`;
 		
 	});
+
+
+
 });
 </script>	
 	
@@ -365,7 +424,10 @@ $(document).ready(function(){
 	            <div id="displayList"></div>
             </div>
             <div class="icons">
-                <span class="icon">📫</span>
+                <span id="message" class="icon" style="position: relative">
+                    📫
+                    <div class="dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></div>
+                </span>
                 <span class="icon">🔔</span>
                 <span class="icon">❔</span>
             </div>
