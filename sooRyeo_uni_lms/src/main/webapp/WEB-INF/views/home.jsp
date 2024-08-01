@@ -86,21 +86,42 @@ body {
 
 
    /* -- CSS 로딩화면 구현 시작(bootstrap 에서 가져옴) 시작 -- */    
-   div.hidden {
-   /* border: 16px solid #f3f3f3; */
+   div.spinner {
+   
      border: 12px solid #f3f3f3;
      border-radius: 50%;
-   /* border-top: 16px solid #3498db; */
-      border-top: 12px dotted blue;
-      border-right: 12px dotted green;
-      border-bottom: 12px dotted red;
-      border-left: 12px dotted pink;
+     border : 12px dotted green;
       
-     width: 120px;
-     height: 120px;
+     width: 150px;
+     height: 150px;
      -webkit-animation: spin 2s linear infinite; /* Safari */
      animation: spin 2s linear infinite;
    }
+   
+   @-webkit-keyframes spin {
+     0% { -webkit-transform: rotate(0deg); }
+     100% { -webkit-transform: rotate(360deg); }
+   }
+   
+   @keyframes spin {
+     0% { transform: rotate(0deg); }
+     100% { transform: rotate(360deg); }
+   }
+   
+   
+   .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5); /* 흰색 배경 (투명도 포함) */
+    display: flex; /* 스피너를 중앙에 배치하기 위해 flex 사용 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    z-index: 9999; /* 다른 요소 위에 표시 */
+	}
+   /* -- CSS 로딩화면 구현 시작(bootstrap 에서 가져옴) 끝 -- */
    
 </style>	
 
@@ -108,7 +129,7 @@ body {
 
 $(document).ready(function(){
 	
-	$("div#spinner").hide();
+	$("div.overlay").hide();
 	
 	$("input#password").keyup(function(key){
 	    if(key.keyCode == 13) {
@@ -124,7 +145,7 @@ $(document).ready(function(){
 });
 function handleLogin() {
 	
-	$("div#spinner").show();
+	$("div.overlay").show();
     
 	const memberType = document.querySelector('input[name="memberType"]:checked').value;
     const form = $('#loginForm');
@@ -145,20 +166,27 @@ function handleLogin() {
         dataType:"json",
         success: function(response) {
             // Handle success scenario
-            if(response.isSuccess) {
-            	$("div#spinner").hide();
-            	alert("성공");
-            	console.log(response.redirectUrl);
-            	window.location.href = response.redirectUrl; 
-            }
-            else {
-            	$("div#spinner").hide();
-            	alert("실패");
-            }
+        if (response.isSuccess) {
+        	$("div.overlay").hide(); // 스피너 숨기기
+
+            // 스피너가 숨겨진 후 잠시 대기한 후 알림 표시
+            setTimeout(function() {
+                alert("성공");
+                console.log(response.redirectUrl);
+                window.location.href = response.redirectUrl; 
+            }, 100); // 100ms 후에 알림 표시
+        } else {
+        	$("div.overlay").hide(); // 스피너 숨기기
+
+            // 스피너가 숨겨진 후 잠시 대기한 후 알림 표시
+            setTimeout(function() {
+                alert("실패");
+            }, 100); // 100ms 후에 알림 표시
+        }
         },
         error: function(xhr, status, error) {
             // Handle error scenario
-            $("div#spinner").hide();
+            $("div.overlay").hide();
             alert('Login failed: ' + error);
         }
     });
@@ -276,8 +304,8 @@ $("input#spinner").spinner( {
   
   
    <%-- CSS 로딩화면 구현한 것--%>
-   <div style="display: flex; position: absolute; top: 30%; left: 37%; border: solid 0px blue;">
-      <div id="spinner" class="hidden" style="margin: auto"></div>
+   <div class="overlay">
+      <div id="spinner" class="spinner" style="margin: auto"></div>
    </div>
    
 </body>
