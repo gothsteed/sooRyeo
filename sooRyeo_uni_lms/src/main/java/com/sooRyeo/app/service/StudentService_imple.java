@@ -30,6 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.sooRyeo.app.model.DepartmentDao;
 import com.sooRyeo.app.model.StudentDao;
+import com.sooRyeo.app.mongo.entity.AlertLecture;
+import com.sooRyeo.app.mongo.repository.AlertLectureRepository;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -67,7 +69,8 @@ public class StudentService_imple implements StudentService {
 	private DepartmentDao departmentDao;
 	
 	
-	
+    @Autowired
+    private AlertLectureRepository alertLectureRepository;
 
 	
 	// 내정보 보기
@@ -929,6 +932,37 @@ public class StudentService_imple implements StudentService {
 		
 	} // end of public StudentTimeTable classListJSON
 
+	@Override
+	public List<AlertLecture> getAlertLecture(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		Student loginuser = (Student) session.getAttribute("loginuser");
+		
+		List<AlertLecture> getAlert = alertLectureRepository.findAllByStudentId(loginuser.getStudent_id());
+		
+		if(getAlert.size() != 0) {
+			return getAlert;
+		}
+		else {
+			return null;
+		}
+		
+	}
+
+
+
+	@Override
+	public AlertLecture deleteAlertLecture(String id) {
+		
+		alertLectureRepository.deleteById(id);
+		
+		AlertLecture checkId = alertLectureRepository.findById(id).orElse(null);
+		
+		return checkId;
+	}
+
+
+	
 
 	
 	

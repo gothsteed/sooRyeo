@@ -17,7 +17,7 @@ public class AlertLecture {
     private String id;
     private Integer lectureId;
     private String lectureName;
-    private Integer StudentId;
+    private Integer studentId;
     private String ProfessorName;
 
 

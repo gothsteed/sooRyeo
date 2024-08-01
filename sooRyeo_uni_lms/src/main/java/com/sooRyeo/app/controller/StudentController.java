@@ -41,8 +41,10 @@ import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
 import com.sooRyeo.app.common.MyUtil;
+import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.Menu;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
@@ -51,6 +53,7 @@ import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.mongo.entity.AlertLecture;
 import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
 
@@ -1118,7 +1121,44 @@ public class StudentController {
 		
 		return "";
 	}
+	
+	@ResponseBody
+	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
+	public String alertLecture(HttpServletRequest request) {
+		
+		List<AlertLecture> alertLecture = studentservice.getAlertLecture(request); 
 
+		JSONArray jsonArr = new JSONArray(); // []
+		
+		if(alertLecture != null) {
+			for(AlertLecture alertLectureData : alertLecture) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				jsonObj.put("Lname", alertLectureData.getLectureName());
+				jsonObj.put("Pname", alertLectureData.getProfessorName());
+				jsonObj.put("LId", alertLectureData.getLectureId());
+				jsonObj.put("Id", alertLectureData.getId());
+				
+				jsonArr.put(jsonObj); // [{},{},{}]
+			}// end of for ----------------------------------
+		}
+		return jsonArr.toString(); 
+	}
+
+	
+	@ResponseBody
+	@GetMapping(value="/student/alertLectureDel.lms", produces="text/plain;charset=UTF-8")
+	public String alertLectureDel(HttpServletRequest request) {
+		
+		String id = (String)request.getParameter("id");
+		
+		AlertLecture alertLecture = studentservice.deleteAlertLecture(id);
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("alertLecture", alertLecture);
+				
+		return jsonObj.toString(); 
+	}
+	
 	
 	// 수업 - 년도, 학기 조회해서 보여주기
 	@ResponseBody
