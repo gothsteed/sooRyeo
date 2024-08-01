@@ -193,6 +193,7 @@
    			position: absolute; /* Position absolute to overlap the header */
 		    z-index: 10000; /* Higher than .header */
 		    overflow:auto;
+		    border-radius: 10px;
 		}
         
     </style>
@@ -216,7 +217,8 @@ $(document).ready(function(){
 		  success: function(response) {
 		    // 성공적으로 데이터를 받았을 때 처리할 코드
 			  if(response == ""){ // 데이터가 없을때
-			    $("span#bell").text("a");
+			    $("span#bell").text("X");
+			  
 			  }
 			  else{ // 데이터가 있을때 
 			    $("span#bell").text("🔔");
@@ -282,7 +284,7 @@ $(document).ready(function(){
 								console.log("~~~~~ 끝 ~~~~~");
 							*/
 							
-							const result = name.substring(0,idx) + "<span style='color:purple;'>"+name.substring(idx,idx + len)+"</span>" + name.substring(idx + len);
+							const result = name.substring(0,idx) + "<span style='color:black;'>"+name.substring(idx,idx + len)+"</span>" + name.substring(idx + len);
 							
 							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
@@ -316,12 +318,15 @@ $(document).ready(function(){
 		location.href = `<%=ctxPath%>\${url}`;
 		
 	});
-
-
-
-
-
-
+	
+	
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('alertLecture');
+        const messageDiv = document.getElementById('lectureAlertSpan');
+        if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
 });
 
 function alertLecture(){
@@ -344,7 +349,7 @@ function alertLecture(){
 					const lId = item.LId;
 					const id = item.Id;
 			  		
-					const result ="<span style='color:purple;'>"+ profName + "교수님의" + lecName +"수업이 추가되었습니다."+"</span>";
+					const result ="<span id='lectureAlertSpan' style='color:purple;'>"+ profName + "교수님의 " + lecName +"수업이 추가되었습니다."+"</span>";
 					
 					v_html += `<span style='cursor:pointer;' data-custom="\${lId}" data-role="\${id}" class='result2'>\${result}<br></span>`
 					
@@ -374,13 +379,13 @@ function alertLecture(){
 		      data: {id: id},
 			  success: function(response) {
 
-				  // alert(response); // object object
+				 alert(response.alertLecture); // undefined
 				  
-				if(response == null){
-					alert("오류발생");
+				if(response.alertLecture == null){
+					location.href = `<%=ctxPath%>/student/myLecture.lms?course_seq=\${url}`;
 				}
 				else{
-					location.href = `<%=ctxPath%>/student/myLecture.lms?course_seq=\${url}`;
+					alert("오류발생");
 				}
 			  },
 			  error: function(request, status, error){
@@ -388,6 +393,9 @@ function alertLecture(){
 			  }
 		});
 	});
+}
+function alertLecture1(){
+	$("div#alertLecture").hide();
 }
 </script>
     
@@ -468,10 +476,10 @@ function alertLecture(){
             <div>
 	            <div class="icons">
 	                <span class="icon">📫</span>
-	                <span class="icon" id="bell" onclick="alertLecture()"></span>
+	                <span class="icon" id="bell" onclick="alertLecture()" ></span>
 	                <span class="icon">❔</span>
 	            </div>
-	            <div style="border:solid 1px red" id="alertLecture">
+	            <div class="dropdown" id="alertLecture">
 	            </div>
             </div>
         </div>
