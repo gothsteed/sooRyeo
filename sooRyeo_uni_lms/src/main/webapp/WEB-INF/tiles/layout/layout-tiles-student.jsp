@@ -150,7 +150,6 @@
             border-radius: 20px;
             width: 100%;
             max-width: 500px;
-            
             position: relative;
         }
 
@@ -174,32 +173,32 @@
             cursor: pointer;
         }
 
-#displayList {
-    max-height: 100px; /* 최대 높이 설정 */
-    background-color: #f4f4f4; /* 배경색 변경 */
-    margin-left: 50px; /* 검색 바와의 간격 */
-    height: auto; /* 내용에 따라 자동 높이 조정 */
-    box-sizing: border-box; /* 패딩과 경계를 너비에 포함 */
-    position: absolute; /* 헤더와 겹치도록 절대 위치 설정 */
-    z-index: 10000; /* .header보다 높은 z-index */
-    overflow: auto; /* 내용이 넘칠 경우 스크롤 추가 */
-    border-radius: 0 0 20px 20px; /* 모서리 둥글게 */
-    padding: 10px; /* 내부 여백 추가 */
-    padding-left: 20px;
-    padding-top: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
-    transition: box-shadow 0.3s; /* 마우스 오버 시 효과를 위한 전환 */
-    opacity: 0.9;
-    border: none;
-    margin-left:2.5%;
-    width: 100%;
-}
+		#displayList {
+		    max-height: 250px; /* 최대 높이 설정 */
+		    background-color: #f4f4f4; /* 배경색 변경 */
+		    margin-left: 50px; /* 검색 바와의 간격 */
+		    height: auto; /* 내용에 따라 자동 높이 조정 */
+		    box-sizing: border-box; /* 패딩과 경계를 너비에 포함 */
+		    position: absolute; /* 헤더와 겹치도록 절대 위치 설정 */
+		    z-index: 10000; /* .header보다 높은 z-index */
+		    overflow: auto; /* 내용이 넘칠 경우 스크롤 추가 */
+		    border-radius: 0 0 20px 20px; /* 모서리 둥글게 */
+		    padding: 10px; /* 내부 여백 추가 */
+		    padding-left: 20px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+		    transition: box-shadow 0.3s; /* 마우스 오버 시 효과를 위한 전환 */
+		    opacity: 0.9;
+		    border: none;
+		    margin-left:2.5%;
+		    width: 100%;
+		}
+		
+		span.result:hover {
+			color: purple;
+			font-weight: bold;
+		
+		}
 
-span.result:hover {
-	color: purple;
-
-}
-   
     </style>
 
 </head>
@@ -266,10 +265,13 @@ $(document).ready(function(){
 								console.log(word.substring(idx + len));     // 검색어 이후 나머지  ==> 에 대해서 궁금해요~~
 								console.log("~~~~~ 끝 ~~~~~");
 							*/
+							const result = `<img src='<%=ctxPath%>/resources/images/glass.png' style='width:15px; height:15px; margin-right:4%; vertical-align: middle;'>` 
+											+ "<span style='vertical-align: middle;'>" + name.substring(0, idx) + "</span>" 
+											+ "<span style='color:purple; font-weight:bold; vertical-align: middle;'>" + name.substring(idx, idx + len) + "</span>" 
+											+ "<span style='vertical-align: middle;'>" + name.substring(idx + len) + "</span>";
+				               	
 							
-							const result = name.substring(0,idx) + "<span style='color:purple; font-weight:bold;'>"+name.substring(idx,idx + len)+"</span>" + name.substring(idx + len);
-							
-							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
+							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'><br>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
 						
 						const input_width = $("input[name='searchWord']").css("width"); // 검색어 input 태그 width 값 알아오기
@@ -300,7 +302,17 @@ $(document).ready(function(){
 		
 		location.href = `<%=ctxPath%>\${url}`;
 		
+	}); // end of $(document).on("click", "span.result", function(e)
+			
+	
+	// 마우스로 다른 곳을 클릭 시 검색 결과 리스트 숨기기
+	$(document).click(function(e) {
+		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='searchWord']")) {
+			$("div#displayList").hide();
+		}
 	});
+			
+			
 });
 </script>
     

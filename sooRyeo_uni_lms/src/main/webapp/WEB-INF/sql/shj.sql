@@ -699,12 +699,13 @@ where fk_student_id = '202400009' and fk_lecture_seq = '14'
 select *
 from tbl_student
 
+select *
+from tbl_menu
 
+update tbl_menu set menu_name = '내 정보'
+where menu_url = '/student/myInfo.lms'
 
-
-
-
-
+commit;
 
 
 
