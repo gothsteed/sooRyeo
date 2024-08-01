@@ -52,6 +52,7 @@ import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.BoardDTO;
 import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.mongo.entity.AlertLecture;
 import com.sooRyeo.app.service.CourseService;
 import com.sooRyeo.app.service.StudentService;
 
@@ -1085,24 +1086,41 @@ public class StudentController {
 	
 	@ResponseBody
 	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
-	public String alertLecture() {
+	public String alertLecture(HttpServletRequest request) {
 		
-		List<String> wordList = studentservice.getAlertLecture(); // 이제 이렇게 서비스로 넘겨서 몽고로 받아오자...
-		
+		List<AlertLecture> alertLecture = studentservice.getAlertLecture(request); 
+
 		JSONArray jsonArr = new JSONArray(); // []
 		
-		if(wordList != null) {
-			for(Menu word : wordList) {
+		if(alertLecture != null) {
+			for(AlertLecture alertLectureData : alertLecture) {
 				JSONObject jsonObj = new JSONObject(); // {}
-				jsonObj.put("name", word.getMenu_name() + ","+ word.getMenu_url());
+				jsonObj.put("Lname", alertLectureData.getLectureName());
+				jsonObj.put("Pname", alertLectureData.getProfessorName());
+				jsonObj.put("LId", alertLectureData.getLectureId());
+				jsonObj.put("Id", alertLectureData.getId());
 				
 				jsonArr.put(jsonObj); // [{},{},{}]
 			}// end of for ----------------------------------
 		}
-		
 		return jsonArr.toString(); 
 	}
 
+	
+	@ResponseBody
+	@GetMapping(value="/student/alertLectureDel.lms", produces="text/plain;charset=UTF-8")
+	public String alertLectureDel(HttpServletRequest request) {
+		
+		String id = (String)request.getParameter("id");
+		
+		AlertLecture alertLecture = studentservice.deleteAlertLecture(id);
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("alertLecture", alertLecture);
+				
+		return jsonObj.toString(); 
+	}
+	
 	
 	
 	

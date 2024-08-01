@@ -18,6 +18,7 @@ import com.sooRyeo.app.domain.StudentTimeTable;
 import com.sooRyeo.app.domain.TodayLecture;
 import com.sooRyeo.app.dto.AssignmentSubmitDTO;
 import com.sooRyeo.app.dto.StudentDTO;
+import com.sooRyeo.app.mongo.entity.AlertLecture;
 
 public interface StudentService {
 	
@@ -133,5 +134,9 @@ public interface StudentService {
 	
 
     ModelAndView getCourseLecturePage(HttpServletRequest request, ModelAndView mav, String fkCourseSeq);
+
+	List<AlertLecture> getAlertLecture(HttpServletRequest request);
+
+	AlertLecture deleteAlertLecture(String id);
 
 }

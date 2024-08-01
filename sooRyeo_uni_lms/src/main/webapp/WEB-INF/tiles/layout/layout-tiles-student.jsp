@@ -183,6 +183,17 @@
 		    z-index: 10000; /* Higher than .header */
 		    overflow:auto;
 		}
+    	#alertLecture {
+		    width: 80%;
+		    max-width: 200px; /* Match the search bar's maximum width */
+		    max-height: 500px; /* Set a height for the example */
+		    background-color: #ddd; /* Just for visibility */
+		    height: 100px;
+		    box-sizing: border-box; /* Include padding and border in the width */
+   			position: absolute; /* Position absolute to overlap the header */
+		    z-index: 10000; /* Higher than .header */
+		    overflow:auto;
+		}
         
     </style>
 
@@ -196,19 +207,20 @@
 
 $(document).ready(function(){
 	
-
+	$("div#alertLecture").hide();
+	
 	$.ajax({
 		  url: "<%= ctxPath%>/student/alertLecture.lms",
 		  method: 'GET',
 		  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
 		  success: function(response) {
 		    // 성공적으로 데이터를 받았을 때 처리할 코드
-			  if(response == null){
-			    $("span#bell").val("🔔");
+			  if(response == ""){ // 데이터가 없을때
+			    $("span#bell").text("a");
 			  }
-			  else{
-			    $("span#bell").val("★");
-			  }
+			  else{ // 데이터가 있을때 
+			    $("span#bell").text("🔔");
+			  }// else---------------------------------
 		  },
 		  error: function(request, status, error){
 	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -306,9 +318,70 @@ $(document).ready(function(){
 	});
 });
 
-function alertLecture (){
+function alertLecture(){
 	
+	$("div#alertLecture").hide();
 	
+	$.ajax({
+		  url: "<%= ctxPath%>/student/alertLecture.lms",
+		  method: 'GET',
+		  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
+		  success: function(response) {
+
+		    let v_html = ``;
+		    
+		    if(response != ""){
+			  	$.each(response, function(index, item){
+	
+					const lecName = item.Lname;
+					const profName = item.Pname;
+					const lId = item.LId;
+					const id = item.Id;
+			  		
+					const result ="<span style='color:purple;'>"+ profName + "교수님의" + lecName +"수업이 추가되었습니다."+"</span>";
+					
+					v_html += `<span style='cursor:pointer;' data-custom="\${lId}" data-role="\${id}" class='result2'>\${result}<br></span>`
+					
+				}); // end of $.each(json, function(index, item){})------------------------------------
+			  	
+				$("div#alertLecture").html(v_html);
+				
+				$("div#alertLecture").show();
+		    }
+		  },
+		  error: function(request, status, error){
+	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		  }
+	});
+	
+	$(document).on("click", "span.result2", function(e){
+		
+		const url = $(this).data('custom');
+		const id = $(this).data('role');
+		
+		$("div#alertLecture").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
+		
+		$.ajax({
+			  url: "<%= ctxPath%>/student/alertLectureDel.lms",
+			  method: 'GET',
+			  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
+		      data: {id: id},
+			  success: function(response) {
+
+				  // alert(response); // object object
+				  
+				if(response == null){
+					alert("오류발생");
+				}
+				else{
+					location.href = `<%=ctxPath%>/student/myLecture.lms?course_seq=\${url}`;
+				}
+			  },
+			  error: function(request, status, error){
+		          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			  }
+		});
+	});
 }
 </script>
     
@@ -386,10 +459,14 @@ function alertLecture (){
 	            </div>
 	            <div id="displayList"></div>
             </div>
-            <div class="icons">
-                <span class="icon">📫</span>
-                <span class="icon" id="bell">🔔</span>
-                <span class="icon">❔</span>
+            <div>
+	            <div class="icons">
+	                <span class="icon">📫</span>
+	                <span class="icon" id="bell" onclick="alertLecture()"></span>
+	                <span class="icon">❔</span>
+	            </div>
+	            <div style="border:solid 1px red" id="alertLecture">
+	            </div>
             </div>
         </div>
         
