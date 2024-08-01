@@ -86,7 +86,7 @@ body {
 
 
    /* -- CSS 로딩화면 구현 시작(bootstrap 에서 가져옴) 시작 -- */    
-   div.loader {
+   div.hidden {
    /* border: 16px solid #f3f3f3; */
      border: 12px solid #f3f3f3;
      border-radius: 50%;
@@ -107,6 +107,9 @@ body {
 <script type="text/javascript">
 
 $(document).ready(function(){
+	
+	$("div#spinner").hide();
+	
 	$("input#password").keyup(function(key){
 	    if(key.keyCode == 13) {
 	    	handleLogin(); 
@@ -120,7 +123,10 @@ $(document).ready(function(){
 	 });
 });
 function handleLogin() {
-    const memberType = document.querySelector('input[name="memberType"]:checked').value;
+	
+	$("div#spinner").show();
+    
+	const memberType = document.querySelector('input[name="memberType"]:checked').value;
     const form = $('#loginForm');
     
     let actionUrl = "";
@@ -140,16 +146,19 @@ function handleLogin() {
         success: function(response) {
             // Handle success scenario
             if(response.isSuccess) {
+            	$("div#spinner").hide();
             	alert("성공");
             	console.log(response.redirectUrl);
             	window.location.href = response.redirectUrl; 
             }
             else {
+            	$("div#spinner").hide();
             	alert("실패");
             }
         },
         error: function(xhr, status, error) {
             // Handle error scenario
+            $("div#spinner").hide();
             alert('Login failed: ' + error);
         }
     });
@@ -268,7 +277,7 @@ $("input#spinner").spinner( {
   
    <%-- CSS 로딩화면 구현한 것--%>
    <div style="display: flex; position: absolute; top: 30%; left: 37%; border: solid 0px blue;">
-      <div class="loader" style="margin: auto"></div>
+      <div id="spinner" class="hidden" style="margin: auto"></div>
    </div>
    
 </body>

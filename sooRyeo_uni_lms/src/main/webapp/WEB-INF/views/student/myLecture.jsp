@@ -65,13 +65,11 @@ $(document).ready(function(){
 
 	// 시작시간, 종료시간
 	var html="";
-	for(var i=0; i<24; i++) {
-		if(i<10){
-			html+="<option value='0"+i+"'>0"+i+"</option>";
-		}
-		else{
+	for(var i=10; i<19; i++) {
+
+		
 			html+="<option value="+i+">"+i+"</option>";
-		}
+		
 	}// end of for----------------------
 
 	$("select#startHour").html(html);
@@ -120,12 +118,17 @@ $(document).ready(function(){
     	const syshour = `\${hours}`;
     	const sysminutes = `\${minutes}`;
 
-     	var startHour= $("select#startHour").val();
-     	var startMinute= $("select#startMinute").val();
-     	var endHour = syshour;
-     	var endMinute= sysminutes;
+    	/* var startHour = parseInt($("select#startHour").val(), 10); // 문자열을 정수로 변환 */
+    	var startHour = parseInt($("select#startHour").val(), 10)
+    	var startMinute = parseInt($("select#startMinute").val(), 10); // 문자열을 정수로 변환
 
-     	console.log("되라" ,startHour);
+    	var endHour = String((startHour + 2) % 24).padStart(2, '0');
+    	var endMinute = startMinute;
+    	
+     	console.log("startHour" ,startHour);
+     	console.log("endHour" ,endHour);
+     	console.log("startMinute" ,startMinute);
+     
 
      	// 조회기간 시작일자가 종료일자 보다 크면 경고
         if (Number(startDate) - Number(sysdate) < 0) {
@@ -170,9 +173,10 @@ $(document).ready(function(){
      	// 오라클에 들어갈 date 형식(년월일시분초)으로 만들기
         var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
         var hour = String(parseInt($("select#startHour").val())).padStart(2, '0');
-        var edate = startDate+hour+$("select#startMinute").val()+"00";
+        var edate = startDate+endHour+$("select#startMinute").val()+"00";
 
-        console.log("hour", hour);
+        console.log("sdate", sdate);
+        console.log("edate", edate);
 
         const prof_id = $("input[name='prof_id']").val();
 
@@ -184,6 +188,7 @@ $(document).ready(function(){
         formData.append('start_date', sdate);
         formData.append('end_date', edate);
 
+        
         $.ajax({
      		url:"<%= ctxPath%>/student/insert_schedule_consult.lms",
      		method : "POST",
@@ -205,6 +210,7 @@ $(document).ready(function(){
        		}
 
      	});
+        
 
 	});
 

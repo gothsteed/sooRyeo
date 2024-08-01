@@ -624,4 +624,16 @@ UPDATE tbl_attendance SET play_time = '0'
 where fk_lecture_seq = '38';
 
 
+select schedule_seq, title, to_char(start_date, 'yyyy-mm-dd hh24:mi:ss'), to_char(end_date, 'yyyy-mm-dd hh24:mi:ss')
+from tbl_schedule
+where schedule_seq = '115'
 
+select *
+from tbl_consult
+
+
+delete
+from tbl_schedule
+where schedule_seq = '114'
+
+commit;
