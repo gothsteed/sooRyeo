@@ -67,13 +67,11 @@ $(document).ready(function(){
 
 	// 시작시간, 종료시간
 	var html="";
-	for(var i=0; i<24; i++) {
-		if(i<10){
-			html+="<option value='0"+i+"'>0"+i+"</option>";
-		}
-		else{
+	for(var i=10; i<19; i++) {
+
+		
 			html+="<option value="+i+">"+i+"</option>";
-		}
+		
 	}// end of for----------------------
 
 	$("select#startHour").html(html);
@@ -122,12 +120,12 @@ $(document).ready(function(){
     	const syshour = `\${hours}`;
     	const sysminutes = `\${minutes}`;
 
-     	var startHour= $("select#startHour").val();
-     	var startMinute= $("select#startMinute").val();
-     	var endHour = syshour;
-     	var endMinute= sysminutes;
+    	/* var startHour = parseInt($("select#startHour").val(), 10); // 문자열을 정수로 변환 */
+    	var startHour = parseInt($("select#startHour").val(), 10)
+    	var startMinute = parseInt($("select#startMinute").val(), 10); // 문자열을 정수로 변환
 
-     	console.log("되라" ,startHour);
+    	var endHour = String((startHour + 2) % 24).padStart(2, '0');
+    	var endMinute = startMinute;
 
      	// 조회기간 시작일자가 종료일자 보다 크면 경고
         if (Number(startDate) - Number(sysdate) < 0) {
@@ -172,9 +170,7 @@ $(document).ready(function(){
      	// 오라클에 들어갈 date 형식(년월일시분초)으로 만들기
         var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
         var hour = String(parseInt($("select#startHour").val())).padStart(2, '0');
-        var edate = startDate+hour+$("select#startMinute").val()+"00";
-
-        console.log("hour", hour);
+        var edate = startDate+endHour+$("select#startMinute").val()+"00";
 
         const prof_id = $("input[name='prof_id']").val();
 
@@ -186,6 +182,7 @@ $(document).ready(function(){
         formData.append('start_date', sdate);
         formData.append('end_date', edate);
 
+        
         $.ajax({
      		url:"<%= ctxPath%>/student/insert_schedule_consult.lms",
      		method : "POST",
@@ -207,21 +204,21 @@ $(document).ready(function(){
        		}
 
      	});
+        
 
 	});
 
 
 
-	$('a#classPlay').click(function(){
-		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq"]').val();
-		<%-- location.href = "<%= ctxPath%>/student/classPlay_One.lms?lecture_seq=" + lecture_seq; --%>
-		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq + "&course_seq=" + ${requestScope.fk_course_seq};
+	$('a#classPlay').click(function(){		
+		const lecture_seq_class = $(this).parent().parent().find('input[name="lecture_seq_2"]').val();
+		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq_class + "&course_seq=" + ${requestScope.fk_course_seq};
 	});
 	
 	
 	$('a#classPlay_list').click(function() {
-		const lecture_seq = $(this).parent().parent().find('input[name="lecture_seq"]').val();
-		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq + "&course_seq=" + ${requestScope.fk_course_seq};
+		const lecture_seq_1 = $(this).parent().parent().find('input[name="lecture_seq"]').val();
+		location.href = "<%= ctxPath %>/student/classPlay_One.lms?lecture_seq=" + lecture_seq_1 + "&course_seq=" + ${requestScope.fk_course_seq};
 	});
 
 	
@@ -323,7 +320,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			
 
 				<div class="card-header" style="display: flex">
-					<input type="hidden" name="lecture_seq" value="${lecture.lecture_seq}" />
+					<input type="hidden" name="lecture_seq_2" value="${lecture_week.lecture_seq}" />
 					<h5 style="font-weight:bold;">${lecture_week.lecture_title}</h5>
 					<c:if test="${requestScope.attendanceMap[lecture_week.lecture_seq]}">
 						<span class="badge badge-success d-block, ml-1" style="height: 20px;">수강완료</span>

@@ -455,3 +455,11 @@ update tbl_student
 set status = 1, finish_date =  null
 where student_id = '202400021';
 
+select s.student_id
+from tbl_student S join tbl_registered_course R on s.student_id = r.fk_student_id
+join tbl_course C on r.fk_course_seq = c.course_seq
+where course_seq = 4;
+
+		select name
+		from tbl_course C join tbl_curriculum R on fk_curriculum_seq = curriculum_seq
+		where course_seq =4;

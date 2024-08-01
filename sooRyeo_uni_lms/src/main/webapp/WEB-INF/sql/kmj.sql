@@ -607,6 +607,33 @@ delete
 from tbl_schedule
 where schedule_seq = '58'
 
-select *
+select to_char(start_date, 'yyyy-mm-dd hh24:mi'), to_char(end_date, 'yyyy-mm-dd hh24:mi')
 from tbl_lecture
-where lecture_seq = '16'
+where lecture_seq = '38';
+
+commit;
+
+
+
+select *
+from tbl_attendance
+where fk_lecture_seq = '38';
+
+
+UPDATE tbl_attendance SET play_time = '0'
+where fk_lecture_seq = '38';
+
+
+select schedule_seq, title, to_char(start_date, 'yyyy-mm-dd hh24:mi:ss'), to_char(end_date, 'yyyy-mm-dd hh24:mi:ss')
+from tbl_schedule
+where schedule_seq = '115'
+
+select *
+from tbl_consult
+
+
+delete
+from tbl_schedule
+where schedule_seq = '114'
+
+commit;

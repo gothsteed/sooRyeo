@@ -270,15 +270,18 @@
 	
 	
 	<!-- 수업 - 강의 한개 제목, 내용 select -->
-	
-	<resultMap type="HashMap" id="classPlay_one">
+	<resultMap type="HashMap" id="classPlay">
 		<result property="lecture_title" 	column="lecture_title"	    javaType="String" />
 		<result property="lecture_content" 	column="lecture_content"	javaType="String" />
 		<result property="video_file_name" 	column="video_file_name"	javaType="String" />
+		<result property="upload_video_file_name" 	column="upload_video_file_name"	javaType="String" />
+		<result property="start_date" 	column="start_date"	javaType="String" />
+		<result property="end_date" 	column="end_date"	javaType="String" />
 	</resultMap>
 	
-	<select id="classPlay_One" parameterType="String" resultMap="classPlay_one">
-		select lecture_title, lecture_content, video_file_name   
+	<select id="classPlay_One" parameterType="String" resultMap="classPlay">
+		select lecture_title, lecture_content, video_file_name, upload_video_file_name,
+			   to_char(start_date, 'yyyy-mm-dd hh24:mi') as start_date, to_char(end_date, 'yyyy-mm-dd hh24:mi') as end_date
 		from tbl_lecture
 		where lecture_seq = #{lecture_seq}
 	</select>
@@ -314,7 +317,7 @@
 	
 	<!-- 출석을 완료했을 경우 isAttended 컬럼 1로 update 하기  -->
 	<update id="update_tbl_attendance_isAttended">
-		update tbl_attendance set ISATTENDED = '1', attended_date = to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+		update tbl_attendance set ISATTENDED = '1', attended_date = sysdate
 		where fk_student_id = #{userid} and fk_lecture_seq = #{lecture_seq}
 	</update>
 	

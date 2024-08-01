@@ -86,27 +86,51 @@ body {
 
 
    /* -- CSS 로딩화면 구현 시작(bootstrap 에서 가져옴) 시작 -- */    
-   div.loader {
-   /* border: 16px solid #f3f3f3; */
+   div.spinner {
+   
      border: 12px solid #f3f3f3;
      border-radius: 50%;
-   /* border-top: 16px solid #3498db; */
-      border-top: 12px dotted blue;
-      border-right: 12px dotted green;
-      border-bottom: 12px dotted red;
-      border-left: 12px dotted pink;
+     border : 12px dotted green;
       
-     width: 120px;
-     height: 120px;
+     width: 150px;
+     height: 150px;
      -webkit-animation: spin 2s linear infinite; /* Safari */
      animation: spin 2s linear infinite;
    }
+   
+   @-webkit-keyframes spin {
+     0% { -webkit-transform: rotate(0deg); }
+     100% { -webkit-transform: rotate(360deg); }
+   }
+   
+   @keyframes spin {
+     0% { transform: rotate(0deg); }
+     100% { transform: rotate(360deg); }
+   }
+   
+   
+   .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5); /* 흰색 배경 (투명도 포함) */
+    display: flex; /* 스피너를 중앙에 배치하기 위해 flex 사용 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    z-index: 9999; /* 다른 요소 위에 표시 */
+	}
+   /* -- CSS 로딩화면 구현 시작(bootstrap 에서 가져옴) 끝 -- */
    
 </style>	
 
 <script type="text/javascript">
 
 $(document).ready(function(){
+	
+	$("div.overlay").hide();
+	
 	$("input#password").keyup(function(key){
 	    if(key.keyCode == 13) {
 	    	handleLogin(); 
@@ -120,7 +144,10 @@ $(document).ready(function(){
 	 });
 });
 function handleLogin() {
-    const memberType = document.querySelector('input[name="memberType"]:checked').value;
+	
+	$("div.overlay").show();
+    
+	const memberType = document.querySelector('input[name="memberType"]:checked').value;
     const form = $('#loginForm');
     
     let actionUrl = "";
@@ -139,21 +166,47 @@ function handleLogin() {
         dataType:"json",
         success: function(response) {
             // Handle success scenario
-            if(response.isSuccess) {
-            	alert("성공");
-            	console.log(response.redirectUrl);
-            	window.location.href = response.redirectUrl; 
-            }
-            else {
-            	alert("실패");
-            }
+        if (response.isSuccess) {
+        	$("div.overlay").hide(); // 스피너 숨기기
+
+            // 스피너가 숨겨진 후 잠시 대기한 후 알림 표시
+            setTimeout(function() {
+                alert("성공");
+                console.log(response.redirectUrl);
+                window.location.href = response.redirectUrl; 
+            }, 100); // 100ms 후에 알림 표시
+        } else {
+        	$("div.overlay").hide(); // 스피너 숨기기
+
+            // 스피너가 숨겨진 후 잠시 대기한 후 알림 표시
+            setTimeout(function() {
+                alert("실패");
+            }, 100); // 100ms 후에 알림 표시
+        }
         },
         error: function(xhr, status, error) {
             // Handle error scenario
+            $("div.overlay").hide();
             alert('Login failed: ' + error);
         }
     });
 }
+
+$("input#spinner").spinner( {
+    spin: function(event, ui) {
+       if(ui.value > 100) {
+          $(this).spinner("value", 100);
+          return false;
+       }
+       else if(ui.value < 1) {
+          $(this).spinner("value", 1);
+          return false;
+       }
+    }
+} );// end of $("input#spinner").spinner({});----------------
+ 
+ 
+
 </script>
 </head>
 
@@ -251,8 +304,8 @@ function handleLogin() {
   
   
    <%-- CSS 로딩화면 구현한 것--%>
-   <div style="display: flex; position: absolute; top: 30%; left: 37%; border: solid 0px blue;">
-      <div class="loader" style="margin: auto"></div>
+   <div class="overlay">
+      <div id="spinner" class="spinner" style="margin: auto"></div>
    </div>
    
 </body>

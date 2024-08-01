@@ -110,19 +110,20 @@ video {
 	
 		
      <div style="display: flex; width: 90%; height: 525pt; margin: 2% auto;">
+     
         <div class="shadow p-3 mb-5 bg-body rounded" style="width : 80%; height: 520pt; background-color: white;">
         
            <input type="hidden" id="lecture_seq" value="${requestScope.lecture_seq}"/>
            <div style="display: flex; justify-content: space-between;">
-           		<div style="height: 50px; margin-left: 7%; margin-top: 3%; font-size: 20pt;">${classOne.lecture_title}</div>
+           		<div style="height: 50px; margin-left: 7%; margin-top: 3%; font-size: 20pt;">${requestScope.classOne.lecture_title}</div>
            		<button type="button" class="btn btn-success" id="end" style="height: 40px; margin-top: 3%; margin-right: 7%;">출석 종료</button>
            </div>
            
-           <video id="video-player" src="${pageContext.request.contextPath}/resources/lectures/big_buck_bunny_720p_10mb.mp4" controls width="1060" height="530"></video>
+           <video id="video-player" src="${pageContext.request.contextPath}/resources/lectures/${requestScope.classOne.upload_video_file_name}" controls width="1060" height="530"></video>
 		
         </div>
         <div class="shadow ml-5 mb-5 bg-body rounded" style="width : 20%; height: 520pt; padding: 2%; background-color: white;">
-           ${classOne.lecture_content}
+           ${requestScope.classOne.lecture_content}
         </div>
         
      </div>
