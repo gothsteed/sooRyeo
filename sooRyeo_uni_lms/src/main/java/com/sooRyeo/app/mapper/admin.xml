@@ -66,10 +66,9 @@
 		order by cnt desc, department_name asc
 	</select>
 
-
 	<select id="getStudenList"
 		resultType="com.sooRyeo.app.domain.Student">
-		SELECT *
+		SELECT student_id, name, email, register_year, status
 		FROM tbl_student
 		order by student_id desc
 	</select>

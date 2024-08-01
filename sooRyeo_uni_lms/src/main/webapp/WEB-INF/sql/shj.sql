@@ -696,8 +696,15 @@ update tbl_attendance set ISATTENDED = '1', attended_date = sysdate
 where fk_student_id = '202400009' and fk_lecture_seq = '14'
 
 
+
+SELECT student_id, name, email, register_year, status
+FROM tbl_student
+order by student_id desc
+
 select *
 from tbl_student
+
+
 
 select *
 from tbl_menu

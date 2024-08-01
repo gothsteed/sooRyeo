@@ -104,7 +104,7 @@
 <div style="display: flex;">
   <div style="margin: auto; padding-left: 3%;">
        <h2 style="margin-bottom: 30px;">글쓰기</h2>
-      <select class="form-select" aria-label="Default select example">
+      <select class="form-select" aria-label="Default select example" style="margin-bottom: 2%; height:30px;">
           <option selected>글 유형 선택</option>
           <option value="0">일반글</option>
           <option value="1">고정글</option>

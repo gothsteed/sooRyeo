@@ -356,17 +356,16 @@ $(document).ready(function(){
 				</div></li>
 			<li class="nav-item"><a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티관리</a>
 				<div class="dropdown-menu" aria-labelledby="groupsMenu">
-					<a class="dropdown-item" href="#">내 친구</a> 
 					<a class="dropdown-item" href="<%=ctxPath%>/board/addList.lms">공지사항쓰기</a>
 					<a class="dropdown-item" href="<%=ctxPath%>/board/announcement.lms">학사공지사항</a>
 				</div>
 			</li>
-			<li class="nav-item">
+<!-- 			<li class="nav-item">
 				<a href="#settings" class="nav-link">
 					<span class="icon">⚙️</span>내정보
 				</a>
-			</li>
-			<li class="nav-item dropdown">
+			</li> -->
+<!-- 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="certificatesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="icon">📜</span>증명서
 			</a>
 				<div class="dropdown-menu" aria-labelledby="certificatesDropdown">
@@ -374,7 +373,7 @@ $(document).ready(function(){
 					<a class="dropdown-item" href="#certificate2">재학증명서</a> 
 					<a class="dropdown-item" href="#certificate3">졸업증명서</a>
 				</div>
-			</li>
+			</li> -->
 			<li class="nav-item"><a href="<%=ctxPath%>/logout.lms" class="nav-link"><span class="icon">➡️</span>로그아웃</a></li>
 		</ul>
 	</div>

@@ -142,6 +142,7 @@ $(document).ready(function(){
 	    	handleLogin(); 
 	    }
 	 });
+	
 });
 function handleLogin() {
 	
@@ -263,7 +264,8 @@ $("input#spinner").spinner( {
                         <div class="row justify-content-between mb-4">
                             <div class="col-4">
                                 <div class="form-check">
-                                    <input class="form-check-inline" type="checkbox" id="idsave" name="idsave" value="saveOk"><label id="RemeberMeLabel" for="idsave" class="form-check-label" style="color:white;">ID 기억</label>
+								    <input class="form-check-inline" type="checkbox" id="idsave" name="idsave" value="saveOk">
+								    <label id="RemeberMeLabel" for="idsave" class="form-check-label" style="color:white;">ID 기억</label>
                                 </div>
                             </div>
                             <div class="col-7 align-self-center text-right g-px-0 g-pr-15 ">
@@ -304,6 +306,7 @@ $("input#spinner").spinner( {
   
   
    <%-- CSS 로딩화면 구현한 것--%>
+
    <div class="overlay">
       <div id="spinner" class="spinner" style="margin: auto"></div>
    </div>

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
    String ctxPath = request.getContextPath();
 %>    
@@ -50,7 +52,7 @@
 
 <hr>
  -->
-<select id="selectTag" name="searchType">
+<select id="selectTag" name="searchType" style="margin-top:2%; margin-bottom: 3%; height:30px;">
 	<option>선택하세요</option>
 	<option value="1">교수</option>
 	<option value="2">학생</option>
@@ -58,21 +60,16 @@
 
 <br>
 
-<table class="table table-success table-striped-columns" id="student">
-  <th>
-  	 
-  </th>
+<table class="table table-striped-columns" id="student">
+<tr class="table table-success">
   <th>학생 아이디</th>
   <th>이름</th>
   <th>이메일</th>
   <th>등록년도</th>
   <th>회원상태</th>
-  
+</tr>
   <c:forEach var="student" items="${requestScope.studentList}" varStatus="status" > 
 	  <tr>
-	  	<td>
-	 
-	  	</td>
 	  	<td>
 	  		${student.student_id}
 	  	</td>
@@ -95,21 +92,16 @@
   </c:forEach>
 </table>
 
-<table class="table table-success table-striped-columns" id="professor">
-  <th>
- 
-  </th>
+<table class="table table-striped-columns" id="professor">
+<tr class="table table-success">
   <th>교수 아이디</th>
   <th>이름</th>
   <th>이메일</th>
   <th>등록일</th>
   <th>회원상태</th>
-  
+<tr>  
   <c:forEach var="professor" items="${requestScope.professorList}" varStatus="status" > 
 	  <tr>
-	  	<td>
-	  	
-	  	</td>
 	  	<td>
 	  		${professor.prof_id}
 	  	</td>
@@ -120,7 +112,7 @@
 	  		${professor.email}
 	  	</td>
 	  	<td>
-	  		${professor.employment_date}
+	  		<fmt:formatDate value="${professor.employment_date}" pattern="yyyy-MM-dd HH:mm:ss"/>
 	  	</td>
 	  	<td>
 	  		<c:if test="${professor.employment_stat == 1}">재직</c:if>
