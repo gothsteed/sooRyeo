@@ -355,13 +355,13 @@ function fetchTimeTable() {
 
 	const url = '<%=ctxPath%>' + '/student/timetableJSON.lms'
 
-	console.log(url);
+	//console.log(url);
 
 	fetch(url)
 			.then(response => response.json())
 			.then(data => {
 
-				console.log(data);
+				//console.log(data);
 
 				fillTimetable(data);
 
