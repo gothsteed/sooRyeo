@@ -23,9 +23,6 @@ public class MessageAggregationRepositoryImpl implements MessageAggregationRepos
 
         MatchOperation matchOperation = Aggregation.match(Criteria.where("readStatus").ne(userKey));
         GroupOperation groupOperation = Aggregation.group("roomId").count().as("unreadCount");
-        
-        AddFieldsOperation addFieldsOperation = Aggregation.addFields().addField("roomIdObj")
-                .withValue(ConvertOperators.ToObjectId.toObjectId("$_id")).build();
 
         LookupOperation lookupOperation = Aggregation.lookup("chatRooms", "roomIdObj", "_id", "roomInfo");
 
@@ -37,7 +34,6 @@ public class MessageAggregationRepositoryImpl implements MessageAggregationRepos
         Aggregation aggregation = Aggregation.newAggregation(
                 matchOperation,
                 groupOperation,
-                addFieldsOperation,
                 lookupOperation,
                 projectionOperation
         );
