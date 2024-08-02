@@ -292,100 +292,112 @@
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 	
 <script type="text/javascript">
+    function getUnreadNotification() {
+        fetch('<%=ctxPath%>/professor/chatAlertREST.lms', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+
+                let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value.unreadCount, 0);
+
+                console.log(totalUnreadCount);
+
+                if(totalUnreadCount > 0) {
+                    document.getElementById('message').innerHTML += `
+
+            <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+                \${totalUnreadCount}
+            </div>
+
+            `;
+                }
+
+                const mailDropdown = document.getElementById('mailDropdown');
+                mailDropdown.innerHTML = '';
+
+                if(totalUnreadCount > 0) {
+                    Object.entries(data).forEach(([key, value]) => {
+                        const item = document.createElement('div');
+                        item.className = 'mail-dropdown-item';
+                        item.innerHTML = `
+                    <div class="mail-item-header">
+                        <span class="mail-item-title ml-0" style="font-size: 13px">상담명: </span>
+                        <span class="mail-item-room ml-0" style="font-size: 13px">\${value.roomName}</span>
+                    </div>
+                    <div class="mail-item-body">
+                        <span class="mail-item-unread ml-0" style="font-size: 13px">\${value.unreadCount}개 안읽었습니다</span>
+                    </div>
+                `;
+                        /*                item.style.padding = '10px';
+                                        item.style.borderBottom = '1px solid #ccc';*/
+                        item.onclick =function() {
+                            location.href = `<%=ctxPath%>/chat.lms?roomId=\${key}`;
+                        };
+                        mailDropdown.appendChild(item);
+                    });
+                }
+                else {
+                    const item = document.createElement('div');
+                    item.className = 'mail-dropdown-item';
+                    item.textContent = `메시지가 없습니다`;
+                    item.style.fontSize = '13px'
+                    /*                item.style.padding = '10px';
+                                    item.style.borderBottom = '1px solid #ccc';*/
+                    mailDropdown.appendChild(item);
+                }
+
+
+                document.getElementById('message').addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('mailDropdown');
+                    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                        dropdown.style.display = 'block';
+                    } else {
+                        dropdown.style.display = 'none';
+                    }
+                    event.stopPropagation(); // Stop the click event from propagating to the document
+                });
+
+                // Add an event listener to the document to hide the dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('mailDropdown');
+                    const messageDiv = document.getElementById('message');
+                    if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+
+
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+
+
+    let isChatPage = false;
+
 
 $(document).ready(function(){
 	
 	$("div#displayList").hide()
 
-    fetch('<%=ctxPath%>/professor/chatAlertREST.lms', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => {
-            console.log(response);
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data received:', data);
 
-            let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value.unreadCount, 0);
+    if(!isChatPage) {
+        getUnreadNotification();
+    }
 
-            console.log(totalUnreadCount);
-
-            if(totalUnreadCount > 0) {
-                document.getElementById('message').innerHTML += `
-
-                <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
-                    \${totalUnreadCount}
-                </div>
-
-                `;
-            }
-
-            const mailDropdown = document.getElementById('mailDropdown');
-            mailDropdown.innerHTML = '';
-
-            if(totalUnreadCount > 0) {
-                Object.entries(data).forEach(([key, value]) => {
-                    const item = document.createElement('div');
-                    item.className = 'mail-dropdown-item';
-                    item.innerHTML = `
-                        <div class="mail-item-header">
-                            <span class="mail-item-title ml-0" style="font-size: 13px">상담명: </span>
-                            <span class="mail-item-room ml-0" style="font-size: 13px">\${value.roomName}</span>
-                        </div>
-                        <div class="mail-item-body">
-                            <span class="mail-item-unread ml-0" style="font-size: 13px">\${value.unreadCount}개 안읽었습니다</span>
-                        </div>
-                    `;
-                    /*                item.style.padding = '10px';
-                                    item.style.borderBottom = '1px solid #ccc';*/
-                    item.onclick =function() {
-                        location.href = `<%=ctxPath%>/chat.lms?roomId=\${key}`;
-                    };
-                    mailDropdown.appendChild(item);
-                });
-            }
-            else {
-                const item = document.createElement('div');
-                item.className = 'mail-dropdown-item';
-                item.textContent = `메시지가 없습니다`;
-                item.style.fontSize = '13px'
-                /*                item.style.padding = '10px';
-                                item.style.borderBottom = '1px solid #ccc';*/
-                mailDropdown.appendChild(item);
-            }
-
-
-            document.getElementById('message').addEventListener('click', function(event) {
-                const dropdown = document.getElementById('mailDropdown');
-                if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-                    dropdown.style.display = 'block';
-                } else {
-                    dropdown.style.display = 'none';
-                }
-                event.stopPropagation(); // Stop the click event from propagating to the document
-            });
-
-            // Add an event listener to the document to hide the dropdown when clicking outside
-            document.addEventListener('click', function(event) {
-                const dropdown = document.getElementById('mailDropdown');
-                const messageDiv = document.getElementById('message');
-                if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
-                    dropdown.style.display = 'none';
-                }
-            });
-
-
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
 
 	
 	$("input[name='searchWord']").keyup(function(){
