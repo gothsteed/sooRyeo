@@ -244,6 +244,9 @@
 
 		});
 
+
+		getUnreadNotification()
+
 	}) // end of $(document).ready(function(){})------------------------------------
 </script>
 
