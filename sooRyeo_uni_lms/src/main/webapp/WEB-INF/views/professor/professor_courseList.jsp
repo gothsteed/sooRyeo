@@ -133,9 +133,9 @@ $(document).ready(function(){
 	}); // end of $("button#submitButton").click(function(e) 
 
 	
-	$("div.border").click(function(e){ // 클릭시 수업 상세로 이동
+	$(document).on("click", "div.arrow", function(e){ // 클릭시 수업 상세로 이동
 		// alert($(this).find("input[name='course_seq']").val());
-		location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq="+$(this).parent().parent().find("input[name='course_seq']").val(); 
+		location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq="+$(this).parent().parent().parent().find("input[name='course_seq']").val(); 
 	});		
 			
 
@@ -164,6 +164,8 @@ function selectCourse(year, semester){
 			console.log(JSON.stringify(json));
 			
 			let v_html = ``;
+			
+			v_html += `<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>수업 목록</h3>`;
 			
 			json.forEach(function(item, index, array){
 			    v_html += `<div id="select">
@@ -223,9 +225,28 @@ function selectCourse(year, semester){
 </script>
 
  
-<div style="display: flex; width : 100%;" class="row">
+<div style="display: flex; width: 80%; margin-left: 10%;" class="row">
 
-
+ <div style="margin-top: 1%; width: 100%;">
+	<div style="display:flex;" class="form-group">
+		  <select id="year" name="year" class="form-control" style="margin-right: 20px; width:15%; align-items: left; margin-left: 45%;">
+		    <option value="">--년도 선택--</option>
+		    <option value="21">2021</option>
+		    <option value="22">2022</option>
+		    <option value="23">2023</option>
+		    <option value="24">2024</option>
+		  </select>
+		  <br>
+		  <select id="semester" name="semester" class="form-control mb-2" style="margin-right: 20px; width:15%;">
+		    <option value="">--학기 선택--</option>
+		    <option value="03">1학기</option>
+		    <option value="07">2학기</option>
+		  </select>
+		  
+		  <button id="submitButton" class="btn btn-success" style="width:8%; height:40px;"><span>확인</span></button>
+	</div> 
+	
+	
 	<div style="margin-top: 2%; width : 80%; border: solid 0px green;" id="showCourse">
 	<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>수업 목록</h3>
 		<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
@@ -271,98 +292,7 @@ function selectCourse(year, semester){
 		</div>	
 		</c:forEach>
 	</div>
-<div style="display: flex; width: 80%; margin-left: 10%;" class="row">
-	
-	<div style="margin-top: 1%; width: 100%;">	
-		<div style="display:flex;" class="form-group">
-	        <select id="year" name="year" class="form-control" style="margin-right: 20px; width:15%; align-items: left; margin-left: 45%;">
-	          <option value="">--년도 선택--</option>
-	          <option value="21">2021</option>
-	          <option value="22">2022</option>
-	          <option value="23">2023</option>
-	          <option value="24">2024</option>
-	        </select>
-	        <br>
-	        <select id="semester" name="semester" class="form-control mb-2" style="margin-right: 20px; width:15%;">
-	          <option value="">--학기 선택--</option>
-	          <option value="03">1학기</option>
-	          <option value="07">2학기</option>
-	        </select>
-	        
-	        <button id="submitButton" class="btn btn-success" style="width:8%; height:40px;"><span>확인</span></button>
-	   	</div>
-	
-	<div style="width: 20%; height: 200px; border-left:solid 2px #DEE2E6; height: 800px;">
-<!-- 		<div class="border border1">· 공지사항</div>
-		<div class="border border2">등록된 게시글이 없습니다.</div>
-		<div class="border border1">· 예정된 할일(03-03 ~ 03-24)</div>
-		<div class="border border2">계획된 일정이 없습니다.</div> -->
-		<br>
-		<div style="align-items: center;" class="form-group ml-1">
-		  <label for="year" style="margin-right: 10px;"><span>년도 선택</span></label>
-		  <select id="year" name="year" class="form-control" style="margin-right: 20px;">
-		    <option value="">--년도 선택--</option>
-		    <option value="21">2021</option>
-		    <option value="22">2022</option>
-		    <option value="23">2023</option>
-		    <option value="24">2024</option>
-		  </select>
-		  <br>
-		  <label for="semester" style="margin-right: 10px;"><span>학기 선택</span></label>
-		  <select id="semester" name="semester" class="form-control mb-2" style="margin-right: 20px;">
-		    <option value="">--학기 선택--</option>
-		    <option value="03">1학기</option>
-		    <option value="07">2학기</option>
-		  </select>
-		  
-		  <button id="submitButton" class="btn btn-primary"><span>확인</span></button>
-		<div style="margin-top: 5%; width : 80%; border: solid 0px green;" id="showCourse">
-		<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>내 수업 목록</h3>
-			<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
-				<div id="select">
-				<div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-				   <input type="hidden" name="course_seq" value="${course.course_seq}"/>
-				   <div style="display: flex;" >
-				      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
-				      <c:choose>
-	                	<c:when test="${course.curriculum.fk_department_seq != null && course.curriculum.required == 1}">
-	                    	<div class="majorO rounded">전공필수</div>
-	                	</c:when>
-	                	<c:when test="${course.curriculum.fk_department_seq != null && course.curriculum.required == 0}">
-	                    	<div class="majorX rounded">전공선택</div>
-	                	</c:when>
-	                	<c:when test="${course.curriculum.fk_department_seq == null && course.curriculum.required == 1}">
-	                    	<div class="no-majorO rounded">교양필수</div>
-	                	</c:when>
-	                	<c:otherwise>
-	                    	<div class="no-majorX rounded">교양선택</div>
-	                	</c:otherwise>
-	            	  </c:choose>
-				      <div style="width: 80%; margin-left: 3%; margin-top: 1%; margin-bottom: 1%;">
-						  <div style="font-size: 20pt; color: black;">${course.curriculum.name}&nbsp;&nbsp;<span style="font-size: 16pt;">${course.curriculum.credit}학점</span></div>
-				         	  <div style="font-size: 12pt; color: black;">
-				         	  	${requestScope.loginuser.name}&nbsp;&nbsp;
-				         	  	<c:forEach var="time" items="${course.timeList}" varStatus="status">
-					         	  	<c:choose>
-			                        	<c:when test="${time.day_of_week == 1}">월</c:when>
-			                        	<c:when test="${time.day_of_week == 2}">화</c:when>
-			                        	<c:when test="${time.day_of_week == 3}">수</c:when>
-			                        	<c:when test="${time.day_of_week == 4}">목</c:when>
-			                        	<c:when test="${time.day_of_week == 5}">금</c:when>
-			                        	<c:otherwise>요일없음</c:otherwise>
-			                    	</c:choose>
-			                    	&nbsp;${time.start_period}-${time.end_period}교시
-		                    	</c:forEach>
-		                 	  </div>	  
-				      </div>
-				      <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
-				   </div>
-				</div>
-			</div>	
-			</c:forEach>
-		</div>
-			
-	</div>
+ </div>	
 </div>
 
 
