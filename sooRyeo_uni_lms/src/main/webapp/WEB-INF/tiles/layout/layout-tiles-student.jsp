@@ -374,15 +374,24 @@ $(document).ready(function(){
 			
 	
 	// 마우스로 다른 곳을 클릭 시 검색 결과 리스트 숨기기
-	$(document).click(function(e) {
+ 	$(document).click(function(e) {
 		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='searchWord']")) {
 			$("div#displayList").hide();
 		}
-	});
+	}); 
+	
+	
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('alertLecture');
+        const messageDiv = document.getElementById('lectureAlertSpan');
+        if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+});
 	
 	
 
-});
 
 function alertLecture(){
 	
@@ -404,7 +413,7 @@ function alertLecture(){
 					const lId = item.LId;
 					const id = item.Id;
 			  		
-					const result ="<span id='lectureAlertSpan' style='color:purple;'>"+ profName + "교수님의 " + "'"+lecName+ "' " +"수업이 추가되었습니다."+"</span>";
+					const result ="<span id='lectureAlertSpan' style='color:black;'>"+ profName + "교수님의 " + "'"+lecName+ "' " +"수업이 추가되었습니다."+"</span>";
 					
 					v_html += `<span style='cursor:pointer;' data-custom="\${lId}" data-role="\${id}" class='result2'>\${result}<br></span>`
 					
@@ -434,7 +443,7 @@ function alertLecture(){
 		      data: {id: id},
 			  success: function(response) {
 
-				alert(response.alertLecture); // undefined
+				// alert(response.alertLecture); // undefined
 				  
 				if(response.alertLecture == null){
 					location.href = `<%=ctxPath%>/student/myLecture.lms?course_seq=\${url}`;
@@ -448,6 +457,8 @@ function alertLecture(){
 			  }
 		});
 	});
+	
+	
 }
 function alertLecture1(){
 	$("div#alertLecture").hide();
