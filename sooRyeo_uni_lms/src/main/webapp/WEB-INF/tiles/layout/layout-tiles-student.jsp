@@ -444,23 +444,15 @@ $(document).ready(function(){
 		  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
 		  success: function(response) {
 		    // 성공적으로 데이터를 받았을 때 처리할 코드
-			  if(response == ""){ // 데이터가 없을때
-			    $("span#bell").text("🔔");
-
-			  }
-			  else{ // 데이터가 있을때
-			    $("span#bell").text("🔔");
-
-			  document.getElementById('bell').innerHTML += `
-
-	                <div class="badge" id="unreadCountBadge" style="position: absolute; right: 4.3%; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+			  if(response != ""){ // 데이터가 없을때
+				  document.getElementById('bell').innerHTML += `
+	
+	                <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
 	                	\${response.length}
 	                </div>
 
 	                `;
-
-
-			  }// else---------------------------------
+			  }
 		  },
 		  error: function(request, status, error){
 	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -738,10 +730,13 @@ function alertLecture1(){
                     📫
                     <span class="mail-dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></span>
                     </span>
-	                <span class="icon" id="bell" onclick="alertLecture()" ></span>
+	                <span class="icon" id="bell" onclick="alertLecture()" style="position: relative">
+	                	🔔
+	                  <span class="bell-dropdown" id="bellDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></span>
+	                </span>
 	                <span class="icon">❔</span>
 	            </div>
-	            <div class="dropdown" id="alertLecture">
+	            <div id="alertLecture">
 	            </div>
             </div>
         </div>
