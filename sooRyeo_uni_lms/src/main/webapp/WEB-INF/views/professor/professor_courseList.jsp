@@ -133,9 +133,9 @@ $(document).ready(function(){
 	}); // end of $("button#submitButton").click(function(e) 
 
 	
-	$(document).on("click", "div.arrow", function(e){ // 클릭시 수업 상세로 이동
+	$(document).on("click", "div#select", function(e){ // 클릭시 수업 상세로 이동
 		// alert($(this).find("input[name='course_seq']").val());
-		location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq="+$(this).parent().parent().parent().find("input[name='course_seq']").val(); 
+		location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq="+$(this).find("input[name='course_seq']").val(); 
 	});		
 			
 
@@ -167,48 +167,53 @@ function selectCourse(year, semester){
 			
 			v_html += `<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>수업 목록</h3>`;
 			
-			json.forEach(function(item, index, array){
-			    v_html += `<div id="select">
-			                <div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
-			                    <input type="hidden" name="course_seq" value="\${item.course_seq}"/>
-			                    <div style="display: flex;">
-			                        <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>`;
-
-			    if (item.fk_department_seq != null && item.required == 1) {
-			        v_html += `<div class="majorO rounded">전공필수</div>`;
-			    } else if (item.fk_department_seq != null && item.required == 0) {
-			        v_html += `<div class="majorX rounded">전공선택</div>`;
-			    } else if (item.fk_department_seq == null && item.required == 1) {
-			        v_html += `<div class="no-majorO rounded">교양필수</div>`;
-			    } else {
-			        v_html += `<div class="no-majorX rounded">교양선택</div>`;
-			    }
-
-			    v_html += `<div style="width: 80%; margin-left: 3%; margin-top: 1%; margin-bottom: 1%;">
-			                    <div style="font-size: 20pt; color: black;">\${item.name}&nbsp;&nbsp;<span style="font-size: 16pt;">\${item.credit}학점</span></div>
-			                    <div style="font-size: 12pt; color: black;">\${item.prof_name}&nbsp;&nbsp;`;
-
-			    item.timeList.forEach(function(item, index, array) {  
-			        let dayOfWeek = "";
-			        switch(item.day_of_week) {
-			            case 1: dayOfWeek = "월"; break;
-			            case 2: dayOfWeek = "화"; break;
-			            case 3: dayOfWeek = "수"; break;
-			            case 4: dayOfWeek = "목"; break;
-			            case 5: dayOfWeek = "금"; break;
-			            default: dayOfWeek = "요일없음";
-			        }
-			        v_html += `\${dayOfWeek}&nbsp;\${item.start_period}-\${item.end_period}교시&nbsp;`;
-			    });
-
-			    v_html += `</div>
-			                </div>
-			                <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
-			                </div>
-			                </div>
-			            </div>`;
-			});
-			
+			if (json.length === 0) {
+                // 수업 목록이 없을 경우 메시지 추가
+                v_html += `<div style="margin-left:10%; font-size: 14pt;">수업이 없습니다.</div>`;
+         	} 
+			else{
+				json.forEach(function(item, index, array){
+				    v_html += `<div id="select">
+				                <div class="border mb-2" style="width: 76%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold; position: relative; right: 20px;">
+				                    <input type="hidden" name="course_seq" value="\${item.course_seq}"/>
+				                    <div style="display: flex;">
+				                        <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>`;
+	
+				    if (item.fk_department_seq != null && item.required == 1) {
+				        v_html += `<div class="majorO rounded">전공필수</div>`;
+				    } else if (item.fk_department_seq != null && item.required == 0) {
+				        v_html += `<div class="majorX rounded">전공선택</div>`;
+				    } else if (item.fk_department_seq == null && item.required == 1) {
+				        v_html += `<div class="no-majorO rounded">교양필수</div>`;
+				    } else {
+				        v_html += `<div class="no-majorX rounded">교양선택</div>`;
+				    }
+	
+				    v_html += `<div style="width: 80%; margin-left: 3%; margin-top: 1%; margin-bottom: 1%;">
+				                    <div style="font-size: 20pt; color: black;">\${item.name}&nbsp;&nbsp;<span style="font-size: 16pt;">\${item.credit}학점</span></div>
+				                    <div style="font-size: 12pt; color: black;">\${item.prof_name}&nbsp;&nbsp;`;
+	
+				    item.timeList.forEach(function(item, index, array) {  
+				        let dayOfWeek = "";
+				        switch(item.day_of_week) {
+				            case 1: dayOfWeek = "월"; break;
+				            case 2: dayOfWeek = "화"; break;
+				            case 3: dayOfWeek = "수"; break;
+				            case 4: dayOfWeek = "목"; break;
+				            case 5: dayOfWeek = "금"; break;
+				            default: dayOfWeek = "요일없음";
+				        }
+				        v_html += `\${dayOfWeek}&nbsp;\${item.start_period}-\${item.end_period}교시&nbsp;`;
+				    });
+	
+				    v_html += `</div>
+				                </div>
+				                <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
+				                </div>
+				                </div>
+				            </div>`;
+				});
+			}
 			$("div#showCourse").html(v_html);
 			
 		},
@@ -247,11 +252,11 @@ function selectCourse(year, semester){
 	</div> 
 	
 	
-	<div style="margin-top: 2%; width : 80%; border: solid 0px green;" id="showCourse">
+	<div style="margin-top: 2%; width : 100%;" id="showCourse">
 	<h3 class="ml-5"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>수업 목록</h3>
 		<c:forEach var="course" items="${requestScope.courseList}" varStatus="status">
 			<div id="select">
-			<div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
+			<div class="border mb-2" style="width: 76%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold; position: relative; right: 20px;">
 			   <input type="hidden" name="course_seq" value="${course.course_seq}"/>
 			   <div style="display: flex;" >
 			      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
@@ -289,7 +294,7 @@ function selectCourse(year, semester){
 			      <div class="arrow" style=" margin-top: 1.5%; margin-right: 2%; margin-left: 14%; cursor: pointer;"><img src="<%= ctxPath%>/resources/images/right-arrow.png" style="width: 35px;"/></div>
 			   </div>
 			</div>
-		</div>	
+			</div>	
 		</c:forEach>
 	</div>
  </div>	
