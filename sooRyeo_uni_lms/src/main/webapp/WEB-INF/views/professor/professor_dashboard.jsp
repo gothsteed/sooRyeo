@@ -106,7 +106,7 @@
        grid.on('added removed change', function(e, items) {
          let str = '';
          items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-         console.log(e.type + ' ' + items.length + ' items:' + str );
+         // console.log(e.type + ' ' + items.length + ' items:' + str );
        });
        
        <!-- tabs 작동을 위한 js -->
@@ -175,8 +175,8 @@
 					*/
 					
 			    	// console.log( $(local).text() + " stn_id:" + $(local).attr("stn_id") + " icon:" + $(local).attr("icon") + " desc:" + $(local).attr("desc") + " ta:" + $(local).attr("ta") ); 
-			      //	속초 stn_id:90 icon:03 desc:구름많음 ta:-2.5
-			      //	북춘천 stn_id:93 icon:03 desc:구름많음 ta:-7.0
+			        //	속초 stn_id:90 icon:03 desc:구름많음 ta:-2.5
+			        //	북춘천 stn_id:93 icon:03 desc:구름많음 ta:-7.0
 			    	
 			        let icon = $(local).attr("icon");  
 			        if(icon == "") {

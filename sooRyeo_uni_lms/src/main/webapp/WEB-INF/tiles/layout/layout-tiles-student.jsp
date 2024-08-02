@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -16,12 +16,12 @@
     <title>Styled Sidebar</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-	
+
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0; 
+            padding: 0;
             display: flex;
             height: 100vh;
             background-color: white;
@@ -116,7 +116,7 @@
             background-repeat: no-repeat;
             background-position: top left;
         }
-        
+
         .content {
             flex-grow: 1;
             overflow-y: auto;
@@ -192,15 +192,15 @@
 		    margin-left:2.5%;
 		    width: 100%;
 		}
-		
+
 		span.result:hover {
 			color: purple;
 			font-weight: bold;
-		
+
 		}
 
     	#alertLecture {
-		    
+
 	        width: 300px; /* 넓은 알림창 */
 		    max-height: 400px; /* 높이 조정 */
 		    background-color: #ffffff; /* 배경색을 하얀색으로 설정 */
@@ -215,7 +215,7 @@
 		    font-family: Arial, sans-serif; /* 간결한 글꼴 */
 		    color: #333; /* 어두운 텍스트 색상 */
 		}
-        
+
         /* 알림 항목 스타일 */
 		.result2 {
 		    display: block;
@@ -227,8 +227,24 @@
 		    cursor: pointer; /* 클릭 커서 */
 		    transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 */
 		}
-		
+
 		.result2:hover {
+		    background-color: #e0e0e0; /* 호버 시 배경색 */
+		    color: #333; /* 호버 시 텍스트 색상 */
+		}
+
+		.result3 {
+		    display: block;
+		    padding: 10px;
+		    margin-bottom: 10px;
+		    border-radius: 5px;
+		    background-color: #f4f4f9; /* 항목 배경색 */
+		    color: #555; /* 텍스트 색상 */
+		    cursor: pointer; /* 클릭 커서 */
+		    transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 */
+		}
+		
+		.result3:hover {
 		    background-color: #e0e0e0; /* 호버 시 배경색 */
 		    color: #333; /* 호버 시 텍스트 색상 */
 		}
@@ -237,6 +253,72 @@
 		    color: #6a0dad; /* 교수 이름과 수업명에 사용될 색상 */
 		    font-weight: bold; /* 강조된 텍스트 */
 		}
+
+
+
+        #mailDropdown {
+
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .mail-dropdown-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .mail-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .mail-dropdown-item:hover {
+            background-color: #f8f8f8;
+        }
+
+        .mail-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .mail-item-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .mail-item-room {
+            color: #666;
+        }
+
+        .mail-item-body {
+            font-size: 11px;
+            color: #444;
+        }
+
+        .mail-item-unread {
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .no-messages {
+            padding: 14px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
     </style>
 
 </head>
@@ -244,49 +326,146 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    
+
 <script type="text/javascript">
 
+    function getUnreadNotification() {
+        fetch('<%=ctxPath%>/student/chatAlertREST.lms', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+
+                let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value.unreadCount, 0);
+
+                console.log(totalUnreadCount);
+
+                if(totalUnreadCount > 0) {
+                    document.getElementById('message').innerHTML += `
+
+            <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+                \${totalUnreadCount}
+            </div>
+
+            `;
+                }
+
+                const mailDropdown = document.getElementById('mailDropdown');
+                mailDropdown.innerHTML = '';
+
+                if(totalUnreadCount > 0) {
+                    Object.entries(data).forEach(([key, value]) => {
+                        const item = document.createElement('div');
+                        item.className = 'mail-dropdown-item';
+                        item.innerHTML = `
+                    <div class="mail-item-header">
+                        <span class="mail-item-title ml-0" style="font-size: 13px">상담명: </span>
+                        <span class="mail-item-room ml-0" style="font-size: 13px">\${value.roomName}</span>
+                    </div>
+                    <div class="mail-item-body">
+                        <span class="mail-item-unread ml-0" style="font-size: 13px">\${value.unreadCount}개 안읽었습니다</span>
+                    </div>
+                `;
+                        /*                item.style.padding = '10px';
+                                        item.style.borderBottom = '1px solid #ccc';*/
+                        item.onclick =function() {
+                            location.href = `<%=ctxPath%>/chat.lms?roomId=\${key}`;
+                        };
+                        mailDropdown.appendChild(item);
+                    });
+                }
+                else {
+                    const item = document.createElement('div');
+                    item.className = 'mail-dropdown-item';
+                    item.textContent = `메시지가 없습니다`;
+                    item.style.fontSize = '13px'
+                    /*                item.style.padding = '10px';
+                                    item.style.borderBottom = '1px solid #ccc';*/
+                    mailDropdown.appendChild(item);
+                }
+
+
+                document.getElementById('message').addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('mailDropdown');
+                    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                        dropdown.style.display = 'block';
+                    } else {
+                        dropdown.style.display = 'none';
+                    }
+                    event.stopPropagation(); // Stop the click event from propagating to the document
+                });
+
+                // Add an event listener to the document to hide the dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('mailDropdown');
+                    const messageDiv = document.getElementById('message');
+                    if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+
+
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+
+
+    let isChatPage = false;
+
 $(document).ready(function(){
-	
+
+    isChatPage = window.location.pathname.includes('/chat.lms');
+
 	$("div#alertLecture").hide();
-	
+
+
+    if(!isChatPage) {
+        getUnreadNotification();
+    }
+
+
+
 	$.ajax({
 		  url: "<%= ctxPath%>/student/alertLecture.lms",
 		  method: 'GET',
 		  dataType: 'json', // 예상되는 서버 응답의 데이터 타입
 		  success: function(response) {
 		    // 성공적으로 데이터를 받았을 때 처리할 코드
-			  if(response == ""){ // 데이터가 없을때
-			    $("span#bell").text("🔔");
-			  
-			  }
-			  else{ // 데이터가 있을때 
-			    $("span#bell").text("🔔");
-			  
-			  document.getElementById('bell').innerHTML += `
-
-	                <div class="badge" id="unreadCountBadge" style="position: absolute; right: 4.3%; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+			  if(response != ""){ // 데이터가 없을때
+				  document.getElementById('bell').innerHTML += `
+	
+	                <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
 	                	\${response.length}
 	                </div>
 
 	                `;
-			  
-			  
-			  }// else---------------------------------
+			  }
 		  },
 		  error: function(request, status, error){
 	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 		  }
 	});
-	
+
 	$("div#displayList").hide();
-	
-	$("input[name='searchWord']").keyup(function(){
-		
+
+	$("input[name='search']").keyup(function(){
+
 		const wordLength = $(this).val().trim().length;
 		// 검색어에서 공백을 제외한 길이를 알아온다.
-		
+
 		if(wordLength == 0){
 			$("div#displayList").hide();
 			// 검색어가 공백이거나 검색어 입력후 백스페이스키를 눌러서 검색어를 모두 지우면 검색된 내용이 안 나오도록 해야 한다.
@@ -295,37 +474,37 @@ $(document).ready(function(){
 			$.ajax({
 				url:"<%= ctxPath%>/student/wordSearchShow.lms",
 				type:"get",
-				data:{"searchWord":$("input[name='searchWord']").val()},
+				data:{"searchWord":$("input[name='search']").val()},
 				dataType:"json",
 				success:function(json){
 					<%-- #120. 검색어 입력시 자동글 완성하기 7 --%>
 					if(json.length > 0){
 						// 검색된 데이터가 있는 경우임.
-						
+
 						let v_html = ``;
-						
+
 						$.each(json, function(index, item){
-							
+
 							const urlIdx = item.name.indexOf(",");
-							
+
 							const name = item.name.substring(0,urlIdx);
 							const url = item.name.substring(urlIdx+1);
-							
+
 							// word ==> javascript 는 재미가 있어요
 							// word ==> 그러면 javaScript  는 뭔가요? ==> 대문자 포함됨
-							
+
 							// word.toLowerCase() 은 word 를 모두 소문자로 변경하는 것이다.
 							// word ==> javascript 는 재미가 있어요
 							// word ==> 그러면 javascript  는 뭔가요? ==> 대문자 사라짐
-							
-							const idx = name.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+
+							const idx = name.toLowerCase().indexOf($("input[name='search']").val().toLowerCase());
 							// 만약에 검색어가 JavA 같이 적었다면
 							/*
 								그러면 javascript  는 뭔가요?   는 idx 가 4 이다.
 								javascript 는 재미가 있어요             는 idx 가 0 이다.
 							*/
-							
-							const len = $("input[name='searchWord']").val().length;
+
+							const len = $("input[name='search']").val().length;
 							// 검색어(JavA)의 길이 len은 4가 된다.
 							/*
 								console.log("~~~~~ 시작 ~~~~~");
@@ -334,20 +513,20 @@ $(document).ready(function(){
 								console.log(word.substring(idx + len));     // 검색어 이후 나머지  ==> 에 대해서 궁금해요~~
 								console.log("~~~~~ 끝 ~~~~~");
 							*/
-							const result = `<img src='<%=ctxPath%>/resources/images/glass.png' style='width:15px; height:15px; margin-right:4%; vertical-align: middle;'>` 
-											+ "<span style='vertical-align: middle;'>" + name.substring(0, idx) + "</span>" 
-											+ "<span style='color:purple; font-weight:bold; vertical-align: middle;'>" + name.substring(idx, idx + len) + "</span>" 
+							const result = `<img src='<%=ctxPath%>/resources/images/glass.png' style='width:15px; height:15px; margin-right:4%; vertical-align: middle;'>`
+											+ "<span style='vertical-align: middle;'>" + name.substring(0, idx) + "</span>"
+											+ "<span style='color:purple; font-weight:bold; vertical-align: middle;'>" + name.substring(idx, idx + len) + "</span>"
 											+ "<span style='vertical-align: middle;'>" + name.substring(idx + len) + "</span>";
-							
+
 							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'><br>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
-						
-						const input_width = $("input[name='searchWord']").css("width"); // 검색어 input 태그 width 값 알아오기
-						
-						$("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
-						
+
+						const input_width = $("input[name='search']").css("width"); // 검색어 input 태그 width 값 알아오기
+
+						$("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기
+
 						$("div#displayList").html(v_html);
-						
+
 						$("div#displayList").show();
 					}
 				},
@@ -356,26 +535,26 @@ $(document).ready(function(){
 			    }
 			});// ajax------------------------------
 		}
-	
-	}); // $("input[name='searchWord']").keyup(function(){})-------------------------------
-		
+
+	}); // $("input[name='search']").keyup(function(){})-------------------------------
+
 	<%-- #121. 검색어 입력시 자동글 완성하기 8 --%>
 	$(document).on("click", "span.result", function(e){
-		
+
 		const url = $(this).data('custom');
 		const name = $(this).text();
-		
-		$("input[name='searchWord']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
+
+		$("input[name='search']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
 		$("div#displayList").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
-		
+
 		location.href = `<%=ctxPath%>\${url}`;
-		
+
 	}); // end of $(document).on("click", "span.result", function(e)
-			
-	
+
+
 	// 마우스로 다른 곳을 클릭 시 검색 결과 리스트 숨기기
  	$(document).click(function(e) {
-		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='searchWord']")) {
+		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='search']")) {
 			$("div#displayList").hide();
 		}
 	}); 
@@ -394,9 +573,9 @@ $(document).ready(function(){
 
 
 function alertLecture(){
-	
+
 	$("div#alertLecture").hide();
-	
+
 	$.ajax({
 		  url: "<%= ctxPath%>/student/alertLecture.lms",
 		  method: 'GET',
@@ -404,10 +583,10 @@ function alertLecture(){
 		  success: function(response) {
 
 		    let v_html = ``;
-		    
+
 		    if(response != ""){
 			  	$.each(response, function(index, item){
-	
+
 					const lecName = item.Lname;
 					const profName = item.Pname;
 					const lId = item.LId;
@@ -416,26 +595,32 @@ function alertLecture(){
 					const result ="<span id='lectureAlertSpan' style='color:black;'>"+ profName + "교수님의 " + "'"+lecName+ "' " +"수업이 추가되었습니다."+"</span>";
 					
 					v_html += `<span style='cursor:pointer;' data-custom="\${lId}" data-role="\${id}" class='result2'>\${result}<br></span>`
-					
+
 				}); // end of $.each(json, function(index, item){})------------------------------------
-			  	
-				$("div#alertLecture").html(v_html);
-				
-				$("div#alertLecture").show();
 		    }
+		    else{
+		    	const result ="<span id='lectureAlertSpan' style='color:black;'>수업 등록 알림이 없습니다.</span>";
+				
+				v_html += `<span style='cursor:pointer;' class='result3'>\${result}<br></span>`
+		    	
+		    }  	
+		    
+				$("div#alertLecture").html(v_html);
+
+				$("div#alertLecture").show();
 		  },
 		  error: function(request, status, error){
 	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 		  }
 	});
-	
+
 	$(document).on("click", "span.result2", function(e){
-		
+
 		const url = $(this).data('custom');
 		const id = $(this).data('role');
-		
+
 		$("div#alertLecture").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
-		
+
 		$.ajax({
 			  url: "<%= ctxPath%>/student/alertLectureDel.lms",
 			  method: 'GET',
@@ -464,9 +649,9 @@ function alertLecture1(){
 	$("div#alertLecture").hide();
 }
 </script>
-    
+
     <div class="sidebar">
-        <div class="profile">        
+        <div class="profile">
         	<c:if test="${empty sessionScope.loginuser.img_name}"> <%-- 이미지가 없을 경우 --%>
             	<img src="<%=ctxPath%>/resources/images/student.png" alt="Profile Picture">
             </c:if>
@@ -535,21 +720,27 @@ function alertLecture1(){
             <div style="width:100%;">
 	            <div class="search-bar">
 	                <span class="icon">🔎</span>
-	                <input type="text" name="searchWord" placeholder="메뉴검색" autocomplete='off'>
+	                <input type="text" name="search" placeholder="메뉴검색" autocomplete='off'>
 	            </div>
 	            <div id="displayList"></div>
             </div>
             <div>
 	            <div class="icons">
-	                <span class="icon">📫</span>
-	                <span class="icon" id="bell" onclick="alertLecture()" ></span>
+	                <span id="message" class="icon" style="position: relative">
+                    📫
+                    <span class="mail-dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></span>
+                    </span>
+	                <span class="icon" id="bell" onclick="alertLecture()" style="position: relative">
+	                	🔔
+	                  <span class="bell-dropdown" id="bellDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></span>
+	                </span>
 	                <span class="icon">❔</span>
 	            </div>
-	            <div class="dropdown" id="alertLecture">
+	            <div id="alertLecture">
 	            </div>
             </div>
         </div>
-        
+
         <div class="main-content">
             <tiles:insertAttribute name="content" />
         </div>

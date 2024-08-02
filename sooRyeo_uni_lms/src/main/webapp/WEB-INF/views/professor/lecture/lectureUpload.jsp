@@ -149,7 +149,7 @@
         color: #555;
     }
 
-    #message {
+    #resultMsg {
         margin-top: 1em;
         color: #555;
     }
@@ -199,7 +199,7 @@
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
     </div>
-    <div id="message"></div>
+    <div id="resultMsg"></div>
 </div>
 
 <script>

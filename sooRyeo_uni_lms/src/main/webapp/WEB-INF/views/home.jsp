@@ -143,7 +143,31 @@ $(document).ready(function(){
 	    }
 	 });
 	
-});
+
+	
+	// === 로그인을 하지 않은 상태일 때 
+	//     로컬스토리지(localStorage)에 저장된 key가 'saveid' 인 userid 값을 불러와서 
+	//     input 태그 userid 에 넣어주기 ===
+	
+	if(${empty sessionScope.loginuser}) {
+		
+		const loginUserid = localStorage.getItem('idsave');
+		// 외부 js에서 로컬 스토리지에 값을 넣었을 때 => requestScope, sessionScope 사용 불가
+		
+		//console.log("확인용 loginUserid : " + loginUserid);
+		
+		if(loginUserid != null) {
+			$("input#id").val(loginUserid);
+			$("input:checkbox[id='idsave']").prop("checked", true);
+		}
+	
+	}
+	
+	
+}); // end of $(document).ready
+
+
+
 function handleLogin() {
 	
 	$("div.overlay").show();
@@ -151,6 +175,7 @@ function handleLogin() {
 	const memberType = document.querySelector('input[name="memberType"]:checked').value;
     const form = $('#loginForm');
     
+   
     let actionUrl = "";
     if (memberType == "student") {
         actionUrl = "<%= ctxPath %>/student/login.lms";
@@ -159,6 +184,22 @@ function handleLogin() {
     } else if (memberType == "admin") {
         actionUrl = "<%= ctxPath %>/admin/login.lms";
     }
+    
+    
+    // 아이디 저장 체크 시
+    if($("input:checkbox[id='idsave']").prop("checked")) {
+       
+        localStorage.setItem('idsave', $("input#id").val());
+        localStorage.setItem('memberType', $("input:radio[name='memberType']:checked").val());
+        
+    } else {
+        localStorage.removeItem('idsave');
+        localStorage.removeItem('memberType');
+    }
+    
+    
+    
+    
     
     $.ajax({
         url: actionUrl,
@@ -207,6 +248,8 @@ $("input#spinner").spinner( {
 } );// end of $("input#spinner").spinner({});----------------
  
  
+ 
+
 
 </script>
 </head>
@@ -259,7 +302,7 @@ $("input#spinner").spinner( {
 	                                <input type="password" name="password" id="password" class="form-control g-color-gray-dark-v3 g-brd-gray-light-v7 g-py-15 g-px-15 rounded-0" placeholder="비밀번호">
 	                            </div>
 	                        </div>
-						</form>
+						
 						
                         <div class="row justify-content-between mb-4">
                             <div class="col-4">
@@ -276,6 +319,7 @@ $("input#spinner").spinner( {
                        	<div class="d-grid gap-2 col-4 mx-auto">
 						  <button id="login" class="btn btn-success btn-lg" style="font-size:16pt; font-weight: bold; margin-bottom: 15%;" type="button" onclick="handleLogin()">로그인</button>
 						</div>
+						</form>
                     </div>
                 </div>
               </div>

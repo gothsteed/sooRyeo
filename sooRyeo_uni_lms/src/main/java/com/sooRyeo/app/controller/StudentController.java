@@ -753,7 +753,7 @@ public class StudentController {
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		
 		int department_seq = loginuser.getFk_department_seq();
-		System.out.println("확인용 department_seq : " + department_seq);
+		// System.out.println("확인용 department_seq : " + department_seq);
 		
 		mav.addObject("department_seq", department_seq);
 		mav.setViewName("chart/student_chart");
