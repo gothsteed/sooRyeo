@@ -790,3 +790,33 @@ WITH
 	    JOIN V ON V.fk_professor_id = P.prof_id
 	    JOIN C ON V.fk_curriculum_seq = C.curriculum_seq
 	    WHERE V.fk_student_id = 202400005 and to_char(V.semester_date, 'yy-MM') = '24-07'
+        
+        
+        
+        
+        select lecture_seq, fk_course_seq
+		     , video_file_name, lecture_file_name, lecture_title
+		     , lecture_content
+		     , start_date
+		     , end_date
+		from tbl_lecture join tbl_course
+		on tbl_lecture.fk_course_seq = tbl_course.course_seq
+		where fk_course_seq = 4 and lecture_seq = 
+		order by lecture_seq asc
+        
+        
+        select lecture_seq, fk_course_seq
+			 , video_file_name, lecture_file_name, lecture_title
+			 , lecture_content
+             , upload_lecture_file_name
+             , upload_video_file_name
+			 , start_date
+     		 , end_date
+		from tbl_lecture join tbl_course
+		on tbl_lecture.fk_course_seq = tbl_course.course_seq
+		where exist = 1 AND lecture_seq = 56
+		order by lecture_seq asc
+        
+        
+        select *
+        from tbl_lecture

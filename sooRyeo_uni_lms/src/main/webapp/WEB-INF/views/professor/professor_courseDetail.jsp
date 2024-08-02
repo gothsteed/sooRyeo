@@ -265,7 +265,7 @@ function deleteLecture(lectureSeq) {
 						</span>
 					</c:if>
 					<c:if test="${not empty lecture.lecture_file_name}">
-						<a href="<%= ctxPath%>/professor/pdf_download.lms?lecture_file_name=${lecture.lecture_file_name}" class="card-link mt-3 ml-5">
+						<a href="<%= ctxPath%>/professor/pdf_download.lms?lecture_file_name=${lecture.lecture_file_name}&upload_lecture_file_name=${lecture.upload_lecture_file_name}" class="card-link mt-3 ml-5">
 							<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}
 						</a>
 					</c:if>

@@ -1122,7 +1122,11 @@ public class ProfessorController {
 			
 		String lecture_file_name = request.getParameter("lecture_file_name");
 		
+		String upload_lecture_file_name = request.getParameter("upload_lecture_file_name");
+		
 		System.out.println("확인용  lecture_file_name : " + lecture_file_name);
+		System.out.println("확인용  upload_lecture_file_name : " + upload_lecture_file_name);
+		
 		
 		response.setContentType("text/html; charset=UTF-8");
 		
@@ -1140,7 +1144,7 @@ public class ProfessorController {
 			}
 			
 			else {// 정상적으로 다운로드를 할 경우
-				String fileName = lecture_file_name;
+				String fileName = upload_lecture_file_name;
 				// 2024062809210487735185511000.jpg -- WAS(톰캣)에 저장된 파일명
 				
 				String orgFilename = lecture_file_name;
@@ -1148,7 +1152,7 @@ public class ProfessorController {
 				HttpSession session = request.getSession(); 
 				String root = session.getServletContext().getRealPath("/");
 
-				String path = root+"resources"+File.separator+"files";
+				String path = root+"resources"+File.separator+"lectures";
 
 	            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
 
