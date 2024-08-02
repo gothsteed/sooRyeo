@@ -347,13 +347,7 @@ $(document).ready(function(){
 	});
 	
 	
-    document.addEventListener('click', function(event) {
-        const dropdown = document.getElementById('alertLecture');
-        const messageDiv = document.getElementById('lectureAlertSpan');
-        if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
-            dropdown.style.display = 'none';
-        }
-    });
+
 });
 
 function alertLecture(){

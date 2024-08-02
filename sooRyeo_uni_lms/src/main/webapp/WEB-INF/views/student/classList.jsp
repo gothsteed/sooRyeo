@@ -103,10 +103,7 @@
 }
 
 
-body > div.content > div.main-content > div > div:nth-child(1) > div {
-	margin-left: 20%;
-	
-}
+
 
 </style>
 
@@ -141,6 +138,7 @@ $(document).ready(function(){
 		
 	}); // end of $("div.border").click(function(e){})
 	
+	
 }); // end of $(document).ready(function(){})
 
 
@@ -162,15 +160,20 @@ function selectCourse(year, semester){
 		type:"post",
 		dataType:"json",
 		success:function(json){
-			console.log(JSON.stringify(json));
-			// [] 또는 [{"curriculum_seq":1,"department_seq":3,"course_seq":4,"professorName":"홍길동","className":"국어학개론","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":1,"prof_id":202400002},{"curriculum_seq":51,"department_seq":3,"course_seq":66,"professorName":"조앤롤링","className":"고전문학","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":1,"prof_id":202400013},{"curriculum_seq":78,"course_seq":22,"professorName":"홍길동","className":"영화로 보는 동유럽","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":0,"prof_id":202400002}]
+			 //console.log(JSON.stringify(json));
+			 // [] 또는 [{"curriculum_seq":1,"department_seq":3,"course_seq":4,"professorName":"홍길동","className":"국어학개론","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":1,"prof_id":202400002},{"curriculum_seq":51,"department_seq":3,"course_seq":66,"professorName":"조앤롤링","className":"고전문학","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":1,"prof_id":202400013},{"curriculum_seq":78,"course_seq":22,"professorName":"홍길동","className":"영화로 보는 동유럽","semester_date":"Sun Jul 07 00:00:00 GMT+09:00 2024","required":0,"prof_id":202400002}]
 	
-			let v_html = ``;
+			 let v_html = ``;
 			
-	         
-	         json.forEach(function(item, index, array){
+			 if (json.length === 0) {
+	                // 수업 목록이 없을 경우 메시지 추가
+	                v_html += `<div style="margin-left:10%; font-size: 14pt;">수업이 없습니다.</div>`;
+	         } 
+			 else {
+				 json.forEach(function(item, index, array){
+			 
 	             v_html += `<div id="select">
-	                         <div class="border mb-2" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
+	                         <div class="border" style="width: 80%; height: 90px; margin: auto; font-size: 26pt; color: #175F30; font-weight: bold;">
 	                             <input type="hidden" name="course_seq" value="\${item.course_seq}"/>
 	                             <div style="display: flex;">
 	                                 <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>`;
@@ -185,7 +188,7 @@ function selectCourse(year, semester){
 	                 v_html += `<div class="no-majorX rounded">교양선택</div>`;
 	             }
 
-	             v_html += `<div style="width: 80%; margin-left: 3%; margin-top: 1%; margin-bottom: 1%;">
+	             v_html += `<div style="width: 60%; margin-left: 3%; margin-top: 1%;">
 	                             <div style="font-size: 20pt; color: black;">\${item.className}</div>
 	                             <div style="font-size: 12pt; color: black;">\${item.professorName}</div>
 	                         </div>
@@ -193,11 +196,17 @@ function selectCourse(year, semester){
 	                         </div>
 	                         </div>
 	                     </div>`;
-	         });
-	         
+	         	 });
+			 }
 	         $("div#showCourse").html(v_html);
 	         
-
+	         // 클릭 이벤트 추가
+	         $("div#showCourse").on("click", "#select", function() {
+	             const courseSeq = $(this).data("course-seq");
+	             
+	             // 상세 페이지로 이동
+	             window.location.href = "<%=ctxPath%>/student/myLecture.lms?course_seq=" + $(this).find("input[name='course_seq']").val();
+	         });
 			
 		},
 		error: function(request, status, error){
@@ -213,13 +222,13 @@ function selectCourse(year, semester){
 </script>
 
 
-<div style="display: flex; width: 80%; margin-left: 10%;" class="row">
+<div style="display: flex; width: 100%;" class="row">
 
 	<div style="margin-top: 1%; width: 100%;">
-		<h3 class="ml-5 mb-4"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:7%;"/>내 수업 목록</h3>
+		<h3 class="mb-4" style="margin-left:8%;"><img src="<%= ctxPath%>/resources/images/class.png" style="width: 50px; height: 60px; margin-right:3%; margin-left:10%;"/>내 수업 목록</h3>
 	
 		<div style="display:flex;" class="form-group">
-		  <select id="year" name="year" class="form-control" style="margin-right: 20px; width:15%; align-items: left; margin-left: 45%;">
+		  <select id="year" name="year" class="form-control" style="margin-right: 20px; width:15%; align-items: left; margin-left: 42%;">
 		    <option value="">--년도 선택--</option>
 		    <option value="21">2021</option>
 		    <option value="22">2022</option>
@@ -236,7 +245,7 @@ function selectCourse(year, semester){
 		  <button id="submitButton" class="btn btn-success" style="width:8%; height:40px;"><span>확인</span></button>
 		</div>
 		
-		<div style="margin-top: 2%; width : 80%; border: solid 0px green;" id="showCourse">
+		<div style="margin-top: 2%; margin: auto; width : 80%;" id="showCourse">
 		<c:if test="${empty requestScope.mapList}">
 			<span style="margin-left:10%; font-weight:bold; color:red; font-size:18pt;">수강중인 수업이 없습니다.</span>
 		</c:if>
@@ -244,7 +253,7 @@ function selectCourse(year, semester){
 		<c:if test="${not empty requestScope.mapList}">
 		
 			<c:forEach var="mapList" items="${requestScope.mapList}">
-				<div class="border" style="width: 80%; height: 90px; margin: 0 auto; font-size: 26pt; color: #175F30; font-weight: bold;">
+				<div class="border" style="width: 80%; height: 90px; margin: auto; font-size: 26pt; color: #175F30; font-weight: bold;">
 				   <input type="hidden" name="course_seq" value="${mapList.course_seq}"/>
 				   <div style="display: flex;" >
 				      <div><img src="<%= ctxPath%>/resources/images/강사님.png" style="border-radius:50%; width: 50px; height: 50px; margin-left: 2%; margin-left: 20%; margin-top: 30%;"/></div>
