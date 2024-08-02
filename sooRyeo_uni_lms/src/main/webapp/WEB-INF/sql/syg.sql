@@ -428,6 +428,8 @@ insert into tbl_menu (menu_url, menu_name, status)
 values ('/admin/curriculum.lms', '커리큘럼 관리', 3);
 insert into tbl_menu (menu_url, menu_name, status)
 values ('/admin/courseRegister.lms', '강의관리', 3);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/board/addList.lms', '공지사항쓰기', 3);
 -------------------------------------------------------
 insert into tbl_menu (menu_url, menu_name, status)
 values ('/professor/courseList.lms', '내 수업', 2);

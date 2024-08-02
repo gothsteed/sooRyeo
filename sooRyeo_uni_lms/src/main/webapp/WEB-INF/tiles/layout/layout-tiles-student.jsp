@@ -16,7 +16,7 @@
     <title>Styled Sidebar</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
+	
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -200,18 +200,43 @@
 		}
 
     	#alertLecture {
-		    width: 80%;
-		    max-width: 200px; /* Match the search bar's maximum width */
-		    max-height: 500px; /* Set a height for the example */
-		    background-color: #ddd; /* Just for visibility */
-		    height: 100px;
-		    box-sizing: border-box; /* Include padding and border in the width */
-   			position: absolute; /* Position absolute to overlap the header */
-		    z-index: 10000; /* Higher than .header */
-		    overflow:auto;
-		    border-radius: 10px;
+		    
+	        width: 300px; /* 넓은 알림창 */
+		    max-height: 400px; /* 높이 조정 */
+		    background-color: #ffffff; /* 배경색을 하얀색으로 설정 */
+		    border: 1px solid #e0e0e0; /* 연한 회색 테두리 */
+		    border-radius: 8px; /* 부드러운 모서리 */
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+		    position: absolute; /* 절대 위치 지정 */
+		    z-index: 10000; /* 높은 z-index */
+		    overflow-y: auto; /* 내용 넘침 처리 */
+		    right: 10px; /* 오른쪽에서의 위치 */
+		    padding: 15px; /* 내부 여백 */
+		    font-family: Arial, sans-serif; /* 간결한 글꼴 */
+		    color: #333; /* 어두운 텍스트 색상 */
 		}
         
+        /* 알림 항목 스타일 */
+		.result2 {
+		    display: block;
+		    padding: 10px;
+		    margin-bottom: 10px;
+		    border-radius: 5px;
+		    background-color: #f4f4f9; /* 항목 배경색 */
+		    color: #555; /* 텍스트 색상 */
+		    cursor: pointer; /* 클릭 커서 */
+		    transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 */
+		}
+		
+		.result2:hover {
+		    background-color: #e0e0e0; /* 호버 시 배경색 */
+		    color: #333; /* 호버 시 텍스트 색상 */
+		}
+		
+		#lectureAlertSpan {
+		    color: #6a0dad; /* 교수 이름과 수업명에 사용될 색상 */
+		    font-weight: bold; /* 강조된 텍스트 */
+		}
     </style>
 
 </head>
@@ -233,11 +258,21 @@ $(document).ready(function(){
 		  success: function(response) {
 		    // 성공적으로 데이터를 받았을 때 처리할 코드
 			  if(response == ""){ // 데이터가 없을때
-			    $("span#bell").text("X");
+			    $("span#bell").text("🔔");
 			  
 			  }
 			  else{ // 데이터가 있을때 
 			    $("span#bell").text("🔔");
+			  
+			  document.getElementById('bell').innerHTML += `
+
+	                <div class="badge" id="unreadCountBadge" style="position: absolute; right: 4.3%; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+	                	\${response.length}
+	                </div>
+
+	                `;
+			  
+			  
 			  }// else---------------------------------
 		  },
 		  error: function(request, status, error){
@@ -303,7 +338,6 @@ $(document).ready(function(){
 											+ "<span style='vertical-align: middle;'>" + name.substring(0, idx) + "</span>" 
 											+ "<span style='color:purple; font-weight:bold; vertical-align: middle;'>" + name.substring(idx, idx + len) + "</span>" 
 											+ "<span style='vertical-align: middle;'>" + name.substring(idx + len) + "</span>";
-				               	
 							
 							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'><br>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
@@ -370,7 +404,7 @@ function alertLecture(){
 					const lId = item.LId;
 					const id = item.Id;
 			  		
-					const result ="<span id='lectureAlertSpan' style='color:purple;'>"+ profName + "교수님의 " + lecName +"수업이 추가되었습니다."+"</span>";
+					const result ="<span id='lectureAlertSpan' style='color:purple;'>"+ profName + "교수님의 " + "'"+lecName+ "' " +"수업이 추가되었습니다."+"</span>";
 					
 					v_html += `<span style='cursor:pointer;' data-custom="\${lId}" data-role="\${id}" class='result2'>\${result}<br></span>`
 					
@@ -400,7 +434,7 @@ function alertLecture(){
 		      data: {id: id},
 			  success: function(response) {
 
-				 alert(response.alertLecture); // undefined
+				alert(response.alertLecture); // undefined
 				  
 				if(response.alertLecture == null){
 					location.href = `<%=ctxPath%>/student/myLecture.lms?course_seq=\${url}`;
