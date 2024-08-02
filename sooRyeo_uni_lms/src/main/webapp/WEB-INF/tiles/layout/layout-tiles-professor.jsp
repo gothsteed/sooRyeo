@@ -117,7 +117,6 @@
 			background-repeat: no-repeat;
 			background-position: top left;
         }
-        
         .content {
             flex-grow: 1;
             overflow-y: auto;
@@ -166,7 +165,9 @@
             display: flex;
             align-items: center;
         }
-
+  /*      .header .icons span:first-child{
+            margin-left: 20px;
+        }*/
         .header .icons span {
             margin-left: 20px;
             font-size: 25px;
@@ -203,8 +204,70 @@
 		    z-index: 10000; /* Higher than .header */
 		    overflow:auto;
 		}
-        
-		
+
+        #mailDropdown {
+
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .mail-dropdown-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .mail-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .mail-dropdown-item:hover {
+            background-color: #f8f8f8;
+        }
+
+        .mail-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .mail-item-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .mail-item-room {
+            color: #666;
+        }
+
+        .mail-item-body {
+            font-size: 11px;
+            color: #444;
+        }
+
+        .mail-item-unread {
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .no-messages {
+            padding: 14px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -233,36 +296,71 @@ $(document).ready(function(){
         })
         .then(data => {
             console.log('Data received:', data);
-            // Process and display the data as needed
-            let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value, 0);
-            //let totalUnreadCount =45;
-            console.log(totalUnreadCount)
 
-            document.getElementById('message').innerHTML += `
+            let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value.unreadCount, 0);
+
+            console.log(totalUnreadCount);
+
+            if(totalUnreadCount > 0) {
+                document.getElementById('message').innerHTML += `
 
                 <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
                     \${totalUnreadCount}
                 </div>
 
                 `;
-
+            }
 
             const mailDropdown = document.getElementById('mailDropdown');
-            mailDropdown.innerHTML = ''; // Clear any existing content
+            mailDropdown.innerHTML = '';
 
-            Object.entries(data).forEach(([key, value]) => {
+            if(totalUnreadCount > 0) {
+                Object.entries(data).forEach(([key, value]) => {
+                    const item = document.createElement('div');
+                    item.className = 'mail-dropdown-item';
+                    item.innerHTML = `
+                        <div class="mail-item-header">
+                            <span class="mail-item-title ml-0" style="font-size: 13px">상담명: </span>
+                            <span class="mail-item-room ml-0" style="font-size: 13px">\${value.roomName}</span>
+                        </div>
+                        <div class="mail-item-body">
+                            <span class="mail-item-unread ml-0" style="font-size: 13px">\${value.unreadCount}개 안읽었습니다</span>
+                        </div>
+                    `;
+                    /*                item.style.padding = '10px';
+                                    item.style.borderBottom = '1px solid #ccc';*/
+                    item.onclick =function() {
+                        location.href = `<%=ctxPath%>/chat.lms?roomId=\${key}`;
+                    };
+                    mailDropdown.appendChild(item);
+                });
+            }
+            else {
                 const item = document.createElement('div');
-                item.textContent = `ID: \${key}, Value: \${value}`;
-                item.style.padding = '10px';
-                item.style.borderBottom = '1px solid #ccc';
+                item.className = 'mail-dropdown-item';
+                item.textContent = `메시지가 없습니다`;
+                item.style.fontSize = '13px'
+                /*                item.style.padding = '10px';
+                                item.style.borderBottom = '1px solid #ccc';*/
                 mailDropdown.appendChild(item);
-            });
+            }
 
-            document.getElementById('message').addEventListener('click', function() {
+
+            document.getElementById('message').addEventListener('click', function(event) {
                 const dropdown = document.getElementById('mailDropdown');
                 if (dropdown.style.display === 'none' || dropdown.style.display === '') {
                     dropdown.style.display = 'block';
                 } else {
+                    dropdown.style.display = 'none';
+                }
+                event.stopPropagation(); // Stop the click event from propagating to the document
+            });
+
+            // Add an event listener to the document to hide the dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('mailDropdown');
+                const messageDiv = document.getElementById('message');
+                if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
                     dropdown.style.display = 'none';
                 }
             });
@@ -426,7 +524,7 @@ $(document).ready(function(){
             <div class="icons">
                 <span id="message" class="icon" style="position: relative">
                     📫
-                    <div class="dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></div>
+                    <span class="mail-dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></span>
                 </span>
                 <span class="icon">🔔</span>
                 <span class="icon">❔</span>
