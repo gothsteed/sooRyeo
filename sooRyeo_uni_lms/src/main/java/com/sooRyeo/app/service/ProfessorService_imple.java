@@ -643,11 +643,11 @@ public class ProfessorService_imple implements ProfessorService {
 
 
 	@Override
-	public List<Lecture> getlectureList_week(String fk_course_seq) {
+	public Lecture getlecture(String lecture_seq) {
 		
-		List<Lecture> lectureList_week = dao.getlectureList_week(fk_course_seq);
+		Lecture getlecture = dao.getlecture(lecture_seq);
 		
-		return lectureList_week;
+		return getlecture;
 	}
 
 

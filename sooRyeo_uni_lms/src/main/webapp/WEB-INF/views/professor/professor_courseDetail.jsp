@@ -251,7 +251,7 @@ function deleteLecture(lectureSeq) {
 				<div class="card-body">
 					<h5 class="card-title">${lecture.lecture_content}</h5>
 					<hr>
-					<a href="<%= ctxPath%>/professor/classPlay.lms?course_seq=${requestScope.fk_course_seq}" class="card-link">
+					<a href="<%= ctxPath%>/professor/classPlay.lms?lecture_seq=${lecture.lecture_seq}" class="card-link">
 						<img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}
 					</a>
 					<!-- 영상 보는 기간 -->
@@ -260,12 +260,12 @@ function deleteLecture(lectureSeq) {
 						<fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/>
             		</span>
 					<c:if test="${empty lecture.lecture_file_name}">
-						<a class="card-link mt-3 ml-5">
-							<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;첨부파일이 없습니다.
-						</a>
+						<span class="card-link mt-3 ml-5">
+							첨부파일이 없습니다.
+						</span>
 					</c:if>
 					<c:if test="${not empty lecture.lecture_file_name}">
-						<a href="#pdf" class="card-link mt-3 ml-5">
+						<a href="<%= ctxPath%>/professor/pdf_download.lms?lecture_file_name=${lecture.lecture_file_name}" class="card-link mt-3 ml-5">
 							<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}
 						</a>
 					</c:if>
