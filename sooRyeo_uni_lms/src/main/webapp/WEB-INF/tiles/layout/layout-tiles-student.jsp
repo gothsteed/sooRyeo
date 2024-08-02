@@ -232,6 +232,22 @@
 		    background-color: #e0e0e0; /* 호버 시 배경색 */
 		    color: #333; /* 호버 시 텍스트 색상 */
 		}
+
+		.result3 {
+		    display: block;
+		    padding: 10px;
+		    margin-bottom: 10px;
+		    border-radius: 5px;
+		    background-color: #f4f4f9; /* 항목 배경색 */
+		    color: #555; /* 텍스트 색상 */
+		    cursor: pointer; /* 클릭 커서 */
+		    transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 색상 전환 */
+		}
+		
+		.result3:hover {
+		    background-color: #e0e0e0; /* 호버 시 배경색 */
+		    color: #333; /* 호버 시 텍스트 색상 */
+		}
 		
 		#lectureAlertSpan {
 		    color: #6a0dad; /* 교수 이름과 수업명에 사용될 색상 */
@@ -418,11 +434,17 @@ function alertLecture(){
 					v_html += `<span style='cursor:pointer;' data-custom="\${lId}" data-role="\${id}" class='result2'>\${result}<br></span>`
 					
 				}); // end of $.each(json, function(index, item){})------------------------------------
-			  	
+		    }
+		    else{
+		    	const result ="<span id='lectureAlertSpan' style='color:black;'>수업 등록 알림이 없습니다.</span>";
+				
+				v_html += `<span style='cursor:pointer;' class='result3'>\${result}<br></span>`
+		    	
+		    }  	
+		    
 				$("div#alertLecture").html(v_html);
 				
 				$("div#alertLecture").show();
-		    }
 		  },
 		  error: function(request, status, error){
 	          alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
