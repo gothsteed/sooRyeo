@@ -410,7 +410,7 @@ $(document).ready(function(){
                 <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
                     <a class="dropdown-item" href="<%=ctxPath%>/professor/courseList.lms">내 수업</a>
-                    <a class="dropdown-item" href="#">출석현황</a>
+                    <!-- <a class="dropdown-item" href="#">출석현황</a> -->
                 </div>
             </li>
             <li class="nav-item">
@@ -424,13 +424,13 @@ $(document).ready(function(){
                 <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
                 <div class="dropdown-menu" aria-labelledby="gradesMenu" >
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/insertGradeform.lms">성적 기입</a>
-                    <a class="dropdown-item" href="#">취득 현황</a>
+                    <!-- <a class="dropdown-item" href="#">취득 현황</a> -->
                 </div>
             </li>
             <li class="nav-item">
                 <a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
                 <div class="dropdown-menu" aria-labelledby="groupsMenu" >
-                    <a class="dropdown-item" href="#">내 친구</a>
+                    <!-- <a class="dropdown-item" href="#">내 친구</a> -->
                     <a class="dropdown-item" href="<%=ctxPath %>/board/announcement.lms">학사공지사항</a>
                 </div>
             </li>
