@@ -104,7 +104,7 @@ public interface ProfessorService {
 	double attendanceRate(int student_id, int fk_course_seq);
 	
 	// 교수 수업 시청하기
-	List<Lecture> getlectureList_week(String fk_course_seq);
+	Lecture getlecture(String lecture_seq);
 
 	
 	

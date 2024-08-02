@@ -487,11 +487,11 @@ public class ProfessorDao_imple implements ProfessorDao {
 
 
 	@Override
-	public List<Lecture> getlectureList_week(String fk_course_seq) {
+	public Lecture getlecture(String lecture_seq) {
 		
-		List<Lecture> lectureList_week = sqlSession.selectList("professor.getlectureList_week", fk_course_seq);
+		Lecture getlecture = sqlSession.selectOne("professor.getlecture", lecture_seq);
 		
-		return lectureList_week;
+		return getlecture;
 		
 	}
 
