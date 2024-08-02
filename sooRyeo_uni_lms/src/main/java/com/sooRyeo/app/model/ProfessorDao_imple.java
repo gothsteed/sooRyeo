@@ -18,6 +18,7 @@ import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -482,6 +483,16 @@ public class ProfessorDao_imple implements ProfessorDao {
         }
 					
 		return attendanceRate;
+	}
+
+
+	@Override
+	public Lecture getlecture(String lecture_seq) {
+		
+		Lecture getlecture = sqlSession.selectOne("professor.getlecture", lecture_seq);
+		
+		return getlecture;
+		
 	}
 
 
