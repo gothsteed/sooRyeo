@@ -39,15 +39,13 @@
 		websocket.onopen = function(){
 			// alert("웹소켓연결됨");
 			$("div#chatStatus").text("정보: 웹소켓에 연결이 성공됨!!");
-
+			getUnreadNotification();
 		};
 
 		// === 메시지 수신시 콜백함수 정의하기 === //
 		websocket.onmessage = function(event){
 			console.log(event.data);
 
-			//event.data = {"messageType":"ALERT","content":"홍길동 교수님이 입장하였습니다","name":null,"senderId":null,"timestamp":"2024-07-21T11:27:20.822072700","senderType":null}
-			//event.data = {"messageType":"CHAT","content":"adsfa","name":"홍길동","senderId":202400002,"timestamp":"2024-07-21T12:05:45.911","senderType":null}
 			const message = JSON.parse(event.data);
 
 			const now = new Date();
@@ -189,7 +187,6 @@
 		});
 
 
-		getUnreadNotification()
 
 	}) // end of $(document).ready(function(){})------------------------------------
 </script>

@@ -26,7 +26,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -157,7 +156,7 @@ public class LectureService_imple implements LectureService{
         String videoOriginalFileName = null;
         Long durationMinutes = null;
         if(lectureUploadDto.getVideo() != null) {
-            fileManager.doFileDelete(lecture.getUploaded_video_file_name(), path);
+            fileManager.doFileDelete(lecture.getUpload_video_file_name(), path);
 
             videoOriginalFileName = lectureUploadDto.getVideo().getOriginalFilename();
             uploadVideoFileName  =  fileManager.doFileUpload(lectureUploadDto.getVideo().getBytes(), videoOriginalFileName, path);
@@ -173,7 +172,7 @@ public class LectureService_imple implements LectureService{
         String uploadAttachFileName = null;
         String attachOriginalFileName = null;
         if(lectureUploadDto.getAttachment() != null) {
-            fileManager.doFileDelete(lecture.getUploaded_lecture_file_name(), path);
+            fileManager.doFileDelete(lecture.getUpload_lecture_file_name(), path);
 
             attachOriginalFileName = lectureUploadDto.getAttachment().getOriginalFilename();
             uploadAttachFileName  =  fileManager.doFileUpload(lectureUploadDto.getAttachment().getBytes(), attachOriginalFileName, path);
@@ -222,10 +221,10 @@ public class LectureService_imple implements LectureService{
         }
 
         if(lecture.getVideo_file_name() != null) {
-            fileManager.doFileDelete(path, lecture.getUploaded_video_file_name());
+            fileManager.doFileDelete(path, lecture.getUpload_video_file_name());
         }
         if(lecture.getLecture_file_name() != null) {
-            fileManager.doFileDelete(path, lecture.getUploaded_lecture_file_name());
+            fileManager.doFileDelete(path, lecture.getUpload_lecture_file_name());
         }
 
         int result = lectureDao.deleteLecture(lecture_seq);
