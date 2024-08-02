@@ -566,9 +566,12 @@ public class CertificateService_imple implements CertificateService {
         String student_id = String.valueOf(loginuser.getStudent_id());
         String birthday = loginuser.getBirthday();
         String department_name = loginuser.getDepartment_name();
-        String finish_date = String.valueOf(loginuser.getFinish_date());
+        
+        Date finish_date = loginuser.getFinish_date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        
         // 졸업년도 null 체크 후 출력
-        String finishDateOutput = (finish_date == null || finish_date.equals("0")) ? "미졸업" : finish_date;
+        String finishDateOutput = (finish_date == null) ? "미졸업" : dateFormat.format(finish_date);
         // db 데이터 불러오기 
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
