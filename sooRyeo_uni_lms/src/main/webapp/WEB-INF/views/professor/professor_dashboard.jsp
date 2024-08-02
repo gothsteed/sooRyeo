@@ -305,13 +305,13 @@
 
          const url = '<%=ctxPath%>' + '/admin/profTimetableJSON.lms?prof_id=' + prof_id;
 
-        // console.log(url);
+         console.log(url);
 
          fetch(url)
              .then(response => response.json())
              .then(data => {
 
-                // console.log(data);
+                 console.log(data);
                  clearTimetable();
                  recreateTimetableStructure();
 
