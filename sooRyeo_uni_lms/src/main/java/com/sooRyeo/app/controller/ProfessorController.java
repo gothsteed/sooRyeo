@@ -3,6 +3,7 @@ package com.sooRyeo.app.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -1103,13 +1104,19 @@ public class ProfessorController {
 	@GetMapping("/professor/classPlay.lms")
 	public ModelAndView classPlay(HttpServletRequest request, ModelAndView mav) {
 		
-		String lecture_seq = request.getParameter("lecture_seq");
-		
+		String lecture_seq = request.getParameter("lecture_seq");		
 		System.out.println("확인용 lecture_seq : " + lecture_seq);
+		
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root+"resources"+File.separator+"lectures";
+	    String videoFileName = request.getParameter("upload_video_file_name");  
+	    String videoPath = path+videoFileName;
 		
 		Lecture lecture = professorService.getlecture(lecture_seq);
 		
 		mav.addObject("lecture", lecture);
+		mav.addObject("videoPath", videoPath);
 		
 		mav.setViewName("classPlay");
 		

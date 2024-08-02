@@ -88,6 +88,7 @@
 			 , video_file_name, lecture_file_name, lecture_title
 			 , lecture_content
 			 , upload_lecture_file_name
+			 , upload_video_file_name
 			 , start_date
      		 , end_date
 		from tbl_lecture join tbl_course

@@ -54,7 +54,7 @@ video {
         
            <input type="hidden" id="lecture_seq" value="${requestScope.lecture.lecture_seq}"/>
            
-           <video id="video-player" src="${pageContext.request.contextPath}/resources/lectures/${requestScope.lecture.video_file_name}" controls width="1060" height="530"></video>
+           <video id="video-player" src="${requestScope.videoPath}" controls width="1060" height="530"></video>
 		
         </div>
         <div class="shadow ml-5 mb-5 bg-body rounded" style="width : 20%; height: 520pt; padding: 2%; background-color: white;">
