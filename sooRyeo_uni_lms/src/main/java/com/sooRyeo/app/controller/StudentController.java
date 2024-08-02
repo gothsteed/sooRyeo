@@ -694,6 +694,8 @@ public class StudentController {
 		
 		String fk_course_seq = request.getParameter("course_seq");
 		
+		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		
 		List<Lecture> lectureList_week = studentservice.getlectureList_week(fk_course_seq);
 		
 		mav.addObject("lectureList_week", lectureList_week);

@@ -25,6 +25,7 @@ import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Curriculum;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -638,6 +639,15 @@ public class ProfessorService_imple implements ProfessorService {
 		double attendanceRate = dao.attendanceRate(student_id, fk_course_seq);
 		
 		return attendanceRate;
+	}
+
+
+	@Override
+	public List<Lecture> getlectureList_week(String fk_course_seq) {
+		
+		List<Lecture> lectureList_week = dao.getlectureList_week(fk_course_seq);
+		
+		return lectureList_week;
 	}
 
 

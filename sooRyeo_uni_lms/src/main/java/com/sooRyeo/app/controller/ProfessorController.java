@@ -1099,6 +1099,23 @@ public class ProfessorController {
 	}
 	
 	
+	// 수업 - 내 강의 - 동영상 플레이
+	@GetMapping("/professor/classPlay.lms")
+	public ModelAndView classPlay(HttpServletRequest request, ModelAndView mav) {
+		
+		String fk_course_seq = request.getParameter("course_seq");
+		
+		System.out.println("확인용 fk_course_seq : " + fk_course_seq);
+		
+		List<Lecture> lectureList_week = professorService.getlectureList_week(fk_course_seq);
+		
+		mav.addObject("lectureList_week", lectureList_week);
+		
+		mav.setViewName("classPlay");
+		
+		return mav;
+	} // end of public String class_play()-------
+	
 	
 	
 	

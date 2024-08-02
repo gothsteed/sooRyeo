@@ -77,7 +77,7 @@
 
 $(document).ready(function(){
 	
-		
+	const course_seq = "${requestScope.fk_course_seq}";	
 
 
 
@@ -251,7 +251,7 @@ function deleteLecture(lectureSeq) {
 				<div class="card-body">
 					<h5 class="card-title">${lecture.lecture_content}</h5>
 					<hr>
-					<a href="<%= ctxPath%>/student/classPlay.lms" class="card-link">
+					<a href="<%= ctxPath%>/professor/classPlay.lms?course_seq=${requestScope.fk_course_seq}" class="card-link">
 						<img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}
 					</a>
 					<!-- 영상 보는 기간 -->
