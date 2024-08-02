@@ -48,12 +48,12 @@ public class ChatController {
         return chatService.getChatPage(request, mav);
     }
 
-    @GetMapping(value = "/student/chatAlertREST.lms")
+    @GetMapping(value = "/student/chatAlertREST.lms", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> getStudentUnreadMessageCount(HttpServletRequest request, HttpServletResponse response) {
         return chatService.getStudentUnreadMessageCount(request, response);
     }
 
-    @GetMapping(value = "/professor/chatAlertREST.lms")
+    @GetMapping(value = "/professor/chatAlertREST.lms", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<String> getProfessorUnreadMessageCount(HttpServletRequest request, HttpServletResponse response) {
         return chatService.getProfessorUnreadMessageCount(request, response);
     }
