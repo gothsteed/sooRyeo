@@ -24,8 +24,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @Service
@@ -233,5 +236,60 @@ public class LectureService_imple implements LectureService{
         }
 
         return ResponseEntity.ok("강의가 삭제되었습니다.");
+    }
+
+    @Override
+    public void downloadLectureAttachment(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html; charset=UTF-8");
+
+        PrintWriter out = null;
+        // out 은 웹브라우저에 기술하는 대상체로 가정
+
+        try {
+
+            if(request.getParameter("lecture_seq") == null) {
+                out = response.getWriter();
+                // out 은 웹브라우저에 기술하는 대상체로 가정
+
+                out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+                return;
+            }
+
+            // 정상적으로 다운로드를 할 경우
+            int lecture_seq = Integer.parseInt(request.getParameter("lecture_seq"));
+
+            Lecture lecture = lectureDao.getLectureInfo(lecture_seq);
+
+            //todo: 다중 파일 저장으로 바꾸기
+            HttpSession session = request.getSession();
+
+            String path = session.getServletContext().getRealPath("/resources/lectures");
+
+            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도
+
+            flag = fileManager.doFileDownload(lecture.getUpload_lecture_file_name(), lecture.getLecture_file_name(), path, response);
+
+            if(!flag) {
+                // 다운로드가 실패한 경우 메시지를 띄워준다.
+                out = response.getWriter();
+                // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+
+                out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+            }
+
+
+        } catch (NumberFormatException | IOException e) {
+
+            try {
+                out = response.getWriter();
+                // out 은 웹브라우저에 기술하는 대상체로 가정
+
+                out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+
+        }
     }
 }

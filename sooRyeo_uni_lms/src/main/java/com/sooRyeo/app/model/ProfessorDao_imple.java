@@ -486,16 +486,6 @@ public class ProfessorDao_imple implements ProfessorDao {
 	}
 
 
-	@Override
-	public Lecture getlecture(String lecture_seq) {
-		
-		Lecture getlecture = sqlSession.selectOne("professor.getlecture", lecture_seq);
-		
-		return getlecture;
-		
-	}
-
-
 
 
 

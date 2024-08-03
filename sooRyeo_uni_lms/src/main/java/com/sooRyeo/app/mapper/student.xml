@@ -89,6 +89,7 @@
 			 , lecture_content
 			 , start_date
      		 , end_date
+			, UPLOAD_VIDEO_FILE_NAME, UPLOAD_LECTURE_FILE_NAME
 		from tbl_lecture join tbl_course
 		on tbl_lecture.fk_course_seq = tbl_course.course_seq
 		where exist = 1 AND fk_course_seq = #{fk_course_seq}

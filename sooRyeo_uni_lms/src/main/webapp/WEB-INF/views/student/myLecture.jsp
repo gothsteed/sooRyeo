@@ -332,7 +332,16 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 					<hr>
 					<a class="card-link" id="classPlay"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
 					<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
-					<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
+					<c:if test="${empty lecture_week.lecture_file_name}">
+						<span class="card-link mt-3 ml-5">
+							첨부파일이 없습니다.
+						</span>
+					</c:if>
+					<c:if test="${not empty lecture_week.lecture_file_name}">
+						<a href="<%= ctxPath%>/lecture/pdf_download.lms?lecture_seq=${lecture_week.lecture_seq}" class="card-link mt-3 ml-5">
+							<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}
+						</a>
+					</c:if>
 				</div>
 		</div>
 	</c:forEach>
@@ -359,7 +368,16 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			<a id="classPlay_list" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
 			<!-- 영상 보는 기간 -->
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
+			<c:if test="${empty lecture.lecture_file_name}">
+						<span class="card-link mt-3 ml-5">
+							첨부파일이 없습니다.
+						</span>
+			</c:if>
+			<c:if test="${not empty lecture.lecture_file_name}">
+				<a href="<%= ctxPath%>/lecture/pdf_download.lms?lecture_seq=${lecture.lecture_seq}" class="card-link mt-3 ml-5">
+					<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}
+				</a>
+			</c:if>
 		</div>
 
 	</div>

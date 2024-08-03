@@ -929,14 +929,14 @@ public class StudentController {
 		
 		return mav;
 	}
-	
-	@RequestMapping(value = "/student/chatting.lms", method = RequestMethod.GET)
+
+/*	@RequestMapping(value = "/student/chatting.lms", method = RequestMethod.GET)
 	public String chatting() {
 
 		return "chatting";
 		// /WEB-INF/views/student/{1}.jsp
 	}
-	
+	*/
 	
 	
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
@@ -1094,14 +1094,13 @@ public class StudentController {
 		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
 		return jsonobj.toString();
 	}
-
 	
 	@GetMapping("/student/test.lms")
 	public String test() {
 		
 		return "test";
 		
-	} // end of public String attendance
+	}
 	
 	
 	
@@ -1123,43 +1122,7 @@ public class StudentController {
 		
 		return "";
 	}
-	
-	@ResponseBody
-	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
-	public String alertLecture(HttpServletRequest request) {
-		
-		List<AlertLecture> alertLecture = studentservice.getAlertLecture(request); 
 
-		JSONArray jsonArr = new JSONArray(); // []
-		
-		if(alertLecture != null) {
-			for(AlertLecture alertLectureData : alertLecture) {
-				JSONObject jsonObj = new JSONObject(); // {}
-				jsonObj.put("Lname", alertLectureData.getLectureName());
-				jsonObj.put("Pname", alertLectureData.getProfessorName());
-				jsonObj.put("LId", alertLectureData.getLectureId());
-				jsonObj.put("Id", alertLectureData.getId());
-				
-				jsonArr.put(jsonObj); // [{},{},{}]
-			}// end of for ----------------------------------
-		}
-		return jsonArr.toString(); 
-	}
-
-	
-	@ResponseBody
-	@GetMapping(value="/student/alertLectureDel.lms", produces="text/plain;charset=UTF-8")
-	public String alertLectureDel(HttpServletRequest request) {
-		
-		String id = (String)request.getParameter("id");
-		
-		AlertLecture alertLecture = studentservice.deleteAlertLecture(id);
-		
-		JSONObject jsonObj = new JSONObject(); // {}
-		jsonObj.put("alertLecture", alertLecture);
-				
-		return jsonObj.toString(); 
-	}
 	
 	
 	// 수업 - 년도, 학기 조회해서 보여주기
