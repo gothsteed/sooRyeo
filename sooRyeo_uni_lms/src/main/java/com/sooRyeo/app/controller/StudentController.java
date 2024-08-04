@@ -1108,19 +1108,7 @@ public class StudentController {
 	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
 		return scheduleService.getStudentConsultPage(request, mav);
 	}
-	
-	
-	// 수업 클릭 시 시청 기간이 아니라면 alert 띄우기
-	@ResponseBody
-	@PostMapping("/student/time_compare_ajax.lms")
-	public String time_compare_ajax(HttpServletRequest request) {
-		
-		String lecture_seq = request.getParameter("lecture_seq");
-		
-		// 수업 기간 읽어오기
-		
-		return "";
-	}
+
 	
 	@ResponseBody
 	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")

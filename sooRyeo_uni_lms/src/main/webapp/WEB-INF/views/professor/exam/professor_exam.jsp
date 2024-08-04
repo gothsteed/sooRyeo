@@ -102,7 +102,7 @@ $(function() {
 
 
     $("button#addBtn").click(function() {
-        $("div#boxWrap").append(` 
+        $("div#boxWrap").append(`  
             <div style="display: flex; align-items: center; margin-top: 20px;" margin-left: 20px; class="aw-wrap">
                 <input type="hidden" class="form-control aw"  value="\${index+1}" name="questionNumber">
                 <span style="width: 130px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
