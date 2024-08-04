@@ -642,19 +642,4 @@ public class ProfessorService_imple implements ProfessorService {
 	}
 
 
-
-
-
-
-	
-
-	
-
-    
-    
-    
-	
-	
-
-
 }

@@ -4,6 +4,7 @@ import com.sooRyeo.app.ExceptionHandler.AuthException;
 import com.sooRyeo.app.common.FileManager;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.LectureAttachedFile;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.dto.LectureInsertDto;
 import com.sooRyeo.app.dto.LectureUpdateDto;
@@ -19,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -69,6 +73,7 @@ public class LectureService_imple implements LectureService{
         return mav;
     }
 
+    @Transactional
     @Override
     public ResponseEntity<String> uploadLecturePage(MultipartHttpServletRequest request, LectureUploadDto lectureUploadDto) throws Exception {
 
@@ -84,16 +89,21 @@ public class LectureService_imple implements LectureService{
 
 
 
-        String uploadAttachFileName = null;
-        String attachOriginalFileName = null;
+        List<String> uploadAttachFileNames = new ArrayList<>();
+        List<String> attachOriginalFileNames = new ArrayList<>();
         if(lectureUploadDto.getAttachment() != null) {
-            attachOriginalFileName = lectureUploadDto.getAttachment().getOriginalFilename();
-            uploadAttachFileName  =  fileManager.doFileUpload(lectureUploadDto.getAttachment().getBytes(), attachOriginalFileName, path);
+            for(MultipartFile file : lectureUploadDto.getAttachment()) {
+                String originalFileName = file.getOriginalFilename();
+                String uploadFileName=  fileManager.doFileUpload(file.getBytes(), originalFileName, path);
+
+                uploadAttachFileNames.add(uploadFileName);
+                attachOriginalFileNames.add(originalFileName);
+            }
         }
 
         LectureInsertDto dto = new LectureInsertDto(lectureUploadDto.getCourse_seq(), lectureUploadDto.getTitle(),
                 lectureUploadDto.getContent(), lectureUploadDto.getStartDateTime(), lectureUploadDto.getEndDateTime(),
-                videoOriginalFileName, uploadedVideoName, attachOriginalFileName, uploadAttachFileName, durationMinutes);
+                videoOriginalFileName, uploadedVideoName, uploadAttachFileNames, attachOriginalFileNames, durationMinutes);
 
 
         int result = lectureDao.insertLecture(dto);
@@ -144,6 +154,7 @@ public class LectureService_imple implements LectureService{
         return mav;
     }
 
+    @Transactional
     @Override
     public ResponseEntity<String> editLecture(HttpServletRequest request, LectureUploadDto lectureUploadDto) throws Exception {
 
@@ -171,17 +182,30 @@ public class LectureService_imple implements LectureService{
 
         }
 
-
-        String uploadAttachFileName = null;
-        String attachOriginalFileName = null;
-        if(lectureUploadDto.getAttachment() != null) {
-            fileManager.doFileDelete(lecture.getUpload_lecture_file_name(), path);
-
-            attachOriginalFileName = lectureUploadDto.getAttachment().getOriginalFilename();
-            uploadAttachFileName  =  fileManager.doFileUpload(lectureUploadDto.getAttachment().getBytes(), attachOriginalFileName, path);
+        if(lectureUploadDto.getRemovedFiles() != null) {
+            for(LectureAttachedFile file : lecture.getAttachedFileList()) {
+                if(lectureUploadDto.isRemoved(file.getLecture_attached_file_seq())) {
+                    fileManager.doFileDelete(file.getUpload_file_name(), path);
+                    lectureDao.deleteAttachFile(file.getLecture_attached_file_seq());
+                }
+            }
         }
 
-        LectureUpdateDto lectureUpdateDto =  new LectureUpdateDto(
+        List<String> uploadAttachFileNames = new ArrayList<>();
+        List<String> attachOriginalFileNames = new ArrayList<>();
+        if(lectureUploadDto.getAttachment() != null) {
+            for(MultipartFile file : lectureUploadDto.getAttachment()) {
+                String originalFileName = file.getOriginalFilename();
+                String uploadFileName=  fileManager.doFileUpload(file.getBytes(), originalFileName, path);
+
+                uploadAttachFileNames.add(uploadFileName);
+                attachOriginalFileNames.add(originalFileName);
+            }
+        }
+
+
+        LectureInsertDto lectureUpdateDto =  new LectureInsertDto(
+                lecture.getLecture_seq(),
                 lectureUploadDto.getLecture_seq(),
                 lectureUploadDto.getTitle(),
                 lectureUploadDto.getContent(),
@@ -189,8 +213,8 @@ public class LectureService_imple implements LectureService{
                 lectureUploadDto.getEndDateTime(),
                 videoOriginalFileName,
                 uploadVideoFileName,
-                attachOriginalFileName,
-                uploadAttachFileName,
+                uploadAttachFileNames,
+                attachOriginalFileNames,
                 durationMinutes);
 
 
@@ -226,8 +250,9 @@ public class LectureService_imple implements LectureService{
         if(lecture.getVideo_file_name() != null) {
             fileManager.doFileDelete(path, lecture.getUpload_video_file_name());
         }
-        if(lecture.getLecture_file_name() != null) {
-            fileManager.doFileDelete(path, lecture.getUpload_lecture_file_name());
+
+        for(LectureAttachedFile file : lecture.getAttachedFileList()) {
+            fileManager.doFileDelete(path, file.getUpload_file_name());
         }
 
         int result = lectureDao.deleteLecture(lecture_seq);
@@ -267,7 +292,7 @@ public class LectureService_imple implements LectureService{
 
             boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도
 
-            flag = fileManager.doFileDownload(lecture.getUpload_lecture_file_name(), lecture.getLecture_file_name(), path, response);
+            //flag = fileManager.doFileDownload(lecture.getUpload_lecture_file_name(), lecture.getLecture_file_name(), path, response);
 
             if(!flag) {
                 // 다운로드가 실패한 경우 메시지를 띄워준다.

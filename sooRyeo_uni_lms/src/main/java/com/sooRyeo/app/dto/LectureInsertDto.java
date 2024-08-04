@@ -1,14 +1,19 @@
 package com.sooRyeo.app.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-/*@AllArgsConstructor
-@NoArgsConstructor*/
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class LectureInsertDto {
-
+    private Integer lecture_seq;
     private Integer course_seq;
     private String title;
     private String content;
@@ -16,14 +21,11 @@ public class LectureInsertDto {
     private LocalDateTime endDateTime;
     private String originalVideoTitle;
     private String uploadVideoTitle;
-    private String originalAttachName;
-    private String uploadAttachName;
+    private List<String> uploadAttachFileNames;
+    private List<String> attachOriginalFileNames;
     private Long durationMinutes;
 
-    public LectureInsertDto() {
-    }
-
-    public LectureInsertDto(Integer course_seq, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String originalVideoTitle, String uploadVideoTitle, String originalAttachName, String uploadAttachName, Long durationMinutes) {
+    public LectureInsertDto(Integer course_seq, String title, String content, LocalDateTime startDateTime, LocalDateTime endDateTime, String originalVideoTitle, String uploadVideoTitle, List<String> uploadAttachFileNames, List<String> attachOriginalFileNames, Long durationMinutes) {
         this.course_seq = course_seq;
         this.title = title;
         this.content = content;
@@ -31,88 +33,8 @@ public class LectureInsertDto {
         this.endDateTime = endDateTime;
         this.originalVideoTitle = originalVideoTitle;
         this.uploadVideoTitle = uploadVideoTitle;
-        this.originalAttachName = originalAttachName;
-        this.uploadAttachName = uploadAttachName;
-        this.durationMinutes = durationMinutes;
-    }
-
-    public Integer getCourse_seq() {
-        return course_seq;
-    }
-
-    public void setCourse_seq(Integer course_seq) {
-        this.course_seq = course_seq;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
-    }
-
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
-    }
-
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
-    }
-
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        this.endDateTime = endDateTime;
-    }
-
-    public String getOriginalVideoTitle() {
-        return originalVideoTitle;
-    }
-
-    public void setOriginalVideoTitle(String originalVideoTitle) {
-        this.originalVideoTitle = originalVideoTitle;
-    }
-
-    public String getUploadVideoTitle() {
-        return uploadVideoTitle;
-    }
-
-    public void setUploadVideoTitle(String uploadVideoTitle) {
-        this.uploadVideoTitle = uploadVideoTitle;
-    }
-
-    public String getOriginalAttachName() {
-        return originalAttachName;
-    }
-
-    public void setOriginalAttachName(String originalAttachName) {
-        this.originalAttachName = originalAttachName;
-    }
-
-    public String getUploadAttachName() {
-        return uploadAttachName;
-    }
-
-    public void setUploadAttachName(String uploadAttachName) {
-        this.uploadAttachName = uploadAttachName;
-    }
-
-    public Long getDurationMinutes() {
-        return durationMinutes;
-    }
-
-    public void setDurationMinutes(Long durationMinutes) {
+        this.uploadAttachFileNames = uploadAttachFileNames;
+        this.attachOriginalFileNames = attachOriginalFileNames;
         this.durationMinutes = durationMinutes;
     }
 }

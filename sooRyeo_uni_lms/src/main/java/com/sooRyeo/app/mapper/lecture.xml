@@ -6,49 +6,77 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="lecture">
 
+	<select id="selectNextLectureSeq" resultType="int">
+		SELECT lecture_seq.nextval FROM dual
+	</select>
+
 	<insert id="insertLecture" parameterType="com.sooRyeo.app.dto.LectureInsertDto">
 		INSERT INTO TBL_LECTURE (
 		LECTURE_SEQ,
 		FK_COURSE_SEQ,
 		VIDEO_FILE_NAME,
-		LECTURE_FILE_NAME,
 		LECTURE_TITLE,
 		LECTURE_CONTENT,
 		START_DATE,
 		END_DATE,
 		UPLOAD_VIDEO_FILE_NAME,
-		UPLOAD_LECTURE_FILE_NAME,
 		LECTURE_TIME
 		) VALUES (
-		lecture_seq.nextval, -- LECTURE_SEQ
+		#{lecture_seq}, -- LECTURE_SEQ
 		#{course_seq}, -- FK_COURSE_SEQ
 		#{originalVideoTitle}, -- VIDEO_FILE_NAME
-		<if test="originalAttachName != null">
-			#{originalAttachName}
-		</if>
-		<if test="originalAttachName == null">
-			NULL
-		</if>, -- LECTURE_FILE_NAME
 		#{title}, -- LECTURE_TITLE
 		#{content}, -- LECTURE_CONTENT
 		#{startDateTime}, -- START_DATE
 		#{endDateTime}, -- END_DATE
 		#{uploadVideoTitle}, -- UPLOAD_VIDEO_FILE_NAME
-		<if test="uploadAttachName != null">
-			#{uploadAttachName},
-		</if>
-		<if test="uploadAttachName == null">
-			NULL,
-		</if> -- COLUMN_NAME
-		#{durationMinutes}
+		#{durationMinutes} -- LECTURE_TIME
 		)
 	</insert>
 
-	<select id="getLectureInfo" parameterType="int" resultType="com.sooRyeo.app.domain.Lecture">
 
-		select *
-		from tbl_lecture
-		where lecture_seq = ${lecture_seq}
+	<insert id="insertAttachFile" parameterType="com.sooRyeo.app.dto.LectureInsertDto">
+		INSERT INTO tbl_lecture_attached_file (
+			lecture_attached_file_seq,
+		    fk_lecture_seq,
+		    original_file_name,
+		    upload_file_name
+			)
+		values (
+			LECTURE_ATTACHED_FILE_SEQ.nextval,
+			#{lecture_seq},
+		    #{originalFileName},
+			#{uploadFileName}
+
+		)
+	</insert>
+
+
+	<resultMap id="lectureWithAttachmentsResultMap" type="com.sooRyeo.app.domain.Lecture">
+		<id property="lecture_seq" column="lecture_seq"/>
+		<result property="fk_course_seq" column="fk_course_seq"/>
+		<result property="video_file_name" column="video_file_name"/>
+		<result property="lecture_title" column="lecture_title"/>
+		<result property="lecture_content" column="lecture_content"/>
+		<result property="start_date" column="start_date"/>
+		<result property="end_date" column="end_date"/>
+		<result property="upload_video_file_name" column="upload_video_file_name"/>
+		<result property="lecture_time" column="lecture_time"/>
+		<collection property="attachedFileList" ofType="com.sooRyeo.app.domain.LectureAttachedFile">
+			<id property="lecture_attached_file_seq" column="lecture_attached_file_seq"/>
+			<result property="fk_lecture_seq" column="fk_lecture_seq"/>
+			<result property="original_file_name" column="original_file_name"/>
+			<result property="upload_file_name" column="upload_file_name"/>
+		</collection>
+	</resultMap>
+
+
+	<select id="getLectureInfo" parameterType="int" resultMap="lectureWithAttachmentsResultMap">
+
+		SELECT l.*, a.LECTURE_ATTACHED_FILE_SEQ, a.original_file_name, a.upload_file_name
+		FROM tbl_lecture l
+				 LEFT JOIN tbl_lecture_attached_file a ON l.lecture_seq = a.fk_lecture_seq
+		WHERE l.lecture_seq = #{lecture_seq}
 
 	</select>
 
@@ -62,10 +90,6 @@
 			<if test="originalVideoTitle != null">
 				, VIDEO_FILE_NAME = #{originalVideoTitle}
 		    	, UPLOAD_VIDEO_FILE_NAME = #{uploadVideoTitle}
-			</if>
-			<if test="originalAttachName != null">
-				, LECTURE_FILE_NAME = #{originalAttachName}
-				,UPLOAD_LECTURE_FILE_NAME = #{uploadAttachName}
 			</if>
 			<if test="durationMinutes != null">
 				,lecture_time = #{durationMinutes}
@@ -97,5 +121,10 @@
 		where course_seq = ${course_seq}
 
 	</select>
+
+	<delete id="deleteAttachFile" parameterType="int">
+		DELETE FROM TBL_LECTURE_ATTACHED_FILE
+		WHERE LECTURE_ATTACHED_FILE_SEQ = #{lectureAttachedFileSeq}
+	</delete>
 
 </mapper>
