@@ -79,21 +79,50 @@
 	        </otherwise>
 	    </choose>
 	</select>
-	
-	
+
+
+	<resultMap id="lectureWithAttachmentsResultMap" type="com.sooRyeo.app.domain.Lecture">
+		<id property="lecture_seq" column="lecture_seq"/>
+		<result property="fk_course_seq" column="fk_course_seq"/>
+		<result property="video_file_name" column="video_file_name"/>
+		<result property="lecture_title" column="lecture_title"/>
+		<result property="lecture_content" column="lecture_content"/>
+		<result property="start_date" column="start_date"/>
+		<result property="end_date" column="end_date"/>
+		<result property="upload_video_file_name" column="upload_video_file_name"/>
+		<result property="lecture_time" column="lecture_time"/>
+		<collection property="attachedFileList" ofType="com.sooRyeo.app.domain.LectureAttachedFile">
+			<id property="lecture_attached_file_seq" column="lecture_attached_file_seq"/>
+			<result property="fk_lecture_seq" column="fk_lecture_seq"/>
+			<result property="original_file_name" column="original_file_name"/>
+			<result property="upload_file_name" column="upload_file_name"/>
+		</collection>
+	</resultMap>
+
+	<select id="getlectureList" parameterType="String" resultMap="lectureWithAttachmentsResultMap">
+
+		SELECT l.*, a.LECTURE_ATTACHED_FILE_SEQ, a.original_file_name, a.upload_file_name
+		FROM tbl_lecture l join tbl_course
+		on l.fk_course_seq = tbl_course.course_seq
+				 LEFT JOIN tbl_lecture_attached_file a ON l.lecture_seq = a.fk_lecture_seq
+		WHERE  exist = 1 AND fk_course_seq = #{fk_course_seq}
+		order by lecture_seq asc
+	</select>
+
 	
 	<!-- 수업  - 내 강의보기 -->	
-	<select id="getlectureList" parameterType="String" resultType="com.sooRyeo.app.domain.Lecture">
+<!--	<select id="getlectureList" parameterType="String" resultType="com.sooRyeo.app.domain.Lecture">
 		select lecture_seq, fk_course_seq
 			 , video_file_name, lecture_file_name, lecture_title
 			 , lecture_content
 			 , start_date
      		 , end_date
+			, UPLOAD_VIDEO_FILE_NAME, UPLOAD_LECTURE_FILE_NAME
 		from tbl_lecture join tbl_course
 		on tbl_lecture.fk_course_seq = tbl_course.course_seq
 		where exist = 1 AND fk_course_seq = #{fk_course_seq}
 		order by lecture_seq asc
-	</select>
+	</select>-->
 	
 	
 	<!-- 수업 - 이번주 강의보기 -->	

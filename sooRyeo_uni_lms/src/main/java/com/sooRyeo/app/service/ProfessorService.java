@@ -13,6 +13,7 @@ import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;
@@ -101,6 +102,9 @@ public interface ProfessorService {
 	
 	// 학생 출석률 가져오기
 	double attendanceRate(int student_id, int fk_course_seq);
+	
+	// 교수 수업 시청하기
+	Lecture getlecture(String lecture_seq);
 
 	
 	

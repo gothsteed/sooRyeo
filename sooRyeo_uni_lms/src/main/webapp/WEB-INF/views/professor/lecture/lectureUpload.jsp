@@ -149,10 +149,41 @@
         color: #555;
     }
 
-    #message {
+    #resultMsg {
         margin-top: 1em;
         color: #555;
     }
+    .file-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px 0;
+        max-height: 150px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .file-list li {
+        padding: 5px 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .file-list li:last-child {
+        border-bottom: none;
+    }
+    .file-list .file-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 80%;
+    }
+    .file-list .file-remove {
+        cursor: pointer;
+        color: #ff4d4d;
+    }
+
 </style>
 
 <div class="container">
@@ -189,8 +220,10 @@
                 <label for="attachmentInput" class="custom-file-upload">
                     첨부파일
                 </label>
-                <input type="file" id="attachmentInput" name="attachment" onchange="updateFileName(this, 'attachmentFileName')">
-                <div id="attachmentFileName" class="file-name">선택된 파일 없음</div>
+                <input type="file" id="attachmentInput" name="attachment" multiple onchange="updateFileNames(this, 'attachmentFileList')">
+                <ul id="attachmentFileList" class="file-list">
+                    <li>선택된 파일 없음</li>
+                </ul>
             </div>
         </div>
         <button type="button" onclick="uploadLecture()">업로드</button>
@@ -199,13 +232,45 @@
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
     </div>
-    <div id="message"></div>
+    <div id="resultMsg"></div>
 </div>
 
 <script>
     function updateFileName(input, outputId) {
         const fileName = input.files[0] ? input.files[0].name : "선택된 파일 없음";
         document.getElementById(outputId).textContent = fileName;
+    }
+
+    function updateFileNames(input, outputId) {
+        const fileList = document.getElementById(outputId);
+        fileList.innerHTML = ''; // Clear existing list
+
+        if (input.files.length > 0) {
+            Array.from(input.files).forEach((file, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                <span class="file-name" title="\${file.name}">\${file.name}</span>
+                <span class="file-remove" onclick="removeFile(\${index}, '\${input.id}', '\${outputId}')">&times;</span>
+            `;
+                fileList.appendChild(li);
+            });
+        } else {
+            const li = document.createElement('li');
+            li.textContent = "선택된 파일 없음";
+            fileList.appendChild(li);
+        }
+    }
+
+    function removeFile(index, inputId, outputId) {
+        const input = document.getElementById(inputId);
+        const dt = new DataTransfer();
+
+        Array.from(input.files)
+            .filter((_, i) => i !== index)
+            .forEach(file => dt.items.add(file));
+
+        input.files = dt.files;
+        updateFileNames(input, outputId);
     }
 
     function uploadLecture() {
@@ -235,8 +300,9 @@
 
 
 
-        if (attachmentInput.files[0]) {
-            formData.append('attachment', attachmentInput.files[0]);
+        // Append multiple attachment files
+        for (let i = 0; i < attachmentInput.files.length; i++) {
+            formData.append('attachment', attachmentInput.files[i]);
         }
 
         var xhr = new XMLHttpRequest();
@@ -252,18 +318,18 @@
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                document.getElementById('message').innerText = '강의가 성공적으로 업로드되었습니다';
+                document.getElementById('resultMsg').innerText = '강의가 성공적으로 업로드되었습니다';
                 alert("강의가 업로드 되었습니다.")
                 location.href="<%=ctxPath%>/professor/courseDetail.lms?course_seq="+${requestScope.course_seq}
             } else {
-                document.getElementById('message').innerText = '강의 업로드에 실패했습니다';
+                document.getElementById('resultMsg').innerText = '강의 업로드에 실패했습니다';
             }
             document.getElementById('progressBar').value = 0;  // Reset progress bar
             document.getElementById('progressText').innerText = '0%';
         };
 
         xhr.onerror = function() {
-            document.getElementById('message').innerText = '강의 업로드에 실패했습니다';
+            document.getElementById('resultMsg').innerText = '강의 업로드에 실패했습니다';
             document.getElementById('progressBar').value = 0;  // Reset progress bar
             document.getElementById('progressText').innerText = '0%';
         };

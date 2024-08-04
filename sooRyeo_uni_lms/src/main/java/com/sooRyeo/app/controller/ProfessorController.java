@@ -1069,13 +1069,10 @@ public class ProfessorController {
 	public ModelAndView editGradeEnd(ModelAndView mav, HttpServletRequest request) {// 학생 점수 수정 끝
 		
 		String goBackURL = request.getParameter("goBackURL");
-		System.out.println("확인용 goBackURL : " + goBackURL);
 		 
 		int regi_course_seq = Integer.parseInt(request.getParameter("regi_course_seq"));
 		double mark = Double.parseDouble(request.getParameter("mark")); 
-		
-		System.out.println("확인용 regi_course_seq : " + regi_course_seq);
-		System.out.println("확인용 mark : " + mark);
+
 		
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("regi_course_seq", regi_course_seq);
@@ -1097,10 +1094,7 @@ public class ProfessorController {
 	
 	    return mav;
 	}
-	
-	
-	
-	
+
 	
 	
 	

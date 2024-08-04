@@ -117,7 +117,6 @@
 			background-repeat: no-repeat;
 			background-position: top left;
         }
-        
         .content {
             flex-grow: 1;
             overflow-y: auto;
@@ -167,7 +166,9 @@
             display: flex;
             align-items: center;
         }
-
+  /*      .header .icons span:first-child{
+            margin-left: 20px;
+        }*/
         .header .icons span {
             margin-left: 20px;
             font-size: 25px;
@@ -219,7 +220,70 @@
 			font-weight: bold;
 		
 		}
-		
+
+        #mailDropdown {
+
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .mail-dropdown-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .mail-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .mail-dropdown-item:hover {
+            background-color: #f8f8f8;
+        }
+
+        .mail-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .mail-item-title {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .mail-item-room {
+            color: #666;
+        }
+
+        .mail-item-body {
+            font-size: 11px;
+            color: #444;
+        }
+
+        .mail-item-unread {
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .no-messages {
+            padding: 14px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -228,68 +292,115 @@
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 	
 <script type="text/javascript">
+    function getUnreadNotification() {
+        fetch('<%=ctxPath%>/professor/chatAlertREST.lms', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+
+                let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value.unreadCount, 0);
+
+                console.log(totalUnreadCount);
+
+                if(totalUnreadCount > 0) {
+                    document.getElementById('message').innerHTML += `
+
+            <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
+                \${totalUnreadCount}
+            </div>
+
+            `;
+                }
+
+                const mailDropdown = document.getElementById('mailDropdown');
+                mailDropdown.innerHTML = '';
+
+                if(totalUnreadCount > 0) {
+                    Object.entries(data).forEach(([key, value]) => {
+                        const item = document.createElement('div');
+                        item.className = 'mail-dropdown-item';
+                        item.innerHTML = `
+                    <div class="mail-item-header">
+                        <span class="mail-item-title ml-0" style="font-size: 13px">상담명: </span>
+                        <span class="mail-item-room ml-0" style="font-size: 13px">\${value.roomName}</span>
+                    </div>
+                    <div class="mail-item-body">
+                        <span class="mail-item-unread ml-0" style="font-size: 13px">\${value.unreadCount}개 안읽었습니다</span>
+                    </div>
+                `;
+                        /*                item.style.padding = '10px';
+                                        item.style.borderBottom = '1px solid #ccc';*/
+                        item.onclick =function() {
+                            location.href = `<%=ctxPath%>/chat.lms?roomId=\${key}`;
+                        };
+                        mailDropdown.appendChild(item);
+                    });
+                }
+                else {
+                    const item = document.createElement('div');
+                    item.className = 'mail-dropdown-item';
+                    item.textContent = `메시지가 없습니다`;
+                    item.style.fontSize = '13px'
+                    /*                item.style.padding = '10px';
+                                    item.style.borderBottom = '1px solid #ccc';*/
+                    mailDropdown.appendChild(item);
+                }
+
+
+                document.getElementById('message').addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('mailDropdown');
+                    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                        dropdown.style.display = 'block';
+                    } else {
+                        dropdown.style.display = 'none';
+                    }
+                    event.stopPropagation(); // Stop the click event from propagating to the document
+                });
+
+                // Add an event listener to the document to hide the dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    const dropdown = document.getElementById('mailDropdown');
+                    const messageDiv = document.getElementById('message');
+                    if (!dropdown.contains(event.target) && !messageDiv.contains(event.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+
+
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+
+
+    let isChatPage = false;
+
 
 $(document).ready(function(){
 	
 	$("div#displayList").hide()
 
-    fetch('<%=ctxPath%>/professor/chatAlertREST.lms', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => {
-            console.log(response);
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data received:', data);
-            // Process and display the data as needed
-            let totalUnreadCount = Object.values(data).reduce((sum, value) => sum + value, 0);
-            //let totalUnreadCount =45;
-            console.log(totalUnreadCount)
 
-            document.getElementById('message').innerHTML += `
+    if(!isChatPage) {
+        getUnreadNotification();
+    }
 
-                <div class="badge" id="unreadCountBadge" style="position: absolute; right: -10px; top: -10px; background-color: red; color:white; align-content: center; font-size: 12px; border-radius: 50%; width: 23px; height: 23px;">
-                    \${totalUnreadCount}
-                </div>
-
-                `;
-
-
-            const mailDropdown = document.getElementById('mailDropdown');
-            mailDropdown.innerHTML = ''; // Clear any existing content
-
-            Object.entries(data).forEach(([key, value]) => {
-                const item = document.createElement('div');
-                item.textContent = `ID: \${key}, Value: \${value}`;
-                item.style.padding = '10px';
-                item.style.borderBottom = '1px solid #ccc';
-                mailDropdown.appendChild(item);
-            });
-
-            document.getElementById('message').addEventListener('click', function() {
-                const dropdown = document.getElementById('mailDropdown');
-                if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-                    dropdown.style.display = 'block';
-                } else {
-                    dropdown.style.display = 'none';
-                }
-            });
-
-
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
 
 	
-	$("input[name='searchWord']").keyup(function(){
+	$("input[name='search']").keyup(function(){
 		
 		const wordLength = $(this).val().trim().length;
 		// 검색어에서 공백을 제외한 길이를 알아온다.
@@ -302,7 +413,7 @@ $(document).ready(function(){
 			$.ajax({
 				url:"<%= ctxPath%>/student/wordSearchShow.lms",
 				type:"get",
-				data:{"searchWord":$("input[name='searchWord']").val()},
+				data:{"searchWord":$("input[name='search']").val()},
 				dataType:"json",
 				success:function(json){
 					<%-- #120. 검색어 입력시 자동글 완성하기 7 --%>
@@ -325,14 +436,14 @@ $(document).ready(function(){
 							// word ==> javascript 는 재미가 있어요
 							// word ==> 그러면 javascript  는 뭔가요? ==> 대문자 사라짐
 							
-							const idx = name.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+							const idx = name.toLowerCase().indexOf($("input[name='search']").val().toLowerCase());
 							// 만약에 검색어가 JavA 같이 적었다면
 							/*
 								그러면 javascript  는 뭔가요?   는 idx 가 4 이다.
 								javascript 는 재미가 있어요             는 idx 가 0 이다.
 							*/
 							
-							const len = $("input[name='searchWord']").val().length;
+							const len = $("input[name='search']").val().length;
 							// 검색어(JavA)의 길이 len은 4가 된다.
 							/*
 								console.log("~~~~~ 시작 ~~~~~");
@@ -350,7 +461,7 @@ $(document).ready(function(){
 							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
 						
-						const input_width = $("input[name='searchWord']").css("width"); // 검색어 input 태그 width 값 알아오기
+						const input_width = $("input[name='search']").css("width"); // 검색어 input 태그 width 값 알아오기
 						
 						$("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
 						
@@ -365,7 +476,7 @@ $(document).ready(function(){
 			});// ajax------------------------------
 		}
 	
-	}); // $("input[name='searchWord']").keyup(function(){})-------------------------------
+	}); // $("input[name='search']").keyup(function(){})-------------------------------
 		
 	<%-- #121. 검색어 입력시 자동글 완성하기 8 --%>
 	$(document).on("click", "span.result", function(e){
@@ -373,7 +484,7 @@ $(document).ready(function(){
 		const url = $(this).data('custom');
 		const name = $(this).text();
 		
-		$("input[name='searchWord']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
+		$("input[name='search']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
 		$("div#displayList").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
 		
 		location.href = `<%=ctxPath%>\${url}`;
@@ -383,7 +494,7 @@ $(document).ready(function(){
 	
 	// 마우스로 다른 곳을 클릭 시 검색 결과 리스트 숨기기
 	$(document).click(function(e) {
-		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='searchWord']")) {
+		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='search']")) {
 			$("div#displayList").hide();
 		}
 	});
@@ -410,7 +521,7 @@ $(document).ready(function(){
                 <a href="#classes" class="nav-link dropdown-toggle" id="classesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📚</span>수업</a>
                 <div class="dropdown-menu" aria-labelledby="classesMenu">
                     <a class="dropdown-item" href="<%=ctxPath%>/professor/courseList.lms">내 수업</a>
-                    <a class="dropdown-item" href="#">출석현황</a>
+                    <!-- <a class="dropdown-item" href="#">출석현황</a> -->
                 </div>
             </li>
             <li class="nav-item">
@@ -424,13 +535,13 @@ $(document).ready(function(){
                 <a href="#grades" class="nav-link dropdown-toggle" id="gradesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">📈</span>성적</a>
                 <div class="dropdown-menu" aria-labelledby="gradesMenu" >
                     <a class="dropdown-item" href="<%=ctxPath %>/professor/insertGradeform.lms">성적 기입</a>
-                    <a class="dropdown-item" href="#">취득 현황</a>
+                    <!-- <a class="dropdown-item" href="#">취득 현황</a> -->
                 </div>
             </li>
             <li class="nav-item">
                 <a href="#groups" class="nav-link dropdown-toggle" id="groupsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="icon">👥</span>커뮤니티</a>
                 <div class="dropdown-menu" aria-labelledby="groupsMenu" >
-                    <a class="dropdown-item" href="#">내 친구</a>
+                    <!-- <a class="dropdown-item" href="#">내 친구</a> -->
                     <a class="dropdown-item" href="<%=ctxPath %>/board/announcement.lms">학사공지사항</a>
                 </div>
             </li>
@@ -443,14 +554,14 @@ $(document).ready(function(){
             <div style="width:100%;">
 	            <div class="search-bar">
 	                <span class="icon">🔎</span>
-	                <input type="text" name="searchWord" placeholder="메뉴검색" autocomplete='off'>
+	                <input type="text" name="search" placeholder="메뉴검색" autocomplete='off'>
 	            </div>
 	            <div id="displayList"></div>
             </div>
             <div class="icons">
                 <span id="message" class="icon" style="position: relative">
                     📫
-                    <div class="dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></div>
+                    <span class="mail-dropdown" id="mailDropdown" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; width: 200px; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1;"></span>
                 </span>
                 <span class="icon">🔔</span>
                 <span class="icon">❔</span>

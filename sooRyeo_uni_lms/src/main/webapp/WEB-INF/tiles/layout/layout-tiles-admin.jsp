@@ -229,7 +229,7 @@ $(document).ready(function(){
 	
 	$("div#displayList").hide();
 	
-	$("input[name='searchWord']").keyup(function(){
+	$("input[name='search']").keyup(function(){
 		
 		const wordLength = $(this).val().trim().length;
 		// 검색어에서 공백을 제외한 길이를 알아온다.
@@ -242,7 +242,7 @@ $(document).ready(function(){
 			$.ajax({
 				url:"<%= ctxPath%>/student/wordSearchShow.lms",
 				type:"get",
-				data:{"searchWord":$("input[name='searchWord']").val()},
+				data:{"searchWord":$("input[name='search']").val()},
 				dataType:"json",
 				success:function(json){
 					<%-- #120. 검색어 입력시 자동글 완성하기 7 --%>
@@ -265,14 +265,14 @@ $(document).ready(function(){
 							// word ==> javascript 는 재미가 있어요
 							// word ==> 그러면 javascript  는 뭔가요? ==> 대문자 사라짐
 							
-							const idx = name.toLowerCase().indexOf($("input[name='searchWord']").val().toLowerCase());
+							const idx = name.toLowerCase().indexOf($("input[name='search']").val().toLowerCase());
 							// 만약에 검색어가 JavA 같이 적었다면
 							/*
 								그러면 javascript  는 뭔가요?   는 idx 가 4 이다.
 								javascript 는 재미가 있어요             는 idx 가 0 이다.
 							*/
 							
-							const len = $("input[name='searchWord']").val().length;
+							const len = $("input[name='search']").val().length;
 							// 검색어(JavA)의 길이 len은 4가 된다.
 							/*
 								console.log("~~~~~ 시작 ~~~~~");
@@ -290,7 +290,7 @@ $(document).ready(function(){
 							v_html += `<span style='cursor:pointer;' data-custom="\${url}" class='result'>\${result}<br></span>`;
 						}); // end of $.each(json, function(index, item){})------------------------------------
 						
-						const input_width = $("input[name='searchWord']").css("width"); // 검색어 input 태그 width 값 알아오기
+						const input_width = $("input[name='search']").css("width"); // 검색어 input 태그 width 값 알아오기
 						
 						$("div#displayList").css({"width":input_width}); // 검색결과 div 의 width 크기를 검색어 입력 input 태그의 width 와 일치시키기 
 						
@@ -305,7 +305,7 @@ $(document).ready(function(){
 			});// ajax------------------------------
 		}
 	
-	}); // $("input[name='searchWord']").keyup(function(){})-------------------------------
+	}); // $("input[name='search']").keyup(function(){})-------------------------------
 		
 	<%-- #121. 검색어 입력시 자동글 완성하기 8 --%>
 	$(document).on("click", "span.result", function(e){
@@ -313,7 +313,7 @@ $(document).ready(function(){
 		const url = $(this).data('custom');
 		const name = $(this).text();
 		
-		$("input[name='searchWord']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
+		$("input[name='search']").val(name); // 텍스트 박스에 검색된 결과의 문자열을 입력해준다. 클릭하면 그 클릭한 문장을 검색 텍스트에 적어주는 것.
 		$("div#displayList").hide(); // 검색할 문장을 선택했으면 리스트를 숨겨주는 것
 		
 		location.href = `<%=ctxPath%>\${url}`;
@@ -324,7 +324,7 @@ $(document).ready(function(){
 	
 	// 마우스로 다른 곳을 클릭 시 검색 결과 리스트 숨기기
 	$(document).click(function(e) {
-		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='searchWord']")) {
+		if (!$(e.target).closest("div#displayList").length && !$(e.target).is("input[name='search']")) {
 			$("div#displayList").hide();
 		}
 	});
@@ -382,7 +382,7 @@ $(document).ready(function(){
             <div style="width:100%;">
 	            <div class="search-bar">
 	                <span class="icon">🔎</span>
-	                <input type="text" name="searchWord" placeholder="메뉴검색" autocomplete='off'>
+	                <input type="text" name="search" placeholder="메뉴검색" autocomplete='off'>
 	            </div>
 	            <div id="displayList"></div>
             </div>

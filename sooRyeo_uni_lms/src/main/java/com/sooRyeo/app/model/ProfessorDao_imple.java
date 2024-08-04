@@ -18,6 +18,7 @@ import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
 import com.sooRyeo.app.domain.Course;
+import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.ProfessorTimeTable;

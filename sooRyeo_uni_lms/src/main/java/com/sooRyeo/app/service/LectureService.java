@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 
 public interface LectureService {
     ModelAndView getUploadLecturePage(HttpServletRequest request, ModelAndView mav);
@@ -18,4 +18,6 @@ public interface LectureService {
     ResponseEntity<String> editLecture(HttpServletRequest request, LectureUploadDto lectureUploadDto) throws Exception;
 
     ResponseEntity<String> deleteLecture(HttpServletRequest request) throws Exception;
+
+    void downloadLectureAttachment(HttpServletRequest request, HttpServletResponse response);
 }

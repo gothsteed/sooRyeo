@@ -8,7 +8,6 @@
 %>
 
 <style>
-
     .container {
         background-color: #d1e0e0;
         padding: 2em;
@@ -149,10 +148,41 @@
         color: #555;
     }
 
-    #message {
+    #resultMsg {
         margin-top: 1em;
         color: #555;
     }
+    .file-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 10px 0;
+        max-height: 150px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .file-list li {
+        padding: 5px 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .file-list li:last-child {
+        border-bottom: none;
+    }
+    .file-list .file-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 80%;
+    }
+    .file-list .file-remove {
+        cursor: pointer;
+        color: #ff4d4d;
+    }
+
 </style>
 
 <div class="container">
@@ -190,8 +220,20 @@
                 <label for="attachmentInput" class="custom-file-upload">
                     첨부파일
                 </label>
-                <input type="file" id="attachmentInput" name="attachment" onchange="updateFileName(this, 'attachmentFileName')">
-                <div id="attachmentFileName" class="file-name">${lecture.lecture_file_name}</div>
+                <input type="file" id="attachmentInput" name="attachment" multiple onchange="addNewFiles(this, 'attachmentFileList')">
+                <ul id="attachmentFileList" class="file-list">
+                    <c:if test="${not empty lecture.attachedFileList}">
+                        <c:forEach var="file" items="${lecture.attachedFileList}" varStatus="status">
+                            <li class="file-item existing-file" data-file-index="${status.index}" data-file-id="${file.lecture_attached_file_seq}">
+                                <span class="file-name" title="${file.original_file_name}">${file.original_file_name}</span>
+                                <span class="file-remove" onclick="removeExistingFile(${file.lecture_attached_file_seq}, this)">&times;</span>
+                            </li>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty lecture.attachedFileList}">
+                        <li>선택된 파일 없음</li>
+                    </c:if>
+                </ul>
             </div>
         </div>
         <button type="button" onclick="updateLecture()">업데이트</button>
@@ -200,13 +242,74 @@
         <progress id="progressBar" value="0" max="100"></progress>
         <span id="progressText">0%</span>
     </div>
-    <div id="message"></div>
+    <div id="resultMsg"></div>
 </div>
 
 <script>
+    let removedFiles = [];
+
     function updateFileName(input, outputId) {
         const fileName = input.files[0] ? input.files[0].name : "선택된 파일 없음";
         document.getElementById(outputId).textContent = fileName;
+    }
+
+    function addNewFiles(input, outputId) {
+        const fileList = document.getElementById(outputId);
+
+        // Remove the "선택된 파일 없음" message if it exists
+        const noFileMessage = fileList.querySelector('li:not(.file-item)');
+        if (noFileMessage) {
+            noFileMessage.remove();
+        }
+
+        if (input.files.length > 0) {
+            Array.from(input.files).forEach((file, index) => {
+                const li = document.createElement('li');
+                li.className = 'file-item new-file';
+                li.innerHTML = `
+                        <span class="file-name" title="\${file.name}">\${file.name}</span>
+                        <span class="file-remove" onclick="removeNewFile(\${index}, 'attachmentInput', '\${outputId}')">&times;</span>
+                    `;
+                fileList.appendChild(li);
+            });
+        }
+    }
+
+    function removeNewFile(index, inputId, outputId) {
+        const input = document.getElementById(inputId);
+        const dt = new DataTransfer();
+        const fileList = document.getElementById(outputId);
+
+        Array.from(input.files)
+            .filter((_, i) => i !== index)
+            .forEach(file => dt.items.add(file));
+
+        input.files = dt.files;
+
+        // Remove the file from the list
+        const fileItems = fileList.querySelectorAll('.new-file');
+        if (fileItems[index]) {
+            fileItems[index].remove();
+        }
+
+        // If no files left, add the "선택된 파일 없음" message
+        if (fileList.children.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = "선택된 파일 없음";
+            fileList.appendChild(li);
+        }
+    }
+
+    function removeExistingFile(fileId, element) {
+        removedFiles.push(fileId);
+        element.closest('.file-item').remove();
+
+        const fileList = document.getElementById('attachmentFileList');
+        if (fileList.children.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = "선택된 파일 없음";
+            fileList.appendChild(li);
+        }
     }
 
     function updateLecture() {
@@ -229,16 +332,18 @@
         formData.append('startDateTime', startDateInput + 'T' + startTimeInput);
         formData.append('endDateTime', endDateInput + 'T' + endTimeInput);
 
-
         if (videoInput.files[0]) {
             formData.append('video', videoInput.files[0]);
         }
 
-
-        if (attachmentInput.files[0]) {
-            formData.append('attachment', attachmentInput.files[0]);
+        for (let i = 0; i < attachmentInput.files.length; i++) {
+            formData.append('attachment', attachmentInput.files[i]);
         }
 
+        for (let i = 0; i < removedFiles.length; i++) {
+            formData.append('removedFiles', removedFiles[i]);
+        }
+        
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '<%=ctxPath%>/professor/updateLectureREST.lms', true);
 
@@ -252,19 +357,19 @@
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                document.getElementById('message').innerText = '강의가 성공적으로 업데이트되었습니다';
+                document.getElementById('resultMsg').innerText = '강의가 성공적으로 업데이트되었습니다';
                 alert("강의가 업데이트 되었습니다.");
                 location.href = "<%=ctxPath%>/professor/courseDetail.lms?course_seq=" + ${lecture.fk_course_seq};
             } else {
-                document.getElementById('message').innerText = '강의 업데이트에 실패했습니다';
+                document.getElementById('resultMsg').innerText = '강의 업데이트에 실패했습니다';
             }
-            document.getElementById('progressBar').value = 0;  // Reset progress bar
+            document.getElementById('progressBar').value = 0;
             document.getElementById('progressText').innerText = '0%';
         };
 
         xhr.onerror = function() {
-            document.getElementById('message').innerText = '강의 업데이트에 실패했습니다';
-            document.getElementById('progressBar').value = 0;  // Reset progress bar
+            document.getElementById('resultMsg').innerText = '강의 업데이트에 실패했습니다';
+            document.getElementById('progressBar').value = 0;
             document.getElementById('progressText').innerText = '0%';
         };
 

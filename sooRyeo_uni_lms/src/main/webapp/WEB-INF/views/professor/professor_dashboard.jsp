@@ -106,7 +106,7 @@
        grid.on('added removed change', function(e, items) {
          let str = '';
          items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-         console.log(e.type + ' ' + items.length + ' items:' + str );
+         // console.log(e.type + ' ' + items.length + ' items:' + str );
        });
        
        <!-- tabs 작동을 위한 js -->
@@ -174,7 +174,7 @@
 					      마치 배열의 인덱스(index)로 값(value)를 찾는 것과 같은 효과를 낸다.
 					*/
 					
-			    	console.log( $(local).text() + " stn_id:" + $(local).attr("stn_id") + " icon:" + $(local).attr("icon") + " desc:" + $(local).attr("desc") + " ta:" + $(local).attr("ta") ); 
+			    //	console.log( $(local).text() + " stn_id:" + $(local).attr("stn_id") + " icon:" + $(local).attr("icon") + " desc:" + $(local).attr("desc") + " ta:" + $(local).attr("ta") ); 
 			      //	속초 stn_id:90 icon:03 desc:구름많음 ta:-2.5
 			      //	북춘천 stn_id:93 icon:03 desc:구름많음 ta:-7.0
 			    	

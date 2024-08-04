@@ -57,6 +57,10 @@
 
 <!--	=================logging setting====================   -->
 
+<!--	<logger name="org.apache.ibatis">
+		<level value="DEBUG" />
+	</logger>-->
+
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />

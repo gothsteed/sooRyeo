@@ -428,6 +428,8 @@ insert into tbl_menu (menu_url, menu_name, status)
 values ('/admin/curriculum.lms', '커리큘럼 관리', 3);
 insert into tbl_menu (menu_url, menu_name, status)
 values ('/admin/courseRegister.lms', '강의관리', 3);
+insert into tbl_menu (menu_url, menu_name, status)
+values ('/board/addList.lms', '공지사항쓰기', 3);
 -------------------------------------------------------
 insert into tbl_menu (menu_url, menu_name, status)
 values ('/professor/courseList.lms', '내 수업', 2);
@@ -463,3 +465,13 @@ where course_seq = 4;
 		select name
 		from tbl_course C join tbl_curriculum R on fk_curriculum_seq = curriculum_seq
 		where course_seq =4;
+        
+        select *
+        from tbl_course;
+        
+        select s.student_id
+		from tbl_student S join tbl_registered_course R on s.student_id = r.fk_student_id
+		join tbl_course C on r.fk_course_seq = c.course_seq
+		where course_seq = 24;
+        
+        
