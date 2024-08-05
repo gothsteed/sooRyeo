@@ -21,10 +21,32 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-
-
 <title>SooRyeo Univ.</title>
 
+<style>
+input#fileInput {
+  border:1px solid #CCCCCC;
+  padding:5px;
+  border-radius:8px;
+  background:#fff;
+}
+input#fileInput::file-selector-button {
+  border:1px solid #CCCCCC;
+  border-radius:8px;
+  background:fff;
+  color:black;
+  transition:.2s;
+}
+
+input::file-selector-button:hover {
+  background:#CCCCCC;
+  color:#fff;
+}
+
+
+
+
+</style>
 
 
 <script type="text/javascript">
@@ -80,15 +102,17 @@ $(function() {
 
 
     $("button#addBtn").click(function() {
-        $("div#boxWrap").append(`
-            <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
+        $("div#boxWrap").append(`  
+            <div style="display: flex; align-items: center; margin-top: 20px;" margin-left: 20px; class="aw-wrap">
                 <input type="hidden" class="form-control aw"  value="\${index+1}" name="questionNumber">
-                <span style="width: 70px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
-                <input type="text" class="form-control aw" style="width: 100px;" id="\${index+1}answer" name="answer"/>
-                <span style="width: 70px; text-align:center;">배점 :</span>
+                <span style="width: 130px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
+                <input type="text" class="form-control aw" style="width: 80px;" id="\${index+1}answer" name="answer"/>
+                <span style="width: 130px; text-align:center;">배점 :</span>
                 <input type="text" class="form-control aw ts-scr" style="width: 130px;" placeholder="숫자만 입력" id="\${index+1}score" name="score"/>
-            </div>
+            </div> 
         `);
+        
+
         
         index++; // 함수 내 하단에 증가문 설정
     });
@@ -281,21 +305,22 @@ function set_exam() {
 
 
 
-<div class="content-body">
+<div class="content-body" style="width: 85%; margin: 0 auto;">
 
    <div class="container-fluid" style="padding-top: 10px;">
       <div class="card" id="card-title-1">
-         <div class="card-header border-0 pb-0 " style="display: flex; justify-content: space-between; ">
-            <h1 class="card-title" style="color:#6e6e6e;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 출제</h1>
-            <button type="button" id="ok" class="btn btn-secondary" style="width: 150px;">출제하기</button>
+         <div class="card-header border-0 pb-0" style="display: flex; justify-content: center;">
+            <h1 class="card-title" style="color:black;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 출제</h1>
          </div>
-         <hr>
          <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
             <form name="exam" enctype="multipart/form-data">
-               <div class="noti-wrap" style="background-color: #175F30;">
-                  <span style="padding-bottom: 8px; color: white;">[출제자 유의사항]</span><br>
-                  <span style="color: white;">▶ 시험지 업로드는 PDF파일만 가능합니다.</span><br>
-                  <span style="color: white;">▶ 문제 추가 시 꼭 답안을 작성한 후 출제하시기 바랍니다.</span>
+               <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+	               <div class="noti-wrap">
+	                  <span style="padding-bottom: 8px; color: #175F30; font-weight: bold;">[출제자 유의사항]</span><br>
+	                  <span style="color: #175F30; font-weight: bold;">▶ 시험지 업로드는 PDF파일만 가능합니다.</span><br>
+	                  <span style="color: #175F30; font-weight: bold;">▶ 문제 추가 시 꼭 답안을 작성한 후 출제하시기 바랍니다.</span>
+	               </div>
+	               <button type="button" id="ok" class="btn btn-secondary" style="width: 150px; height: 40px;">출제하기</button>
                </div>
                <hr>
                <div>
@@ -320,37 +345,30 @@ function set_exam() {
 					 <input type="hidden" id="test_start_time" name="test_start_time" />
 					 <input type="hidden" id="test_end_time" name="test_end_time" />
 					 
-					 
                      <input type="file" class="form-control" id="fileInput" name="attach" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
-
-					
                   </div>
                </div>
                
                
                <hr>
-               <div class="answer-wrap" style="display: flex;">
-                  <div id="myPdf" style="width:800px; height:900px; border: solid 1px black;">
+               <div class="answer-wrap" style="display: flex; width: 100%;">
+                  <div id="myPdf" style="width:50%; height:900px; border: solid 1px black;">
                   	 <div id="pdfPreview" style="text-align: center;"><div style="margin-top: 50%;">시험지 미리보기 <br>(파일을 먼저 등록해주세요.)</div></div>
                   </div>
-                  <div class="hidden"></div>
-                  <div style="padding-left: 20px; width: 50%;"> 
-                     <button type="button" class="btn btn-primary" id="addBtn" style="margin-bottom: 12px; margin-top: 12px; padding: 8px 15px;">답안추가</button>
-                     <button type="button" class="btn btn-danger light" id="delBtn" style="margin-bottom: 12px; margin-top: 12px; padding: 8px 15px; margin-left: 30px;">답안삭제</button>
+                  <div style="width: 50%; display: flex;"> 
+					 <div id="boxWrap" style="width: 60%;">
+					
+                            <div style="display: flex; align-items: center; margin-top: 20px;"  class="aw-wrap">
+                               <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
+                               <span style="width: 130px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 80px;" id="1answer" name="answer">
+                               <span style="width: 130px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" placeholder="숫자만 입력">
+                            </div>
 
-                     <div id="answer-container">
-
-							<div id="boxWrap">
-							
-	                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
-	                                <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
-	                                <span style="width: 70px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer">
-	                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" placeholder="숫자만 입력">
-	                             </div>
-
-							</div>
-
-                     </div>
+					 </div>
+                     <div style="display: flex; width: 30%; margin-left: 10%;">
+	                     <button type="button" class="btn" id="addBtn" style="margin-bottom: 12px; margin-top: 20px; background-color: green; color: white; height: 40px;">답안추가</button>
+	                     <button type="button" class="btn" id="delBtn" style="margin-bottom: 12px; margin-top: 20px; margin-left: 15px; border: solid 1px green; color: green; height: 40px;">답안삭제</button>
+					 </div>
                   </div>
                </div>
             </form>

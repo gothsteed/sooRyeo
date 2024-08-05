@@ -929,14 +929,14 @@ public class StudentController {
 		
 		return mav;
 	}
-	
-	@RequestMapping(value = "/student/chatting.lms", method = RequestMethod.GET)
+
+/*	@RequestMapping(value = "/student/chatting.lms", method = RequestMethod.GET)
 	public String chatting() {
 
 		return "chatting";
 		// /WEB-INF/views/student/{1}.jsp
 	}
-	
+	*/
 	
 	
 	// 학생 대쉬보드 - 수강중인 과목 출석률 
@@ -1094,14 +1094,13 @@ public class StudentController {
 		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
 		return jsonobj.toString();
 	}
-
 	
 	@GetMapping("/student/test.lms")
 	public String test() {
 		
 		return "test";
 		
-	} // end of public String attendance
+	}
 	
 	
 	
@@ -1110,19 +1109,8 @@ public class StudentController {
 	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
 		return scheduleService.getStudentConsultPage(request, mav);
 	}
-	
-	
-	// 수업 클릭 시 시청 기간이 아니라면 alert 띄우기
-	@ResponseBody
-	@PostMapping("/student/time_compare_ajax.lms")
-	public String time_compare_ajax(HttpServletRequest request) {
-		
-		String lecture_seq = request.getParameter("lecture_seq");
-		
-		// 수업 기간 읽어오기
-		
-		return "";
-	}
+
+
 	
 	@ResponseBody
 	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
@@ -1146,21 +1134,7 @@ public class StudentController {
 		return jsonArr.toString(); 
 	}
 
-	
-	@ResponseBody
-	@GetMapping(value="/student/alertLectureDel.lms", produces="text/plain;charset=UTF-8")
-	public String alertLectureDel(HttpServletRequest request) {
-		
-		String id = (String)request.getParameter("id");
-		
-		AlertLecture alertLecture = studentservice.deleteAlertLecture(id);
-		
-		JSONObject jsonObj = new JSONObject(); // {}
-		jsonObj.put("alertLecture", alertLecture);
-				
-		return jsonObj.toString(); 
-	}
-	
+
 	
 	// 수업 - 년도, 학기 조회해서 보여주기
 	@ResponseBody

@@ -1070,13 +1070,10 @@ public class ProfessorController {
 	public ModelAndView editGradeEnd(ModelAndView mav, HttpServletRequest request) {// 학생 점수 수정 끝
 		
 		String goBackURL = request.getParameter("goBackURL");
-		System.out.println("확인용 goBackURL : " + goBackURL);
 		 
 		int regi_course_seq = Integer.parseInt(request.getParameter("regi_course_seq"));
 		double mark = Double.parseDouble(request.getParameter("mark")); 
-		
-		System.out.println("확인용 regi_course_seq : " + regi_course_seq);
-		System.out.println("확인용 mark : " + mark);
+
 		
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("regi_course_seq", regi_course_seq);
@@ -1098,101 +1095,6 @@ public class ProfessorController {
 	
 	    return mav;
 	}
-	
-	
-	// 수업 - 내 강의 - 동영상 플레이
-	@GetMapping("/professor/classPlay.lms")
-	public ModelAndView classPlay(HttpServletRequest request, ModelAndView mav) {
-		
-		String lecture_seq = request.getParameter("lecture_seq");		
-		System.out.println("확인용 lecture_seq : " + lecture_seq);
-		
-		HttpSession session = request.getSession();
-		String root = session.getServletContext().getRealPath("/");
-		String path = root+"resources"+File.separator+"lectures";
-	    String videoFileName = request.getParameter("upload_video_file_name");  
-	    String videoPath = path+videoFileName;
-		
-		Lecture lecture = professorService.getlecture(lecture_seq);
-		
-		mav.addObject("lecture", lecture);
-		mav.addObject("videoPath", videoPath);
-		
-		mav.setViewName("classPlay");
-		
-		return mav;
-	} // end of public String class_play()-------
-	
-	
-	@GetMapping(value="/professor/pdf_download.lms", produces="text/plain;charset=UTF-8")
-	public void pdf_download(HttpServletRequest request, HttpServletResponse response) {// 첨부파일 다운로드
-			
-		String lecture_file_name = request.getParameter("lecture_file_name");
-		
-		String upload_lecture_file_name = request.getParameter("upload_lecture_file_name");
-		
-		System.out.println("확인용  lecture_file_name : " + lecture_file_name);
-		System.out.println("확인용  upload_lecture_file_name : " + upload_lecture_file_name);
-		
-		
-		response.setContentType("text/html; charset=UTF-8");
-		
-		PrintWriter out = null;
-		// out 은 웹브라우저에 기술하는 대상체로 가정
-		
-		try {
-		
-			if(lecture_file_name == null) {
-				out = response.getWriter();
-				// out 은 웹브라우저에 기술하는 대상체로 가정
-				
-				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
-	             return;
-			}
-			
-			else {// 정상적으로 다운로드를 할 경우
-				String fileName = upload_lecture_file_name;
-				// 2024062809210487735185511000.jpg -- WAS(톰캣)에 저장된 파일명
-				
-				String orgFilename = lecture_file_name;
-
-				HttpSession session = request.getSession(); 
-				String root = session.getServletContext().getRealPath("/");
-
-				String path = root+"resources"+File.separator+"lectures";
-
-	            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
-
-	            flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
-
-	            if(!flag) {
-	               // 다운로드가 실패한 경우 메시지를 띄워준다. 
-	               out = response.getWriter();
-	                // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
-	                
-	                out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
-	            }
-
-			}
-
-		} catch (NumberFormatException | IOException e) {
-			
-			try {
-				out = response.getWriter();
-				// out 은 웹브라우저에 기술하는 대상체로 가정
-				
-				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
-				
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-			
-		}	
-		
-	}// end of public void professor_download(HttpServletRequest request, HttpServletResponse response)
-	
-	
-	
 	
 	
 	

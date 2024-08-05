@@ -332,7 +332,27 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 					<hr>
 					<a class="card-link" id="classPlay"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture_week.video_file_name}</a>
 					<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture_week.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture_week.end_date}" pattern="yyyy-MM-dd"/></span>
-					<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%= ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture_week.lecture_file_name}</a>
+					<c:if test="${empty lecture_week.attachedFileList}">
+						<span class="card-link mt-3 ml-5">
+							첨부파일이 없습니다.
+						</span>
+					</c:if>
+					<c:if test="${not empty lecture_week.attachedFileList}">
+
+						<div class="dropdown mt-3 ml-5" style="display: inline">
+							<button class="btn btn-secondary dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								첨부 파일 목록
+							</button>
+							<div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+								<c:forEach var="file" items="${lecture_week.attachedFileList}">
+									<a class="dropdown-item" href="<%= ctxPath%>/lecture/file_download.lms?file_seq=${file.lecture_attached_file_seq}">
+										<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid mr-2" style="width: 20px;">
+											${file.original_file_name}
+									</a>
+								</c:forEach>
+							</div>
+						</div>
+					</c:if>
 				</div>
 		</div>
 	</c:forEach>
@@ -359,7 +379,27 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
 			<a id="classPlay_list" class="card-link"><img src="<%=ctxPath%>/resources/images/play.png" class="img-fluid" style="width:3%;">&nbsp;${lecture.video_file_name}</a>
 			<!-- 영상 보는 기간 -->
 			<span class="card-text" style="color:orange;"><fmt:formatDate value="${lecture.start_date}" pattern="yyyy-MM-dd"/> ~ <fmt:formatDate value="${lecture.end_date}" pattern="yyyy-MM-dd"/></span>
-			<a href="#pdf" class="card-link mt-3 ml-5"><img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid" style="width:2.5%;">&nbsp;${lecture.lecture_file_name}</a>
+			<c:if test="${empty lecture.attachedFileList}">
+						<span class="card-link mt-3 ml-5">
+							첨부파일이 없습니다.
+						</span>
+			</c:if>
+			<c:if test="${not empty lecture.attachedFileList}">
+
+				<div class="dropdown mt-3 ml-5" style="display: inline">
+					<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						첨부 파일 목록
+					</button>
+					<div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+						<c:forEach var="file" items="${lecture.attachedFileList}">
+							<a class="dropdown-item" href="<%= ctxPath%>/lecture/file_download.lms?file_seq=${file.lecture_attached_file_seq}">
+								<img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid mr-2" style="width: 20px;">
+									${file.original_file_name}
+							</a>
+						</c:forEach>
+					</div>
+				</div>
+			</c:if>
 		</div>
 
 	</div>

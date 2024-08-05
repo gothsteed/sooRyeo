@@ -3,7 +3,6 @@ package com.sooRyeo.app.model;
 import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.dto.LectureInsertDto;
-import com.sooRyeo.app.dto.LectureUpdateDto;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ public interface LectureDao {
 
     Lecture getLectureInfo(int lectureSeq);
 
-    int updateLecture(LectureUpdateDto lectureDto);
+    int updateLecture(LectureInsertDto lectureDto);
 
     int deleteLecture(int lectureSeq);
 
@@ -21,4 +20,6 @@ public interface LectureDao {
 	List<Integer> getStudentOfLecture(Integer course_seq);
 
 	String getLectureName(Integer course_seq);
+
+    void deleteAttachFile(Integer lectureAttachedFileSeq);
 }
