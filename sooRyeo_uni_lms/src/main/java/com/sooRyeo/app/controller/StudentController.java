@@ -1094,23 +1094,16 @@ public class StudentController {
 		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
 		return jsonobj.toString();
 	}
-/*
-	@GetMapping("/student/test.lms")
-	public String test() {
-		
-		return "test";
-		
-	}
-	*/
-	
-	
 
+	
+	
 	@GetMapping("/student/consult.lms")
 	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
 		return scheduleService.getStudentConsultPage(request, mav);
 	}
 
 
+	
 
 	
 	// 수업 - 년도, 학기 조회해서 보여주기

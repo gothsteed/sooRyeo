@@ -174,6 +174,13 @@
 				return;
 			}
 	        
+	     	// 내용 유효성 검사
+			var content = $("textarea#content").val().trim();
+	        if(content==""){
+				alert("내용을 입력하세요."); 
+				return;
+			}
+	        
 
 			
 			// 달력 형태로 만들어야 한다.(시작일과 종료일)

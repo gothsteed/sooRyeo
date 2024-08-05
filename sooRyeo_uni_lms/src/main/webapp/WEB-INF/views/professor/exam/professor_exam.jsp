@@ -211,8 +211,10 @@ function set_exam() {
      	  var startMinute= $("select#startMinute").val();
      	  var endMinute= $("select#endMinute").val();
      	
-
-	      if (!startDate) {
+		  var testDate = $("input#test-date").val();
+		  console.log("testDate", testDate);
+     	  
+	      if(!testDate) {
                alert("날짜를 선택해 주세요.");
                return;
           }
