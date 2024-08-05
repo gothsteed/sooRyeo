@@ -1094,17 +1094,9 @@ public class StudentController {
 		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
 		return jsonobj.toString();
 	}
-	
-	@GetMapping("/student/test.lms")
-	public String test() {
-		
-		return "test";
-		
-	}
-	
-	
-	
 
+	
+	
 	@GetMapping("/student/consult.lms")
 	public ModelAndView getConsultPage(HttpServletRequest request, ModelAndView mav) {
 		return scheduleService.getStudentConsultPage(request, mav);
@@ -1112,28 +1104,6 @@ public class StudentController {
 
 
 	
-	@ResponseBody
-	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
-	public String alertLecture(HttpServletRequest request) {
-		
-		List<AlertLecture> alertLecture = studentservice.getAlertLecture(request); 
-
-		JSONArray jsonArr = new JSONArray(); // []
-		
-		if(alertLecture != null) {
-			for(AlertLecture alertLectureData : alertLecture) {
-				JSONObject jsonObj = new JSONObject(); // {}
-				jsonObj.put("Lname", alertLectureData.getLectureName());
-				jsonObj.put("Pname", alertLectureData.getProfessorName());
-				jsonObj.put("LId", alertLectureData.getLectureId());
-				jsonObj.put("Id", alertLectureData.getId());
-				
-				jsonArr.put(jsonObj); // [{},{},{}]
-			}// end of for ----------------------------------
-		}
-		return jsonArr.toString(); 
-	}
-
 
 	
 	// 수업 - 년도, 학기 조회해서 보여주기

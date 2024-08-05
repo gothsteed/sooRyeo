@@ -46,7 +46,6 @@ video {
 		  $("button#end").click(function() {
 		    // Calculate the time spent on the page
 		    const minutes = calculateTimeSpent(pageLoadTime);
-		    alert(`\${minutes}`);
 		    
 		    const lecture_seq = $("input#lecture_seq").val();
 		    
