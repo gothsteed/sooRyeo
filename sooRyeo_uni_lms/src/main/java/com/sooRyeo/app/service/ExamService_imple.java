@@ -6,29 +6,18 @@ import com.sooRyeo.app.model.CourseDao;
 import com.sooRyeo.app.model.ScheduleDao;
 import com.sooRyeo.app.model.StudentDao;
 import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.entity.LoginLog;
-import com.sooRyeo.app.mongo.entity.MemberType;
 import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import com.sooRyeo.app.dto.ExamResultDto;
 import com.sooRyeo.app.dto.ScoreDto;
 import com.sooRyeo.app.jsonBuilder.JsonBuilder;
-import com.sooRyeo.app.model.ScheduleDao;
 import com.sooRyeo.app.mongo.entity.Answer;
 import com.sooRyeo.app.mongo.entity.StudentAnswer;
 import com.sooRyeo.app.mongo.entity.SubmitAnswer;
 import com.sooRyeo.app.mongo.repository.StudentExamAnswerRepository;
 
-import com.sooRyeo.app.mongo.entity.ExamAnswer;
-import com.sooRyeo.app.mongo.repository.ExamAnswerRepository;
 
-
-import org.springframework.data.domain.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -303,47 +292,39 @@ public class ExamService_imple implements ExamService {
 	}
 
 
+    @Override
+    public ModelAndView getExamUpdatePage(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, String courseSeq, String scheduleSeq) {
+        String  coures_name = scheduleDao.select_coures_name(courseSeq);
 
-	// 출제된 시험 정보 select 해오기
-	@Override
-	public Map<String, String> show_exam(String schedule_seq) {
-		Map<String, String> show_exam = scheduleDao.show_exam(schedule_seq);
-		return show_exam;
-	}
+        // 출제된 시험 정보 select 해오기
+        Map<String, String> show_exam = scheduleDao.show_exam(scheduleSeq);
 
+        String ANSWER_MONGO_ID = show_exam.get("answer_mongo_id");
 
-	// 몽고db에서 시험 answers select 해오기 
-	@Override
-	public List<ExamAnswer> select_answers(HttpServletRequest request, HttpServletResponse response, String ANSWER_MONGO_ID) {
-		List<ExamAnswer> select_answers = examAnswerRepository.findAllById("ANSWER_MONGO_ID");
-		return select_answers;
-	}
+        ExamAnswer exam = examAnswerRepository.findById(ANSWER_MONGO_ID).orElse(null);
 
-
-
-	@Override
-	public List<Answer> getExam_info(String ANSWER_MONGO_ID) {
-		
-	    List<ExamAnswer> examList = examAnswerRepository.findAllById(ANSWER_MONGO_ID); // ExamAnswer 객체들을 가져옴
-	    
-	    List<Answer> answers = null;
-	     
-	    if (examList != null && !examList.isEmpty()) {
-	    	
-            for (ExamAnswer exam : examList) {
-                answers = exam.getAnswers();  // 각 ExamAnswer 객체의 answers 배열을 가져옴
-            }
-            
-        } else {
-            System.out.println("examList가 비어 있습니다.");
+        if(exam == null) {
+            mav.addObject("loc", request.getContextPath() + "/professor/exam.lms?course_seq="+courseSeq);
+            mav.addObject("message", "존재하지 않는 시험입니다.");
+            mav.setViewName("msg");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return mav;
         }
-	    
-	    return answers;
-	}
 
 
+        mav.addObject("schedule_seq", scheduleSeq);
+        mav.addObject("course_seq", courseSeq);
+        mav.addObject("answer_mongo_id",ANSWER_MONGO_ID);
+        mav.addObject("exam_info", exam.getAnswers());
+        mav.addObject("show_exam", show_exam);
+        mav.addObject("coures_name", coures_name);
+        mav.setViewName("exam/professor_exam_update");
 
-	@Override
+        return mav;
+    }
+
+
+    @Override
 	public ExamAnswer update_examAnswer(List<Answer> answer_list, String answer_mongo_id) {
 		
 	    Optional<ExamAnswer> one_document = examAnswerRepository.findById(answer_mongo_id);
@@ -531,12 +512,6 @@ public class ExamService_imple implements ExamService {
 		
 		return n2;
 	}
-
-
-
-	
-
-
 
 
 }

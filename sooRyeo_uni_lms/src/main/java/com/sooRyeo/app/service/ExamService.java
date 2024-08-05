@@ -13,8 +13,6 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Exam;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,14 +35,6 @@ public interface ExamService {
 
 	// 시험 출제 뷰단에 과목명 보여주기
 	String select_coures_name(String course_seq);
-	
-	// 출제된 시험 정보 select 해오기
-	Map<String, String> show_exam(String schedule_seq);
-	
-	// 몽고DB에서 값 select 해오기
-	List<ExamAnswer> select_answers(HttpServletRequest request, HttpServletResponse response, String ANSWER_MONGO_ID);
-
-	List<Answer> getExam_info(String ANSWER_MONGO_ID);
 
 	// 시험 수정 시 몽고db에 update
 	ExamAnswer update_examAnswer(List<Answer> answer_list, String answer_mongo_id);
@@ -78,4 +68,5 @@ public interface ExamService {
 	// 시험 삭제 시 오라클 delete
 	int delete_exam_schedule(String schedule_seq);
 
+	ModelAndView getExamUpdatePage(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, String courseSeq, String scheduleSeq);
 }

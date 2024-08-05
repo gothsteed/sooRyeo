@@ -126,8 +126,8 @@
                 populateAnswerComparison(data);
             },
             error: function(xhr, status, error) {
-                console.error('Error fetching exam data:', error);
-                alert('Failed to load exam results. Please try again later.');
+                console.error('Error fetching exam data:', error.text);
+                alert(xhr.responseText);
             }
         });
 

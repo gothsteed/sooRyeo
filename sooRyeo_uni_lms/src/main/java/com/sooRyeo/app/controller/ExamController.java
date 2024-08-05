@@ -211,7 +211,7 @@ public class ExamController {
 	}
 
 	@RequireLogin(type = {Professor.class, Student.class})
-	@GetMapping("/professor/exam/resultREST.lms")
+	@GetMapping(value="/professor/exam/resultREST.lms", produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> getExamResultData(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		return examService.getExamResultData(mav, request, response);
 	}
@@ -263,36 +263,11 @@ public class ExamController {
 	@RequireLogin(type = {Professor.class})
 	@PostMapping(value = "/professor/professor_exam_update.lms")
 	public ModelAndView professor_exam_update(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-		
+
 		String course_seq = request.getParameter("course_seq");
 		String schedule_seq = request.getParameter("schedule_seq");
-		
-		// 시험 출제 뷰단에 과목명 보여주기
-		String  coures_name = examService.select_coures_name(course_seq);
-		
-		// 출제된 시험 정보 select 해오기
-		Map<String, String> show_exam = examService.show_exam(schedule_seq);
-		
-		String ANSWER_MONGO_ID = show_exam.get("answer_mongo_id");
 
-		List<Answer>  exam_info = examService.getExam_info(ANSWER_MONGO_ID);
-	
-        for (Answer answer : exam_info) {
-        	
-            int getAnswer = answer.getAnswer();  // 각 Answer 객체의 answer를 가져옴
-            int getScore = answer.getScore();    // 각 Answer 객체의 를 가져옴
-            
-        }
-		
-        mav.addObject("schedule_seq", schedule_seq);
-        mav.addObject("course_seq", course_seq);
-        mav.addObject("answer_mongo_id",ANSWER_MONGO_ID);
-		mav.addObject("exam_info", exam_info);
-		mav.addObject("show_exam", show_exam);
-		mav.addObject("coures_name", coures_name);
-		mav.setViewName("exam/professor_exam_update");
-
-		return mav;
+		return examService.getExamUpdatePage(request, response, mav, course_seq, schedule_seq);
 	}
 	
 	

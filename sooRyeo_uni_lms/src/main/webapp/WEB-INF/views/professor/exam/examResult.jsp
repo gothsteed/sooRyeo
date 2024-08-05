@@ -34,16 +34,26 @@
             var scheduleSeq = '<%= scheduleSeq %>';
             var url = '<%= ctxPath %>/professor/exam/resultREST.lms?schedule_seq=' + scheduleSeq;
 
-            $.getJSON(url, function(data) {
-                populateResults(data.studuentScoreList);
-                populateStats([{
-                    averageScore: data.averageScore,
-                    highestScore: data.highestScore,
-                    lowestScore: data.lowestScore
-                }]);
-                renderScoreDistributionChart(data.studuentScoreList);
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    populateResults(data.studuentScoreList);
+                    populateStats([{
+                        averageScore: data.averageScore,
+                        highestScore: data.highestScore,
+                        lowestScore: data.lowestScore
+                    }]);
+                    renderScoreDistributionChart(data.studuentScoreList);
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
 
-            });
 
             function populateResults(results) {
                 var resultsTable = $("#results tbody");
