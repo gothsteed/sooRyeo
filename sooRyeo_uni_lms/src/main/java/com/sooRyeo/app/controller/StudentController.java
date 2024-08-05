@@ -1094,14 +1094,14 @@ public class StudentController {
 		// System.out.println("~~ controller 에서 jsonObj 확인 => " + jsonobj.toString());
 		return jsonobj.toString();
 	}
-	
+/*
 	@GetMapping("/student/test.lms")
 	public String test() {
 		
 		return "test";
 		
 	}
-	
+	*/
 	
 	
 
@@ -1110,29 +1110,6 @@ public class StudentController {
 		return scheduleService.getStudentConsultPage(request, mav);
 	}
 
-
-	
-	@ResponseBody
-	@GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
-	public String alertLecture(HttpServletRequest request) {
-		
-		List<AlertLecture> alertLecture = studentservice.getAlertLecture(request); 
-
-		JSONArray jsonArr = new JSONArray(); // []
-		
-		if(alertLecture != null) {
-			for(AlertLecture alertLectureData : alertLecture) {
-				JSONObject jsonObj = new JSONObject(); // {}
-				jsonObj.put("Lname", alertLectureData.getLectureName());
-				jsonObj.put("Pname", alertLectureData.getProfessorName());
-				jsonObj.put("LId", alertLectureData.getLectureId());
-				jsonObj.put("Id", alertLectureData.getId());
-				
-				jsonArr.put(jsonObj); // [{},{},{}]
-			}// end of for ----------------------------------
-		}
-		return jsonArr.toString(); 
-	}
 
 
 	

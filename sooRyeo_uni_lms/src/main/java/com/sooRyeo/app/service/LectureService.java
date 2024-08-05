@@ -20,4 +20,5 @@ public interface LectureService {
     ResponseEntity<String> deleteLecture(HttpServletRequest request) throws Exception;
 
     void downloadLectureAttachment(HttpServletRequest request, HttpServletResponse response);
+
 }
