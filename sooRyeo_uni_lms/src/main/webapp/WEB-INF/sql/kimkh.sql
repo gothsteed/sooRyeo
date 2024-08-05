@@ -820,3 +820,23 @@ WITH
         
         select *
         from tbl_lecture
+
+
+SELECT previousseq, previoussubject, lecture_notice_seq as seq, l_title as title, l_content as content
+		, viewcount, writeday
+		, nextseq, nextsubject
+		from
+		(
+			select lag (lecture_notice_seq) over(order by lecture_notice_seq desc) AS previousseq
+			, lag (l_title,1) over(order by lecture_notice_seq desc) AS previoussubject
+			, lecture_notice_seq
+			, lead (lecture_notice_seq) over(order by lecture_notice_seq desc) AS nextseq
+			, lead (l_title, 1) over(order by lecture_notice_seq desc) AS Nextsubject
+			, writeday, viewcount, l_title, l_content
+			from tbl_lecture_notice
+			where fk_course_seq = '4'
+			 
+				where lower(l_title) like '%' || lower('안녕하세요') || '%'
+			 
+		) V
+		WHERE V.lecture_notice_seq = '43'
