@@ -386,11 +386,6 @@ $(document).ready(function(){
 	            </div>
 	            <div id="displayList"></div>
             </div>
-            <div class="icons">
-                <span class="icon">📫</span>
-                <span class="icon">🔔</span>
-                <span class="icon">❔</span>
-            </div>
         </div>
 
 
