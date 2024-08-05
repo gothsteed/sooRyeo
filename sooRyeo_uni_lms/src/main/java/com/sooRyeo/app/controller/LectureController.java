@@ -66,7 +66,6 @@ public class LectureController {
     @ResponseBody
     @GetMapping(value="/student/alertLecture.lms", produces="text/plain;charset=UTF-8")
     public String alertLecture(HttpServletRequest request) {
-
         List<AlertLecture> alertLecture = studentService.getAlertLecture(request);
 
         JSONArray jsonArr = new JSONArray(); // []

@@ -790,3 +790,53 @@ WITH
 	    JOIN V ON V.fk_professor_id = P.prof_id
 	    JOIN C ON V.fk_curriculum_seq = C.curriculum_seq
 	    WHERE V.fk_student_id = 202400005 and to_char(V.semester_date, 'yy-MM') = '24-07'
+        
+        
+        
+        
+        select lecture_seq, fk_course_seq
+		     , video_file_name, lecture_file_name, lecture_title
+		     , lecture_content
+		     , start_date
+		     , end_date
+		from tbl_lecture join tbl_course
+		on tbl_lecture.fk_course_seq = tbl_course.course_seq
+		where fk_course_seq = 4 and lecture_seq = 
+		order by lecture_seq asc
+        
+        
+        select lecture_seq, fk_course_seq
+			 , video_file_name, lecture_file_name, lecture_title
+			 , lecture_content
+             , upload_lecture_file_name
+             , upload_video_file_name
+			 , start_date
+     		 , end_date
+		from tbl_lecture join tbl_course
+		on tbl_lecture.fk_course_seq = tbl_course.course_seq
+		where exist = 1 AND lecture_seq = 56
+		order by lecture_seq asc
+        
+        
+        select *
+        from tbl_lecture
+
+
+SELECT previousseq, previoussubject, lecture_notice_seq as seq, l_title as title, l_content as content
+		, viewcount, writeday
+		, nextseq, nextsubject
+		from
+		(
+			select lag (lecture_notice_seq) over(order by lecture_notice_seq desc) AS previousseq
+			, lag (l_title,1) over(order by lecture_notice_seq desc) AS previoussubject
+			, lecture_notice_seq
+			, lead (lecture_notice_seq) over(order by lecture_notice_seq desc) AS nextseq
+			, lead (l_title, 1) over(order by lecture_notice_seq desc) AS Nextsubject
+			, writeday, viewcount, l_title, l_content
+			from tbl_lecture_notice
+			where fk_course_seq = '4'
+			 
+				where lower(l_title) like '%' || lower('안녕하세요') || '%'
+			 
+		) V
+		WHERE V.lecture_notice_seq = '43'

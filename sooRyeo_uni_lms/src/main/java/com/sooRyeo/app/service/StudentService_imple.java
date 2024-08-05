@@ -54,7 +54,7 @@ import com.sooRyeo.app.dto.StudentDTO;
 public class StudentService_imple implements StudentService {
 	
 	@Autowired
-	private StudentDao dao;
+	private StudentDao studentDao;
 
 	@Autowired
 	private LectureDao lectureDao;
@@ -95,7 +95,7 @@ public class StudentService_imple implements StudentService {
 		member_student.setExtraAddress(loginuser.getExtraAddress());	// 추가주소
 		
 		// 학과명 가져오기
-		String d_name = dao.select_department(loginuser.getStudent_id());
+		String d_name = studentDao.select_department(loginuser.getStudent_id());
 		member_student.setDepartment_name(d_name);
 		
 		
@@ -125,7 +125,7 @@ public class StudentService_imple implements StudentService {
 		
 		int n = 0;
 		try {
-			n = dao.pwdDuplicateCheck(paraMap);
+			n = studentDao.pwdDuplicateCheck(paraMap);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -164,7 +164,7 @@ public class StudentService_imple implements StudentService {
 		
 		int n = 0;
 		try {
-			n = dao.telDuplicateCheck(paraMap);
+			n = studentDao.telDuplicateCheck(paraMap);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -201,7 +201,7 @@ public class StudentService_imple implements StudentService {
 		
 		int n = 0;
 		try {
-			n = dao.emailDuplicateCheck(paraMap);
+			n = studentDao.emailDuplicateCheck(paraMap);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -269,7 +269,7 @@ public class StudentService_imple implements StudentService {
 		paraMap.put("email", email);
 		paraMap.put("tel", tel);
 		
-		String fileName = dao.select_file_name(paraMap);
+		String fileName = studentDao.select_file_name(paraMap);
 		
 	
         System.out.println("확인용 fileName : " + fileName);
@@ -283,7 +283,7 @@ public class StudentService_imple implements StudentService {
             paraMap.put("path", path); // 삭제해야할 파일이 저장된 경로
             paraMap.put("fileName", fileName); // 삭제해야할 파일이 저장된 경로
             
-            n1 = dao.delFilename(paraMap.get("student_id"));
+            n1 = studentDao.delFilename(paraMap.get("student_id"));
             System.out.println("n1: " + n1);
             
             if (n1 == 1) {
@@ -372,7 +372,7 @@ public class StudentService_imple implements StudentService {
 
 		
 		try {
-			n2 = dao.student_info_edit(paraMap);
+			n2 = studentDao.student_info_edit(paraMap);
 			// System.out.println("n2: " + n2);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -392,16 +392,18 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public StudentTimeTable classList(int userid) {
 		
-		StudentTimeTable classList = dao.classList(userid);
+		StudentTimeTable classList = studentDao.classList(userid);
 		return classList;
 	}
-
+	
+	
+	//todo : getlectureList, getlectureList_week 모두 lectureDAO로 옮기기
 	@Override
 	public ModelAndView getCourseLecturePage(HttpServletRequest request, ModelAndView mav, String fkCourseSeq) {
 		HttpSession session =  request.getSession();
 		Student student =  (Student) session.getAttribute("loginuser");
-
-		List<Lecture> lectureList = dao.getlectureList(fkCourseSeq);
+		
+		List<Lecture> lectureList = studentDao.getlectureList(fkCourseSeq);
 		List<Attendance> addendenceList  = lectureDao.getAttendance(fkCourseSeq, student.getStudent_id());
 		Map<Integer, Boolean> attendanceMap = new HashMap<>();
 		for(Attendance a : addendenceList) {
@@ -410,10 +412,10 @@ public class StudentService_imple implements StudentService {
 			}
 		}
 
-		List<Professor> professor_info = dao.select_prof_info(fkCourseSeq);
+		List<Professor> professor_info = studentDao.select_prof_info(fkCourseSeq);
 
 		// 수업 - 이번주 강의보기
-		List<Lecture> lectureList_week = dao.getlectureList_week(fkCourseSeq);
+		List<Lecture> lectureList_week = studentDao.getlectureList_week(fkCourseSeq);
 
 		mav.addObject("professor_info", professor_info);
 		mav.addObject("attendanceMap", attendanceMap);
@@ -432,7 +434,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Lecture> getlectureList(String fk_course_seq) {
 		
-		List<Lecture> lectureList = dao.getlectureList(fk_course_seq);
+		List<Lecture> lectureList = studentDao.getlectureList(fk_course_seq);
 
 		return lectureList;
 	} // end of public List<Lecture> getlectureList
@@ -443,7 +445,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Lecture> getlectureList_week(String fk_course_seq) {
 		
-		List<Lecture> lectureList_week = dao.getlectureList_week(fk_course_seq);
+		List<Lecture> lectureList_week = studentDao.getlectureList_week(fk_course_seq);
 		
 		return lectureList_week;
 		
@@ -464,7 +466,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Map<String, String>> getassignment_List(String fk_course_seq, int userid) {
 		
-		List<Map<String, String>> assignment_List = dao.getassignment_List(fk_course_seq, userid);
+		List<Map<String, String>> assignment_List = studentDao.getassignment_List(fk_course_seq, userid);
 		
 		return assignment_List;
 		
@@ -477,7 +479,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public Map<String, Object> getassignment_detail_1(String schedule_seq_assignment) {
 		
-		Map<String, Object> assignment_detail_1 = dao.getassignment_detail_1(schedule_seq_assignment);
+		Map<String, Object> assignment_detail_1 = studentDao.getassignment_detail_1(schedule_seq_assignment);
 		
 		return assignment_detail_1;
 		
@@ -490,7 +492,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public Map<String, Object> getassignment_detail_2(String schedule_seq_assignment, int userid) {
 		
-		Map<String, Object> assignment_detail_2 = dao.getassignment_detail_2(schedule_seq_assignment, userid);
+		Map<String, Object> assignment_detail_2 = studentDao.getassignment_detail_2(schedule_seq_assignment, userid);
 		
 		return assignment_detail_2;
 		
@@ -505,7 +507,7 @@ public class StudentService_imple implements StudentService {
 		
 		int n = 0;
 		
-		n = dao.addComment(asdto);
+		n = studentDao.addComment(asdto);
 
 		return n;
 		
@@ -516,7 +518,7 @@ public class StudentService_imple implements StudentService {
 	// 교수 이름, 교수 번호 select
 	@Override
 	public List<Professor> select_prof_info(String fk_course_seq) {
-		List<Professor> prof_info = dao.select_prof_info(fk_course_seq);
+		List<Professor> prof_info = studentDao.select_prof_info(fk_course_seq);
 		return prof_info;
 	}
 
@@ -526,7 +528,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public int insert__schedule_consult(String prof_id, String title, String content, String start_date, String end_date, int userid) {
 		
-		int n = dao.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid); 
+		int n = studentDao.insert__schedule_consult(prof_id, title, content, start_date, end_date, userid);
 		return n;
 	}
 
@@ -534,7 +536,7 @@ public class StudentService_imple implements StudentService {
 	// 수업 - 강의 한개 제목, 내용 select
 	@Override
 	public Map<String, String> classPlay_One(String lecture_seq) {
-		Map<String, String> classOne = dao.classPlay_One(lecture_seq);
+		Map<String, String> classOne = studentDao.classPlay_One(lecture_seq);
 		return classOne;
 	}
 
@@ -542,7 +544,7 @@ public class StudentService_imple implements StudentService {
 	// 출석 테이블에 내가 수강한 수업이 insert 되어진 값이 있는지 알아오기 위함
 	@Override
 	public String select_tbl_attendance(String lecture_seq, int userid) {
-		String fk_lecture_seq = dao.select_tbl_attendance(lecture_seq, userid);
+		String fk_lecture_seq = studentDao.select_tbl_attendance(lecture_seq, userid);
 		return fk_lecture_seq;
 	}
 
@@ -550,14 +552,14 @@ public class StudentService_imple implements StudentService {
 	// 처음 동영상을 재생한 경우 tbl_attendance 에 insert
 	@Override
 	public int insert_tbl_attendance(String play_time, String lecture_seq, int userid) {
-		int n = dao.insert_tbl_attendance(play_time, lecture_seq, userid);
+		int n = studentDao.insert_tbl_attendance(play_time, lecture_seq, userid);
 		return n;
 	}
 
 	
 	@Override
 	public int select_play_time_lecture_time(String play_time, String lecture_seq, int userid) {
-		int i = dao.select_play_time_lecture_time(play_time, lecture_seq, userid);
+		int i = studentDao.select_play_time_lecture_time(play_time, lecture_seq, userid);
 		return i;
 	}
 	
@@ -566,7 +568,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public int update_tbl_attendance(String play_time, String lecture_seq, int userid) {
 
-		int n1 = dao.update_tbl_attendance(play_time, lecture_seq, userid);
+		int n1 = studentDao.update_tbl_attendance(play_time, lecture_seq, userid);
 		System.out.println("service 에서 n1 체크 => " +  n1);
 		return n1;
 	}
@@ -575,7 +577,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public int update_tbl_attendance_isAttended(String lecture_seq, int userid) {
 		
-		int n2 = dao.update_tbl_attendance_isAttended(lecture_seq, userid);
+		int n2 = studentDao.update_tbl_attendance_isAttended(lecture_seq, userid);
 		return n2;
 	}
 
@@ -591,7 +593,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public Map<String, Object> getreadComment(String fk_schedule_seq_assignment, int userid) {
 		
-		Map<String, Object> asdto = dao.getreadComment(fk_schedule_seq_assignment, userid);
+		Map<String, Object> asdto = studentDao.getreadComment(fk_schedule_seq_assignment, userid);
 		
 		return asdto;
 		
@@ -603,7 +605,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public AssignmentSubmitDTO getCommentOne(String assignment_submit_seq) {
 		
-		AssignmentSubmitDTO asdto = dao.getCommentOne(assignment_submit_seq);
+		AssignmentSubmitDTO asdto = studentDao.getCommentOne(assignment_submit_seq);
 		
 		return asdto;
 		
@@ -616,10 +618,10 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public String student_chart_credit(int student_id, int department_seq) {
 		
-		Map<String, String> myRequiredCredit = dao.student_myRequiredCredit(student_id, department_seq);
-		Map<String, String> yourRequiredCredit = dao.student_yourRequiredCredit(student_id, department_seq);
-		Map<String, String> UnrequiredCredit = dao.student_UnrequiredCredit(student_id);
-		Map<String, String> LiberalCredit = dao.student_LiberalCredit(student_id);
+		Map<String, String> myRequiredCredit = studentDao.student_myRequiredCredit(student_id, department_seq);
+		Map<String, String> yourRequiredCredit = studentDao.student_yourRequiredCredit(student_id, department_seq);
+		Map<String, String> UnrequiredCredit = studentDao.student_UnrequiredCredit(student_id);
+		Map<String, String> LiberalCredit = studentDao.student_LiberalCredit(student_id);
 		
 		JsonArray jsonArr = new JsonArray();	
 		JsonObject jsonObj = new JsonObject();
@@ -639,7 +641,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Map<String, Object>> attendanceList(int userid, String name) {
 		
-		List<Map<String, Object>> attendanceList = dao.attendanceList(userid, name);
+		List<Map<String, Object>> attendanceList = studentDao.attendanceList(userid, name);
 		
 		return attendanceList;
 		
@@ -652,7 +654,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Curriculum> lectureList() {
 		
-		List<Curriculum> lectureList = dao.lectureList();
+		List<Curriculum> lectureList = studentDao.lectureList();
 		
 		return lectureList;
 		
@@ -664,14 +666,14 @@ public class StudentService_imple implements StudentService {
 	// 이수한 학점이 몇점인지 알아오는 메소드
 	@Override
 	public int credit_point(int student_id) {
-		int credit_point = dao.credit_point(student_id); 
+		int credit_point = studentDao.credit_point(student_id);
 		return credit_point;
 	}
 
 	// 학적변경테이블(tbl_student_status_change)에 졸업신청을 insert 하는 메소드 
 	@Override
 	public int application_status_change(int student_id, int status_num) {
-		int n = dao.application_status_change(student_id, status_num); 
+		int n = studentDao.application_status_change(student_id, status_num);
 		return n;
 	}
 
@@ -679,7 +681,7 @@ public class StudentService_imple implements StudentService {
 	// 현재 학적변경을 신청한 상태인지 알아오는 메소드
 	@Override
 	public String getApplication_status(int student_id) {
-		String application_status = dao.getApplication_status(student_id); 
+		String application_status = studentDao.getApplication_status(student_id);
 		return application_status;
 	}
 
@@ -687,13 +689,13 @@ public class StudentService_imple implements StudentService {
 	// 오늘의 수업만을 불러오는 메소드
 	@Override
 	public List<TodayLecture> getToday_lec(int student_id) {
-		List<TodayLecture> today_lec = dao.getToday_lec(student_id);
+		List<TodayLecture> today_lec = studentDao.getToday_lec(student_id);
 		return today_lec;
 	}
 
 	@Override
 	public Pager<Announcement> getAnnouncement(int currentPage) {
-		Pager<Announcement> announcementList = dao.getAnnouncement(currentPage);
+		Pager<Announcement> announcementList = studentDao.getAnnouncement(currentPage);
 		return announcementList;
 	}
 
@@ -877,7 +879,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Curriculum> Curriculum_nameList(int student_id) {
 		
-		List<Curriculum> Curriculum_nameList = dao.Curriculum_nameList(student_id);
+		List<Curriculum> Curriculum_nameList = studentDao.Curriculum_nameList(student_id);
 		
 		return Curriculum_nameList;
 		
@@ -889,7 +891,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public Map<String, Object> myAttendance_byCategoryJSON(int student_id, String name) {
 		
-		Map<String, Object> myAttendance_byCategoryJSON = dao.myAttendance_byCategoryJSON(student_id, name);
+		Map<String, Object> myAttendance_byCategoryJSON = studentDao.myAttendance_byCategoryJSON(student_id, name);
 		
 		return myAttendance_byCategoryJSON;
 		
@@ -901,7 +903,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Map<String, Object>> Acquisition_status(int student_id) {
 		
-		List<Map<String, Object>> Acquisition_status = dao.Acquisition_status(student_id);
+		List<Map<String, Object>> Acquisition_status = studentDao.Acquisition_status(student_id);
 		
 		return Acquisition_status;
 		
@@ -913,7 +915,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public List<Map<String, Object>> Acquisition_status_JSON(String semester, int student_id) {
 		
-		List<Map<String, Object>> Acquisition_status_JSON = dao.Acquisition_status_JSON(semester, student_id);
+		List<Map<String, Object>> Acquisition_status_JSON = studentDao.Acquisition_status_JSON(semester, student_id);
 		
 		return Acquisition_status_JSON;
 		
@@ -926,7 +928,7 @@ public class StudentService_imple implements StudentService {
 	@Override
 	public StudentTimeTable classListJSON(String semester, int student_id) {
 		
-		StudentTimeTable classListJSON = dao.classListJSON(semester, student_id);
+		StudentTimeTable classListJSON = studentDao.classListJSON(semester, student_id);
 		
 		return classListJSON;
 		
