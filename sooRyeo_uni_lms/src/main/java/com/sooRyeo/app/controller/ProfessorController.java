@@ -150,12 +150,12 @@ public class ProfessorController {
 	      
 	      if(n == 1) {
 	    	  mav.addObject("message", "교수정보 수정을 성공하였습니다.");
-	    	  mav.addObject("loc", mrequest.getContextPath()+"/professor/dashboard");
+	    	  mav.addObject("loc", mrequest.getContextPath()+"/professor/dashboard.lms");
 	    	  mav.setViewName("msg");
 	      }
 	      else {
 	    	  mav.addObject("message", "교수정보 수정이 실패하였습니다.");
-	    	  mav.addObject("loc", mrequest.getContextPath()+ "/professor/info");
+	    	  mav.addObject("loc", mrequest.getContextPath()+ "/professor/info.lms");
 	    	  mav.setViewName("msg");
 	      }
       
@@ -1006,7 +1006,7 @@ public class ProfessorController {
 		
 		// System.out.println("확인용 출석율 : " + attendanceRate);
 		
-		Double DtotalScore = DassignmentScore + DtotalExamScore + DattendanceRate;
+		Double DtotalScore = (DassignmentScore + DtotalExamScore + DattendanceRate)/3;
 		
 		String totalScore = String.format("%.2f", DtotalScore); 
 		System.out.println("확인용 토탈 : " + totalScore);

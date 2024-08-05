@@ -282,6 +282,9 @@ public class ExamController {
             int getAnswer = answer.getAnswer();  // 각 Answer 객체의 answer를 가져옴
             int getScore = answer.getScore();    // 각 Answer 객체의 를 가져옴
             
+            System.out.println("확인용 getAnswer : " + getAnswer);
+            System.out.println("확인용 getScore : " + getScore);
+            
         }
 		
         mav.addObject("schedule_seq", schedule_seq);
