@@ -153,6 +153,10 @@ const colors = [
 
 let colorIndex = 0;
 
+function getDayOfWeek(day) {
+	const days = ["월", "화", "수", "목", "금", "토", "일"];
+	return days[day - 1];
+}
 
 function fetchData(pageNum) {
     console.log(pageNum);
@@ -168,9 +172,15 @@ function fetchData(pageNum) {
                 var row = document.createElement("tr");
                 console.log(data.register_count )
                 console.log(data.capacity)
+
+				const timeString = data.timeList.map(item => {
+					const day = getDayOfWeek(item.day_of_week);
+					return `\${day} \${item.start_period}-\${item.end_period}`;
+				}).join(", ");
                 
                 row.innerHTML = "<td><button type='button' class='btn sign-up-btn btn-primary' data-course-seq='" + data.course_seq + "'>신청</button></td>" +
                                 "<td>" + data.curriculum.name + "</td>" +
+								"<td>" + timeString + "</td>" +
                                 "<td>" + data.professor.name + "</td>" +
                                 "<td>" + (data.curriculum.grade == null ? '' : data.curriculum.grade) + "</td>" +
                                 "<td>" + data.curriculum.credit + "</td>" +
@@ -736,6 +746,7 @@ function clearScheduleForms() {
 						<tr>
 							<th>선택</th>
 							<th>강의 이름</th>
+							<th>시간</th>
 							<th>교수</th>
 							<th>학년</th>
 							<th>이수 학점</th>

@@ -26,7 +26,7 @@ public class AuthAspect {
 	public void checkAuth(JoinPoint joinPoint, RequireLogin requireLogin) throws Throwable {
 		
 
-/*		if(requireLogin == null) {
+		if(requireLogin == null) {
 			
 			requireLogin = joinPoint.getTarget().getClass().getAnnotation(RequireLogin.class);
 			
@@ -58,7 +58,7 @@ public class AuthAspect {
 				return;
 			}
 			throw new AuthException("권한이 없습니다");
-		}*/
+		}
 
 	
 		

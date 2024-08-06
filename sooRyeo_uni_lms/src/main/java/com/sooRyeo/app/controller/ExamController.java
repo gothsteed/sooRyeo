@@ -113,15 +113,15 @@ public class ExamController {
 		
 		for(int i=0; i<arr_answer.length; i++) {
 			
-				Answer answer =  new Answer();
-			
-				answer.setAnswer(Integer.parseInt(arr_answer[i]));
-				answer.setScore(Integer.parseInt(arr_score[i]));    
-				answer.setQuestionNumber(Integer.parseInt(arr_questionNumber[i]));
-				
-				answer_list.add(answer);
-				
-				total_score +=  Integer.parseInt(arr_score[i]);
+			Answer answer =  new Answer();
+
+			answer.setAnswer(Integer.parseInt(arr_answer[i]));
+			answer.setScore(Integer.parseInt(arr_score[i]));
+			answer.setQuestionNumber(Integer.parseInt(arr_questionNumber[i]));
+
+			answer_list.add(answer);
+
+			total_score +=  Integer.parseInt(arr_score[i]);
 			
 		}
 		
