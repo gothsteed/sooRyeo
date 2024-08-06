@@ -182,7 +182,7 @@ function updateDateTime() {
 
         // test_date_time input의 value 속성에 설정
         $("input:hidden[name='test_start_time']").val(startDateTime);
-        $("input:hidden[name='test_end_time']").val(startDateTime);
+        $("input:hidden[name='test_end_time']").val(endDateTime);
         // document.getElementById('test_start_time').value = startDateTime;
         // document.getElementById('test_end_time').value = endDateTime;
     }
@@ -307,7 +307,7 @@ function set_exam() {
 
 
 
-<div class="content-body" style="width: 85%; margin: 0 auto;">
+<div class="content-body" style="width: 100%; margin: 0 auto;">
 
    <div class="container-fluid" style="padding-top: 10px;">
       <div class="card" id="card-title-1">

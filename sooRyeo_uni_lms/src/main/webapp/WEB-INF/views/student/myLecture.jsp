@@ -124,10 +124,10 @@ $(document).ready(function(){
     	var startHour = parseInt($("select#startHour").val(), 10)
     	var startMinute = parseInt($("select#startMinute").val(), 10); // 문자열을 정수로 변환
 
-    	var endHour = String((startHour + 2) % 24).padStart(2, '0');
-    	var endMinute = startMinute;
+    	var endHour = syshour;
+    	var endMinute = sysminutes;
 
-     	// 조회기간 시작일자가 종료일자 보다 크면 경고
+     	// 상담 신청한 날짜가 현재보다 과거이면 경고
         if (Number(startDate) - Number(sysdate) < 0) {
          	alert("현재보다 상담신청일이 과거입니다.");
          	return;
@@ -202,6 +202,8 @@ $(document).ready(function(){
 	        error: function(xhr, status, error) {
 				alert("상담 신청 실패!");
        		}
+     		
+     		location.href="javascript:history.go(0);"; // 페이지 새로고침
 
      	});
         
