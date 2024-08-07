@@ -120,6 +120,14 @@ function timeoutSubmit() {
     
 };
 
+function validateInput(input) {
+    // Check if the value is not a number
+    if (isNaN(input.value) || input.value === '') {
+        alert('숫자만 입력 가능합니다.');
+        input.value = ''; // Clear the invalid input
+    }
+};
+
 </script>
 
 
@@ -146,7 +154,7 @@ function timeoutSubmit() {
                 <form name="SelectAnswer" style="flex: 1;">
                     <c:forEach begin="1" end="${requestScope.examView.question_count}" varStatus="questionStatus">
                         <div>${questionStatus.index}. 
-                            <input name="${questionStatus.index}" type="text" style="width:30%; margin-bottom:5%" maxlength="1"/>
+                            <input name="${questionStatus.index}" type="text" style="width:30%; margin-bottom:5%" maxlength="1" oninput="validateInput(this)"/>
                         </div>
                     </c:forEach>
                     <input name="selCount" style="display: none;" value="${requestScope.examView.question_count}"/>
