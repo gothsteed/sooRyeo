@@ -168,26 +168,33 @@ function fetchData(pageNum) {
             const tableBody = document.querySelector("table tbody");
             tableBody.innerHTML = "";
             console.log(data);
-            data.forEach(function(data) {
-                var row = document.createElement("tr");
-                console.log(data.register_count )
-                console.log(data.capacity)
+			if (data.length === 0) {
+				// Display message when no courses are available
+				const messageRow = document.createElement("tr");
+				messageRow.innerHTML = "<td colspan='8' class='text-center'>개설된 강의 없음</td>";
+				tableBody.appendChild(messageRow);
+			} else {
+				data.forEach(function(data) {
+					var row = document.createElement("tr");
+					console.log(data.register_count)
+					console.log(data.capacity)
 
-				const timeString = data.timeList.map(item => {
-					const day = getDayOfWeek(item.day_of_week);
-					return `\${day} \${item.start_period}-\${item.end_period}`;
-				}).join(", ");
-                
-                row.innerHTML = "<td><button type='button' class='btn sign-up-btn btn-primary' data-course-seq='" + data.course_seq + "'>신청</button></td>" +
-                                "<td>" + data.curriculum.name + "</td>" +
-								"<td>" + timeString + "</td>" +
-                                "<td>" + data.professor.name + "</td>" +
-                                "<td>" + (data.curriculum.grade == null ? '' : data.curriculum.grade) + "</td>" +
-                                "<td>" + data.curriculum.credit + "</td>" +
-                                "<td>" + (data.curriculum.required === 1 ? 'Yes' : 'No') + "</td>" + 
-                                "<td>" + data.register_count  + "/" +  data.capacity + "</td>";
-                tableBody.appendChild(row);
-            });
+					const timeString = data.timeList.map(item => {
+						const day = getDayOfWeek(item.day_of_week);
+						return `\${day} \${item.start_period}-\${item.end_period}`;
+					}).join(", ");
+
+					row.innerHTML = "<td><button type='button' class='btn sign-up-btn btn-primary' data-course-seq='" + data.course_seq + "'>신청</button></td>" +
+							"<td>" + data.curriculum.name + "</td>" +
+							"<td>" + timeString + "</td>" +
+							"<td>" + data.professor.name + "</td>" +
+							"<td>" + (data.curriculum.grade == null ? '' : data.curriculum.grade) + "</td>" +
+							"<td>" + data.curriculum.credit + "</td>" +
+							"<td>" + (data.curriculum.required === 1 ? 'Yes' : 'No') + "</td>" +
+							"<td>" + data.register_count  + "/" +  data.capacity + "</td>";
+					tableBody.appendChild(row);
+				});
+			}
 
             // Add event listeners to the sign-up buttons
             document.querySelectorAll('.sign-up-btn').forEach(button => {
