@@ -27,49 +27,53 @@
 		<%-- ============== ajax로 테이블 내용물 가져오기 시작 ============== --%>
 
 		$.ajax({
-			url:"<%= ctxPath%>/professor/assignment_checkJSON.lms",
-			method: "POST",
-			data:{"schedule_seq_assignment":"${requestScope.assign_view.assignment.schedule_seq_assignment}"},
-			enctype:"multipart/form-data",
-			dataType:"json",
-			
-			success:function(json){			
-				
-				let v_html = ``;
-				
-				json.forEach(function(item, index, array){
-					
-					v_html += `<tr>
-			      				<td style="text-align: center; vertical-align: middle;">\${item.row_num}</td> 
-			      				<td style="text-align: center; vertical-align: middle;">\${item.assignment_submit_seq}</td> 
-			      				<td style="text-align: center; vertical-align: middle;">\${item.name}</td>
-			      				<td style="text-align: center; vertical-align: middle;">\${item.attatched_file}</td>
-				            	<td style="text-align: center; vertical-align: middle;">\${item.end_date}</td>
-				            	<td style="text-align: center; vertical-align: middle;">\${item.submit_datetime}</td>`;
-				            	
-					if (item.score === "미채점") {
-				        v_html += `<td style='text-align: center; vertical-align: middle;'>
-				            <input type='text' id="score" style="width: 50%"/>
-				            <button type='button' class='btn btn-secondary mt-1' onclick='insertGrade("\${item.assignment_submit_seq}")'>점수입력</button>
-				        </td>`;
-				    } else {
-				        v_html += `<td id="editScore" style="text-align: center; vertical-align: middle;">\${item.score}점<br>
-				        <button type='button' class='btn btn-secondary mt-1' onclick='editScore("\${item.score}", "\${item.assignment_submit_seq}")'>점수수정</button>
-				        </td>`;
-				    }
+		    url: "<%= ctxPath %>/professor/assignment_checkJSON.lms",
+		    method: "POST",
+		    data: { "schedule_seq_assignment": "${requestScope.assign_view.assignment.schedule_seq_assignment}" },
+		    enctype: "multipart/form-data",
+		    dataType: "json",
+		    
+		    success: function(json) {
+		        let v_html = ``;
 
-				    v_html += `</tr>`;
-					
-				});
-				
-				$("table#assignCheck tbody").html(v_html);
-				
-					
-			},
-		    error: function(request, status, error){
-		        alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		   	}
-				
+		        json.forEach(function(item, index, array) {
+		            v_html += `<tr>
+		                          <td style="text-align: center; vertical-align: middle;">\${item.row_num}</td>
+		                          <td style="text-align: center; vertical-align: middle;">\${item.assignment_submit_seq}</td>
+		                          <td style="text-align: center; vertical-align: middle;">\${item.name}</td>
+		                          <td style="text-align: center; vertical-align: middle;">\${item.attatched_file}</td>`;
+
+		            if (item.attatched_file === "없음") {
+		                v_html += `<td style="text-align: center; vertical-align: middle;">\${item.attatched_file}</td>`;
+		            } else {
+		                v_html += `<td style="text-align: center; vertical-align: middle;">
+		                            <a href="<%= ctxPath %>/downloadAssignSubmit.lms?assignment_submit_seq=\${item.assignment_submit_seq}">
+		                            \${item.attatched_file}</a>
+		                           </td>`;
+		            }
+
+		            v_html += `<td style="text-align: center; vertical-align: middle;">\${item.end_date}</td>
+		                       <td style="text-align: center; vertical-align: middle;">\${item.submit_datetime}</td>`;
+
+		            if (item.score === "미채점") {
+		                v_html += `<td style='text-align: center; vertical-align: middle;'>
+		                            <input type='text' id="score" style="width: 50%"/>
+		                            <button type='button' class='btn btn-secondary mt-1' onclick='insertGrade("\${item.assignment_submit_seq}")'>점수입력</button>
+		                           </td>`;
+		            } else {
+		                v_html += `<td id="editScore" style="text-align: center; vertical-align: middle;">\${item.score}점<br>
+		                           <button type='button' class='btn btn-secondary mt-1' onclick='editScore("\${item.score}", "\${item.assignment_submit_seq}")'>점수수정</button>
+		                           </td>`;
+		            }
+
+		            v_html += `</tr>`;
+		        });
+
+		        $("table#assignCheck tbody").html(v_html);
+		    },
+		    error: function(request, status, error) {
+		        alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+		    }
 		});		
 		
 		<%-- ============== ajax로 테이블 내용물 가져오기 끝 ============== --%>
