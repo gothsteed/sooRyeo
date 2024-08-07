@@ -399,8 +399,6 @@ public class ExamController {
 		String mongo_id = request.getParameter("mongo_id");
 		String course_seq = request.getParameter("course_seq");
 		
-		System.out.println("course_seq 확인용 => " + course_seq);
-		
 		String  getFile_name = examdto.getFile_name();
 		
 		if( !getFile_name.isEmpty() ) {

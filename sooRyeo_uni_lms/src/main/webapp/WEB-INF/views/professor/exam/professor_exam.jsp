@@ -42,10 +42,6 @@ input::file-selector-button:hover {
   background:#CCCCCC;
   color:#fff;
 }
-
-
-
-
 </style>
 
 
@@ -102,15 +98,17 @@ $(function() {
 
 
     $("button#addBtn").click(function() {
-        $("div#boxWrap").append(`  
-            <div style="display: flex; align-items: center; margin-top: 20px;" margin-left: 20px; class="aw-wrap">
-                <input type="hidden" class="form-control aw"  value="\${index+1}" name="questionNumber">
-                <span style="width: 130px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
-                <input type="text" class="form-control aw" style="width: 80px;" id="\${index+1}answer" name="answer"/>
-                <span style="width: 130px; text-align:center;">배점 :</span>
-                <input type="text" class="form-control aw ts-scr" style="width: 130px;" placeholder="숫자만 입력" id="\${index+1}score" name="score"/>
-            </div> 
-        `);
+
+        
+        $("div#boxWrap").append(`
+                <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
+                    <input type="hidden" class="form-control aw"  value="\${index+1}" name="questionNumber">
+                    <span style="width: 70px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
+                    <input type="text" class="form-control aw" style="width: 80px;" id="\${index+1}answer" name="answer"/>
+                    <span style="width: 70px; text-align:center;">배점 :</span>
+                    <input type="text" class="form-control aw ts-scr" style="width: 80px;" placeholder="숫자만 입력" id="\${index+1}score" name="score"/>
+                </div>
+            `);
         
 
         
@@ -183,8 +181,6 @@ function updateDateTime() {
         // test_date_time input의 value 속성에 설정
         $("input:hidden[name='test_start_time']").val(startDateTime);
         $("input:hidden[name='test_end_time']").val(endDateTime);
-        // document.getElementById('test_start_time').value = startDateTime;
-        // document.getElementById('test_end_time').value = endDateTime;
     }
 }
 
@@ -212,14 +208,22 @@ function set_exam() {
      	  var endMinute= $("select#endMinute").val();
      	
 		  var testDate = $("input#test-date").val();
-		  console.log("testDate", testDate);
+		  console.log("startHour", startHour);
+		  console.log("endHour", endHour);
+		  console.log("startMinute", startMinute);
+		  console.log("endMinute", endMinute);
      	  
 	      if(!testDate) {
                alert("날짜를 선택해 주세요.");
                return;
           }
+	      
+ 	      if(startHour - endHour > 0) {
+	      		alert("종료시간이 시작시간 보다 작습니다."); 
+	    		return;
+	      }
 
-           
+
         // 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
 		var startDate = $("#test-date").val();	
     	var sArr = startDate.split("-");
@@ -228,35 +232,44 @@ function set_exam() {
     		startDate += sArr[i];
     	}
     	
-    	var endDate = $("#test-date").val();
-    	var eArr = endDate.split("-");   
-     	var endDate= "";
-     	for(var i=0; i<eArr.length; i++){
-     		endDate += eArr[i];
-     	}
-     	
+    	const now = new Date();
 
-        
+    	const year = now.getFullYear();
+    	const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
+    	const day = String(now.getDate()).padStart(2, '0');
+    	const hours = String(now.getHours()).padStart(2, '0');
+    	const minutes = String(now.getMinutes()).padStart(2, '0');
+    	const sysdate = `\${year}\${month}\${day}`;
+    	const syshour = `\${hours}`;
+    	const sysminutes = `\${minutes}`;
+    	
+    	var endDate = sysdate;
+
      	// 조회기간 시작일자가 종료일자 보다 크면 경고
-        if (Number(endDate) - Number(startDate) < 0) {
-         	alert("종료일이 시작일 보다 작습니다."); 
+        if (Number(endDate) - Number(startDate) > 0) {
+         	alert("이미 지난 날짜에는 시험을 출제할 수 없습니다."); 
          	return;
         }
      	
      	// 시작일과 종료일 같을 때 시간과 분에 대한 유효성 검사
-        else if(Number(endDate) == Number(startDate)) {
+     	else if(Number(endDate) == Number(startDate)) {
         	
-        	if(Number(startHour) > Number(endHour)){
-        		alert("종료일이 시작일 보다 작습니다."); 
+        	if(Number(startHour) < Number(syshour)) {
+        		alert("이미 지난 시간에는 시험을 출제할 수 없습니다.");
+        		return;
+        	}
+        	
+        	if(Number(startHour) > Number(endHour)) {
+        		alert("종료시간이 시작시간 보다 작습니다.!!!"); 
         		return;
         	}
         	else if(Number(startHour) == Number(endHour)){
         		if(Number(startMinute) > Number(endMinute)){
-        			alert("종료일이 시작일 보다 작습니다."); 
+        			alert("종료시간이 시작시간 보다 작습니다."); 
         			return;
         		}
         		else if(Number(startMinute) == Number(endMinute)){
-        			alert("시작일과 종료일이 동일합니다."); 
+        			alert("시작시간과 종료시간이 동일합니다."); 
         			return;
         		}
         	}
@@ -316,22 +329,22 @@ function set_exam() {
          </div>
          <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
             <form name="exam" enctype="multipart/form-data">
-               <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
 	               <div class="noti-wrap">
 	                  <span style="padding-bottom: 8px; color: #175F30; font-weight: bold;">[출제자 유의사항]</span><br>
 	                  <span style="color: #175F30; font-weight: bold;">▶ 시험지 업로드는 PDF파일만 가능합니다.</span><br>
 	                  <span style="color: #175F30; font-weight: bold;">▶ 문제 추가 시 꼭 답안을 작성한 후 출제하시기 바랍니다.</span>
 	               </div>
-	               <button type="button" id="ok" class="btn btn-secondary" style="width: 150px; height: 40px;">출제하기</button>
+	               <button type="button" id="ok" class="btn btn-success" style="width: 150px; height: 40px;">출제하기</button>
                </div>
                <hr>
                <div>
                   <div style="margin-bottom: 6px;"> 
-                     <span style="margin-left: 55px;">> 시험구분</span>
-                     <span style="margin-left: 60px;">> 시험일자</span>
-                     <span style="margin-left: 100px;">> 시험 시작 시간</span>
-                     <span style="margin-left: 142px;">> 시험 종료 시간</span>
-                     <span style="margin-left: 150px;">> 시험지 등록</span>
+                     <span style="margin-left: 41px;">> 시험구분</span>
+                     <span style="margin-left: 68px;">> 시험일자</span>
+                     <span style="margin-left: 88px;">> 시험 시작 시간</span>
+                     <span style="margin-left: 98px;">> 시험 종료 시간</span>
+                     <span style="margin-left: 105px;">> 시험지 변경</span>
                   </div>
                   <div class="con-wrap" style="display: flex;">
                   
@@ -353,24 +366,28 @@ function set_exam() {
                
                
                <hr>
-               <div class="answer-wrap" style="display: flex; width: 100%;">
-                  <div id="myPdf" style="width:50%; height:900px; border: solid 1px black;">
+               <div class="answer-wrap" style="display: flex;">
+                  <div id="myPdf" style="width:800px; height:900px; border: solid 1px black;">
                   	 <div id="pdfPreview" style="text-align: center;"><div style="margin-top: 50%;">시험지 미리보기 <br>(파일을 먼저 등록해주세요.)</div></div>
                   </div>
-                  <div style="width: 50%; display: flex;"> 
-					 <div id="boxWrap" style="width: 60%;">
-					
-                            <div style="display: flex; align-items: center; margin-top: 20px;"  class="aw-wrap">
-                               <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
-                               <span style="width: 130px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 80px;" id="1answer" name="answer">
-                               <span style="width: 130px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" placeholder="숫자만 입력">
-                            </div>
+                  <div style="padding-left: 20px; width: 50%;"> 
+                     <button type="button" class="btn" id="addBtn" style="background-color: green; color: white; margin: 12px 0; padding: 8px 15px;">답안추가</button>
+                     <button type="button" class="btn" id="delBtn" style="border: solid 1px green; color: green; margin: 12px 0; padding: 8px 15px; margin-left: 20px;">답안삭제</button>
 
-					 </div>
-                     <div style="display: flex; width: 30%; margin-left: 10%;">
-	                     <button type="button" class="btn" id="addBtn" style="margin-bottom: 12px; margin-top: 20px; background-color: green; color: white; height: 40px;">답안추가</button>
-	                     <button type="button" class="btn" id="delBtn" style="margin-bottom: 12px; margin-top: 20px; margin-left: 15px; border: solid 1px green; color: green; height: 40px;">답안삭제</button>
-					 </div>
+                     <div id="answer-container">
+
+							<div id="boxWrap">
+							
+		                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
+		                                <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
+		                                <span style="width: 70px; text-align:center;">1번 답 :</span> <input type="text" class="form-control aw" style="width: 80px;" id="1answer" name="answer" value="${exam_info.answer}">
+		                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 80px;" id="1score" name="score" value="${exam_info.score}" placeholder="숫자만 입력">
+		                             </div>
+							
+							</div>
+
+                     </div>
+                     
                   </div>
                </div>
             </form>

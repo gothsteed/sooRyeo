@@ -214,6 +214,11 @@ $(document).ready(function(){
     		msg.text("없는 아이디입니다.");
     		$("button#goMain").show();
     		
+            $("button#goMain").click(function(){
+                location.href = "<%=ctxPath%>";
+                
+             });
+    		
     	}else {
     		
     	    $("input#name-idFind").hide();

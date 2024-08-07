@@ -633,7 +633,34 @@ from tbl_consult
 
 
 delete
+from tbl_exam
+where fk_schedule_seq = '131'
+
+delete
 from tbl_schedule
-where schedule_seq = '114'
+where schedule_seq = '131'
+
 
 commit;
+
+
+
+
+select *
+from tbl_exam
+where fk_schedule_seq = '131'
+
+select *
+from tbl_consult
+where fk_schedule_seq = '128'
+
+select to_char(start_date, 'yyyy-mm-dd hh24:mi'), to_char(end_date, 'yyyy-mm-dd hh24:mi')
+from tbl_schedule
+where schedule_seq = '131'
+
+
+select *
+from tbl_schedule
+order by schedule_seq desc
+
+

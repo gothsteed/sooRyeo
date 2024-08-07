@@ -24,11 +24,30 @@
 
 <title>SooRyeo Univ.</title>
 
+<style>
+input#fileInput {
+  border:1px solid #CCCCCC;
+  padding:5px;
+  border-radius:8px;
+  background:#fff;
+}
+input#fileInput::file-selector-button {
+  border:1px solid #CCCCCC;
+  border-radius:8px;
+  background:fff;
+  color:black;
+  transition:.2s;
+}
+
+input::file-selector-button:hover {
+  background:#CCCCCC;
+  color:#fff;
+}
+</style>
+
+
+
 <script type="text/javascript">
-
-
-// 문제 수 증가, 감소
-
 
 var index = 0; // 변수 설정은 함수의 바깥에 설정!
 
@@ -114,9 +133,9 @@ $(function() {
             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
                 <input type="hidden" class="form-control aw"  value="\${index+1}" name="questionNumber">
                 <span style="width: 70px; text-align:center;">\${index+1}번 답 :</span> <!-- i 값을 span에 설정 -->
-                <input type="text" class="form-control aw" style="width: 100px;" id="\${index+1}answer" name="answer"/>
+                <input type="text" class="form-control aw" style="width: 80px;" id="\${index+1}answer" name="answer"/>
                 <span style="width: 70px; text-align:center;">배점 :</span>
-                <input type="text" class="form-control aw ts-scr" style="width: 130px;" placeholder="숫자만 입력" id="\${index+1}score" name="score"/>
+                <input type="text" class="form-control aw ts-scr" style="width: 80px;" placeholder="숫자만 입력" id="\${index+1}score" name="score"/>
             </div>
         `);
         
@@ -321,33 +340,35 @@ function delete_exam() {
 
 
 
-<div class="content-body">
+<div class="content-body" style="width: 100%; margin: 0 auto;">
 
    <div class="container-fluid" style="padding-top: 10px;">
       <div class="card" id="card-title-1">
-         <div class="card-header border-0 pb-0 " style="display: flex; justify-content: space-between; ">
-            <h1 class="card-title" style="color:#6e6e6e;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 수정</h1>
-            <div style="display: flex;">
-	            <button type="button" id="update" class="btn btn-secondary" style="width: 150px; margin-right: 3%;">수정하기</button>
-	            <button type="button" id="delete" class="btn btn-primary" style="width: 150px;" onclick="delete_exam();">삭제하기</button>
-            </div>
+         <div class="card-header border-0 pb-0" style="display: flex; justify-content: center;">
+            <h1 class="card-title" style="color:black;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 수정/삭제</h1>
          </div>
-         <hr>
          <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
             <form name="exam" enctype="multipart/form-data">
-               <div class="noti-wrap" style="background-color: #175F30;">
-                  <span style="padding-bottom: 8px; color: white;">[출제자 유의사항]</span><br>
-                  <span style="color: white;">▶ 시험지 업로드는 PDF파일만 가능합니다.</span><br>
-                  <span style="color: white;">▶ 문제 추가 시 꼭 답안을 작성한 후 출제하시기 바랍니다.</span>
+               <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+	               <div class="noti-wrap">
+	                  <span style="padding-bottom: 8px; color: #175F30; font-weight: bold;">[출제자 유의사항]</span><br>
+	                  <span style="color: #175F30; font-weight: bold;">▶ 시험지 업로드는 PDF파일만 가능합니다.</span><br>
+	                  <span style="color: #175F30; font-weight: bold;">▶ 문제 추가 시 꼭 답안을 작성한 후 출제하시기 바랍니다.</span>
+	               </div>
+	               <div>
+	               		<button type="button" id="update" class="btn btn-secondary" style="width: 150px;">수정하기</button>
+               			<button type="button" id="delete" class="btn btn-success" style="width: 150px;" onclick="delete_exam();">삭제하기</button>
+	               </div>
+	               
                </div>
                <hr>
                <div>
                   <div style="margin-bottom: 6px;"> 
-                     <span style="margin-left: 55px;">> 시험구분</span>
-                     <span style="margin-left: 60px;">> 시험일자</span>
-                     <span style="margin-left: 100px;">> 시험 시작 시간</span>
-                     <span style="margin-left: 142px;">> 시험 종료 시간</span>
-                     <span style="margin-left: 150px;">> 시험지 변경</span>
+                     <span style="margin-left: 41px;">> 시험구분</span>
+                     <span style="margin-left: 68px;">> 시험일자</span>
+                     <span style="margin-left: 88px;">> 시험 시작 시간</span>
+                     <span style="margin-left: 98px;">> 시험 종료 시간</span>
+                     <span style="margin-left: 105px;">> 시험지 변경</span>
                   </div>
                   	
 		                  <div class="con-wrap" style="display: flex;">
@@ -355,19 +376,19 @@ function delete_exam() {
 		                  	 <input type="hidden" value="${requestScope.answer_mongo_id}" name="answer_mongo_id" id ="answer_mongo_id" />
 		                  	 <input type="hidden" value="${requestScope.schedule_seq}" name="schedule_seq" id ="schedule_seq" />
 		                  	 <input type="hidden" value="${requestScope.course_seq}" name="course_seq" id ="course_seq" />
-							 <input type="text" id="test_type" name="test_type" class="form-control" style="width: 120px; margin-left: 46px;"  value="${show_exam.title}"/>	
+							 <input type="text" id="test_type" name="test_type" class="form-control" style="width: 120px; margin-left: 40px;"  value="${show_exam.title}"/>	
 		                     
 		                     <input type="text" class="datepicker  form-control" id="test-date" name="test_date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
 		                     <select class="form-control" id="startHour" name="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
 							 <select class="form-control" id="startMinute" name="startMinute" class="form-select" style="width: 100px;"></select>&nbsp;분
-							 <select class="form-control" id="endHour" name="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
+							 <select class="form-control" id="endHour" name="endHour" class="schedule" style="width: 90px; margin-left: 2%;"></select>&nbsp;시&nbsp;
 							 <select class="form-control" id="endMinute" name="endMinute" class="schedule" style="width: 100px;"></select>&nbsp;분
 							 
 							 <input type="hidden" id="test_start_time" name="test_start_time" />
 							 <input type="hidden" id="test_end_time" name="test_end_time" />
 							 
 							 
-		                     <input type="file" class="form-control" id="fileInput" name="attach" accept="application/pdf" style="width: 300px; margin-left: 45px;" onchange="previewPDF()" />
+		                     <input type="file" class="form-control" id="fileInput" name="attach" accept="application/pdf" style="width: 300px; margin-left: 30px;" onchange="previewPDF()" />
 							 <input type="hidden" value="${show_exam.file_name}" name="file_name"/>
 		                  </div>
 
@@ -382,8 +403,8 @@ function delete_exam() {
                   </div>
                   <div class="hidden"></div>
                   <div style="padding-left: 20px; width: 50%;"> 
-                     <button type="button" class="btn btn-primary" id="addBtn" style="margin-bottom: 12px; margin-top: 12px; padding: 8px 15px;">답안추가</button>
-                     <button type="button" class="btn btn-danger light" id="delBtn" style="margin-bottom: 12px; margin-top: 12px; padding: 8px 15px; margin-left: 30px;">답안삭제</button>
+                     <button type="button" class="btn" id="addBtn" style="background-color: green; color: white; margin: 12px 0; padding: 8px 15px;">답안추가</button>
+                     <button type="button" class="btn" id="delBtn" style="border: solid 1px green; color: green; margin: 12px 0; padding: 8px 15px; margin-left: 20px;">답안삭제</button>
 
                      <div id="answer-container">
 
@@ -393,8 +414,8 @@ function delete_exam() {
 								
 		                             <div style="display: flex; align-items: center; margin-top: 20px;" class="aw-wrap">
 		                                <input type="hidden" class="form-control aw"  value="1" name="questionNumber">
-		                                <span style="width: 70px; text-align:center;">${status.count}번 답 :</span> <input type="text" class="form-control aw" style="width: 100px;" id="1answer" name="answer" value="${exam_info.answer}">
-		                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 130px;" id="1score" name="score" value="${exam_info.score}" placeholder="숫자만 입력">
+		                                <span style="width: 70px; text-align:center;">${status.count}번 답 :</span> <input type="text" class="form-control aw" style="width: 80px;" id="1answer" name="answer" value="${exam_info.answer}">
+		                                <span style="width: 70px; text-align:center;">배점 :</span> <input type="text" class="form-control aw ts-scr"  style="width: 80px;" id="1score" name="score" value="${exam_info.score}" placeholder="숫자만 입력">
 		                             </div>
 		                             
 	                                 <c:if test="${status.last}">

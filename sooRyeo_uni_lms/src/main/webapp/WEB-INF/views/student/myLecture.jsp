@@ -195,6 +195,7 @@ $(document).ready(function(){
 				if( json.result == 1) {
 					$('#ConsultingModal').modal('hide');
 					alert("상담 신청 성공!");
+		     		location.href="javascript:history.go(0);"; // 페이지 새로고침
 					return;
 				}
 
@@ -203,7 +204,6 @@ $(document).ready(function(){
 				alert("상담 신청 실패!");
        		}
      		
-     		location.href="javascript:history.go(0);"; // 페이지 새로고침
 
      	});
         
