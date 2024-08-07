@@ -229,63 +229,74 @@ function updateCurriculum(id) {
         });
 }
  --%>
- function updateCurriculum() {
-	    // Get the curriculum_seq from the hidden input field
-	    const curriculum_seq = document.getElementById('curriculum_seq').value;
+function validateForm() {
+	const name = document.getElementById('updateName').value.trim();
+	const credit = document.getElementById('updateCredit').value;
+	const grade = document.getElementById('updateGrade').value;
 
-	    // Get the form element
-	    const form = document.getElementById('updateForm');
-
-	    // Create a FormData object from the form
-	    const formData = new FormData(form);
-
-	    // Convert FormData to a plain object
-	    const data = {};
-	    formData.forEach((value, key) => {
-	        data[key] = value;
-	    });
-
-	    // Check the state of the checkbox and set the value
-	    const updateRequiredCheckbox = document.getElementById('updateRequired');
-	    data.required = updateRequiredCheckbox.checked ? 1 : 0;
-
-	    // Add the curriculum_seq to the data object
-	    data.curriculum_seq = curriculum_seq;
-
-	    console.log(data);
-
-	    // Convert the data object to a JSON string
-	    const jsonData = JSON.stringify(data);
-
-	    // URL to your update endpoint
-	    const url = '<%=ctxPath%>' + '/admin/updateCurriculumREST.lms';
-
-	    // Send the data with fetch
-	    fetch(url, {
-	        method: 'POST',
-	        headers: {
-	            'Content-Type': 'application/json'
-	        },
-	        body: jsonData
-	    })
-	    .then(response => {
-	        console.log(response);
-	        return response.text();  // Extract the response body as text
-	    })
-	    .then(body => {
-	        alert(body);
-	        $('#updateModal').modal('hide');
-	        fetchData(1); // Refresh the data
-	    })
-	    .catch(error => {
-	        console.error("업데이트 실패: ", error);
-	        alert("업데이트 실패");
-	    });
+	if (name === '') {
+		alert('강의 이름을 입력해주세요.');
+		return false;
 	}
 
+	if (credit === '' || isNaN(credit) || credit <= 0) {
+		alert('유효한 이수 학점을 입력해주세요.');
+		return false;
+	}
 
+	// Grade can be empty for general education courses
+	if (grade !== '' && (isNaN(grade) || grade < 1 || grade > 4)) {
+		alert('유효한 학년을 선택해주세요.');
+		return false;
+	}
 
+	return true;
+}
 
+function updateCurriculum() {
+	if (!validateForm()) {
+		return;
+	}
+
+	const curriculum_seq = document.getElementById('curriculum_seq').value;
+	const form = document.getElementById('updateForm');
+	const formData = new FormData(form);
+	const data = {};
+
+	formData.forEach((value, key) => {
+		data[key] = value;
+	});
+
+	const updateRequiredCheckbox = document.getElementById('updateRequired');
+	data.required = updateRequiredCheckbox.checked ? 1 : 0;
+	data.curriculum_seq = curriculum_seq;
+
+	console.log(data);
+
+	const jsonData = JSON.stringify(data);
+	const url = '<%=ctxPath%>' + '/admin/updateCurriculumREST.lms';
+
+	fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: jsonData
+	})
+			.then(response => {
+				console.log(response);
+				return response.text();
+			})
+			.then(body => {
+				alert(body);
+				$('#updateModal').modal('hide');
+				fetchData(1);
+			})
+			.catch(error => {
+				console.error("업데이트 실패: ", error);
+				alert("업데이트 실패");
+			});
+}
 
 </script>
 </head>
