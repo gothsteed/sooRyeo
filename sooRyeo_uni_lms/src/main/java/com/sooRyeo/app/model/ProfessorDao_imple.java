@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
@@ -298,8 +299,17 @@ public class ProfessorDao_imple implements ProfessorDao {
 		
 		return assignmentCheckJSON;
 	}
-
-
+	
+	
+	@Override
+	public AssignmentSubmit searchsubmitFile(String assignment_submit_seq) {
+		
+		AssignmentSubmit assignsub = sqlSession.selectOne("professor.searchsubmitFile", assignment_submit_seq);
+		
+		return assignsub;
+	}
+	
+	
 	@Override
 	public int scoreUpdate(Map<String, String> paraMap) {
 		
@@ -484,6 +494,9 @@ public class ProfessorDao_imple implements ProfessorDao {
 					
 		return attendanceRate;
 	}
+
+
+
 
 
 

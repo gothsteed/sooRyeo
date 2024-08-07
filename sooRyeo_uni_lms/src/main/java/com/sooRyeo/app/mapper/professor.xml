@@ -395,6 +395,13 @@
 	</select>
 	
 	
+	<select id="searchsubmitFile" parameterType="String" resultType="com.sooRyeo.app.domain.AssignmentSubmit">
+		select attatched_file, orgfilename
+        from tbl_assignment_submit
+        where assignment_submit_seq = #{assignment_submit_seq} 
+	</select>
+	
+	
 	<update id="scoreUpdate" parameterType="HashMap">
 		update tbl_assignment_submit set score = #{score}
 		where assignment_submit_seq = to_number(#{assignment_submit_seq})

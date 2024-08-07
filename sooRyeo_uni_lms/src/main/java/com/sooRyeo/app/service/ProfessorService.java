@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Course;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
@@ -105,6 +106,9 @@ public interface ProfessorService {
 	
 	// 교수 수업 시청하기
 	Lecture getlecture(String lecture_seq);
+	
+	// 학생 첨부 파일 다운로드위해 파일 찾기
+	AssignmentSubmit searchsubmitFile(String assignment_submit_seq);
 
 	
 	

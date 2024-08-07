@@ -12,6 +12,7 @@ public class AssignmentSubmit {
     private Integer score;
     private String submit_datetime;
     private String attatched_file;
+    private String orgfilename;
     
     
 	public Integer getAssignment_submit_seq() {
@@ -37,6 +38,12 @@ public class AssignmentSubmit {
 	}
 	public String getAttatched_file() {
 		return attatched_file;
+	}
+	public String getOrgfilename() {
+		return orgfilename;
+	}
+	public void setOrgfilename(String orgfilename) {
+		this.orgfilename = orgfilename;
 	}
     
     

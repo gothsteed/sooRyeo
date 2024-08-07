@@ -704,6 +704,72 @@ public class ProfessorController {
 	}
 	
 	
+	@GetMapping("/downloadAssignSubmit.lms")
+	public void downloadAssignSubmit(HttpServletRequest request, HttpServletResponse response) {// 학생제출과제파일 다운로드
+		
+		String assignment_submit_seq = request.getParameter("assignment_submit_seq");
+		
+		// System.out.println("확인용  schedule_seq_assignment : " + schedule_seq_assignment);
+		
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null;
+		// out 은 웹브라우저에 기술하는 대상체로 가정
+		
+		try {
+	
+			AssignmentSubmit assignsub = professorService.searchsubmitFile(assignment_submit_seq);
+			
+			if(assignsub == null || assignsub != null && assignsub.getAttatched_file() == null) {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체로 가정
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호 이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+	             return;
+			}
+			
+			else {// 정상적으로 다운로드를 할 경우
+				String fileName = assignsub.getAttatched_file();
+				// 2024062809210487735185511000.jpg -- WAS(톰캣)에 저장된 파일명
+				
+				String orgFilename = assignsub.getOrgfilename();
+
+				HttpSession session = request.getSession(); 
+				String root = session.getServletContext().getRealPath("/");
+
+				String path = root+"resources"+File.separator+"files";
+
+	            boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도 
+
+	            flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+
+	            if(!flag) {
+	               // 다운로드가 실패한 경우 메시지를 띄워준다. 
+	               out = response.getWriter();
+	                // out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+	                
+	                out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+	            }
+
+			}
+
+		} catch (NumberFormatException | IOException e) {
+			
+			try {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체로 가정
+				
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+				
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			
+		}	
+		
+	}// end of public void downloadAssignSubmit(HttpServletRequest request, HttpServletResponse response)
+	
+	
 	@PostMapping("/professor/scoreUpdate.lms")
 	public ModelAndView professor_scoreUpdate(ModelAndView mav, HttpServletRequest request) {// 과제 점수 등록
 		

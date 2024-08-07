@@ -23,6 +23,7 @@ import com.sooRyeo.app.common.Sha256;
 import com.sooRyeo.app.domain.Announcement;
 import com.sooRyeo.app.domain.AssignJoinSchedule;
 import com.sooRyeo.app.domain.Assignment;
+import com.sooRyeo.app.domain.AssignmentSubmit;
 import com.sooRyeo.app.domain.Lecture;
 import com.sooRyeo.app.domain.Pager;
 import com.sooRyeo.app.domain.Professor;
@@ -538,7 +539,16 @@ public class ProfessorService_imple implements ProfessorService {
 		
 		return assignmentCheckJSON;
 	}
-
+	
+	
+	@Override
+	public AssignmentSubmit searchsubmitFile(String assignment_submit_seq) {
+		
+		AssignmentSubmit assignsub = professorDao.searchsubmitFile(assignment_submit_seq);
+		
+		return assignsub;
+	}
+	
 
 	@Override
 	public int scoreUpdate(Map<String, String> paraMap) {
@@ -640,6 +650,9 @@ public class ProfessorService_imple implements ProfessorService {
 		
 		return getlecture;
 	}
+
+
+
 
 
 }
