@@ -170,11 +170,16 @@ $(document).ready(function(){
         // 오라클에 들어갈 date 형식(년월일시분초)으로 만들기
         var sdate = startDate+$("select#startHour").val()+$("select#startMinute").val()+"00";
         var hour = String(parseInt($("select#startHour").val())).padStart(2, '0');
-        var edate = startDate+endHour+$("select#startMinute").val()+"00";
+        var endhour = Number(hour)+2
+        var edate = startDate+endhour+$("select#startMinute").val()+"00";
+        
+        console.log("hour", hour);
+        console.log("endhour", endhour);
+        console.log("edate", edate);
 
         const prof_id = $("input[name='prof_id']").val();
 
-       const formData = new FormData();
+        const formData = new FormData();
 
         formData.append('prof_id', prof_id);
         formData.append('title', title);
@@ -188,8 +193,8 @@ $(document).ready(function(){
            method : "POST",
            data: formData,
            dataType:'json',
-         contentType: false,
-         processData: false,
+           contentType: false,
+           processData: false,
            success: function(json) {
 
 
@@ -207,6 +212,7 @@ $(document).ready(function(){
      		
 
         });
+        
         
 
    });
