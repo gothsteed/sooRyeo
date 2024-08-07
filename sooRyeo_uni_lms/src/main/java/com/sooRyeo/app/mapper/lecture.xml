@@ -127,4 +127,13 @@
 		WHERE LECTURE_ATTACHED_FILE_SEQ = #{lectureAttachedFileSeq}
 	</delete>
 
+
+	<select id="getAttachedFile" parameterType="int" resultType="com.sooRyeo.app.domain.LectureAttachedFile">
+
+		select *
+		from TBL_LECTURE_ATTACHED_FILE
+		where LECTURE_ATTACHED_FILE_SEQ = #{fileSeq}
+
+	</select>
+
 </mapper>

@@ -2,6 +2,7 @@ package com.sooRyeo.app.mongo.controller;
 
 
 import com.sooRyeo.app.aop.RequireLogin;
+import com.sooRyeo.app.domain.Professor;
 import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.mongo.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequireLogin(type = {Student.class, Process.class})
+@RequireLogin(type = {Student.class, Professor.class})
 public class ChatController {
 
     @Autowired

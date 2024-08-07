@@ -277,14 +277,7 @@ public class AdminController {
 
 		return adminService.makeCourseRegiseterPage(request, mav);
 	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/admin/profTimetableJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
-	public String getProfTimetableJSON(HttpServletRequest request, ModelAndView mav) {
-		
-		return courseService.getProfTimetable(request, mav);
-	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/admin/courseInsertJSON.lms", method = RequestMethod.POST, produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> courseInsertJSON(HttpServletRequest request, @RequestBody CourseInsertReqeustDTO courseInsertReqeustDTO) {
