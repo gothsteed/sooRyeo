@@ -295,26 +295,29 @@ function addSchedule() {
     
     
     // Send the data to the server
-    fetch('<%=ctxPath%>/admin/courseInsertJSON.lms', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    })
-    .then(result => {
-        if (result.ok) {
-            // If the insertion was successful, update the timetable
-			fetchProfTimeTable(prof_id);
-            alert("강의가 성공적으로 추가되었습니다.");
-        } else {
-            alert("강의 추가에 실패했습니다: " + result.body);
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert("강의 추가 중 오류가 발생했습니다.");
-    });
+	fetch('<%=ctxPath%>/admin/courseInsertJSON.lms', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formData),
+	})
+			.then(response => {
+				if (response.ok) {
+					// If the insertion was successful, update the timetable
+					fetchProfTimeTable(prof_id);
+					alert("강의가 성공적으로 추가되었습니다.");
+				} else {
+					// If the response is not ok, read the response body and show it in the alert
+					return response.text().then(errorMessage => {
+						throw new Error(errorMessage || "Unknown error occurred");
+					});
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+				alert("강의 추가에 실패했습니다: " + error.message);
+			});
 
     // Reset all forms
     forms.forEach(form => form.reset());

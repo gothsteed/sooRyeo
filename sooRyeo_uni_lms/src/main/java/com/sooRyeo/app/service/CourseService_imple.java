@@ -53,10 +53,20 @@ public class CourseService_imple implements CourseService {
 		
 		
 		
-		List<Time> timeList = new ArrayList<Time>();
+		List<Time> timeList = new ArrayList<>();
 		
 		for(TimeDto dto : courseInsertReqeustDTO.getTimeList()) {
 			timeList.add(new Time(dto.getDay_of_week(), dto.getStart_period(), dto.getEnd_period()));
+		}
+
+		for(int i=0; i<timeList.size(); i++) {
+			Time time = timeList.get(i);
+			for(int j=i + 1; j<timeList.size(); j++) {
+				Time otherTime = timeList.get(j);
+				if(time.isConflict(otherTime)) {
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("입력한 강의 시간이 중복됩니다");
+				}
+			}
 		}
 		
 		
@@ -64,7 +74,7 @@ public class CourseService_imple implements CourseService {
 		
 		
 		if(!profTimeTable.canAddCourse(newCourse)) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("시간이 중복됩니다");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미 입력된 시간 입니다");
 		}
 		int n = courseDao.openCourse(newCourse, courseInsertReqeustDTO.getProf_id());
 		
