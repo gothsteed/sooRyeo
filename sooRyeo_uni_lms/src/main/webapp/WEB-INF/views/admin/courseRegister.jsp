@@ -114,6 +114,11 @@ th {
 	font-size: 1em;
 	color: #333;
 }
+.error-message {
+	color: red;
+	font-size: 0.9em;
+	margin-top: 5px;
+}
 </style>
 
 
@@ -147,17 +152,88 @@ const colors = [
     "#c3e6cb", // light green
     "#bee5eb"  // light blue
 ];
-
-
-
 let colorIndex = 0;
+
+
+let isProfessorSearched = false;
+
+function validateAndSearchProfessor() {
+	const professorId = document.getElementById('professor-search').value.trim();
+	const errorElement = document.getElementById('professorError');
+
+	if (professorId === '') {
+		errorElement.textContent = '교수 교번을 입력해주세요.';
+		return;
+	}
+
+	errorElement.textContent = '';
+	fetchProfTimeTable(professorId);
+	isProfessorSearched = true;
+	document.getElementById('addScheduleBtn').disabled = false;
+}
+
+function validateAndAddSchedule() {
+	if (!isProfessorSearched) {
+		alert('먼저 교수를 검색해주세요.');
+		return;
+	}
+
+	if (!validateCapacity()) return;
+	if (!validateSelectedCourse()) return;
+	if (!validateTimeForms()) return;
+
+	addSchedule();
+}
+
+function validateCapacity() {
+	const capacity = document.getElementById('capacity').value;
+	const errorElement = document.getElementById('capacityError');
+
+	if (capacity === '' || parseInt(capacity) < 1) {
+		errorElement.textContent = '유효한 수강 정원을 입력해주세요.';
+		return false;
+	}
+
+	errorElement.textContent = '';
+	return true;
+}
+
+function validateSelectedCourse() {
+	const selectedCourse = document.querySelector('input[name="curriculum_seq"]:checked');
+	if (!selectedCourse) {
+		alert('강의를 선택해주세요.');
+		return false;
+	}
+	return true;
+}
+
+function validateTimeForms() {
+	const forms = document.querySelectorAll('#form-container .schedule-form');
+	let isValid = true;
+
+	forms.forEach(form => {
+		const formId = form.id.split('-').pop();
+		const dayOfWeek = document.getElementById(`day-of-week-\${formId}`).value;
+		const startPeriod = parseInt(document.getElementById(`start-period-\${formId}`).value);
+		const endPeriod = parseInt(document.getElementById(`end-period-\${formId}`).value);
+
+		if (startPeriod > endPeriod) {
+			alert('끝나는 교시는 시작교시와 같거나 커야합니다.');
+			isValid = false;
+		}
+	});
+
+	return isValid;
+}
+
+
 
 function addSchedule() {
     const selectedCourse = document.querySelector('input[name="curriculum_seq"]:checked');
-    if (!selectedCourse) {
+/*    if (!selectedCourse) {
         alert("강의를 선택해주세요.");
         return;
-    }
+    }*/
 
     const curriculum_seq = selectedCourse.value;
     const prof_id = document.getElementById('professor-search').value; // Assuming this is the professor's ID input field
@@ -338,14 +414,14 @@ document.addEventListener("DOMContentLoaded", function() {
     
     
     
-    const profSearchButton = document.getElementById("profSearchButton");
+/*    const profSearchButton = document.getElementById("profSearchButton");
     profSearchButton.addEventListener('click', function() {
 
     	let profId = document.getElementById("professor-search").value;
     	console.log(profId)
     	fetchProfTimeTable(profId)
 
-    });
+    });*/
 
 
     
@@ -816,12 +892,14 @@ function clearScheduleForms() {
 
 
 			<div class="card-header d-flex justify-content-between align-items-center">
-				<button type="button" class="btn btn-success" onclick="addSchedule()">시간표에 추가</button>
+				<button type="button" class="btn btn-success" id="addScheduleBtn" onclick="validateAndAddSchedule()" disabled>시간표에 추가</button>
 			</div>
 
 			<div class="card-body">
 				<div class="form-group col-md-5 pl-0">
-					<label for="capacity-0">수강 정원</label> <input type="number" class="form-control" id="capacity" required min="1">
+					<label for="capacity">수강 정원</label>
+					<input type="number" class="form-control" id="capacity" required min="1">
+					<div id="capacityError" class="error-message"></div>
 				</div>
 				<div id="form-container">
 
@@ -876,9 +954,10 @@ function clearScheduleForms() {
 				<div class="col-md-5 h3 pl-0 pr-0">교수 검색</div>
 				<div class="col-md-5 ml-auto">
 					<input id="professor-search" class="form-control" placeholder="교번을 입력하시오">
+					<div id="professorError" class="error-message"></div>
 				</div>
 				<div class="col-md-2 ml-auto">
-					<button type="button" class="btn btn-primary" id="profSearchButton">검색</button>
+					<button type="button" class="btn btn-primary" id="profSearchButton" onclick="validateAndSearchProfessor()">검색</button>
 				</div>
 
 			</div>
