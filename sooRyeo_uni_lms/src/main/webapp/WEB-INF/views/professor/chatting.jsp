@@ -136,7 +136,7 @@
 
 			$("div#chatMessage").scrollTop(99999999);
 
-
+/*			getUnreadNotification();*/
 		};
 
 		// === 웹소켓 연결 해제시 콜백함수 정의하기 === //

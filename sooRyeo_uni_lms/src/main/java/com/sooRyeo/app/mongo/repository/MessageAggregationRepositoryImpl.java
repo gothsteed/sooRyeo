@@ -18,8 +18,8 @@ public class MessageAggregationRepositoryImpl implements MessageAggregationRepos
     private MongoTemplate mongoTemplate;
 
     @Override
-    public Map<String, Map<String, Object>> getUnreadCountPerRoom(MemberType memberType, Integer studentId) {
-        String userKey = memberType.toString() + studentId;
+    public Map<String, Map<String, Object>> getUnreadCountPerRoom(MemberType memberType, Integer memberId) {
+        String userKey = memberType.toString() + memberId;
 
         MatchOperation matchOperation = Aggregation.match(Criteria.where("readStatus").ne(userKey));
         GroupOperation groupOperation = Aggregation.group("roomId").count().as("unreadCount");
@@ -28,6 +28,14 @@ public class MessageAggregationRepositoryImpl implements MessageAggregationRepos
                 .withValue(ConvertOperators.ToObjectId.toObjectId("$_id")).build();
 
         LookupOperation lookupOperation = Aggregation.lookup("chatRooms", "roomIdObj", "_id", "roomInfo");
+
+        MatchOperation roomMatchOperation = null;
+        if(memberType == MemberType.STUDENT) {
+            roomMatchOperation = Aggregation.match(Criteria.where("roomInfo.studentId").is(memberId));
+        }
+        else {
+            roomMatchOperation = Aggregation.match(Criteria.where("roomInfo.professorId").is(memberId));
+        }
 
         ProjectionOperation projectionOperation = Aggregation.project()
                 .and("_id").as("roomId")
@@ -39,6 +47,7 @@ public class MessageAggregationRepositoryImpl implements MessageAggregationRepos
                 groupOperation,
                 addFieldsOperation,
                 lookupOperation,
+                roomMatchOperation,
                 projectionOperation
         );
 

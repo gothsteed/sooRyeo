@@ -132,7 +132,7 @@ function timeoutSubmit() {
 			</div>
             <div class="card-body">
                 <p class="card-text">
-                    <iframe width="100%" height="600" src="<%= ctxPath %>/resources/exam/${examView.original_file_name}#toolbar=0&navpanes=0&scrollbar=0"></iframe>
+                    <iframe width="100%" height="600" src="<%= ctxPath %>/resources/files/${examView.file_name}#toolbar=0&navpanes=0&scrollbar=0"></iframe>
                 </p>
             </div>
         </div>

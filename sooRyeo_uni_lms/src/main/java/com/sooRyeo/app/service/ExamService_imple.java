@@ -69,7 +69,7 @@ public class ExamService_imple implements ExamService {
         mav.addObject("examList", examPager.getObjectList());
         mav.addObject("currentPage", examPager.getPageNumber());
         mav.addObject("perPageSize", examPager.getPerPageSize());
-        mav.addObject("pageBar",examPager.makePageBar(request.getContextPath() + "/professor/exam.lms", "course_seq="+course_seq));
+        mav.addObject("pageBar",examPager.makePageBar(request.getContextPath() + "/student/exam.lms", "course_seq="+course_seq));
 
         LocalDateTime currentTime = LocalDateTime.now();
         mav.addObject("currentTime", currentTime);
