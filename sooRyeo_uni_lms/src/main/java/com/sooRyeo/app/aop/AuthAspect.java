@@ -57,13 +57,9 @@ public class AuthAspect {
 			if (session.getAttribute("loginuser").getClass().getName().equalsIgnoreCase(type.getName())) {
 				return;
 			}
-			throw new AuthException("권한이 없습니다");
-		}
 
-	
-		
-		
-		
+		}
+		throw new AuthException("권한이 없습니다");
 	}
 	
 	

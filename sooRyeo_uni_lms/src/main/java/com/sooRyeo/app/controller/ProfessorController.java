@@ -37,7 +37,7 @@ import com.sooRyeo.app.dto.AssignScheInsertDTO;
 
 
 @Controller
-@RequireLogin(type = {Professor.class})
+@RequireLogin(type = {Professor.class, Admin.class})
 public class ProfessorController {
 	
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다.
@@ -52,6 +52,9 @@ public class ProfessorController {
 
 	@Autowired
 	private ScheduleService scheduleService;
+
+	@Autowired
+	private CourseService courseService;
 
 	@Autowired
 	private ExamService examService;
@@ -161,8 +164,16 @@ public class ProfessorController {
       
 	      return mav;
 	}
-	
-	
+	@ResponseBody
+	@RequestMapping(value = "/admin/profTimetableJSON.lms", method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
+	public String getProfTimetableJSON(HttpServletRequest request, ModelAndView mav) {
+
+		return courseService.getProfTimetable(request, mav);
+	}
+
+
+
+
 	@GetMapping(value = "/professor/courseList.lms")  
 	public ModelAndView professor_course(HttpServletRequest request, ModelAndView mav, Professor professor) {// 교수 진행 강의 목록
 		
