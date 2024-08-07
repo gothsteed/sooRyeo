@@ -454,8 +454,8 @@ WHERE status in (1,4) and menu_name like '%'|| '내' ||'%';
 
 
 update tbl_student
-set status = 1, finish_date =  null
-where student_id = '202400021';
+set status = 1
+where student_id = '202400005';
 
 select s.student_id
 from tbl_student S join tbl_registered_course R on s.student_id = r.fk_student_id
@@ -474,4 +474,6 @@ where course_seq = 4;
 		join tbl_course C on r.fk_course_seq = c.course_seq
 		where course_seq = 24;
         
-        
+select *
+from tbl_student;
+

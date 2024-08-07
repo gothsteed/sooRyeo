@@ -57,6 +57,14 @@
 			<result property="employment_date" column="professor_employment_date" />
 			<result property="img_name" column="professor_img_name" />
 		</association>
+
+		<collection property="timeList" ofType="com.sooRyeo.app.domain.Time">
+			<id property="time_seq" column="TIME_SEQ"/>
+			<result property="fk_course_seq" column="time_course_seq"/>
+			<result property="day_of_week" column="day_of_week"/>
+			<result property="start_period" column="start_period"/>
+			<result property="end_period" column="end_period"/>
+		</collection>
 	</resultMap>
 
 
@@ -106,12 +114,19 @@
 		v2.office_address as professor_office_address,
 		v2.employment_stat as professor_employment_stat,
 		v2.employment_date as professor_employment_date,
-		v2.img_name as professor_img_name
+		v2.img_name as professor_img_name,
+		v3.TIME_SEQ as TIME_SEQ,
+		v3.FK_COURSE_SEQ as time_course_seq,
+		v3.DAY_OF_WEEK as day_of_week,
+		v3.END_PERIOD as end_period,
+		v3.START_PERIOD as start_period
 		from
 		tbl_curriculum v0
 		join tbl_course v1 on v0.curriculum_seq = v1.fk_curriculum_seq
 		join tbl_professor v2 on
 		v1.fk_professor_id = v2.prof_id
+		left join TBL_TIME v3
+		on v1.COURSE_SEQ = v3.FK_COURSE_SEQ
 
 		<where>
 			v1.exist = 1
