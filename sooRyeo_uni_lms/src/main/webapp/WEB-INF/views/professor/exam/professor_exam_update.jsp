@@ -225,65 +225,59 @@ function update_exam() {
 	     }
 	      
 	      
-	     // 시험 날짜 유효성 검사
+		  // 시험 날짜 유효성 검사
 		  var startDate = $("#test-date").val();
-          var startDate = new Date(startDate);    
-          
-       	  var startHour= $("select#startHour").val();
-     	  var endHour = $("select#endHour").val();
-     	  var startMinute= $("select#startMinute").val();
-     	  var endMinute= $("select#endMinute").val();
-     	
-
-	      if (!startDate) {
-               alert("날짜를 선택해 주세요.");
-               return;
-          }
-
-           
-        // 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
-		var startDate = $("#test-date").val();	
-    	var sArr = startDate.split("-");
-    	startDate= "";	
-    	for(var i=0; i<sArr.length; i++){
-    		startDate += sArr[i];
-    	}
+	      var startDate = new Date(startDate);    
+         
+      	  var startHour= $("select#startHour").val();
+    	  var endHour = $("select#endHour").val(); 
+    	  var startMinute= $("select#startMinute").val();
+    	  var endMinute= $("select#endMinute").val();
     	
-    	var endDate = $("#test-date").val();
-    	var eArr = endDate.split("-");   
-     	var endDate= "";
-     	for(var i=0; i<eArr.length; i++){
-     		endDate += eArr[i];
-     	}
-     	
+		  var testDate = $("input#test-date").val();
+		  console.log("startHour", startHour);
+		  console.log("endHour", endHour);
+		  console.log("startMinute", startMinute);
+		  console.log("endMinute", endMinute);
+    	  
+	      if(!testDate) {
+              alert("날짜를 선택해 주세요.");
+              return;
+         }
+	      
+	      if(startHour - endHour > 0) {
+	      		alert("종료시간이 시작시간 보다 작습니다."); 
+	    		return;
+	      }
 
-        
-     	// 조회기간 시작일자가 종료일자 보다 크면 경고
-        if (Number(endDate) - Number(startDate) < 0) {
-         	alert("종료일이 시작일 보다 작습니다."); 
-         	return;
+
+       // 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
+		var startDate = $("#test-date").val();	
+	   	var sArr = startDate.split("-");
+	   	startDate= "";	
+	   	for(var i=0; i<sArr.length; i++){
+	   		startDate += sArr[i];
+	   	}
+	   	
+	   	const now = new Date();
+	
+	   	const year = now.getFullYear();
+	   	const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
+	   	const day = String(now.getDate()).padStart(2, '0');
+	   	const hours = String(now.getHours()).padStart(2, '0');
+	   	const minutes = String(now.getMinutes()).padStart(2, '0');
+	   	const sysdate = `\${year}\${month}\${day}`;
+	   	const syshour = `\${hours}`;
+	   	const sysminutes = `\${minutes}`;
+	   	
+	   	var endDate = sysdate;
+	
+    	// 조회기간 시작일자가 종료일자 보다 크면 경고
+        if (Number(endDate) - Number(startDate) > 0) {
+        	alert("이미 지난 날짜에는 시험을 출제할 수 없습니다."); 
+        	return;
         }
      	
-     	// 시작일과 종료일 같을 때 시간과 분에 대한 유효성 검사
-        else if(Number(endDate) == Number(startDate)) {
-        	
-        	if(Number(startHour) > Number(endHour)){
-        		alert("종료일이 시작일 보다 작습니다."); 
-        		return;
-        	}
-        	else if(Number(startHour) == Number(endHour)){
-        		if(Number(startMinute) > Number(endMinute)){
-        			alert("종료일이 시작일 보다 작습니다."); 
-        			return;
-        		}
-        		else if(Number(startMinute) == Number(endMinute)){
-        			alert("시작일과 종료일이 동일합니다."); 
-        			return;
-        		}
-        	}
-       }// end of else if---------------------------------
-           
-
        
        // 시험 답안 유효성 검사
        /*
@@ -362,13 +356,13 @@ function delete_exam() {
 	               
                </div>
                <hr>
-               <div>
-                  <div style="margin-bottom: 6px;"> 
-                     <span style="margin-left: 41px;">> 시험구분</span>
-                     <span style="margin-left: 68px;">> 시험일자</span>
-                     <span style="margin-left: 88px;">> 시험 시작 시간</span>
-                     <span style="margin-left: 98px;">> 시험 종료 시간</span>
-                     <span style="margin-left: 105px;">> 시험지 변경</span>
+               <div style="margin-left: 7%;">
+                  <div style="margin-bottom: 0.5%;"> 
+                     <span style="margin-left: 2.7%;">> 시험구분</span>
+                     <span style="margin-left: 5%;">> 시험일자</span>
+                     <span style="margin-left: 6.7%;">> 시험 시작 시간</span>
+                     <span style="margin-left: 9%;">> 시험 종료 시간</span>
+                     <span style="margin-left: 9%;">> 시험지 변경</span>
                   </div>
                   	
 		                  <div class="con-wrap" style="display: flex;">
@@ -398,7 +392,7 @@ function delete_exam() {
                
                <hr>
                <div class="answer-wrap" style="display: flex;">
-                  <div id="myPdf" style="width:800px; height:900px; border: solid 1px black;">
+                  <div id="myPdf" style="width:800px; height:900px; border: solid 1px black; margin-left: 5%;">
                   	 <div id="pdfPreview" style="text-align: center;"><div style="margin-top: 50%;">시험지 미리보기 <br>(파일을 먼저 등록해주세요.)</div></div>
                   </div>
                   <div class="hidden"></div>

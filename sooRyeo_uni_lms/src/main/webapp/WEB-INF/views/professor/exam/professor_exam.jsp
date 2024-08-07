@@ -189,11 +189,11 @@ function updateDateTime() {
 function set_exam() {
 	
 
-		 // 시험 구분 유효성 검사
+		 // 시험 제목 유효성 검사
 		 var test_type = $("input#test_type").val().trim();
 		 
 	     if (test_type == "") {
-	           	alert("시험 구분을 입력해주세요!");
+	           	alert("시험 제목을 입력해주세요!");
 	           	return;
 	     }
 	      
@@ -327,7 +327,7 @@ function set_exam() {
          <div class="card-header border-0 pb-0" style="display: flex; justify-content: center;">
             <h1 class="card-title" style="color:black;  font-weight: 900; font-size: 23px;">${requestScope.coures_name} 시험 출제</h1>
          </div>
-         <div class="card-body" style="color: black; font-size: 18px;   padding: 0.75rem; ">
+         <div class="card-body" style="color: black; font-size: 18px; padding: 0.75rem; ">
             <form name="exam" enctype="multipart/form-data">
                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
 	               <div class="noti-wrap">
@@ -338,20 +338,20 @@ function set_exam() {
 	               <button type="button" id="ok" class="btn btn-success" style="width: 150px; height: 40px;">출제하기</button>
                </div>
                <hr>
-               <div>
+               <div style="margin-left: 5%;">
                   <div style="margin-bottom: 6px;"> 
-                     <span style="margin-left: 41px;">> 시험구분</span>
-                     <span style="margin-left: 68px;">> 시험일자</span>
-                     <span style="margin-left: 88px;">> 시험 시작 시간</span>
-                     <span style="margin-left: 98px;">> 시험 종료 시간</span>
-                     <span style="margin-left: 105px;">> 시험지 변경</span>
+                     <span style="margin-left: 3%;">> 시험제목</span>
+                     <span style="margin-left: 6.7%;">> 시험일자</span>
+                     <span style="margin-left: 6.7%;">> 시험 시작 시간</span>
+                     <span style="margin-left: 9.8%;">> 시험 종료 시간</span>
+                     <span style="margin-left: 10%;">> 시험지 변경</span>
                   </div>
                   <div class="con-wrap" style="display: flex;">
                   
                   	 <input type="hidden" value="${requestScope.course_seq}" name="course_seq" id ="course_seq" />
 					 <input type="text" id="test_type" name="test_type" class="form-control" style="width: 120px; margin-left: 46px;" />	
                      
-                     <input type="text" class="datepicker  form-control" id="test-date" name="test_date" placeholder="날짜 선택" style="width: 120px; margin-left: 46px;" readonly>
+                     <input type="text" class="datepicker  form-control" id="test-date" name="test_date" placeholder="날짜 선택" style="width: 120px; margin-left: 5%;" readonly>
                      <select class="form-control" id="startHour" name="startHour" class="form-select" style="width: 90px; margin-left: 5%;"></select>&nbsp;시&nbsp;
 					 <select class="form-control" id="startMinute" name="startMinute" class="form-select" style="width: 100px;"></select>&nbsp;분
 					 <select class="form-control" id="endHour" name="endHour" class="schedule" style="width: 90px; margin-left: 3%;"></select>&nbsp;시&nbsp;
@@ -367,7 +367,7 @@ function set_exam() {
                
                <hr>
                <div class="answer-wrap" style="display: flex;">
-                  <div id="myPdf" style="width:800px; height:900px; border: solid 1px black;">
+                  <div id="myPdf" style="width:800px; height:900px; border: solid 1px black; margin-left: 5%;">
                   	 <div id="pdfPreview" style="text-align: center;"><div style="margin-top: 50%;">시험지 미리보기 <br>(파일을 먼저 등록해주세요.)</div></div>
                   </div>
                   <div style="padding-left: 20px; width: 50%;"> 
