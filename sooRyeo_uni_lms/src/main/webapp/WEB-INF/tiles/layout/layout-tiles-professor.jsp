@@ -390,8 +390,11 @@
 
 
 $(document).ready(function(){
-	
+    isChatPage = window.location.pathname.includes('/chat.lms');
+
+
 	$("div#displayList").hide()
+
 
 
     if(!isChatPage) {

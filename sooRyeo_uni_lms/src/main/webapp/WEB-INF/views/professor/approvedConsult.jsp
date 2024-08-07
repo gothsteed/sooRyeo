@@ -95,8 +95,8 @@
 					loadCurrentChatRooms();  // Reload chat rooms after starting a new one
 				})
 				.catch(error => {
-					console.error('승인도중 오류가 발생했습니다.:', error);
-					alert('승인도중 오류가 발생했습니다.: ' + error.message);
+					console.error( error);
+					alert( error.message);
 				});
 	}
 	function loadCurrentChatRooms() {
