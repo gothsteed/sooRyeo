@@ -40,8 +40,7 @@
 		            v_html += `<tr>
 		                          <td style="text-align: center; vertical-align: middle;">\${item.row_num}</td>
 		                          <td style="text-align: center; vertical-align: middle;">\${item.assignment_submit_seq}</td>
-		                          <td style="text-align: center; vertical-align: middle;">\${item.name}</td>
-		                          <td style="text-align: center; vertical-align: middle;">\${item.attatched_file}</td>`;
+		                          <td style="text-align: center; vertical-align: middle;">\${item.name}</td>`;
 
 		            if (item.attatched_file === "없음") {
 		                v_html += `<td style="text-align: center; vertical-align: middle;">\${item.attatched_file}</td>`;
