@@ -68,7 +68,7 @@
 					${exam.schedule.isBefore(currentTime)},
 					${exam.schedule.isBetweenSchedule(currentTime)},
 					${exam.schedule.isAfter(currentTime)})">
-					<th scope="row" class="col-1" style="text-align: center">${status.count}</th>
+					<th scope="row" class="col-1" style="text-align: center">${(currentPage - 1) * (perPageSize) +  status.count}</th>
 					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
 					<td class="col-3" style="text-align: center">${exam.durationInMinute}분</td>

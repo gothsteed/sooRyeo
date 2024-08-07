@@ -98,7 +98,7 @@
 		<c:when test="${not empty requestScope.examList}">
 			<c:forEach var="exam" items="${requestScope.examList}" varStatus="status">
 				<tr class="row" onclick="handleExamClick(${exam.fk_schedule_seq}, ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetweenSchedule(currentTime)}, ${exam.schedule.isBefore(currentTime)});">
-					<th scope="row" class="col-1" style="text-align: center">${status.count}</th>
+					<th scope="row" class="col-1" style="text-align: center">${(currentPage - 1) * (perPageSize) +  status.count}</th>
 					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
 					<td class="col-3" style="text-align: center">${exam.durationInMinute}분</td>
