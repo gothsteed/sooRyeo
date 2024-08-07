@@ -2,6 +2,7 @@ package com.sooRyeo.app.model;
 
 import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.LectureAttachedFile;
 import com.sooRyeo.app.dto.LectureInsertDto;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,11 @@ public class LectureDao_imple implements LectureDao {
     @Override
     public void deleteAttachFile(Integer lectureAttachedFileSeq) {
         sqlSession.delete("lecture.deleteAttachFile", lectureAttachedFileSeq);
+    }
+
+    @Override
+    public LectureAttachedFile getAttachedFile(int fileSeq) {
+        return sqlSession.selectOne("lecture.getAttachedFile", fileSeq);
     }
 
 

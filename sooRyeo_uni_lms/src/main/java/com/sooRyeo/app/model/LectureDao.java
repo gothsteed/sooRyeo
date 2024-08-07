@@ -2,6 +2,7 @@ package com.sooRyeo.app.model;
 
 import com.sooRyeo.app.domain.Attendance;
 import com.sooRyeo.app.domain.Lecture;
+import com.sooRyeo.app.domain.LectureAttachedFile;
 import com.sooRyeo.app.dto.LectureInsertDto;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface LectureDao {
 	String getLectureName(Integer course_seq);
 
     void deleteAttachFile(Integer lectureAttachedFileSeq);
+
+    LectureAttachedFile getAttachedFile(int fileSeq);
 }

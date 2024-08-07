@@ -347,7 +347,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
                      </button>
                      <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
                         <c:forEach var="file" items="${lecture_week.attachedFileList}">
-                           <a class="dropdown-item" href="<%= ctxPath%>/lecture/file_download.lms?file_seq=${file.lecture_attached_file_seq}">
+                           <a class="dropdown-item" href="<%= ctxPath%>/lecture/pdf_download.lms?file_seq=${file.lecture_attached_file_seq}">
                               <img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid mr-2" style="width: 20px;">
                                  ${file.original_file_name}
                            </a>
@@ -394,7 +394,7 @@ $('#ConsultingModal').on('hidden.bs.modal', function () {
                </button>
                <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
                   <c:forEach var="file" items="${lecture.attachedFileList}">
-                     <a class="dropdown-item" href="<%= ctxPath%>/lecture/file_download.lms?file_seq=${file.lecture_attached_file_seq}">
+                     <a class="dropdown-item" href="<%= ctxPath%>/lecture/pdf_download.lms?file_seq=${file.lecture_attached_file_seq}">
                         <img src="<%=ctxPath%>/resources/images/pdf.png" class="img-fluid mr-2" style="width: 20px;">
                            ${file.original_file_name}
                      </a>

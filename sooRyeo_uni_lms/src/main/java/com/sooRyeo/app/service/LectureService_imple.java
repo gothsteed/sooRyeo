@@ -272,7 +272,7 @@ public class LectureService_imple implements LectureService{
 
         try {
 
-            if(request.getParameter("lecture_seq") == null) {
+            if(request.getParameter("file_seq") == null) {
                 out = response.getWriter();
                 // out 은 웹브라우저에 기술하는 대상체로 가정
 
@@ -281,9 +281,9 @@ public class LectureService_imple implements LectureService{
             }
 
             // 정상적으로 다운로드를 할 경우
-            int lecture_seq = Integer.parseInt(request.getParameter("lecture_seq"));
+            int fileSeq = Integer.parseInt(request.getParameter("file_seq"));
 
-            Lecture lecture = lectureDao.getLectureInfo(lecture_seq);
+            LectureAttachedFile file = lectureDao.getAttachedFile(fileSeq);
 
             //todo: 다중 파일 저장으로 바꾸기
             HttpSession session = request.getSession();
@@ -292,7 +292,7 @@ public class LectureService_imple implements LectureService{
 
             boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도
 
-            //flag = fileManager.doFileDownload(lecture.getUpload_lecture_file_name(), lecture.getLecture_file_name(), path, response);
+            flag = fileManager.doFileDownload(file.getUpload_file_name(), file.getOriginal_file_name(), path, response);
 
             if(!flag) {
                 // 다운로드가 실패한 경우 메시지를 띄워준다.
