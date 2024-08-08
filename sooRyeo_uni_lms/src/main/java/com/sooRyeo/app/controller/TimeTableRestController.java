@@ -3,6 +3,7 @@ package com.sooRyeo.app.controller;
 import com.sooRyeo.app.aop.RequireLogin;
 import com.sooRyeo.app.domain.Admin;
 import com.sooRyeo.app.domain.Professor;
+import com.sooRyeo.app.domain.Student;
 import com.sooRyeo.app.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequireLogin(type = {Professor.class, Admin.class})
+@RequireLogin(type = {Professor.class, Admin.class, Student.class})
 public class TimeTableRestController {
 
     @Autowired
