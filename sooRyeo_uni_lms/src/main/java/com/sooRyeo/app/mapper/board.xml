@@ -143,6 +143,7 @@
 		SELECT *
 		FROM tbl_announcement
 		where status = 1
+		order by writeday desc
 	</select>
 
 

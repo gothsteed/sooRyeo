@@ -4,7 +4,6 @@
 <%
 	String ctxPath = request.getContextPath();
 %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,19 +32,26 @@
 			font-size: 0.9em;
 			margin-top: 5px;
 		}
+
+		select:disabled {
+			background-color: #e9ecef;
+			opacity: 1;
+		}
 	</style>
 </head>
 <body>
 <div class="card">
 	<h5 class="card-header text-center">커리큘럼 추가</h5>
 	<div class="card-body">
-		<form id="curriculumForm" action="/admin/add_curriculum_end.lms" method="post" onsubmit="return validateForm()">
+		<form id="curriculumForm" action="<%=ctxPath%>/admin/add_curriculum_end.lms" method="post" onsubmit="return validateForm()">
 			<div class="form-group row">
 				<label for="fk_department_seq" class="col-sm-4 col-form-label">학과</label>
 				<div class="col-sm-8">
-					<select class="form-control" name="fk_department_seq" id="fk_department_seq">
+					<select class="form-control" name="fk_department_seq" id="fk_department_seq" onchange="toggleGradeField()">
 						<option value="">교양</option>
-						<!-- Departments would be populated here -->
+						<c:forEach var="major" items="${requestScope.departments}" varStatus="status">
+							<option value="${major.department_seq}">${major.department_name}</option>
+						</c:forEach>
 					</select>
 				</div>
 			</div>
@@ -106,10 +112,23 @@
 </div>
 
 <script>
+	function toggleGradeField() {
+		const departmentSelect = document.getElementById('fk_department_seq');
+		const gradeSelect = document.getElementById('grade');
+
+		if (departmentSelect.value === "") {
+			gradeSelect.disabled = true;
+			gradeSelect.value = "";
+		} else {
+			gradeSelect.disabled = false;
+		}
+	}
+
 	function validateForm() {
 		let isValid = true;
+		const department = document.getElementById('fk_department_seq').value;
 		const name = document.getElementById('name').value.trim();
-		const grade = document.getElementById('grade').value;
+		const grade = document.getElementById('grade');
 		const credit = document.getElementById('credit').value.trim();
 		const required = document.querySelector('input[name="required"]:checked');
 
@@ -122,7 +141,7 @@
 		}
 
 		// Validate grade
-		if (grade === '') {
+		if (department !== "" && grade.value === '' && !grade.disabled) {
 			document.getElementById('gradeError').textContent = '학년을 선택해주세요.';
 			isValid = false;
 		} else {
@@ -150,6 +169,9 @@
 
 		return isValid;
 	}
+
+	// Initialize the grade field state
+	document.addEventListener('DOMContentLoaded', toggleGradeField);
 </script>
 </body>
 </html>
