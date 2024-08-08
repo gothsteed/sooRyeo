@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class MessageAggregationRepositoryImpl implements MessageAggregationRepository {
+public class MessageAggregationRepositoryImple implements MessageAggregationRepository {
 
     @Autowired
     private MongoTemplate mongoTemplate;
