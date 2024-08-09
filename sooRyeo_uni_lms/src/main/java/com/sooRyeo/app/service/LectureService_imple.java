@@ -248,11 +248,11 @@ public class LectureService_imple implements LectureService{
         }
 
         if(lecture.getVideo_file_name() != null) {
-            fileManager.doFileDelete(path, lecture.getUpload_video_file_name());
+            fileManager.doFileDelete(lecture.getUpload_video_file_name(), path);
         }
 
         for(LectureAttachedFile file : lecture.getAttachedFileList()) {
-            fileManager.doFileDelete(path, file.getUpload_file_name());
+            fileManager.doFileDelete(file.getUpload_file_name(), path);
         }
 
         int result = lectureDao.deleteLecture(lecture_seq);

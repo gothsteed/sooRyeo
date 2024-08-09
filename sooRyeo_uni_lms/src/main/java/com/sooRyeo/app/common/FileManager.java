@@ -191,6 +191,7 @@ public class FileManager {
 		File file = new File(pathname);
 		
 		if(file.exists()) {
+
 			file.delete();
 		}
 		
