@@ -63,16 +63,16 @@ public class StudentController {
 
 	@Autowired
 	private StudentService studentservice;
-	
+
 	@Autowired
 	private FileManager fileManager;
-	
+
 	@Autowired
 	private CourseService courseService;
 
 	@Autowired
 	private ScheduleService scheduleService;
-	
+
 
 	@RequestMapping(value = "/student/dashboard.lms", method = RequestMethod.GET)
 	public ModelAndView student(ModelAndView mav, HttpServletRequest request) {
@@ -80,59 +80,59 @@ public class StudentController {
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int student_id = loginuser.getStudent_id();
-		
+
 		// 오늘의 수업만을 불러오는 메소드
 		List<TodayLecture> today_lec = studentservice.getToday_lec(student_id);
-		
+
 		int currentPage = 0;
 		try {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		} catch (Exception e) {
 			currentPage = 1;
 		}
-		
+
 		String goBackURL = MyUtil.getCurrentURL(request);
-		
+
 		// 학사공지사항을 전부 불러오는 메소드
 		Pager<Announcement> announcementList =  studentservice.getAnnouncement(currentPage);
-		
-		
+
+
 		// 하이차트 - 학생이 듣고있는 수업명 가져오는 메소드
 		List<Curriculum> Curriculum_nameList = studentservice.Curriculum_nameList(student_id);
 		mav.addObject("Curriculum_nameList", Curriculum_nameList);
-		
-		
-		
+
+
+
 		mav.addObject("announcementList", announcementList.getObjectList());
 		mav.addObject("currentPage", announcementList.getPageNumber());
 		mav.addObject("perPageSize", announcementList.getPerPageSize());
 		mav.addObject("goBackURL","/board/announcement.lms");
 		mav.addObject("today_lec",today_lec);
 		mav.setViewName("student_Main");
-		
+
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/student/lectureList.lms", method = RequestMethod.GET)
 	public String lectureList() {
-		
+
 		return "lectureList";
 		// /WEB-INF/views/student/{1}.jsp
 	}
-	
-	
+
+
 	// 수업리스트 보여주기
 	@GetMapping(value="/student/classList.lms")
 	public ModelAndView classList(HttpServletRequest request, ModelAndView mav) {
-		
-		HttpSession session = request.getSession();		
+
+		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
-		
+
 		int userid = loginuser.getStudent_id();
-		
+
 		StudentTimeTable timeTable = studentservice.classList(userid);
 		List<Course> mapList = timeTable.getCourseList();
-	
+
 		if(mapList == null) {// 정보가 없다면
 			  mav.addObject("message", "신청한 수업이 없습니다.");
 	    	  mav.addObject("loc", request.getContextPath()+"/student/dashboard.lms");
@@ -141,86 +141,86 @@ public class StudentController {
 		}
 
 		String goBackURL = MyUtil.getCurrentURL(request);
-		
+
 		mav.addObject("goBackURL", goBackURL);
 		mav.addObject("loginuser", loginuser);
 		mav.addObject("mapList", mapList);
 		mav.setViewName("classList");
-		
+
 		return mav;
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 	// 내정보 보기
 	@RequestMapping(value="/student/myInfo.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView myInfo(ModelAndView mav, HttpServletRequest request) {
-		
+
 		StudentDTO member_student = studentservice.getViewInfo(request);
-		
+
 		// System.out.println(member_student.getStatus());
-		
+
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int student_id = loginuser.getStudent_id();
-		
+
 		// 현재 학적변경을 신청한 상태인지 알아오는 메소드
 		String application_status = studentservice.getApplication_status(student_id);
 		if(application_status == null) {
 			application_status = "0";
 		}
-		
+
 		mav.addObject("application_status", application_status);
 		mav.addObject("member_student", member_student);
 		mav.setViewName("myInfo");
-		
+
 		return mav;
-		
+
 	} // end of public ModelAndView myInfo
-	
-	
+
+
 	// 비밀번호 중복
 	@ResponseBody
 	@PostMapping(value = "/student/pwdDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
-	public String pwdDuplicateCheck(HttpServletRequest request, StudentDTO student) {	
-		
-		JSONObject json = studentservice.pwdDuplicateCheck(request);						
-		
+	public String pwdDuplicateCheck(HttpServletRequest request, StudentDTO student) {
+
+		JSONObject json = studentservice.pwdDuplicateCheck(request);
+
 		return json.toString();
 	}
 
-	
+
 	// 전화번호 중복
 	@ResponseBody
 	@PostMapping(value = "/student/telDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
-	public String telDuplicateCheck(HttpServletRequest request, StudentDTO student) {		
-		
-		JSONObject json = studentservice.telDuplicateCheck(request);						
-		
+	public String telDuplicateCheck(HttpServletRequest request, StudentDTO student) {
+
+		JSONObject json = studentservice.telDuplicateCheck(request);
+
 		return json.toString();
 	}
-	
-	
+
+
 	// 이메일 중복
 	@ResponseBody
 	@PostMapping(value = "/student/emailDuplicateCheck.lms", produces="text/plain;charset=UTF-8")
-	public String emailDuplicateCheck(HttpServletRequest request, StudentDTO student) {	
-		
-		JSONObject json = studentservice.emailDuplicateCheck(request);						
-		
+	public String emailDuplicateCheck(HttpServletRequest request, StudentDTO student) {
+
+		JSONObject json = studentservice.emailDuplicateCheck(request);
+
 		return json.toString();
 	}
-	
-	
+
+
 	// 학생 정보 수정
 	@PostMapping(value = "/student/student_info_edit.lms")
 	public ModelAndView professor_info_edit( ModelAndView mav, StudentDTO student, MultipartHttpServletRequest mrequest) {
-		     
-		
+
+
 	      int n = studentservice.student_info_edit(student, mrequest);
-      
+
 	      if(n == 1) {
 	    	  mav.addObject("message", "학생정보 수정을 성공하였습니다.");
 	    	  mav.addObject("loc", mrequest.getContextPath()+"/student/dashboard.lms");
@@ -231,17 +231,17 @@ public class StudentController {
 	    	  mav.addObject("loc", mrequest.getContextPath()+ "/student/myInfo.lms");
 	    	  mav.setViewName("msg");
 	      }
-      
+
 	      return mav;
 	}
-	
 
 
-	
+
+
 	// 수업  - 내 강의보기
 	@GetMapping(value="/student/myLecture.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView myLecture(ModelAndView mav, HttpServletRequest request) {
-		 
+
 		String fk_course_seq = request.getParameter("course_seq");
 		
 /*
@@ -264,51 +264,46 @@ public class StudentController {
 		//return mav;
 
 		return studentservice.getCourseLecturePage(request, mav, fk_course_seq);
-		
+
 	} // end of public String myLecture
-	
-	
-	
+
+
+
 	// 수업 - 내 강의 - 과제
 	@GetMapping(value="/student/assignment_List.lms", produces="text/plain;charset=UTF-8")
 	public ModelAndView assignment_List(ModelAndView mav, HttpServletRequest request) {
-		
+
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int userid = loginuser.getStudent_id();
-		
-		String fk_course_seq = request.getParameter("fk_course_seq");		
-		
+
+		String fk_course_seq = request.getParameter("fk_course_seq");
+
 		List<Map<String, String>> assignment_List = studentservice.getassignment_List(fk_course_seq, userid);
 		mav.addObject("assignment_List", assignment_List);
-		
-		mav.setViewName("assignment_List");
-		
-		return mav;
-		
-	} // end of public ModelAndView assignment_List
-		
 
-	
-	
+		mav.setViewName("assignment_List");
+
+		return mav;
+
+	} // end of public ModelAndView assignment_List
+
+
+
+
 	@GetMapping("/student/courseRegister.lms")
 	public ModelAndView cousrseRegister(HttpServletRequest request, ModelAndView mav) {
-	
+
 		return studentservice.getCourseRegisterPage(request, mav);
 		// /WEB-INF/views/student/{1}.jsp
 	}
-	
+
 	@GetMapping(value = "/student/courseJSON.lms", produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> cousrseREST(HttpServletRequest request) {
 		return courseService.getCourseList(request);
 	}
-	
-	@GetMapping(value = "/student/timetableJSON.lms", produces="text/plain;charset=UTF-8")
-	public ResponseEntity<String> timeTableREST(HttpServletRequest request) {
-		return courseService.getLoginStudentTimeTable(request);
-	}
-	
-	
+
+
 	@PostMapping(value = "/student/registerCourseREST.lms", produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> registerCourseREST(HttpServletRequest request) {
 		return courseService.registerCourse(request);

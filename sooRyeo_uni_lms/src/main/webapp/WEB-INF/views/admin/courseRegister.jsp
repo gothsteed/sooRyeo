@@ -763,6 +763,7 @@ function recreateTimetableStructure() {
 
 let formCounter = 0;
 
+/*
 function addForm() {
     formCounter++;
     const formHtml = `
@@ -809,6 +810,57 @@ function addForm() {
         </form>
     `;
     $('#form-container').append(formHtml);
+}
+*/
+
+
+function addForm() {
+	formCounter++;
+	const formHtml = `
+        <form class="row mt-3 schedule-form" id="schedule-form-\${formCounter}">
+            <div class="form-group col-md-3">
+                <label for="day-of-week-\${formCounter}">요일</label>
+                <select class="form-control" id="day-of-week-\${formCounter}" required>
+                    <option value="1">월</option>
+                    <option value="2">화</option>
+                    <option value="3">수</option>
+                    <option value="4">목</option>
+                    <option value="5">금</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="start-period-\${formCounter}">시작 교시</label>
+                <select class="form-control" id="start-period-\${formCounter}" required>
+                    <option value="1">1교시</option>
+                    <option value="2">2교시</option>
+                    <option value="3">3교시</option>
+                    <option value="4">4교시</option>
+                    <option value="5">5교시</option>
+                    <option value="6">6교시</option>
+                    <option value="7">7교시</option>
+                    <option value="8">8교시</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="end-period-\${formCounter}">끝 교시</label>
+                <select class="form-control" id="end-period-\${formCounter}" required>
+                    <option value="1">1교시</option>
+                    <option value="2">2교시</option>
+                    <option value="3">3교시</option>
+                    <option value="4">4교시</option>
+                    <option value="5">5교시</option>
+                    <option value="6">6교시</option>
+                    <option value="7">7교시</option>
+                    <option value="8">8교시</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label class="d-block">&nbsp;</label>
+                <button type="button" class="btn btn-danger" onclick="removeForm(this)">삭제</button>
+            </div>
+        </form>
+    `;
+	$('#form-container').append(formHtml);
 }
 
 function removeForm(button) {
@@ -907,8 +959,9 @@ function clearScheduleForms() {
 				<div id="form-container">
 
 					<form class="row mt-3 schedule-form" id="schedule-form-0">
-						<div class="form-group col-md-2">
-							<label for="day-of-week-0">요일</label> <select class="form-control" id="day-of-week-0" required>
+						<div class="form-group col-md-3">
+							<label for="day-of-week-0">요일</label>
+							<select class="form-control" id="day-of-week-0" required>
 								<option value="1">월</option>
 								<option value="2">화</option>
 								<option value="3">수</option>
@@ -917,7 +970,8 @@ function clearScheduleForms() {
 							</select>
 						</div>
 						<div class="form-group col-md-3">
-							<label for="start-period-0">시작 교시</label> <select class="form-control" id="start-period-0" required>
+							<label for="start-period-0">시작 교시</label>
+							<select class="form-control" id="start-period-0" required>
 								<option value="1">1교시</option>
 								<option value="2">2교시</option>
 								<option value="3">3교시</option>
@@ -929,7 +983,8 @@ function clearScheduleForms() {
 							</select>
 						</div>
 						<div class="form-group col-md-3">
-							<label for="end-period-0">끝 교시</label> <select class="form-control" id="end-period-0" required>
+							<label for="end-period-0">끝 교시</label>
+							<select class="form-control" id="end-period-0" required>
 								<option value="1">1교시</option>
 								<option value="2">2교시</option>
 								<option value="3">3교시</option>
@@ -940,7 +995,8 @@ function clearScheduleForms() {
 								<option value="8">8교시</option>
 							</select>
 						</div>
-						<div class="col-md-2" style="margin-top:5%">
+						<div class="form-group col-md-3">
+							<label class="d-block">&nbsp;</label>
 							<button type="button" class="btn btn-danger" onclick="removeForm(this)">삭제</button>
 						</div>
 					</form>
