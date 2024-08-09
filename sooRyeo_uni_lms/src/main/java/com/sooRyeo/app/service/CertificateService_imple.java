@@ -122,7 +122,7 @@ public class CertificateService_imple implements CertificateService {
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
+        PdfFont font = PdfFontFactory.createFont("/usr/share/fonts/truetype/nanum/NanumGothic.ttf", "Identity-H", true);
         
         // 이미지 로드
         ImageData data = ImageDataFactory.create(imgPath);
@@ -394,7 +394,7 @@ public class CertificateService_imple implements CertificateService {
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
+        PdfFont font = PdfFontFactory.createFont("/usr/share/fonts/truetype/nanum/NanumGothic.ttf", "Identity-H", true);
         
         // 이미지 로드
         ImageData data = ImageDataFactory.create(imgPath);
@@ -578,7 +578,7 @@ public class CertificateService_imple implements CertificateService {
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
+        PdfFont font = PdfFontFactory.createFont("/usr/share/fonts/truetype/nanum/NanumGothic.ttf", "Identity-H", true);
         
         // 이미지 로드
         ImageData data = ImageDataFactory.create(imgPath);
