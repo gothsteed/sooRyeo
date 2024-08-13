@@ -15,12 +15,10 @@ public class Consult {
 	private Schedule schedule;
 	private Student student;
 	private Professor professor;
-	
-	
-	
-	public Integer getFk_schedule_seq() {
-		return fk_schedule_seq;
-	}
+
+
+
+	public Integer getFk_schedule_seq() {return fk_schedule_seq;}
 	public Integer getFk_student_id() {
 		return fk_student_id;
 	}

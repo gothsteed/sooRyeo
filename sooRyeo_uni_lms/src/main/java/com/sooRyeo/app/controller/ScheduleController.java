@@ -29,7 +29,7 @@ import com.sooRyeo.app.service.ScheduleService;
 public class ScheduleController {
 	
 	@Autowired
-	private ScheduleService service;
+	private ScheduleService scheduleService;
 	
 	
 	// 캘린더 띄우기
@@ -51,10 +51,10 @@ public class ScheduleController {
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int userid = loginuser.getStudent_id();
 		
-		List<Map<String, String>> assignment_list = service.showAssignment(userid);
-		List<Map<String, String>> todo_list = service.showTodo(userid);
-		List<Map<String, String>> consult_list = service.showConsult(userid);
-		List<Map<String, String>> exam_list = service.showExam(userid);
+		List<Map<String, String>> assignment_list = scheduleService.showAssignment(userid);
+		List<Map<String, String>> todo_list = scheduleService.showTodo(userid);
+		List<Map<String, String>> consult_list = scheduleService.showConsult(userid);
+		List<Map<String, String>> exam_list = scheduleService.showExam(userid);
 		
 		JSONArray jsonArr = new JSONArray();
 		
@@ -130,8 +130,8 @@ public class ScheduleController {
 		String start_date = request.getParameter("start_date");
 		String end_date = request.getParameter("end_date");
 		
-		int n1 = service.update_tbl_schedule(schedule_seq, title, start_date, end_date);
-		int n2 = service.update_tbl_todo(schedule_seq, content);
+		int n1 = scheduleService.update_tbl_schedule(schedule_seq, title, start_date, end_date);
+		int n2 = scheduleService.update_tbl_todo(schedule_seq, content);
 		
 		JSONObject jsonobj  = new JSONObject();
 		jsonobj.put("result", n1*n2);
@@ -154,7 +154,7 @@ public class ScheduleController {
 		String start_date = request.getParameter("start_date");
 		String end_date = request.getParameter("end_date");
 		
-		int n = service.insert_tbl_schedule(title, start_date, end_date, content, userid);
+		int n = scheduleService.insert_tbl_schedule(title, start_date, end_date, content, userid);
 		
 		JSONObject jsonobj  = new JSONObject();
 		jsonobj.put("result", n);
@@ -170,8 +170,8 @@ public class ScheduleController {
 		
 		String schedule_seq =request.getParameter("schedule_seq");
 		
-		int n1 = service.delete_tbl_todo(schedule_seq);
-		int n2 = service.delete_tbl_schedule(schedule_seq);
+		int n1 = scheduleService.delete_tbl_todo(schedule_seq);
+		int n2 = scheduleService.delete_tbl_schedule(schedule_seq);
 		
 		JSONObject jsonobj  = new JSONObject();
 		jsonobj.put("result", n1*n2);
@@ -182,21 +182,21 @@ public class ScheduleController {
 	@RequireLogin(type = {Professor.class})
 	@GetMapping("/professor/approveConsult.lms")
 	public ModelAndView approveConsultPage(ModelAndView mav, HttpServletRequest request) {
-		return service.makeApproveConsultPage(request, mav);
+		return scheduleService.makeApproveConsultPage(request, mav);
 	}
 
 	@RequireLogin(type = {Professor.class})
 	@PostMapping("/schedule/detailREST.lms")
 	public ResponseEntity<String> getScheduleDetail(HttpServletRequest request) {
 
-		return  service.getConsultDetail(request);
+		return  scheduleService.getConsultDetail(request);
 	}
 
 
 	@RequireLogin(type = {Professor.class})
 	@PostMapping(value="/schedule/approveREST.lms", produces="text/plain;charset=UTF-8")
 	public ResponseEntity<String> updateConsultApproveStatus(HttpServletRequest request, @RequestBody ConsultApprovalDto consultApprovalDto) {
-		return service.updateConsultApproveStatus(request, consultApprovalDto);
+		return scheduleService.updateConsultApproveStatus(request, consultApprovalDto);
 	}
 	
 	

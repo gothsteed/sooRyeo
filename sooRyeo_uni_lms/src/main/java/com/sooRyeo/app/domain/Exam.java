@@ -19,35 +19,7 @@ public class Exam {
     
 
     private Schedule schedule;
-
-
-/*    public Integer getEnd_date_seconds() {
-    	return end_date_seconds;
-    }
-
-    public Integer getFk_schedule_seq() {
-        return fk_schedule_seq;
-    }
-
-    public Integer getFk_course_seq() {
-        return fk_course_seq;
-    }
-
-    public String getFile_name() {
-        return file_name;
-    }
-
-    public String getOriginal_file_name() {
-        return original_file_name;
-    }
-
-    public String getAnswer_mongo_id() {
-        return answer_mongo_id;
-    }
-
-    public Integer getQuestion_count() {
-        return question_count;
-    }*/
+    
 
 
     public LocalDateTime getStartDate() {
