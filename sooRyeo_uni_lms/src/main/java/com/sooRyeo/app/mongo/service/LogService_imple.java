@@ -82,8 +82,8 @@ public class LogService_imple implements LogService {
         Instant endOfDayInstant = adjustedzonedEndTime.toInstant();
 
 
-        System.out.println("startOfDayInstant: " + startOfDayInstant);
-        System.out.println("endOfDayInstant: " + endOfDayInstant);
+        // System.out.println("startOfDayInstant: " + startOfDayInstant);
+        // System.out.println("endOfDayInstant: " + endOfDayInstant);
         
         Instant oneDayBefore = startOfDayInstant.minus(1, ChronoUnit.DAYS); 		// 하루 전
         Instant twoDayBefore = startOfDayInstant.minus(2, ChronoUnit.DAYS); 		// 이틀 전
@@ -94,8 +94,8 @@ public class LogService_imple implements LogService {
         
         // System.out.println("확인용 endOfDay : " + endOfDay);
         // System.out.println("확인용 startOfDay : " + startOfDay);
-        System.out.println("확인용 oneDayBefore : " + oneDayBefore);
-        System.out.println("확인용 twoDayBefore : " + oneDayBefore);
+        // System.out.println("확인용 oneDayBefore : " + oneDayBefore);
+        // System.out.println("확인용 twoDayBefore : " + oneDayBefore);
         
         
         // 이번 달의 첫 날과 마지막 날 계산
@@ -107,8 +107,8 @@ public class LogService_imple implements LogService {
         LocalDateTime endOfMonth = lastDayOfMonth.atTime(LocalTime.MAX); // 마지막 날 23:59:59.999999999  
               
         
-        System.out.println("확인용 startOfMonth : " + startOfMonth);
-        System.out.println("확인용 endOfMonth : " + endOfMonth);
+        // System.out.println("확인용 startOfMonth : " + startOfMonth);
+        // System.out.println("확인용 endOfMonth : " + endOfMonth);
         
         // Instant 변환
         Instant startOfMonthInstant = startOfMonth.atZone(zoneId).toInstant();
@@ -158,7 +158,7 @@ public class LogService_imple implements LogService {
 
                 // 조정된 ZonedDateTime을 다시 Instant로 변환
                 Instant logTimestamp = adjustedZonedDateTime.toInstant();
-                System.out.println("logTimestamp (UTC): " + logTimestamp);
+                // System.out.println("logTimestamp (UTC): " + logTimestamp);
                 
                 
                 if (logTimestamp.isAfter(startOfDayInstant) && !logTimestamp.isAfter(endOfDayInstant)) {
