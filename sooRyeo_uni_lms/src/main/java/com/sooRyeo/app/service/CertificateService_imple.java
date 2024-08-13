@@ -29,6 +29,8 @@ import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -54,6 +56,12 @@ public class CertificateService_imple implements CertificateService {
 	
 	@Autowired
 	private CertificateDao certificateDao;
+
+    private PdfFont getFont() throws IOException {
+        Resource resource = new ClassPathResource("font/malgun.ttf");
+        String fontPath = resource.getFile().getAbsolutePath();
+        return PdfFontFactory.createFont(fontPath, "Identity-H", true);
+    }
 	
 
 	// 배경 이미지를 처리하는 이벤트 핸들러 클래스
@@ -122,7 +130,7 @@ public class CertificateService_imple implements CertificateService {
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
+        PdfFont font = getFont();
         
         // 이미지 로드
         ImageData data = ImageDataFactory.create(imgPath);
@@ -394,7 +402,7 @@ public class CertificateService_imple implements CertificateService {
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
+        PdfFont font = getFont();
         
         // 이미지 로드
         ImageData data = ImageDataFactory.create(imgPath);
@@ -578,7 +586,7 @@ public class CertificateService_imple implements CertificateService {
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
-        PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/malgun.ttf", "Identity-H", true);
+        PdfFont font = getFont();
         
         // 이미지 로드
         ImageData data = ImageDataFactory.create(imgPath);
