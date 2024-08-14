@@ -345,7 +345,7 @@ button.fc-customButton-button.fc-button.fc-button-primary {
 	                        			var end_date = moment(item.end_date).format('YYYY-MM-DD HH:mm:ss');
 	                        			var color = "";
 	                        			var url = "";
-	                        			
+                                        console.log(item);
 	                        			if(item.schedule_type == '1') {
 	                        				color = "#175F30";
 	                        				url = "<%= ctxPath%>/student/assignment_List.lms?fk_course_seq="+item.course_seq	

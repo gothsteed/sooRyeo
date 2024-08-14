@@ -1,13 +1,13 @@
 package com.sooRyeo.app.domain;
 
 import lombok.Getter;
+import org.json.JSONObject;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-public class Exam {
+public class Exam implements ScheduleInterface{
     private Integer fk_schedule_seq;
     private Integer fk_course_seq;
     private String file_name;
@@ -31,16 +31,40 @@ public class Exam {
         return  duration.toMinutes();
     }
 
+    @Override
+    public LocalDateTime getStartLocalDateTime() {
+        return null;
+    }
+
+    @Override
+    public LocalDateTime getEndLocalDateTime() {
+        return null;
+    }
+
+    @Override
+    public Duration getDuration() {
+        return null;
+    }
+
+    @Override
     public boolean isBefore(LocalDateTime localDateTime) {
         return schedule.isBefore(localDateTime);
     }
 
+    @Override
     public boolean isAfter(LocalDateTime localDateTime) {
         return schedule.isAfter(localDateTime);
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonobj  = schedule.toJson();
+        jsonobj.put("course_seq", fk_course_seq);
+        return jsonobj;
+    }
+
     public boolean isBetween(LocalDateTime time) {
-        return schedule.isBetweenSchedule(time);
+        return schedule.isBetween(time);
     }
 
     public long getSecondsTillEnd() {

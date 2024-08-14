@@ -1,11 +1,13 @@
 package com.sooRyeo.app.model;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.sooRyeo.app.domain.Exam;
+import com.sooRyeo.app.domain.ScheduleInterface;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ExamDTO;
 
@@ -23,7 +25,26 @@ public class ScheduleDao_imple implements ScheduleDao {
 	@Qualifier("sqlsession") // 이름이 같은것을 주입
 	private SqlSessionTemplate sqlSession;
 
-	
+
+
+	@Override
+	public List<ScheduleInterface> getSchedules(int userid) {
+		List<ScheduleInterface> combinedList = new ArrayList<>();
+
+		List<ScheduleInterface> assignmentList = sqlSession.selectList("schedule.showAssignment", userid);
+		List<ScheduleInterface> consultList  = sqlSession.selectList("schedule.showConsult", userid);
+		List<ScheduleInterface> examList  = sqlSession.selectList("schedule.showExam", userid);
+		List<ScheduleInterface> todoList  = sqlSession.selectList("schedule.showTodo", userid);
+
+		combinedList.addAll(assignmentList);
+		combinedList.addAll(consultList);
+		combinedList.addAll(examList);
+		combinedList.addAll(todoList);
+
+		return combinedList;
+	}
+
+
 	// 스케줄테이블 select
 	@Override
 	public List<Map<String, String>> showAssignment(int userid) {
@@ -263,7 +284,7 @@ public class ScheduleDao_imple implements ScheduleDao {
 
 	@Override
 	public List<Map<String, String>> showExam(int userid) {
-		List<Map<String, String>> Schedule = sqlSession.selectList("schedule.showExam", userid);
+		List<Map<String, String>>  Schedule = sqlSession.selectList("schedule.showExam", userid);
 		return Schedule;
 	}
 
@@ -352,9 +373,6 @@ public class ScheduleDao_imple implements ScheduleDao {
 		int n = sqlSession.delete("schedule.delete_exam_tbl_schedule", schedule_seq);
 		return n;
 	}
-
-
-
 
 
 }

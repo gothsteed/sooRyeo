@@ -52,10 +52,6 @@ public class ExamController {
 		
 		// === 첨부파일 업로드 시작 === //
 		MultipartFile attach = examdto.getAttach();
-		
-		// System.out.println(attach);
-		// MultipartFile[field="attach", filename=2024년도 국가기술자격 검정 시행계획(대외 공고).pdf, contentType=application/pdf, size=466949]
-		
 		String newFileName = "";
 		String originalFilename = "";
 		

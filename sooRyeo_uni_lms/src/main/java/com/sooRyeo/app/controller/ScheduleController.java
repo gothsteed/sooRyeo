@@ -6,7 +6,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.sooRyeo.app.domain.Exam;
+import com.sooRyeo.app.domain.ScheduleInterface;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
+import com.sooRyeo.app.jsonBuilder.JsonBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +33,10 @@ public class ScheduleController {
 	
 	@Autowired
 	private ScheduleService scheduleService;
-	
-	
+    @Autowired
+    private JsonBuilder jsonBuilder;
+
+
 	// 캘린더 띄우기
 	@RequireLogin(type = {Student.class})
 	@GetMapping("/student/scheduleManagement.lms")
@@ -50,68 +55,13 @@ public class ScheduleController {
 		HttpSession session = request.getSession();
 		Student loginuser = (Student)session.getAttribute("loginuser");
 		int userid = loginuser.getStudent_id();
-		
-		List<Map<String, String>> assignment_list = scheduleService.showAssignment(userid);
-		List<Map<String, String>> todo_list = scheduleService.showTodo(userid);
-		List<Map<String, String>> consult_list = scheduleService.showConsult(userid);
-		List<Map<String, String>> exam_list = scheduleService.showExam(userid);
+
+		List<ScheduleInterface> scheduleList = scheduleService.getSchedules(userid);
 		
 		JSONArray jsonArr = new JSONArray();
-		
-		for(Map<String, String> schedule : assignment_list) {
-			JSONObject jsonobj  = new JSONObject();
-			jsonobj.put("fk_student_id", schedule.get("fk_student_id"));
-			jsonobj.put("course_seq", schedule.get("course_seq"));
-			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
-			jsonobj.put("title", schedule.get("title"));
-			jsonobj.put("schedule_type", schedule.get("schedule_type"));
-			jsonobj.put("start_date", schedule.get("start_date"));
-			jsonobj.put("end_date", schedule.get("end_date"));
-			
-			jsonArr.put(jsonobj);
-			
-		}
-		
-		
-		for(Map<String, String> schedule : todo_list) {
-			JSONObject jsonobj  = new JSONObject();
-			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
-			jsonobj.put("schedule_type", schedule.get("schedule_type"));
-			jsonobj.put("title", schedule.get("title"));
-			jsonobj.put("content", schedule.get("content"));
-			jsonobj.put("start_date", schedule.get("start_date"));
-			jsonobj.put("end_date", schedule.get("end_date"));
-			
-			jsonArr.put(jsonobj);
-		}
-		
-		
-		for(Map<String, String> schedule : consult_list) {
-			JSONObject jsonobj  = new JSONObject();
-			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
-			jsonobj.put("schedule_type", schedule.get("schedule_type"));
-			jsonobj.put("title", schedule.get("title"));
-			jsonobj.put("content", schedule.get("content"));
-			jsonobj.put("start_date", schedule.get("start_date"));
-			jsonobj.put("end_date", schedule.get("end_date"));
-			jsonobj.put("professor_name", schedule.get("name"));
-			
-			jsonArr.put(jsonobj);
-		}
-		
-		
-		for(Map<String, String> schedule : exam_list) {
-			JSONObject jsonobj  = new JSONObject();
-			jsonobj.put("fk_student_id", schedule.get("fk_student_id"));
-			jsonobj.put("course_seq", schedule.get("course_seq"));
-			jsonobj.put("schedule_seq", schedule.get("schedule_seq"));
-			jsonobj.put("title", schedule.get("title"));
-			jsonobj.put("schedule_type", schedule.get("schedule_type"));
-			jsonobj.put("start_date", schedule.get("start_date"));
-			jsonobj.put("end_date", schedule.get("end_date"));
-			
-			jsonArr.put(jsonobj);
-			
+
+		for(ScheduleInterface schedule : scheduleList) {
+			jsonArr.put(schedule.toJson());
 		}
 		
 		return jsonArr.toString();

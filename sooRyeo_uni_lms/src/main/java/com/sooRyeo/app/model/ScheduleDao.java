@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.sooRyeo.app.domain.Consult;
 import com.sooRyeo.app.domain.Exam;
+import com.sooRyeo.app.domain.ScheduleInterface;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import com.sooRyeo.app.dto.ExamDTO;
-import org.springframework.http.ResponseEntity;
 
 public interface ScheduleDao {
 	
@@ -91,5 +91,6 @@ public interface ScheduleDao {
 	// 시험 삭제시 schedule 테이블 delete
 	int delete_exam_tbl_schedule(String schedule_seq);
 
-	
+
+	List<ScheduleInterface> getSchedules(int userid);
 }

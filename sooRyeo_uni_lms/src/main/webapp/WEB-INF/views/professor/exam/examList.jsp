@@ -97,7 +97,7 @@
 	<c:choose>
 		<c:when test="${not empty requestScope.examList}">
 			<c:forEach var="exam" items="${requestScope.examList}" varStatus="status">
-				<tr class="row" onclick="handleExamClick(${exam.fk_schedule_seq}, ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetweenSchedule(currentTime)}, ${exam.schedule.isBefore(currentTime)});">
+				<tr class="row" onclick="handleExamClick(${exam.fk_schedule_seq}, ${exam.schedule.isAfter(currentTime)}, ${exam.schedule.isBetween(currentTime)}, ${exam.schedule.isBefore(currentTime)});">
 					<th scope="row" class="col-1" style="text-align: center">${(currentPage - 1) * (perPageSize) +  status.count}</th>
 					<td class="col-3" id="title" style="text-align: center">${exam.schedule.title}</td>
 					<td class="col-3" style="text-align: center">${exam.startDate}</td>
@@ -106,7 +106,7 @@
 						<c:if test="${exam.schedule.isBefore(currentTime)}">
 							진행전
 						</c:if>
-						<c:if test="${exam.schedule.isBetweenSchedule(currentTime)}">
+						<c:if test="${exam.schedule.isBetween(currentTime)}">
 							진행중
 						</c:if>
 						<c:if test="${exam.schedule.isAfter(currentTime)}">

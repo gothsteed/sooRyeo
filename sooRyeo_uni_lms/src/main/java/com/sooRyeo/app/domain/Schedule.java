@@ -1,11 +1,13 @@
 package com.sooRyeo.app.domain;
 
 
+import org.json.JSONObject;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Schedule {
+public class Schedule  implements ScheduleInterface{
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	private Integer schedule_seq;
 	private String title;
@@ -35,7 +37,8 @@ public class Schedule {
 	}
 
 
-	public boolean isBetweenSchedule(LocalDateTime time) {
+	@Override
+	public boolean isBetween(LocalDateTime time) {
 		LocalDateTime start = LocalDateTime.parse(start_date, formatter);
 		LocalDateTime end = LocalDateTime.parse(end_date, formatter);
 
@@ -46,23 +49,39 @@ public class Schedule {
 		return false;
 	}
 
+	@Override
 	public LocalDateTime getStartLocalDateTime() {
 		return LocalDateTime.parse(start_date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
+	@Override
 	public LocalDateTime getEndLocalDateTime() {
 		return LocalDateTime.parse(end_date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
 
+	@Override
 	public Duration getDuration() {
 		return Duration.between(LocalDateTime.parse(start_date, formatter) , LocalDateTime.parse(end_date, formatter));
 	}
+	@Override
 	public boolean isBefore(LocalDateTime time) {
 		return time.isBefore(getStartLocalDateTime());
 	}
+	@Override
 	public boolean isAfter(LocalDateTime time) {
 		return time.isAfter(getEndLocalDateTime());
 	}
 
+	@Override
+	public JSONObject toJson() {
+		JSONObject jsonobj  = new JSONObject();
+		jsonobj.put("schedule_seq", getSchedule_seq());
+		jsonobj.put("schedule_type", getSchedule_type());
+		jsonobj.put("title", getTitle());
+		jsonobj.put("start_date", getStart_date());
+		jsonobj.put("end_date", getEnd_date());
+
+		return jsonobj;
+	}
 
 
 }

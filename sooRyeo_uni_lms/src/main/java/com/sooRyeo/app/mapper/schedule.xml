@@ -87,44 +87,46 @@
 	</resultMap>
 
 
+
 	<!--  과제 읽어오기  -->
-	<resultMap type="HashMap" id="assignmentMap">
-		<result column="fk_student_id" property="fk_student_id" javaType="String" />
-		<result column="course_seq" property="course_seq" javaType="String" />
-		<result column="schedule_seq" property="schedule_seq" javaType="String" />
-		<result column="title" property="title" javaType="String" />
-		<result column="schedule_type" property="schedule_type" javaType="String" />
-		<result column="start_date" property="start_date" javaType="String" />
-		<result column="end_date" property="end_date" javaType="String" />
+	<resultMap type="com.sooRyeo.app.domain.Assignment" id="assignmentMap">
+		<result column="schedule_seq_assignment" property="schedule_seq_assignment" javaType="Integer" />
+		<result column="fk_course_seq" property="fk_course_seq" javaType="Integer" />
+		<result column="content" property="content" javaType="String" />
+		<result column="attatched_file" property="attatched_file" javaType="String" />
+		<result column="orgfilename" property="orgfilename" javaType="String" />
+		<association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
 	</resultMap>
 	
 	<select id="showAssignment" parameterType="Int" resultMap="assignmentMap">
-			select fk_student_id, A.course_seq as course_seq, schedule_seq, title, schedule_type, start_date, end_date
-			from tbl_schedule join tbl_assignment
-			on schedule_seq = schedule_seq_assignment
-			join tbl_course A
-			on course_seq = fk_course_seq
-			join tbl_registered_course B
-			on B.fk_course_seq = A.course_seq
-			where fk_student_id = #{userid}
+		select TBL_SCHEDULE.*, TBL_ASSIGNMENT.*
+		from tbl_schedule join tbl_assignment
+							   on schedule_seq = schedule_seq_assignment
+						  join tbl_course A
+							   on course_seq = fk_course_seq
+						  join tbl_registered_course B
+							   on B.fk_course_seq = A.course_seq
+		where fk_student_id = #{userid}
 	</select>
 	
 	
 	<!--  내 개인일정 읽어오기  -->
-	<resultMap type="HashMap" id="todoMap">
-		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+	<resultMap type="com.sooRyeo.app.domain.Todo" id="todoMap">
+		<result column="schedule_seq" property="schedule_seq" javaType="Integer" />
 		<result column="content" property="content" javaType="String" />
-		<result column="title" property="title" javaType="String" />
-		<result column="schedule_type" property="schedule_type" javaType="String" />
-		<result column="start_date" property="start_date" javaType="String" />
-		<result column="end_date" property="end_date" javaType="String" />
+		<association property="schedule" javaType="com.sooRyeo.app.domain.Schedule" resultMap="ScheduleResultMap"/>
 	</resultMap>
-	
-	
-	
-	
+
 	<select id="showTodo" parameterType="Int" resultMap="todoMap">
-			select B.schedule_seq, A.content, title, schedule_type, start_date, end_date
+			select
+			    	A.SCHEDULE_SEQ as schedule_seq,
+			    	content,
+			    	FK_STUDENT_ID,
+			    	title,
+			    	SCHEDULE_TYPE,
+			    	START_DATE,
+			    	END_DATE,
+			    	CONFIRM
 			from tbl_todo A join tbl_schedule B
 			on A.schedule_seq = B.schedule_seq
 			where fk_student_id = #{userid}
@@ -142,9 +144,10 @@
 		<result column="start_date" property="start_date" javaType="String" />
 		<result column="end_date" property="end_date" javaType="String" />
 		<result column="name" property="name" javaType="String" />
+
 	</resultMap>
 	
-	<select id="showConsult" parameterType="Int" resultMap="consultMap">
+	<select id="showConsult" parameterType="Int" resultMap="ConsultJoinProfessorMap">
 		with
 		S AS (
 		    select schedule_seq, title, schedule_type, start_date, end_date, confirm
@@ -155,17 +158,41 @@
 		    from tbl_consult
 		),                
 		P AS (
-		    select name, prof_id
+		    select *
 		    from tbl_professor
 		)
 		
-		select S.schedule_seq, S.title, S.schedule_type, S.start_date, S.end_date, C.content, P.name
+		select
+			*
 		
 		from S JOIN C
 		on C.fk_schedule_seq = S.schedule_seq
 		JOIN P
 		on P.PROF_ID = C.FK_PROF_ID
 		where  C.FK_STUDENT_ID = #{userid} and S.confirm = '1'
+	</select>
+
+	<!-- 시험 테이블 select -->
+	<resultMap type="HashMap" id="examMap">
+		<result column="fk_student_id" property="fk_student_id" javaType="String" />
+		<result column="course_seq" property="course_seq" javaType="String" />
+		<result column="schedule_seq" property="schedule_seq" javaType="String" />
+		<result column="title" property="title" javaType="String" />
+		<result column="schedule_type" property="schedule_type" javaType="String" />
+		<result column="start_date" property="start_date" javaType="String" />
+		<result column="end_date" property="end_date" javaType="String" />
+	</resultMap>
+
+	<select id="showExam" parameterType="Int" resultMap="ExamScheduleResultMap">
+		select
+			tbl_exam.*, tbl_schedule.*
+		from tbl_schedule join tbl_exam
+							   on schedule_seq = fk_schedule_seq
+						  join tbl_course A
+							   on course_seq = fk_course_seq
+						  join tbl_registered_course B
+							   on B.fk_course_seq = A.course_seq
+		where fk_student_id = #{userid}
 	</select>
 	
 	
@@ -497,27 +524,30 @@ where rno between #{startRno} and #{endRno}
 	</select>
 	
 	
-	<!-- 시험 테이블 select -->
-	<resultMap type="HashMap" id="examMap">
-		<result column="fk_student_id" property="fk_student_id" javaType="String" />
-		<result column="course_seq" property="course_seq" javaType="String" />
-		<result column="schedule_seq" property="schedule_seq" javaType="String" />
-		<result column="title" property="title" javaType="String" />
-		<result column="schedule_type" property="schedule_type" javaType="String" />
-		<result column="start_date" property="start_date" javaType="String" />
-		<result column="end_date" property="end_date" javaType="String" />
-	</resultMap>
-	
-	<select id="showExam" parameterType="Int" resultMap="examMap">
-			select fk_student_id, A.course_seq , schedule_seq, title, schedule_type, start_date, end_date
-			from tbl_schedule join tbl_exam
-			on schedule_seq = fk_schedule_seq
-			join tbl_course A
-			on course_seq = fk_course_seq
-			join tbl_registered_course B
-			on B.fk_course_seq = A.course_seq
-			where fk_student_id = #{userid}
-	</select>
+
+
+<!--	<select id="showExam" parameterType="Int" resultMap="ExamScheduleResultMap">
+		select
+			SCHEDULE_SEQ,
+			TITLE,
+			SCHEDULE_TYPE,
+			START_DATE,
+			END_DATE,
+			CONFIRM,
+			FK_SCHEDULE_SEQ,
+			B.FK_COURSE_SEQ,
+			FILE_NAME,
+			ORIGINAL_FILE_NAME,
+			ANSWER_MONGO_ID
+		from tbl_schedule join tbl_exam
+							   on schedule_seq = fk_schedule_seq
+						  join tbl_course A
+							   on course_seq = fk_course_seq
+						  join tbl_registered_course B
+							   on B.fk_course_seq = A.course_seq
+		where fk_student_id = ${userid}
+	</select>-->
+
 
 
 	<select id="getExamList" parameterType="HashMap" resultMap="ExamScheduleResultMap">

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sooRyeo.app.domain.ScheduleInterface;
 import com.sooRyeo.app.dto.ConsultApprovalDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,4 +51,6 @@ public interface ScheduleService {
     
     // 시험테이블 select
 	List<Map<String, String>> showExam(int userid);
+
+	List<ScheduleInterface> getSchedules(int userid);
 }

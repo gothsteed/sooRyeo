@@ -224,5 +224,10 @@ public class ScheduleService_imple implements ScheduleService {
 		return schedule;
 	}
 
+	@Override
+	public List<ScheduleInterface> getSchedules(int userid) {
+        return dao.getSchedules(userid);
+	}
+
 
 }
